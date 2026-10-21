@@ -122,3 +122,27 @@ Devem aparecer duas linhas com `rowsecurity = true`.
 transfere o SQLite, não conecta o desktop e não cria telas financeiras no celular.
 Continue usando o desktop para os dados reais até validarmos a migração.
 Não é necessário reinstalar o executável nesta etapa.
+
+## Conferir a conta pelo desktop
+
+Com o código atualizado, abra **Dados → Conexão com a nuvem…**. Preencha a
+Project URL e a mesma chave pública Publishable/anon configuradas no Cloudflare.
+Use o e-mail e a senha do usuário do aplicativo, criado em Authentication → Users,
+e clique em **Verificar acesso**. Não use a senha administrativa do banco.
+
+A conferência faz login e consulta a autorização do proprietário no Supabase.
+Somente depois do sucesso, URL e chave pública ficam em `nuvem.json`, na pasta
+local dos dados, fora do repositório. A senha não é gravada em arquivo e o campo
+é limpo ao iniciar a tentativa. A sessão fica apenas na memória desse processo;
+**Desconectar** a remove do desktop, sem encerrar sessões em outros dispositivos.
+Ainda não há renovação automática da sessão: esta etapa apenas verifica o acesso.
+
+A janela não envia vendas ou informações financeiras. Ela também não baixa nem
+substitui o banco local. A conexão só acontece ao clicar em Verificar acesso;
+falhas de internet não impedem o uso normal do programa. O backup no Drive segue
+independente dessa configuração.
+
+Esta opção está no código-fonte atualizado. O executável publicado v1.0.1 ainda
+não a inclui. Para testar pelo VS Code, atualize a cópia do repositório com
+`git pull` e execute `python executar.py` na pasta principal. A migração e a
+sincronização serão implementadas em etapas posteriores, com backup e validação.

@@ -22,6 +22,8 @@ dist/
 /dados-originais/
 /relatorios/
 backup_drive.json
+nuvem.json
+.nuvem-*.json
 preferencias.json
 *.log
 node_modules/

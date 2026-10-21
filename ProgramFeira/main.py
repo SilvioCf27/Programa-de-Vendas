@@ -11,6 +11,7 @@ from ProgramFeira.resumos import calcular_indicadores, periodo_anterior, descrev
 from ProgramFeira.exportacao import montar_relatorio, exportar
 from ProgramFeira.interface.fontes import registrar_fontes
 from ProgramFeira.interface.painel_backup import BackupDrive
+from ProgramFeira.interface.painel_nuvem import ConexaoNuvem
 from ProgramFeira.interface.icones import rotulo_icone
 from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES
 from ProgramFeira.preferencias import carregar_tema, salvar_tema
@@ -687,6 +688,8 @@ menu_dados.add_command(label='Criar backup agora', command=fazer_backup_manual)
 menu_dados.add_command(label='Restaurar backup…', command=restaurar_copia)
 backup_drive = BackupDrive(janela, CAMINHO_BANCO)
 menu_dados.add_command(label='Backup no Google Drive…', command=backup_drive.configurar)
+conexao_nuvem = ConexaoNuvem(janela, CAMINHO_BANCO.parent)
+menu_dados.add_command(label='Conexão com a nuvem…', command=conexao_nuvem.configurar)
 menu_dados.add_separator()
 menu_dados.add_command(label='Local dos dados', command=mostrar_pasta_dados)
 menu.add_cascade(label='Dados', menu=menu_dados)

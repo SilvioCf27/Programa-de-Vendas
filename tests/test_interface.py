@@ -241,6 +241,33 @@ assert a.area_cartoes.winfo_viewable()
 assert a.analises.winfo_viewable()
 assert str(a.botao_exportar.cget('text')) == 'Exportar relatório'
 assert len(a.listar_vendas()) == 9
+# Conexão online roda fora do loop gráfico e não transfere o SQLite.
+from ProgramFeira.nuvem import Sessao, carregar_config as carregar_nuvem
+import time
+popup = a.conexao_nuvem.configurar()
+assert a.conexao_nuvem.configurar() is popup
+campos = a.conexao_nuvem.campos
+for nome, valor in {'url': 'https://projeto-ficticio.supabase.co', 'chave': 'sb_publishable_apenas_teste', 'email': 'teste@example.invalid', 'senha': 'senha-ficticia'}.items():
+    campos[nome].insert(0, valor)
+with patch('ProgramFeira.nuvem.ClienteNuvem.entrar', return_value=Sessao('usuario', 'teste@example.invalid', 'token-ficticio')) as login:
+    a.conexao_nuvem.botao_entrar.invoke()
+    assert campos['senha'].get() == ''
+    assert a.conexao_nuvem.ocupado
+    assert str(campos['email'].cget('state')) == 'disabled'
+    prazo = time.monotonic() + 5
+    while a.conexao_nuvem.ocupado and time.monotonic() < prazo:
+        a.janela.update()
+        time.sleep(0.01)
+    assert not a.conexao_nuvem.ocupado
+    login.assert_called_once_with('teste@example.invalid', 'senha-ficticia')
+assert a.conexao_nuvem.sessao.email == 'teste@example.invalid'
+assert 'Nenhum registro foi transferido' in a.conexao_nuvem.status.get()
+assert carregar_nuvem(a.CAMINHO_BANCO.parent)['url'] == 'https://projeto-ficticio.supabase.co'
+assert len(a.listar_vendas()) == 9
+assert 'senha-ficticia' not in (a.CAMINHO_BANCO.parent / 'nuvem.json').read_text()
+a.conexao_nuvem.botao_sair.invoke()
+assert a.conexao_nuvem.sessao is None
+a.conexao_nuvem.fechar()
 assert not errors, errors
 a.janela.destroy()
 '''

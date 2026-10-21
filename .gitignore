@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.idea/
+.vscode/*
+!.vscode/launch.json
+*.db-journal
+*.db-wal
+*.db-shm
+.venv-build/
+build/
+dist/
+# Dados de uso e arquivos privados não fazem parte do código público.
+*.db
+!ProgramFeira/assets/banco_inicial.db
+*.sqlite
+*.sqlite3
+*.xlsx
+*.csv
+/backups/
+/dados-originais/
+/relatorios/
+backup_drive.json
+preferencias.json
+*.log

@@ -1,0 +1,88 @@
+name: Executavel Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'ProgramFeira/**'
+      - 'tests/**'
+      - 'tools/gerar_executavel.py'
+      - 'tools/versao_windows.txt'
+      - 'tools/testar_windows.py'
+      - 'executar.py'
+      - 'GestaoDaFeira.spec'
+      - 'requirements*.txt'
+      - 'docs/EXECUTAVEL.md'
+      - '.github/workflows/executavel-windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-build.txt
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements-build.txt
+      - name: Testar o programa no Windows
+        run: python tools/testar_windows.py
+      - name: Gerar e verificar o executavel
+        run: python tools/gerar_executavel.py
+      - name: Disponibilizar pacote aprovado
+        uses: actions/upload-artifact@v4
+        with:
+          name: GestaoDaFeira-Windows-x64
+          path: |
+            dist/GestaoDaFeira-Windows-x64.zip
+            dist/SHA256.txt
+            dist/VALIDACAO_WINDOWS.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Guardar diagnostico da compilacao
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Diagnostico-Windows
+          path: |
+            build/GestaoDaFeira/warn-GestaoDaFeira.txt
+            dist/VALIDACAO_WINDOWS.json
+            dist/TESTES_WINDOWS.json
+          if-no-files-found: ignore
+
+  publicar:
+    needs: windows
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: GestaoDaFeira-Windows-x64
+          path: pacote
+      - name: Publicar versao aprovada
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSAO: ${{ github.ref_name }}
+        run: >-
+          gh release view "$VERSAO" >/dev/null 2>&1 || gh release create "$VERSAO"
+          pacote/GestaoDaFeira-Windows-x64.zip
+          pacote/SHA256.txt
+          pacote/VALIDACAO_WINDOWS.json
+          --verify-tag
+          --title "Gestão da Feira $VERSAO — Windows"
+          --notes-file .github/notas-executavel.md

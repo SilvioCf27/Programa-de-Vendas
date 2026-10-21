@@ -1,0 +1,2 @@
+# Necessário apenas para exportar em Excel (.xlsx). CSV usa a biblioteca padrão.
+openpyxl==3.1.5

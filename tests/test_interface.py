@@ -1,0 +1,251 @@
+"""Teste funcional dos widgets reais. Execute com uma sessão gráfica disponível."""
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class InterfaceTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('DISPLAY') or sys.platform in ('win32', 'darwin'), 'Sem sessão gráfica')
+    def test_fluxos_reais_em_banco_temporario(self):
+        # Subprocesso evita que a interface acesse o banco pessoal dos demais testes.
+        script = r'''
+from unittest.mock import patch
+from pathlib import Path
+import sys, os
+sys.path.insert(0, 'tests')
+from dados_ficticios import criar_banco
+criar_banco(Path(os.environ['PROGRAMFEIRA_DATA_DIR']) / 'vendas.db')
+import tkinter as tk
+from pathlib import Path
+with patch.object(tk.Tk, 'mainloop'):
+    import ProgramFeira.main as a
+errors = []
+a.janela.report_callback_exception = lambda *args: errors.append(args)
+a.janela.update()
+assert len(a.tabela.get_children()) == 9
+assert a.formulario.state() == 'withdrawn'
+# O acabamento usa controles ttk reais: seletor, teclado e estados permanecem nativos.
+combo = a.filtro_mes_combobox
+combo.event_generate('<ButtonPress-1>', x=combo.winfo_width()-12, y=combo.winfo_height()//2)
+a.janela.update()
+popup = str(combo.tk.call('ttk::combobox::PopdownWindow', combo))
+assert int(combo.tk.call('winfo', 'ismapped', popup)) == 1
+combo.event_generate('<Escape>')
+a.janela.update()
+check = a.linha_dias.winfo_children()[0]
+check.invoke()
+assert a.filtros_dias_semana[0].get()
+check.invoke()
+assert not a.filtros_dias_semana[0].get()
+assert 'Gestão da Feira' in a.janela.title()
+for coluna in a.colunas:
+    assert str(a.tabela.column(coluna, 'anchor')) == 'center'
+    assert str(a.tabela.heading(coluna, 'anchor')) == 'center'
+assert a.tabela.column('dinheiro', 'width') < 145
+# Tema é trocado sem alterar banco, seleção ou formulário.
+from ProgramFeira.preferencias import carregar_tema
+from ProgramFeira.interface.visual import PALETAS
+assert a.tema_atual.get() == 'escuro'
+a.alternar_tema()
+a.janela.update()
+assert a.tema_atual.get() == 'claro'
+assert carregar_tema(a.CAMINHO_BANCO.parent) == 'claro'
+a.alternar_tema()
+a.janela.update()
+assert a.tema_atual.get() == 'escuro'
+assert str(a.formulario.cget('background')) == PALETAS['escuro']['fundo']
+assert str(a.tabela.tag_configure('impar', 'background')) == PALETAS['escuro']['alternada']
+assert a.indicadores_visuais['total'].get() == 'R$ 561,25'
+assert [a.abas.tab(i, 'text') for i in range(3)] == ['Vendas', 'Análises', 'Finanças']
+a.abas.select(1)
+a.janela.update()
+assert a.painel_analises.winfo_viewable()
+c = a.painel_analises.comparador
+a.painel_analises.abas.select(1)
+a.janela.update()
+c.seletor_a.tipo.set('Mês');c.seletor_a.ano.set('2026');c.seletor_a.mes.set('Janeiro')
+c.seletor_b.tipo.set('Mês');c.seletor_b.ano.set('2026');c.seletor_b.mes.set('Fevereiro')
+snapshot = a.relatorio_atual
+c.comparar()
+assert c.ultima_selecao == (('2026-01-01', '2026-01-31'), ('2026-02-01', '2026-02-28'))
+assert c.ultima_comparacao['a']['quantidade'] == len(a.listar_vendas('2026-01-01', '2026-01-31'))
+assert a.relatorio_atual is snapshot
+c.seletor_a.tipo.set('Data');c.seletor_a.inicio.set('02/01/2026')
+c.seletor_b.tipo.set('Data');c.seletor_b.inicio.set('04/01/2026')
+c.comparar()
+assert c.ultima_comparacao['a']['total'] == 50
+assert c.ultima_comparacao['b']['total'] == 50
+anterior = c.ultima_comparacao
+c.seletor_b.inicio.set('31/02/2026');c.comparar()
+assert c.ultima_comparacao is anterior
+assert 'válida' in c.aviso.get()
+c.seletor_a.tipo.set('Fechamento');c.seletor_a.mes.set('Outubro')
+c.seletor_b.tipo.set('Intervalo');c.seletor_b.inicio.set('10/10/2026');c.seletor_b.fim.set('09/11/2026')
+c.comparar()
+assert c.ultima_selecao[0] == c.ultima_selecao[1] == ('2026-10-10', '2026-11-09')
+assert c.ultima_comparacao['diferenca'] == 0
+a.painel_analises.abas.select(0)
+a.janela.update()
+
+assert len(a.painel_analises.pagamentos.get_children()) == 3
+assert sum(int(a.painel_analises.semana.item(i, 'values')[1]) for i in a.painel_analises.semana.get_children()) == 9
+from ProgramFeira.interface.ajuda import mostrar_ajuda, AJUDAS
+for chave in AJUDAS:
+    ajuda = mostrar_ajuda(a.janela, chave)
+    a.janela.update()
+    assert ajuda.winfo_viewable()
+    ajuda.destroy()
+a.abas.select(0)
+a.janela.update()
+
+# Filtro aplicado nos widgets reais.
+a.filtro_ano.set('2026')
+assert a.aviso_filtros.get()
+a.atualizar_tabela()
+assert not a.aviso_filtros.get()
+a.janela.update()
+assert len(a.tabela.get_children()) == 5
+assert a.painel_analises.comparador.ultima_selecao[0] == ('2026-10-10', '2026-11-09')
+assert a.painel_analises.filtro.get() == 'Ano: 2026'
+assert sum(int(a.painel_analises.semana.item(i, 'values')[1]) for i in a.painel_analises.semana.get_children()) == 5
+assert a.indicadores_visuais['quantidade'].get() == '5'
+# Ordenar não aplica seletores que ainda não foram confirmados.
+a.filtro_ano.set('2025')
+assert a.painel_analises.aviso.get()
+assert a.painel_analises.filtro.get() == 'Ano: 2026'
+a.ordenar_tabela('total')
+assert a.aviso_filtros.get()
+assert len(a.tabela.get_children()) == 5
+assert all(v[1].startswith('2026-') for v in a.relatorio_atual['vendas'])
+assert a.relatorio_atual['vendas'][0][2] + a.relatorio_atual['vendas'][0][3] + a.relatorio_atual['vendas'][0][4] > 0
+arquivo = Path(a.CAMINHO_BANCO).parent / 'relatorio.csv'
+with patch.object(a.filedialog, 'asksaveasfilename', return_value=str(arquivo)), patch.object(a.messagebox, 'showinfo'):
+    a.exportar_visualizacao('csv')
+assert arquivo.exists()
+with patch.object(a.filedialog, 'asksaveasfilename', return_value=''), patch.object(a, 'exportar') as writer:
+    a.exportar_visualizacao('csv')
+    writer.assert_not_called()
+# Layout em janela menor mantém tabela e filtros acessíveis.
+a.janela.geometry('980x700')
+a.janela.update()
+assert a.layout_colunas == 3
+assert a.tabela.winfo_height() > 70
+assert a.filtro_ano_combobox.winfo_viewable()
+assert a.painel_filtros.winfo_rooty() == a.area_tabela.winfo_rooty()
+assert a.painel_filtros.winfo_rootx() > a.area_tabela.winfo_rootx()
+assert a.botao_editar.winfo_rooty() > a.tabela.winfo_rooty() + a.tabela.winfo_height()
+assert a.barra_tabela.winfo_rootx() == a.tabela.winfo_rootx()
+assert a.botao_aplicar_filtros.winfo_rooty() + a.botao_aplicar_filtros.winfo_height() < a.painel_filtros.winfo_rooty() + a.painel_filtros.winfo_height()
+a.canvas_filtros.event_generate('<MouseWheel>', delta=-120)
+a.janela.update()
+assert a.canvas_filtros.yview()[0] > 0
+a.canvas_filtros.yview_moveto(0)
+
+
+a.limpar_filtros()
+# Duplicidade recusada mantém o formulário aberto e não altera o banco.
+a.nova_venda()
+a.entrada_ano.set('2026')
+a.entrada_mes.set('Janeiro')
+a.atualizar_dias()
+a.entrada_dia.set('2')
+with patch.object(a.messagebox, 'askyesno', return_value=False):
+    a.cadastrar()
+assert len(a.tabela.get_children()) == 9
+assert a.formulario.state() == 'normal'
+a.cancelar_edicao()
+# Cadastro pelo formulário real, seguido de edição e exclusão.
+a.nova_venda()
+a.janela.update()
+assert a.formulario.state() == 'normal'
+a.entrada_ano.set('2026')
+a.entrada_mes.set('Outubro')
+a.atualizar_dias()
+a.entrada_dia.set('21')
+a.entrada_dinheiro.insert(0, '125,50')
+a.entrada_pix.insert(0, '24,50')
+with patch.object(a.messagebox, 'showinfo'):
+    a.cadastrar()
+a.janela.update()
+assert a.formulario.state() == 'withdrawn'
+assert len(a.tabela.get_children()) == 10
+v = a.buscar_venda_por_data('2026-10-21')
+assert v[2:]==(125.5, 24.5, 0)
+item = next(i for i in a.tabela.get_children() if int(a.tabela.item(i, 'values')[0]) == v[0])
+a.tabela.selection_set(item)
+a.janela.update()
+assert str(a.botao_editar['state']) == 'normal'
+a.botao_editar.invoke()
+a.janela.update()
+assert a.venda_em_edicao == v[0]
+assert a.formulario.state() == 'normal'
+a.entrada_pix.delete(0, 'end')
+a.entrada_pix.insert(0, '30,00')
+with patch.object(a.messagebox, 'showinfo'):
+    a.cadastrar()
+assert a.buscar_venda_por_id(v[0])[3] == 30
+item = next(i for i in a.tabela.get_children() if int(a.tabela.item(i, 'values')[0]) == v[0])
+a.tabela.selection_set(item)
+with patch.object(a.messagebox, 'askyesno', return_value=True), patch.object(a.messagebox, 'showinfo'):
+    a.excluir_venda_selecionada()
+assert a.buscar_venda_por_id(v[0]) is None
+assert len(a.tabela.get_children()) == 9
+# Fecha e reabre formulário, com dias zerados permitidos.
+a.nova_venda()
+a.cancelar_edicao()
+assert a.formulario.state() == 'withdrawn'
+# Finanças tem consulta e formulários próprios, preservando o histórico de vendas.
+a.abas.select(2)
+a.janela.update()
+f = a.painel_financeiro
+f.tipo.set('Fechamento'); f.referencia.set('01/10/2026'); f.consultar()
+assert (f.inicio, f.fim) == ('2026-10-10', '2026-11-09')
+snapshot = a.relatorio_atual
+popup = f.formulario('despesa')
+corpo = popup.winfo_children()[0]
+def campo(linha, texto):
+    widget = corpo.grid_slaves(row=linha, column=1)[0]
+    widget.set(texto) if hasattr(widget, 'set') else (widget.delete(0, 'end'), widget.insert(0, texto))
+campo(0, '15/10/2026'); campo(1, 'Conta de água'); campo(2, '123,45')
+corpo.grid_slaves(row=7, column=1)[0].invoke()
+a.janela.update()
+assert len(f.tabela.get_children()) == 1
+assert f.valores['despesas'].get() == 'R$ 123,45'
+assert a.relatorio_atual is snapshot
+f.tabela.selection_set(f.tabela.get_children()[0])
+popup = f.formulario('despesa', next(iter(f.registros.values())))
+corpo = popup.winfo_children()[0]
+campo(2, '120,00'); corpo.grid_slaves(row=7, column=1)[0].invoke()
+assert f.valores['despesas'].get() == 'R$ 120,00'
+popup = f.formulario_anual()
+corpo = popup.winfo_children()[0]
+campo(0, '2025'); campo(1, '01/01/2025'); campo(2, '31/12/2025'); campo(3, '210,25')
+corpo.grid_slaves(row=7, column=1)[0].invoke()
+f.tipo.set('Ano'); f.referencia.set('01/01/2025'); f.consultar()
+assert f.valores['taxas'].get() == 'R$ 210,25'
+f.tipo.set('Mês'); f.referencia.set('01/10/2025'); f.consultar()
+assert 'provisório' in f.aviso.get()
+assert f.valores['taxas'].get() == 'R$ 0,00'
+a.alternar_tema(); a.janela.update()
+assert f.winfo_viewable()
+a.janela.geometry('980x700'); a.janela.update()
+assert f.tabela.winfo_viewable()
+assert f.tabela.winfo_height() > 30
+a.abas.select(0); a.janela.update()
+assert a.area_cartoes.winfo_viewable()
+assert a.analises.winfo_viewable()
+assert str(a.botao_exportar.cget('text')) == 'Exportar relatório'
+assert len(a.listar_vendas()) == 9
+assert not errors, errors
+a.janela.destroy()
+'''
+        with tempfile.TemporaryDirectory() as folder:
+            env = {**os.environ, 'PROGRAMFEIRA_DATA_DIR': folder}
+            result = subprocess.run([sys.executable, '-c', script], cwd=ROOT, env=env,
+                                    capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

@@ -1,0 +1,213 @@
+"""Regras financeiras independentes da interface; valores novos em centavos."""
+import calendar
+import re
+import sqlite3
+from contextlib import closing
+from datetime import date, timedelta
+from decimal import Decimal
+from uuid import uuid4
+from ProgramFeira.database import banco
+from ProgramFeira.comparacao import fechamento_do_mes
+from ProgramFeira.resumos import calcular_indicadores
+
+MEIOS = ('Dinheiro', 'Pix', 'Cartão de crédito', 'Outro')
+CATEGORIAS = ('Casa', 'Feira', 'Outros', 'Compromisso inicial')
+
+
+def centavos(texto):
+    texto = str(texto).strip().removeprefix('R$').strip()
+    if ',' in texto:
+        if not re.fullmatch(r'(?:\d+|\d{1,3}(?:\.\d{3})+),\d{1,2}', texto):
+            raise ValueError('Informe o valor como 1234,56 ou 1.234,56.')
+        texto = texto.replace('.', '').replace(',', '.')
+    if not re.fullmatch(r'\d+(?:\.\d{1,2})?', texto):
+        raise ValueError('Informe um valor positivo, com até duas casas decimais.')
+    valor = int(Decimal(texto) * 100)
+    if not 0 < valor <= 999_999_999_99:
+        raise ValueError('O valor deve ser maior que zero e menor que um bilhão de reais.')
+    return valor
+
+
+def inicializar():
+    with closing(banco.conectar()) as c:
+        tabelas = {r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    with closing(banco.conectar()) as c:
+        colunas = {r[1] for r in c.execute('PRAGMA table_info(financeiro_taxas_anuais)')}
+    if {'financeiro_lancamentos', 'financeiro_taxas_anuais'} <= tabelas and {'natureza', 'observacao'} <= colunas:
+        return
+    # Snapshot íntegro, anterior a qualquer alteração de estrutura.
+    banco.criar_backup()
+    with closing(banco.conectar()) as c, c:
+        c.execute('BEGIN IMMEDIATE')
+        c.execute('''CREATE TABLE IF NOT EXISTS financeiro_lancamentos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, tipo TEXT NOT NULL CHECK(tipo IN ('despesa','taxa')),
+            data TEXT NOT NULL, descricao TEXT NOT NULL,
+            valor_centavos INTEGER NOT NULL CHECK(valor_centavos > 0),
+            meio TEXT NOT NULL, categoria TEXT NOT NULL,
+            grupo TEXT, parcela INTEGER NOT NULL DEFAULT 1,
+            parcelas INTEGER NOT NULL DEFAULT 1)''')
+        c.execute('''CREATE UNIQUE INDEX IF NOT EXISTS idx_taxa_diaria
+            ON financeiro_lancamentos(data) WHERE tipo='taxa' ''')
+        c.execute('''CREATE TABLE IF NOT EXISTS financeiro_taxas_anuais (
+            ano INTEGER PRIMARY KEY, inicio TEXT NOT NULL, fim TEXT NOT NULL,
+            valor_centavos INTEGER NOT NULL CHECK(valor_centavos > 0),
+            natureza TEXT NOT NULL DEFAULT 'Confirmada', observacao TEXT NOT NULL DEFAULT '')''')
+
+        colunas = {r[1] for r in c.execute('PRAGMA table_info(financeiro_taxas_anuais)')}
+        for nome, padrao in (('natureza', 'Confirmada'), ('observacao', '')):
+            if nome not in colunas:
+                c.execute(f"ALTER TABLE financeiro_taxas_anuais ADD COLUMN {nome} TEXT NOT NULL DEFAULT '{padrao}'")
+
+
+def _data(texto):
+    try:
+        dia = date.fromisoformat(texto)
+        if dia.isoformat() != texto:
+            raise ValueError('Use AAAA-MM-DD.')
+        return dia
+    except (TypeError, ValueError) as erro:
+        raise ValueError('Informe uma data válida.') from erro
+
+
+def _conflito(c, inicio, fim, ignorar=None):
+    return c.execute('''SELECT ano FROM financeiro_taxas_anuais
+        WHERE inicio <= ? AND fim >= ? AND ano != ?''', (fim, inicio, ignorar or -1)).fetchone()
+
+
+def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Outros', parcelas=1, identificador=None):
+    dia = _data(data)
+    quantia = centavos(valor)
+    descricao = descricao.strip()
+    if tipo not in ('despesa', 'taxa') or not descricao or len(descricao) > 200:
+        raise ValueError('Preencha uma descrição de até 200 caracteres.')
+    if meio not in MEIOS or categoria not in CATEGORIAS:
+        raise ValueError('Selecione uma forma de pagamento e uma categoria válidas.')
+    try:
+        parcelas = int(parcelas)
+    except (TypeError, ValueError) as erro:
+        raise ValueError('Informe a quantidade de parcelas.') from erro
+    if not 1 <= parcelas <= 120 or (parcelas > 1 and (tipo != 'despesa' or meio != 'Cartão de crédito' or identificador is not None)):
+        raise ValueError('Use de 1 a 120 parcelas, apenas para nova despesa no cartão.')
+    if tipo == 'taxa' and parcelas != 1:
+        raise ValueError('Taxas não podem ser parceladas.')
+    linhas = []
+    grupo = uuid4().hex if parcelas > 1 else None
+    for i in range(parcelas):
+        mes = dia.year * 12 + dia.month - 1 + i
+        ano, mes = divmod(mes, 12)
+        mes += 1
+        vencimento = date(ano, mes, min(dia.day, calendar.monthrange(ano, mes)[1]))
+        linhas.append((tipo, vencimento.isoformat(), descricao, quantia, meio, categoria, grupo, i + 1, parcelas))
+    banco.criar_backup()
+    with closing(banco.conectar()) as c, c:
+        c.execute('BEGIN IMMEDIATE')
+        if identificador is not None:
+            anterior = c.execute('SELECT tipo FROM financeiro_lancamentos WHERE id=?', (identificador,)).fetchone()
+            if not anterior or anterior[0] != tipo:
+                raise ValueError('O lançamento selecionado não existe mais.')
+        if tipo == 'taxa' and _conflito(c, data, data):
+            raise ValueError('Essa data já está coberta por uma taxa anual. Não desconte a mesma taxa duas vezes.')
+        try:
+            if identificador is None:
+                c.executemany('''INSERT INTO financeiro_lancamentos
+                    (tipo,data,descricao,valor_centavos,meio,categoria,grupo,parcela,parcelas)
+                    VALUES (?,?,?,?,?,?,?,?,?)''', linhas)
+            else:
+                # Edição altera somente a parcela selecionada, preservando sua identificação.
+                c.execute('''UPDATE financeiro_lancamentos SET data=?,descricao=?,valor_centavos=?,meio=?,categoria=?
+                    WHERE id=?''', (data, descricao, quantia, meio, categoria, identificador))
+        except sqlite3.IntegrityError as erro:
+            if tipo == 'taxa' and 'UNIQUE constraint failed' in str(erro):
+                raise ValueError('Já existe uma taxa para essa data. Edite o lançamento existente.') from erro
+            raise
+
+
+def salvar_taxa_anual(ano, inicio, fim, valor, natureza='Confirmada', observacao=''):
+    try:
+        ano = int(ano)
+    except (TypeError, ValueError) as erro:
+        raise ValueError('Informe um ano válido.') from erro
+    if natureza not in ('Confirmada', 'Estimada'):
+        raise ValueError('Escolha Confirmada ou Estimada.')
+    primeira, ultima = _data(inicio), _data(fim)
+    quantia = centavos(valor)
+    if primeira.year != ano or ultima.year != ano or primeira > ultima:
+        raise ValueError('O intervalo da taxa deve estar dentro do ano informado, em ordem crescente.')
+    banco.criar_backup()
+    with closing(banco.conectar()) as c, c:
+        c.execute('BEGIN IMMEDIATE')
+        if c.execute("SELECT id FROM financeiro_lancamentos WHERE tipo='taxa' AND data BETWEEN ? AND ? LIMIT 1", (inicio, fim)).fetchone():
+            raise ValueError('Há taxas diárias nesse intervalo. Não é possível somar um ajuste anual sobre elas.')
+        c.execute('''INSERT INTO financeiro_taxas_anuais (ano,inicio,fim,valor_centavos,natureza,observacao) VALUES (?,?,?,?,?,?)
+            ON CONFLICT(ano) DO UPDATE SET inicio=excluded.inicio,fim=excluded.fim,valor_centavos=excluded.valor_centavos,
+            natureza=excluded.natureza,observacao=excluded.observacao''',
+            (ano, inicio, fim, quantia, natureza, observacao.strip()))
+
+
+def excluir_lancamento(identificador, anual=False):
+    tabela, coluna = ('financeiro_taxas_anuais', 'ano') if anual else ('financeiro_lancamentos', 'id')
+    banco.criar_backup()
+    with closing(banco.conectar()) as c, c:
+        c.execute('BEGIN IMMEDIATE')
+        c.execute(f'DELETE FROM {tabela} WHERE {coluna}=?', (identificador,))
+
+
+def listar_lancamentos(inicio, fim):
+    with closing(banco.conectar()) as c:
+        c.row_factory = sqlite3.Row
+        return [dict(r) for r in c.execute('SELECT * FROM financeiro_lancamentos WHERE data BETWEEN ? AND ? ORDER BY data DESC,id DESC', (inicio, fim))]
+
+
+def listar_taxas_anuais():
+    with closing(banco.conectar()) as c:
+        c.row_factory = sqlite3.Row
+        return [dict(r) for r in c.execute('SELECT * FROM financeiro_taxas_anuais ORDER BY ano DESC')]
+
+
+def limites(tipo, referencia):
+    dia = _data(referencia)
+    if tipo == 'Semana':
+        inicio = dia - timedelta(days=dia.weekday())
+        return inicio.isoformat(), (inicio + timedelta(days=6)).isoformat()
+    if tipo == 'Mês':
+        return dia.replace(day=1).isoformat(), dia.replace(day=calendar.monthrange(dia.year, dia.month)[1]).isoformat()
+    if tipo == 'Ano':
+        return date(dia.year, 1, 1).isoformat(), date(dia.year, 12, 31).isoformat()
+    if tipo == 'Fechamento':
+        return fechamento_do_mes(dia.year, dia.month)
+    raise ValueError('Escolha Semana, Mês, Fechamento ou Ano.')
+
+
+def resumir(vendas, lancamentos, anuais, inicio, fim):
+    bruto = calcular_indicadores(vendas)['total']
+    despesas = sum(r['valor_centavos'] for r in lancamentos if r['tipo'] == 'despesa')
+    taxas = sum(r['valor_centavos'] for r in lancamentos if r['tipo'] == 'taxa')
+    parciais = []
+    estimados = []
+    for ajuste in anuais:
+        if ajuste['inicio'] <= fim and ajuste['fim'] >= inicio:
+            if ajuste.get('natureza') == 'Estimada':
+                estimados.append(ajuste['ano'])
+            if inicio <= ajuste['inicio'] and fim >= ajuste['fim']:
+                taxas += ajuste['valor_centavos']
+            else:
+                parciais.append(ajuste['ano'])
+    taxas, despesas = Decimal(taxas) / 100, Decimal(despesas) / 100
+    liquido = bruto - taxas
+    saldo = liquido - despesas
+    return dict(bruto=bruto, taxas=taxas, liquido=liquido, despesas=despesas, saldo=saldo,
+                falta=max(Decimal(0), -saldo), parciais=parciais, estimados=estimados)
+
+
+def resumo_periodo(inicio, fim):
+    return resumir(banco.listar_vendas(inicio, fim), listar_lancamentos(inicio, fim), listar_taxas_anuais(), inicio, fim)
+
+
+def semanas(lancamentos):
+    grupos = {}
+    for r in lancamentos:
+        if r['tipo'] == 'despesa':
+            dia = _data(r['data'])
+            segunda = dia - timedelta(days=dia.weekday())
+            grupos[segunda] = grupos.get(segunda, 0) + r['valor_centavos']
+    return sorted(grupos.items())

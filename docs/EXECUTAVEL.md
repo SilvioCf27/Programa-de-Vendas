@@ -1,0 +1,49 @@
+# Gestão da Feira para Windows
+
+## Abrir sem Python ou VS Code
+
+1. Baixe `GestaoDaFeira-Windows-x64.zip` na seção Releases do repositório: https://github.com/SilvioCf27/Programa-de-Vendas/releases/latest . Escolha esse arquivo, não o arquivo “Source code”.
+2. Clique com o botão direito no ZIP e escolha **Extrair tudo**.
+3. Abra a pasta `GestaoDaFeira` extraída e dê dois cliques em **GestaoDaFeira.exe**.
+
+Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, bibliotecas, fontes e um banco inicial vazio. Não execute de dentro do ZIP nem mova somente o `.exe`. É possível criar um atalho para o executável na área de trabalho. Não requer instalação como administrador.
+
+O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
+
+## Seus dados e atualizações
+
+O programa continua usando `%LOCALAPPDATA%\ProgramFeira\vendas.db`, o mesmo banco usado ao executar pelo VS Code. Vendas, taxas, despesas, parcelas, tema e configuração de backup existentes são preservados. Se `PROGRAMFEIRA_DATA_DIR` estiver definido, esse caminho personalizado continua tendo prioridade.
+
+Em um computador sem banco local, o programa cria um banco vazio e prepara a estrutura financeira. Os dados de uso posteriores ficam sempre fora da pasta do executável. Taxas e despesas já cadastradas no banco local são preservadas.
+
+Para atualizar, feche todas as instâncias do programa e extraia o novo pacote em outra pasta. Abra o novo `.exe` e confira os registros. Não misture arquivos de duas versões e não substitua o banco da pasta de dados pelo arquivo que acompanha o pacote. Depois da conferência, é possível remover a pasta antiga do programa; preserve a pasta local de dados e os backups. Não use o VS Code e o executável ao mesmo tempo para editar o mesmo banco.
+
+`git pull` atualiza o código do repositório, mas não transforma um executável já gerado em uma nova versão. Para usar uma alteração no executável, baixe o novo pacote ou gere-o novamente. O backup no Drive continua funcionando conforme a configuração já salva. Trocar de computador exige restaurar o banco e configurar novamente o Drive.
+
+A cópia portátil não inclui o Google Drive para computador: ele deve continuar instalado e conectado para sincronizar a pasta de backup. A exportação Excel já está incluída; não requer instalar openpyxl ou ter Excel instalado para gerar os arquivos.
+
+## Se não abrir
+
+Erros na abertura geram uma mensagem e, quando a pasta de dados permite escrita, um registro em `%LOCALAPPDATA%\ProgramFeira\logs\inicializacao.log`. Envie a última mensagem do arquivo para investigar. Se houver caminho personalizado de dados, o registro fica na subpasta `logs` desse caminho.
+
+## Gerar a distribuição localmente
+
+Esta seção é apenas para quem gera o pacote. Para executar um pacote pronto, Python não é necessário.
+
+No Windows, instale **Python 3.11 x64 com Tcl/Tk e o Python Launcher**. Atualize o repositório, feche o programa e dê dois cliques em `gerar_executavel.cmd`. A primeira geração precisa de internet para baixar as dependências. O script cria um ambiente separado `.venv-build`, executa os testes, gera o programa e testa o próprio binário com dados temporários. Não usa seu banco pessoal.
+
+O resultado fica em `dist/GestaoDaFeira-Windows-x64.zip`. A distribuição inclui apenas um banco inicial vazio. Os testes do pacote usam dados temporários e não levam suas vendas para o executável.
+
+Também é possível executar em um ambiente de desenvolvimento já preparado:
+
+```powershell
+py -3.11 -m pip install -r requirements-build.txt
+py -3.11 -m unittest discover -s tests -v
+py -3.11 tools/gerar_executavel.py
+```
+
+## Geração pelo GitHub
+
+A automação **Executavel Windows**, na aba Actions, gera o pacote em um Windows x64, executa os testes e verifica cadastro, despesas, backup, fontes e exportação CSV/Excel dentro do executável, com um banco temporário. Um pacote reprovado não é publicado.
+
+Em atualizações da branch `main`, o ZIP aprovado aparece em **Artifacts → GestaoDaFeira-Windows-x64** da execução correspondente; pode ser necessário estar conectado ao GitHub para baixar. Esse download contém o ZIP do programa e os relatórios. Em tags de versão `v*`, a automação também publica o ZIP em Releases, após a aprovação dos testes. A execução manual está disponível em **Actions → Executavel Windows → Run workflow**.

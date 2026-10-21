@@ -423,6 +423,53 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=consultar_
     a.conexao_nuvem.agendador._disparar()
     aguardar_nuvem()
     assert len(servidor.dados['vendas']) == 9
+    # Outra abertura recupera a sessão sem formulário/login. O relógio avança
+    # três consultas consecutivas, sem pressionar Sincronizar ou Verificar.
+    from test_automacao_nuvem import Relogio
+    sessao_salva = a.conexao_nuvem.sessao
+    a.conexao_nuvem.configurar()
+    with patch('ProgramFeira.sessao_windows.remover') as remover_sessao:
+        a.conexao_nuvem.sair()
+        remover_sessao.assert_called_once()
+    a.conexao_nuvem.fechar()
+    with patch('ProgramFeira.sessao_windows.carregar', return_value=sessao_salva), patch('ProgramFeira.nuvem.ClienteNuvem.entrar') as login_desnecessario:
+        a.conexao_nuvem.restaurar_sessao()
+        login_desnecessario.assert_not_called()
+    assert a.conexao_nuvem.sessao == sessao_salva
+    assert a.conexao_nuvem.agendador.tarefa is not None
+    a.conexao_nuvem.agendador.parar()
+    relogio = Relogio()
+    a.conexao_nuvem.agendador.relogio = relogio
+    a.conexao_nuvem.agendador.ativar()
+    for indice in range(3):
+        servidor.editar('vendas', registro['id'], pix_centavos=600 + indice)
+        assert relogio.disparar() == (2000 if indice == 0 else 60000)
+        aguardar_nuvem()
+        assert a.buscar_venda_por_data('2026-01-02')[3] == (600 + indice) / 100
+        assert not a.conexao_nuvem.agendador.pausado
+        assert len(relogio.tarefas) == 1
+    # Mesmo sem mudanças, continua agendando e recebe a alteração posterior.
+    assert relogio.disparar() == 60000
+    aguardar_nuvem()
+    assert 'Nenhuma alteração' in a.conexao_nuvem.status.get()
+    servidor.editar('vendas', registro['id'], pix_centavos=603)
+    assert relogio.disparar() == 60000
+    aguardar_nuvem()
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 6.03
+    a.conexao_nuvem.agendador.parar()
+    a.conexao_nuvem.agendador.relogio = a.janela
+    # Uma exceção ao redesenhar não deixa o agendador preso em execução.
+    a.conexao_nuvem.agendador.executando = True
+    with patch.object(a.conexao_nuvem, 'ao_sincronizar', side_effect=ValueError('falha gráfica simulada')):
+        try:
+            a.conexao_nuvem._concluiu_sincronizacao(sessao_salva,
+                dict(enviadas=0, recebidas=1, registros={'vendas': 9}, backup=None), automatico=True)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('O erro gráfico deveria ser reportado ao chamador')
+    assert not a.conexao_nuvem.agendador.executando
+    assert a.conexao_nuvem.agendador.tarefa is not None
     # Conflito pausa sem caixas de diálogo nem sobrescrita.
     a.atualizar_venda(a.buscar_venda_por_data('2026-01-02')[0], '2026-01-02', 1, 6, 0)
     servidor.editar('vendas', registro['id'], pix_centavos=777)

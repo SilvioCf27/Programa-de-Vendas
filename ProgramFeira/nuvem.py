@@ -97,6 +97,7 @@ class ClienteNuvem:
         self.url = config['url']
         self.chave = config['chave_publica']
         self._ultima_sessao = None
+        self.ao_renovar = None
         self._abrir = request.build_opener(_SemRedirecionamento()).open
 
     def _post(self, caminho, dados, token=None):
@@ -189,7 +190,8 @@ class ClienteNuvem:
 
     def garantir_sessao(self, sessao):
         # Preserva a rotação do refresh token mesmo quando a consulta seguinte
-        # falha. Nada deste cache é persistido em disco.
+        # falha. O desktop pode persistir a credencial renovável por um
+        # callback que usa a proteção da conta do Windows.
         if self._ultima_sessao and self._ultima_sessao.usuario_id == sessao.usuario_id and self._ultima_sessao.expira_em > sessao.expira_em:
             sessao = self._ultima_sessao
         if not sessao.expira_em or sessao.expira_em > time.time() + 60:
@@ -205,5 +207,7 @@ class ClienteNuvem:
         except (ValueError, KeyError, TypeError):
             raise SessaoExpirada('A sessão não pôde ser renovada. Entre novamente na mesma conta.') from None
         self._ultima_sessao = nova
+        if self.ao_renovar:
+            self.ao_renovar(nova)
         # Cada RPC de sincronização verifica a autorização novamente no banco.
         return nova

@@ -38,3 +38,6 @@ migracoes-nuvem/
 
 sincronizacao.json
 .sincronizacao-*.json
+
+sessao-nuvem.dpapi
+.sessao-*.dpapi

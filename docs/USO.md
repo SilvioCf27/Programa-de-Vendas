@@ -55,7 +55,9 @@ Não é preciso inserir vendas fictícias no seu banco para fazer essa conferên
 ## Usar junto com o celular
 
 Depois de configurar a nuvem e validar o vínculo, abra **Dados → Conexão com a
-nuvem** e entre na sua conta. A opção automática consulta a cada minuto e agenda
+nuvem** e entre na sua conta uma vez. No Windows, a sessão fica protegida pela
+sua conta do sistema e é recuperada nas próximas aberturas; a senha não é salva.
+**Desconectar** remove essa sessão salva do computador. A opção automática consulta a cada minuto e agenda
 um envio logo após salvar ou excluir no PC. Ela aguarda o fechamento de formulários de edição. Filtros ainda não
 aplicados são preservados e não interrompem a sincronização. O rodapé mostra alterações aguardando envio,
 a última atualização ou uma pausa por conflito.

@@ -5,7 +5,7 @@ import queue
 import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ProgramFeira import nuvem, migracao_nuvem, sincronizacao, automacao_nuvem
+from ProgramFeira import nuvem, migracao_nuvem, sincronizacao, automacao_nuvem, sessao_windows
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.resumos import moeda
 
@@ -19,7 +19,7 @@ class ConexaoNuvem:
         self.bloquear_edicao = bloquear_edicao
         self.bloqueando_edicao = False
         self.em_segundo_plano = False
-        self.status = tk.StringVar(master=janela, value='Somente a URL e a chave pública são salvas. Entre para conectar à nuvem.')
+        self.status = tk.StringVar(master=janela, value='Entre para conectar à nuvem. No Windows, a sessão fica protegida na sua conta; sua senha não é salva.')
         self.resumo = tk.StringVar(master=janela, value='Nuvem: entre em Dados → Conexão com a nuvem.')
         self.automatico = tk.BooleanVar(master=janela, value=automacao_nuvem.carregar_preferencia(pasta))
         self.agendador = automacao_nuvem.Agendador(janela,
@@ -30,6 +30,43 @@ class ConexaoNuvem:
         self.popup = None
         self.sessao = self.cliente = self.preparacao = None
         self.ocupado = False
+        self.aviso_sessao = ''
+        # Apenas leitura local; a rede será consultada pelo agendador após abrir a UI.
+        self.janela.after_idle(self.restaurar_sessao)
+
+    def _persistir_sessao(self, cliente, sessao):
+        try:
+            sessao_windows.salvar(self.pasta, cliente.url, sessao)
+            self.aviso_sessao = ''
+        except OSError:
+            self.aviso_sessao = ' Não foi possível salvar a sessão protegida; será necessário entrar novamente na próxima abertura.'
+
+    def _preparar_cliente(self, cliente):
+        cliente.ao_renovar = lambda sessao: self._persistir_sessao(cliente, sessao)
+        return cliente
+
+    def restaurar_sessao(self):
+        if self.ocupado or self.sessao:
+            return
+        try:
+            config = nuvem.carregar_config(self.pasta)
+            if not config:
+                return
+            sessao = sessao_windows.carregar(self.pasta, config['url'])
+            if not sessao:
+                return
+            self.cliente = self._preparar_cliente(nuvem.ClienteNuvem(config['url'], config['chave_publica']))
+            self.sessao = sessao
+            if self.popup is not None and self.popup.winfo_exists():
+                self.campos['email'].delete(0, 'end')
+                self.campos['email'].insert(0, sessao.email)
+            self.status.set('Sessão recuperada deste Windows. O acesso será renovado antes de sincronizar.')
+            self.resumo.set('Nuvem: reconectando automaticamente…' if self.automatico.get() else 'Nuvem: sessão recuperada · Modo manual')
+            self.agendador.ativar()
+            self._controles()
+        except nuvem.ErroNuvem as erro:
+            self.status.set(str(erro))
+            self.resumo.set('Nuvem: entre novamente para recuperar o acesso.')
 
     def configurar(self):
         if self.popup is not None and self.popup.winfo_exists():
@@ -43,7 +80,7 @@ class ConexaoNuvem:
         corpo.pack(fill='both', expand=True)
         corpo.columnconfigure(1, weight=1)
         ttk.Label(corpo, text='Sua conta no Gestão da Feira', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
-        ttk.Label(corpo, text='A opção automática consulta alterações a cada minuto após entrar na conta.\nSincronizar agora continua disponível. Sem internet, os dados continuam salvos localmente.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
+        ttk.Label(corpo, text='No Windows, a sessão é recuperada ao abrir o programa, sem salvar sua senha.\nA opção automática consulta alterações a cada minuto. Desconectar remove a sessão salva.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
         try:
             config = nuvem.carregar_config(self.pasta)
         except nuvem.ErroNuvem as erro:
@@ -85,7 +122,7 @@ class ConexaoNuvem:
         popup.bind('<Escape>', lambda e: self.fechar())
         self._controles()
         if self.sessao:
-            self.status.set(f'Acesso verificado para {self.sessao.email}. Use Sincronizar agora para enviar e receber alterações.')
+            self.status.set(f'Conta conectada: {self.sessao.email}. A opção automática consulta alterações a cada minuto.' + self.aviso_sessao)
         return popup
 
     def _controles(self):
@@ -99,6 +136,13 @@ class ConexaoNuvem:
         self.botao_transferir.configure(state='normal' if self.preparacao and not self.ocupado and not self.vinculado else 'disabled')
 
     def sair(self):
+        if self.ocupado:
+            return
+        try:
+            sessao_windows.remover(self.pasta)
+        except OSError:
+            self.status.set('Não foi possível remover a sessão salva. Confira as permissões da pasta e tente desconectar novamente.')
+            return
         self.agendador.parar()
         self.resumo.set('Nuvem: desconectada. Os dados continuam salvos neste computador.')
         self.sessao = self.cliente = self.preparacao = None
@@ -188,8 +232,10 @@ class ConexaoNuvem:
                 dados.clear()
 
         def concluir(sessao):
+            self._preparar_cliente(cliente)
+            self._persistir_sessao(cliente, sessao)
             self.sessao, self.cliente = sessao, cliente
-            self.status.set(f'Acesso verificado para {sessao.email}. Configuração salva. Nenhum registro foi transferido.')
+            self.status.set(f'Acesso verificado para {sessao.email}. Configuração salva. Nenhum registro foi transferido.' + self.aviso_sessao)
             self.resumo.set('Nuvem: conectada. Sincronização automática ativa.' if self.automatico.get() and self.vinculado else 'Nuvem: conectada. Use Sincronizar agora.')
             self.agendador.ativar()
 
@@ -264,20 +310,23 @@ class ConexaoNuvem:
     def _concluiu_sincronizacao(self, nova_sessao, resultado, automatico=False):
         self.sessao = nova_sessao
         self.vinculado = True
-        horario = datetime.now().strftime('%H:%M')
+        horario = datetime.now().strftime('%H:%M:%S')
         self.resumo.set(f'Nuvem atualizada às {horario} · Automática ativa' if self.automatico.get() else f'Nuvem atualizada às {horario} · Modo manual')
         self.status.set(
             f"Sincronização concluída. Alterações enviadas: {resultado['enviadas']}; recebidas: {resultado['recebidas']}.\n"
             f"Vendas: {resultado['registros']['vendas']}. "
             + (f"Backup: {resultado['backup']}\n" if resultado['backup'] else 'Nenhuma alteração; não foi necessário outro backup.\n')
-            + ('A consulta automática continuará a cada minuto enquanto o programa estiver aberto e autenticado.' if self.automatico.get() else 'Modo manual: use Sincronizar agora depois de editar em qualquer dispositivo.')
+            + self.aviso_sessao + ('A consulta automática continuará a cada minuto enquanto o programa estiver aberto e autenticado.' if self.automatico.get() else 'Modo manual: use Sincronizar agora depois de editar em qualquer dispositivo.')
         )
-        if self.ao_sincronizar and (not automatico or resultado['recebidas']):
-            self.ao_sincronizar()
-        if automatico:
-            self.agendador.concluir()
-        else:
-            self.agendador.ativar()
+        try:
+            if self.ao_sincronizar and (not automatico or resultado['recebidas']):
+                self.ao_sincronizar()
+        finally:
+            # Uma falha de renderização não pode cancelar as próximas consultas.
+            if automatico:
+                self.agendador.concluir()
+            else:
+                self.agendador.ativar()
 
     def sincronizar(self):
         if self.ocupado:

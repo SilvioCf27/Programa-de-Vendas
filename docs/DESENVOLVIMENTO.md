@@ -51,3 +51,10 @@ Apagar um arquivo do commit atual não o remove do histórico do Git. Se dados p
 ## Gerar uma versão
 
 No Windows com Python 3.11 x64, execute `gerar_executavel.cmd`. O resultado fica em `dist/`. As instruções de distribuição e atualização estão em [EXECUTAVEL.md](EXECUTAVEL.md).
+
+A sessão persistente do desktop usa `sessao_windows.py` e a DPAPI no escopo do
+usuário (sem `LOCAL_MACHINE`), via `ctypes`, sem dependência adicional. O arquivo
+contém apenas um blob protegido, vinculado ao projeto; nunca a senha ou o token
+de acesso. A renovação grava o novo refresh token antes de consultar os dados.
+O teste de DPAPI real é executado somente no Windows; nos demais sistemas são
+testados o formato, as falhas e a integração com o provedor substituído.

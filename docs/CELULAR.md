@@ -133,12 +133,18 @@ e clique em **Verificar acesso**. Não use a senha administrativa do banco.
 A conferência faz login e consulta a autorização do proprietário no Supabase.
 Somente depois do sucesso, URL e chave pública ficam em `nuvem.json`, na pasta
 local dos dados, fora do repositório. A senha não é gravada em arquivo e o campo
-é limpo ao iniciar a tentativa. A sessão fica apenas na memória desse processo;
-**Desconectar** a remove do desktop, sem encerrar sessões em outros dispositivos.
-A sessão é renovada enquanto o desktop está aberto, com tokens somente na memória. Se o acesso for revogado, entre novamente. Cada abertura ainda exige login; operações pendentes não são perdidas ao sair.
+é limpo ao iniciar a tentativa. No Windows, a credencial renovável da sessão é
+protegida pela DPAPI da conta atual, em `sessao-nuvem.dpapi`. A senha e o token de
+acesso não são persistidos. Esse arquivo fica na pasta local dos dados, fora do
+repositório e dos backups SQLite/Drive. Ele não deve ser publicado nem transferido
+para outro computador: não é um backup dos dados.
 
-A conexão só acontece por ação explícita nessa janela. Falhas de internet não
-impedem o uso normal do programa. O backup no Drive segue independente.
+Nas próximas aberturas, o desktop recupera a sessão e, com a opção automática
+ativa, renova o acesso e consulta a nuvem em segundo plano. **Desconectar** remove
+a sessão salva deste PC, sem encerrar sessões em outros dispositivos. Se a sessão
+for revogada ou não puder ser recuperada, entre novamente. Em sistemas sem DPAPI,
+o login continua sendo necessário a cada abertura; não há gravação em texto aberto.
+Falhas de internet não impedem o uso local. O backup no Drive segue independente.
 
 Esta opção está no código-fonte atualizado. O executável publicado v1.0.1 ainda
 não a inclui. Para testar pelo VS Code, atualize a cópia do repositório com
@@ -213,7 +219,8 @@ sua conta Supabase. A conferência na conta real é realizada por você no progr
 O desktop mantém o SQLite como banco de trabalho e continua funcionando sem
 internet. Com a opção automática ativa, consulta a nuvem a cada minuto e troca
 as alterações quando não há edição em andamento. Precisa estar aberto e
-autenticado; cada abertura exige login e senha e tokens não são salvos em arquivo.
+autenticado. No Windows, a sessão protegida é recuperada automaticamente nas
+próximas aberturas; não é preciso abrir a janela de conexão novamente.
 Não há um envio final garantido ao fechar: confira o status antes de sair. Um botão desabilitado durante o
 processo evita iniciar duas sincronizações na mesma janela. Conclua ou cancele
 qualquer formulário de venda antes de sincronizar.
@@ -304,7 +311,8 @@ um envio em cerca de dois segundos quando não há edição aberta. Desmarque pa
 fica em `sincronizacao.json`, junto aos dados locais, sem senha ou token.
 
 A consulta de rede ocorre em segundo plano. O programa aguarda formulários de
-venda, despesas ou taxas e consultas ainda não aplicadas. Se um editor for aberto
+venda, despesas ou taxas. Filtros ainda não aplicados não bloqueiam a rede e
+são preservados enquanto os resultados da seleção já aplicada são atualizados. Se um editor for aberto
 durante a consulta, o recebimento é adiado e os campos digitados são preservados.
 Quando há dados a trocar, as ações de edição ficam temporariamente desabilitadas
 para concluir a transação. A janela continua respondendo e não abre um aviso a
@@ -321,13 +329,17 @@ Alterações locais são identificadas no rodapé como aguardando envio; isso ev
 confundir uma sincronização anterior com um cadastro que ainda não saiu do PC.
 Restaurar um backup pausa a automação até uma conferência e sincronização manual.
 
-A sessão é renovada na memória, sem gravar o refresh token no disco. Se a rede
-falhar depois da renovação, a nova sessão é preservada na memória para a próxima
-tentativa. Desconectar cancela o agendamento e remove a sessão desse processo.
+A sessão é renovada automaticamente. No Windows, cada credencial renovada é
+salva com a proteção da conta atual antes da próxima consulta, para permitir a
+reconexão mesmo após fechar o programa. Falhas ao salvar são informadas nos
+detalhes da conexão. Se a rede falhar depois da renovação, a nova sessão também
+permanece na memória para a próxima tentativa. Desconectar cancela o agendamento
+e remove a sessão salva. O rodapé mostra a hora da última conferência, com segundos,
+mesmo quando não havia alterações a receber.
 
 A automação não funciona com o PC desligado ou o programa fechado. O celular
 continua salvando online; o PC recebe essas alterações depois de abrir o programa
-e entrar na conta. Ao encerrar durante um envio, pode haver um lote pendente,
+(no Windows, recuperando a sessão salva). Ao encerrar durante um envio, pode haver um lote pendente,
 retomado com segurança no próximo acesso. Não depende de outro SQL nem de novos
 serviços pagos. O executável publicado v1.0.1 ainda não contém essas funções;
 use o código atualizado enquanto uma nova versão portátil não for publicada.

@@ -51,3 +51,17 @@ Antes de atualizar, crie um backup. Depois de abrir a nova versão:
 5. Faça uma cópia no Drive, feche e reabra o aplicativo.
 
 Não é preciso inserir vendas fictícias no seu banco para fazer essa conferência.
+
+## Usar junto com o celular
+
+Depois de configurar a nuvem e validar o vínculo, abra **Dados → Conexão com a
+nuvem** e entre na sua conta. A opção automática consulta a cada minuto e agenda
+um envio logo após salvar ou excluir no PC. Ela aguarda formulários e consultas
+pendentes antes de aplicar mudanças. O rodapé mostra alterações aguardando envio,
+a última atualização ou uma pausa por conflito.
+
+O programa precisa estar aberto e autenticado. Sem conexão, os registros ficam
+no banco local e serão enviados quando a conexão retornar. O botão **Sincronizar
+agora** continua disponível; desmarque a opção automática se preferir usá-lo.
+Confira o status antes de fechar, pois não há um envio final garantido na saída.
+Veja a configuração completa em [CELULAR.md](CELULAR.md).

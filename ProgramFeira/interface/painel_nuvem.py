@@ -1,19 +1,31 @@
 """Acesso e migração inicial, sempre fora do loop gráfico."""
+from datetime import datetime
 from decimal import Decimal
 import queue
 import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ProgramFeira import nuvem, migracao_nuvem, sincronizacao
+from ProgramFeira import nuvem, migracao_nuvem, sincronizacao, automacao_nuvem
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.resumos import moeda
 
 
 class ConexaoNuvem:
-    def __init__(self, janela, pasta, ao_sincronizar=None, antes_sincronizar=None):
+    def __init__(self, janela, pasta, ao_sincronizar=None, antes_sincronizar=None, antes_automatico=None, bloquear_edicao=None):
         self.janela, self.pasta = janela, pasta
         self.ao_sincronizar = ao_sincronizar
         self.antes_sincronizar = antes_sincronizar
+        self.antes_automatico = antes_automatico or antes_sincronizar
+        self.bloquear_edicao = bloquear_edicao
+        self.bloqueando_edicao = False
+        self.em_segundo_plano = False
+        self.status = tk.StringVar(master=janela, value='Somente a URL e a chave pública são salvas. Entre para conectar à nuvem.')
+        self.resumo = tk.StringVar(master=janela, value='Nuvem: entre em Dados → Conexão com a nuvem.')
+        self.automatico = tk.BooleanVar(master=janela, value=automacao_nuvem.carregar_preferencia(pasta))
+        self.agendador = automacao_nuvem.Agendador(janela,
+            lambda: bool(self.automatico.get() and self.sessao and self.vinculado),
+            self._livre_automatico, self._automatico)
+        janela.bind('<Destroy>', lambda e: self.agendador.parar() if e.widget is janela else None, add='+')
         self.vinculado = sincronizacao.vinculado(pasta / 'vendas.db')
         self.popup = None
         self.sessao = self.cliente = self.preparacao = None
@@ -31,7 +43,7 @@ class ConexaoNuvem:
         corpo.pack(fill='both', expand=True)
         corpo.columnconfigure(1, weight=1)
         ttk.Label(corpo, text='Sua conta no Gestão da Feira', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
-        ttk.Label(corpo, text='Após a transferência inicial, use Sincronizar agora para enviar e receber alterações.\nSem internet, o desktop continua salvando localmente. O celular precisa de conexão.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
+        ttk.Label(corpo, text='A opção automática consulta alterações a cada minuto após entrar na conta.\nSincronizar agora continua disponível. Sem internet, os dados continuam salvos localmente.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
         try:
             config = nuvem.carregar_config(self.pasta)
         except nuvem.ErroNuvem as erro:
@@ -49,7 +61,6 @@ class ConexaoNuvem:
             campo.insert(0, inicial)
             campo.grid(row=linha, column=1, sticky='ew', pady=5)
             self.campos[nome] = campo
-        self.status = tk.StringVar(value='Somente a URL e a chave pública são salvas. Senha e sessão não são gravadas em arquivo.')
         ttk.Label(corpo, textvariable=self.status, wraplength=570, justify='left', style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w', pady=12)
         acoes = ttk.Frame(corpo)
         acoes.grid(row=7, column=0, columnspan=2, sticky='ew')
@@ -66,6 +77,10 @@ class ConexaoNuvem:
         self.botao_transferir.pack(side='left', padx=8)
         self.botao_sincronizar = ttk.Button(corpo, text='Sincronizar agora', command=self.sincronizar, style='Primary.TButton')
         self.botao_sincronizar.grid(row=9, column=0, columnspan=2, sticky='w', pady=(12, 0))
+        self.check_automatico = ttk.Checkbutton(corpo,
+            text='Sincronizar automaticamente a cada minuto enquanto estiver conectado',
+            variable=self.automatico, command=self.alterar_automatico)
+        self.check_automatico.grid(row=10, column=0, columnspan=2, sticky='w', pady=(12, 0))
         popup.protocol('WM_DELETE_WINDOW', self.fechar)
         popup.bind('<Escape>', lambda e: self.fechar())
         self._controles()
@@ -74,6 +89,9 @@ class ConexaoNuvem:
         return popup
 
     def _controles(self):
+        if self.popup is None or not self.popup.winfo_exists():
+            return
+        self.check_automatico.configure(state='disabled' if self.ocupado else 'normal')
         for controle in [*self.campos.values(), self.botao_entrar, self.botao_sair]:
             controle.configure(state='disabled' if self.ocupado else 'normal')
         self.botao_sincronizar.configure(state='normal' if self.sessao and not self.ocupado else 'disabled')
@@ -81,32 +99,40 @@ class ConexaoNuvem:
         self.botao_transferir.configure(state='normal' if self.preparacao and not self.ocupado and not self.vinculado else 'disabled')
 
     def sair(self):
+        self.agendador.parar()
+        self.resumo.set('Nuvem: desconectada. Os dados continuam salvos neste computador.')
         self.sessao = self.cliente = self.preparacao = None
         self.campos['senha'].delete(0, 'end')
         self.status.set('Sessão removida deste programa. Configuração pública e backups preservados.')
         self._controles()
 
     def fechar(self):
-        if self.ocupado:
+        if self.ocupado and not self.em_segundo_plano:
             return
         self.campos['senha'].delete(0, 'end')
         self.preparacao = None
         self.popup.destroy()
 
-    def _rodar(self, operacao, concluir, mensagem):
+    def _rodar(self, operacao, concluir, mensagem, segundo_plano=False, ao_erro=None, travar=False):
         self.ocupado = True
+        self.em_segundo_plano = segundo_plano
         self._controles()
-        self.popup.grab_set()
+        popup = self.popup if self.popup is not None and self.popup.winfo_exists() else None
+        if popup is not None and not segundo_plano:
+            popup.grab_set()
         self.status.set(mensagem)
+        self.bloqueando_edicao = travar
+        if travar and self.bloquear_edicao:
+            self.bloquear_edicao(True)
         resultados = queue.Queue()
 
         def trabalhar():
             try:
                 resultados.put((True, operacao()))
             except nuvem.ErroNuvem as erro:
-                resultados.put((False, str(erro)))
+                resultados.put((False, erro))
             except Exception:
-                resultados.put((False, 'Operação não confirmada. Confira a conexão e o espaço em disco. Faça uma nova conferência antes de tentar transferir novamente.'))
+                resultados.put((False, nuvem.ErroNuvem('Operação não confirmada. Confira a conexão e o espaço em disco antes de continuar.')))
 
         def acompanhar():
             try:
@@ -114,15 +140,21 @@ class ConexaoNuvem:
             except queue.Empty:
                 self.janela.after(100, acompanhar)
                 return
-            self.ocupado = False
-            if not self.popup.winfo_exists():
-                return
-            self.popup.grab_release()
+            self.ocupado = self.em_segundo_plano = False
+            self.bloqueando_edicao = False
+            if travar and self.bloquear_edicao:
+                self.bloquear_edicao(False)
+            if popup is not None and popup.winfo_exists() and popup.grab_current() == popup:
+                popup.grab_release()
             if sucesso:
                 concluir(resultado)
             else:
                 self.preparacao = None
-                self.status.set(resultado)
+                self.status.set(str(resultado))
+                if ao_erro:
+                    ao_erro(resultado)
+                else:
+                    self.resumo.set('Nuvem: operação não confirmada. Abra Conexão com a nuvem para conferir.')
             self.vinculado = sincronizacao.vinculado(self.pasta / 'vendas.db')
             self._controles()
 
@@ -132,6 +164,8 @@ class ConexaoNuvem:
     def entrar(self):
         if self.ocupado:
             return
+        self.agendador.parar()
+        self.resumo.set('Nuvem: verificando acesso…')
         self.sessao = self.cliente = self.preparacao = None
         dados = {nome: campo.get() for nome, campo in self.campos.items()}
         self.campos['senha'].delete(0, 'end')
@@ -156,6 +190,8 @@ class ConexaoNuvem:
         def concluir(sessao):
             self.sessao, self.cliente = sessao, cliente
             self.status.set(f'Acesso verificado para {sessao.email}. Configuração salva. Nenhum registro foi transferido.')
+            self.resumo.set('Nuvem: conectada. Sincronização automática ativa.' if self.automatico.get() and self.vinculado else 'Nuvem: conectada. Use Sincronizar agora.')
+            self.agendador.ativar()
 
         self._rodar(operacao, concluir, 'Verificando acesso e autorização da conta…')
 
@@ -216,6 +252,33 @@ class ConexaoNuvem:
 
         self._rodar(lambda: migracao_nuvem.transferir(p), concluir, 'Transferindo e validando os dados. Aguarde sem fechar o programa…')
 
+    def _falha_sincronizacao(self, erro):
+        temporario = isinstance(erro, nuvem.ErroTemporario)
+        if temporario:
+            nova_tentativa = 'Nova tentativa em até 5 minutos.' if self.automatico.get() else 'Use Sincronizar agora para tentar novamente.'
+            self.resumo.set('Nuvem: sem conexão; dados locais preservados. ' + nova_tentativa)
+        else:
+            self.resumo.set('Nuvem: sincronização pausada. Abra Conexão com a nuvem para conferir.')
+        self.agendador.concluir(erro=erro)
+
+    def _concluiu_sincronizacao(self, nova_sessao, resultado, automatico=False):
+        self.sessao = nova_sessao
+        self.vinculado = True
+        horario = datetime.now().strftime('%H:%M')
+        self.resumo.set(f'Nuvem atualizada às {horario} · Automática ativa' if self.automatico.get() else f'Nuvem atualizada às {horario} · Modo manual')
+        self.status.set(
+            f"Sincronização concluída. Alterações enviadas: {resultado['enviadas']}; recebidas: {resultado['recebidas']}.\n"
+            f"Vendas: {resultado['registros']['vendas']}. "
+            + (f"Backup: {resultado['backup']}\n" if resultado['backup'] else 'Nenhuma alteração; não foi necessário outro backup.\n')
+            + ('A consulta automática continuará a cada minuto enquanto o programa estiver aberto e autenticado.' if self.automatico.get() else 'Modo manual: use Sincronizar agora depois de editar em qualquer dispositivo.')
+        )
+        if self.ao_sincronizar and (not automatico or resultado['recebidas']):
+            self.ao_sincronizar()
+        if automatico:
+            self.agendador.concluir()
+        else:
+            self.agendador.ativar()
+
     def sincronizar(self):
         if self.ocupado:
             return
@@ -226,17 +289,86 @@ class ConexaoNuvem:
         except nuvem.ErroNuvem as erro:
             self.status.set(str(erro))
             return
+        self.agendador.parar()
         self.preparacao = None
         cliente, sessao = self.cliente, self.sessao
 
-        def concluir(resultado):
-            self.vinculado = True
-            self.status.set(
-                f"Sincronização concluída. Alterações enviadas: {resultado['enviadas']}; recebidas: {resultado['recebidas']}.\n"
-                f"Vendas: {resultado['registros']['vendas']}. Backup: {resultado['backup']}\n\n"
-                'No celular, use Atualizar ou reabra o aplicativo. Depois de editar em qualquer dispositivo, clique em Sincronizar agora no desktop. Não há envio automático ao fechar.'
-            )
-            if self.ao_sincronizar:
-                self.ao_sincronizar()
+        def operacao():
+            nova = cliente.garantir_sessao(sessao)
+            return nova, sincronizacao.sincronizar(self.pasta / 'vendas.db', cliente, nova)
 
-        self._rodar(lambda: sincronizacao.sincronizar(self.pasta / 'vendas.db', cliente, sessao), concluir, 'Comparando versões, enviando e recebendo alterações… Aguarde sem fechar o programa.')
+        self._rodar(operacao, lambda r: self._concluiu_sincronizacao(*r),
+            'Comparando versões, enviando e recebendo alterações… Aguarde sem fechar o programa.',
+            ao_erro=self._falha_sincronizacao, travar=True)
+
+    def alterar_automatico(self):
+        try:
+            automacao_nuvem.salvar_preferencia(self.pasta, self.automatico.get())
+        except OSError:
+            self.status.set('A preferência não pôde ser salva para a próxima abertura. Confira o espaço em disco.')
+        if self.automatico.get():
+            self.resumo.set('Nuvem: automática ativada; aguarde a próxima consulta.' if self.sessao else 'Nuvem: entre na sua conta para ativar a sincronização automática.')
+            self.agendador.ativar()
+        else:
+            self.agendador.parar()
+            self.resumo.set('Nuvem: modo manual. Use Sincronizar agora.')
+
+    def _livre_automatico(self):
+        if self.ocupado:
+            return False
+        self.vinculado = sincronizacao.vinculado(self.pasta / 'vendas.db')
+        if not self.vinculado:
+            return False
+        try:
+            if self.popup is not None and self.popup.winfo_exists():
+                self._validar_conta()
+            if self.antes_automatico:
+                self.antes_automatico()
+        except (ValueError, KeyError, tk.TclError):
+            self.resumo.set('Nuvem: aguardando finalizar a edição ou aplicar a consulta.')
+            return False
+        return True
+
+    def _automatico(self):
+        cliente, sessao = self.cliente, self.sessao
+        self.resumo.set('Nuvem: consultando alterações…')
+
+        def consultar():
+            base = sincronizacao.assinatura_base(self.pasta / 'vendas.db')
+            if base is None:
+                raise nuvem.ErroNuvem('Confira o vínculo do banco antes de retomar a sincronização automática.')
+            nova = cliente.garantir_sessao(sessao)
+            return nova, cliente.sincronizar(nova), base
+
+        def recebeu(resposta):
+            nova, snapshot, base = resposta
+            self.sessao = nova
+            if not self.automatico.get() or self.agendador.pausado or not self._livre_automatico():
+                self.agendador.concluir(adiar=True)
+                return
+            self.resumo.set('Nuvem: sincronizando; aguarde para editar…')
+            self._rodar(lambda: sincronizacao.sincronizar(self.pasta / 'vendas.db', cliente, nova,
+                    snapshot_inicial=snapshot, somente_se_mudou=True, base_inicial=base),
+                lambda r: self._concluiu_sincronizacao(nova, r, automatico=True),
+                'Sincronizando as alterações em segundo plano…', segundo_plano=True,
+                ao_erro=self._falha_sincronizacao, travar=True)
+
+        self._rodar(consultar, recebeu, 'Consultando alterações na nuvem…',
+            segundo_plano=True, ao_erro=self._falha_sincronizacao)
+
+    def notificar_alteracao(self):
+        if not self.sessao:
+            self.resumo.set('Nuvem: alterações locais salvas. Entre na sua conta para sincronizar.')
+        elif self.agendador.pausado:
+            self.resumo.set('Nuvem: alterações locais pendentes. Sincronização pausada; confira os detalhes.')
+        elif self.automatico.get():
+            self.resumo.set('Nuvem: alterações locais aguardando envio…')
+            self.agendador.agendar(2000)
+        else:
+            self.resumo.set('Nuvem: alterações locais pendentes. Use Sincronizar agora.')
+
+    def banco_restaurado(self):
+        self.vinculado = sincronizacao.vinculado(self.pasta / 'vendas.db')
+        erro = nuvem.ErroNuvem('Banco restaurado. Confira os dados e sincronize manualmente antes de retomar a automação.')
+        self.status.set(str(erro))
+        self._falha_sincronizacao(erro)

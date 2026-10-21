@@ -245,6 +245,7 @@ assert len(a.listar_vendas()) == 9
 from ProgramFeira.nuvem import Sessao, carregar_config as carregar_nuvem
 import time
 popup = a.conexao_nuvem.configurar()
+a.conexao_nuvem.automatico.set(False)
 assert a.conexao_nuvem.configurar() is popup
 campos = a.conexao_nuvem.campos
 for nome, valor in {'url': 'https://projeto-ficticio.supabase.co', 'chave': 'sb_publishable_apenas_teste', 'email': 'teste@example.invalid', 'senha': 'senha-ficticia'}.items():
@@ -312,6 +313,108 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.s
     assert 'formulário' in a.conexao_nuvem.status.get()
     assert servidor.chamadas == chamadas
     a.cancelar_edicao()
+# A consulta automática não bloqueia nem aplica dados enquanto há edição.
+import threading
+from ProgramFeira import sincronizacao as modulo_sync
+original_sync = modulo_sync.sincronizar
+consultando = threading.Event()
+liberar_consulta = threading.Event()
+aplicando = threading.Event()
+liberar_aplicacao = threading.Event()
+primeira_consulta = [True]
+def consultar_automatico(sessao, alteracoes=None, operacao_id=None):
+    if primeira_consulta[0]:
+        primeira_consulta[0] = False
+        consultando.set()
+        assert liberar_consulta.wait(5)
+    return servidor.sincronizar(sessao, alteracoes, operacao_id)
+def aplicar_automatico(*args, **kwargs):
+    aplicando.set()
+    assert liberar_aplicacao.wait(5)
+    return original_sync(*args, **kwargs)
+def aguardar_evento(evento):
+    prazo = time.monotonic() + 5
+    while not evento.is_set() and time.monotonic() < prazo:
+        a.janela.update()
+        time.sleep(.01)
+    assert evento.is_set()
+a.conexao_nuvem.automatico.set(True)
+# Editor financeiro não modal também impede iniciar uma consulta automática.
+editor_financeiro = f.formulario('despesa')
+a.janela.update()
+chamadas = servidor.chamadas
+a.conexao_nuvem.agendador._disparar()
+assert not a.conexao_nuvem.ocupado
+assert servidor.chamadas == chamadas
+editor_financeiro.destroy()
+a.conexao_nuvem.agendador.parar()
+# Alterar filtros sem aplicar não deve atualizar a consulta por conta própria.
+a.filtro_ano.set('2025')
+a.conexao_nuvem.agendador._disparar()
+assert not a.conexao_nuvem.ocupado
+assert servidor.chamadas == chamadas
+a.limpar_filtros()
+a.conexao_nuvem.agendador.parar()
+a.conexao_nuvem.fechar()
+servidor.editar('vendas', registro['id'], pix_centavos=555)
+with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=consultar_automatico):
+    a.conexao_nuvem.agendador._disparar()
+    aguardar_evento(consultando)
+    assert not a.conexao_nuvem.bloqueando_edicao
+    a.nova_venda()
+    a.entrada_pix.insert(0,'99,99')
+    liberar_consulta.set()
+    aguardar_nuvem()
+    assert a.formulario.state() == 'normal'
+    assert a.entrada_pix.get() == '99,99'
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 3.21
+    a.cancelar_edicao()
+    a.conexao_nuvem.agendador.parar()
+    with patch.object(modulo_sync, 'sincronizar', side_effect=aplicar_automatico):
+        a.conexao_nuvem.agendador._disparar()
+        aguardar_evento(aplicando)
+        assert a.conexao_nuvem.bloqueando_edicao
+        a.nova_venda()
+        assert a.formulario.state() == 'withdrawn'
+        liberar_aplicacao.set()
+        aguardar_nuvem()
+    assert not a.conexao_nuvem.bloqueando_edicao
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 5.55
+    assert 'Automática ativa' in a.conexao_nuvem.resumo.get()
+    assert not a.conexao_nuvem.agendador.pausado
+    # Salvar no formulário marca pendência e envia sem o botão manual.
+    a.nova_venda()
+    a.entrada_ano.set('2099'); a.entrada_mes.set('Janeiro'); a.atualizar_dias(); a.entrada_dia.set('2')
+    a.entrada_dinheiro.insert(0,'1,00')
+    with patch.object(a.messagebox,'showinfo'):
+        a.cadastrar()
+    assert 'aguardando envio' in a.conexao_nuvem.resumo.get()
+    assert a.conexao_nuvem.agendador.tarefa is not None
+    a.conexao_nuvem.agendador.parar()
+    a.conexao_nuvem.agendador._disparar()
+    aguardar_nuvem()
+    assert servidor.venda('2099-01-02')['dinheiro_centavos'] == 100
+    venda_teste = a.buscar_venda_por_data('2099-01-02')
+    item = next(i for i in a.tabela.get_children() if int(a.tabela.item(i,'values')[0]) == venda_teste[0])
+    a.tabela.selection_set(item); a.janela.update()
+    with patch.object(a.messagebox,'askyesno',return_value=True), patch.object(a.messagebox,'showinfo'):
+        a.excluir_venda_selecionada()
+    assert 'aguardando envio' in a.conexao_nuvem.resumo.get()
+    a.conexao_nuvem.agendador.parar()
+    a.conexao_nuvem.agendador._disparar()
+    aguardar_nuvem()
+    assert len(servidor.dados['vendas']) == 9
+    # Conflito pausa sem caixas de diálogo nem sobrescrita.
+    a.atualizar_venda(a.buscar_venda_por_data('2026-01-02')[0], '2026-01-02', 1, 6, 0)
+    servidor.editar('vendas', registro['id'], pix_centavos=777)
+    a.conexao_nuvem.agendador.parar()
+    a.conexao_nuvem.agendador._disparar()
+    aguardar_nuvem()
+    assert a.conexao_nuvem.agendador.pausado
+    assert 'Conflitos' in a.conexao_nuvem.status.get()
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 6
+    assert not a.conexao_nuvem.bloqueando_edicao
+popup = a.conexao_nuvem.configurar()
 a.conexao_nuvem.botao_sair.invoke()
 assert a.conexao_nuvem.sessao is None
 a.conexao_nuvem.fechar()

@@ -4,7 +4,7 @@ A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular 
 
 Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises, comparações e exportação ainda serão aproximadas do desktop.
 
-**A sincronização é manual:** depois da migração e do vínculo inicial, use **Sincronizar agora** no desktop para enviar e receber alterações. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
+**A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Dados → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
 ## Serviços escolhidos
 
@@ -135,7 +135,7 @@ Somente depois do sucesso, URL e chave pública ficam em `nuvem.json`, na pasta
 local dos dados, fora do repositório. A senha não é gravada em arquivo e o campo
 é limpo ao iniciar a tentativa. A sessão fica apenas na memória desse processo;
 **Desconectar** a remove do desktop, sem encerrar sessões em outros dispositivos.
-Ainda não há renovação automática da sessão no desktop: se expirar, use **Verificar acesso** novamente. Operações pendentes não são perdidas ao sair.
+A sessão é renovada enquanto o desktop está aberto, com tokens somente na memória. Se o acesso for revogado, entre novamente. Cada abertura ainda exige login; operações pendentes não são perdidas ao sair.
 
 A conexão só acontece por ação explícita nessa janela. Falhas de internet não
 impedem o uso normal do programa. O backup no Drive segue independente.
@@ -207,13 +207,14 @@ sua conta Supabase. A conferência na conta real é realizada por você no progr
    com a migração concluída. Se já houver diferenças, o programa para, pois ainda
    não tem uma base anterior para distinguir edições de exclusões com segurança.
 3. Aguarde a confirmação. A partir daí, depois de cadastrar, editar ou excluir em
-   qualquer dispositivo, clique em **Sincronizar agora** no desktop. São enviados
+   qualquer dispositivo, aguarde a consulta automática ou clique em **Sincronizar agora** no desktop. São enviados
    e recebidos vendas, despesas, taxas e parcelas. A aba Finanças no site permite consultar e editar os mesmos registros financeiros.
 
 O desktop mantém o SQLite como banco de trabalho e continua funcionando sem
-internet. Não há envio automático ao fechar nem consulta periódica no desktop.
-Ele precisa estar aberto e autenticado para sincronizar. Cada abertura exige
-login; senha e tokens não são salvos em arquivo. Um botão desabilitado durante o
+internet. Com a opção automática ativa, consulta a nuvem a cada minuto e troca
+as alterações quando não há edição em andamento. Precisa estar aberto e
+autenticado; cada abertura exige login e senha e tokens não são salvos em arquivo.
+Não há um envio final garantido ao fechar: confira o status antes de sair. Um botão desabilitado durante o
 processo evita iniciar duas sincronizações na mesma janela. Conclua ou cancele
 qualquer formulário de venda antes de sincronizar.
 
@@ -292,4 +293,41 @@ online antes de recriar manualmente uma despesa após uma interrupção.
 O service worker continua sem armazenar respostas financeiras. Sair da conta
 limpa a tela; uma operação pendente só é retomada pela mesma conta. Depois de
 alterar no celular, use **Sincronizar agora** no PC para receber os dados. O envio
-no desktop continua manual nesta versão.
+no desktop também pode ser automático, conforme a seção abaixo.
+
+## Sincronização automática no desktop
+
+Atualize o código, abra **Dados → Conexão com a nuvem** e use **Verificar acesso**.
+Depois do vínculo inicial, a opção **Sincronizar automaticamente a cada minuto**
+fica ativa por padrão. Depois de salvar ou excluir um registro no PC, agenda
+um envio em cerca de dois segundos quando não há edição aberta. Desmarque para continuar no modo manual; essa preferência
+fica em `sincronizacao.json`, junto aos dados locais, sem senha ou token.
+
+A consulta de rede ocorre em segundo plano. O programa aguarda formulários de
+venda, despesas ou taxas e consultas ainda não aplicadas. Se um editor for aberto
+durante a consulta, o recebimento é adiado e os campos digitados são preservados.
+Quando há dados a trocar, as ações de edição ficam temporariamente desabilitadas
+para concluir a transação. A janela continua respondendo e não abre um aviso a
+cada consulta. O status da nuvem fica no rodapé; clique nele para abrir os detalhes.
+
+Se nada mudou, a consulta não cria outro backup. Antes de trocar dados, mantém o
+backup verificado e as mesmas regras de versões, conflitos e retomada. Uma falha
+de internet agenda novas tentativas em 1, 2, 4 e até 5 minutos. O botão manual
+permite tentar antes. Conflitos, dados inválidos ou acesso revogado pausam a
+automação. Confira o registro indicado antes de tentar sincronizar manualmente;
+uma sincronização manual bem-sucedida ou um novo login retoma o agendamento.
+
+Alterações locais são identificadas no rodapé como aguardando envio; isso evita
+confundir uma sincronização anterior com um cadastro que ainda não saiu do PC.
+Restaurar um backup pausa a automação até uma conferência e sincronização manual.
+
+A sessão é renovada na memória, sem gravar o refresh token no disco. Se a rede
+falhar depois da renovação, a nova sessão é preservada na memória para a próxima
+tentativa. Desconectar cancela o agendamento e remove a sessão desse processo.
+
+A automação não funciona com o PC desligado ou o programa fechado. O celular
+continua salvando online; o PC recebe essas alterações depois de abrir o programa
+e entrar na conta. Ao encerrar durante um envio, pode haver um lote pendente,
+retomado com segurança no próximo acesso. Não depende de outro SQL nem de novos
+serviços pagos. O executável publicado v1.0.1 ainda não contém essas funções;
+use o código atualizado enquanto uma nova versão portátil não for publicada.

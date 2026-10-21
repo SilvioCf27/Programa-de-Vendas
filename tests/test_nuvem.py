@@ -145,3 +145,36 @@ class NuvemTests(unittest.TestCase):
         cliente._abrir = Mock(side_effect=HTTPError(URL, 404, 'erro', {}, resposta({'code': 'PGRST202'})))
         with self.assertRaisesRegex(nuvem.ErroNuvem, '004_sincronizacao.sql'):
             cliente.sincronizar(nuvem.Sessao('usuario', 'email', 'token'))
+
+    def test_sessao_renova_somente_perto_da_expiracao_e_na_mesma_conta(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        sessao = nuvem.Sessao('usuario', 'email', 'token-antigo', 'refresh-antigo', 1)
+        cliente._abrir = Mock(return_value=resposta({'access_token':'token-novo','refresh_token':'refresh-novo','expires_in':3600,'user':{'id':'usuario','email':'email'}}))
+        nova = cliente.garantir_sessao(sessao)
+        self.assertEqual(nova.token, 'token-novo')
+        self.assertEqual(nova.refresh_token, 'refresh-novo')
+        self.assertNotIn('refresh-novo', repr(nova))
+        self.assertEqual(json.loads(cliente._abrir.call_args.args[0].data), {'refresh_token':'refresh-antigo'})
+        self.assertIs(cliente.garantir_sessao(sessao), nova)  # Mesmo se o chamador ainda tem a cópia antiga.
+        cliente._abrir.assert_called_once()
+
+    def test_renovacao_nao_pode_trocar_usuario(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock(return_value=resposta({'access_token':'novo','refresh_token':'refresh','expires_in':3600,'user':{'id':'outro'}}))
+        with self.assertRaises(nuvem.SessaoExpirada):
+            cliente.garantir_sessao(nuvem.Sessao('usuario','email','token','refresh',1))
+        self.assertIsNone(cliente._ultima_sessao)
+
+    def test_sessao_expirada_sem_refresh_exige_login(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock()
+        with self.assertRaises(nuvem.SessaoExpirada):
+            cliente.garantir_sessao(nuvem.Sessao('usuario','email','token','',1))
+        cliente._abrir.assert_not_called()
+
+    def test_erros_de_rede_temporarios_e_sessao_revogada_sao_distintos(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        for status, esperado in ((503,nuvem.ErroTemporario),(429,nuvem.ErroTemporario),(401,nuvem.SessaoExpirada)):
+            cliente._abrir = Mock(side_effect=HTTPError(URL,status,'segredo',{},None))
+            with self.assertRaises(esperado):
+                cliente.sincronizar(nuvem.Sessao('usuario','email','token'))

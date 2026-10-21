@@ -199,14 +199,54 @@ def _aplicar(c, remotos, referencias, usuario_id):
     return alteradas
 
 
-def sincronizar(banco, cliente, sessao):
+def _assinatura_base(c):
+    estado = c.execute('select projeto,usuario_id,pendente from nuvem_sync_estado where singleton=1').fetchone()
+    if not estado:
+        return None
+    registros = [tuple(r) for r in c.execute('select tabela,remoto_id,local_id,base_local,base_remota from nuvem_sync_registros order by tabela,remoto_id')]
+    return migracao.assinatura([tuple(estado), registros])
+
+
+def assinatura_base(banco):
+    with closing(sqlite3.connect(Path(banco).resolve().as_uri() + '?mode=ro', uri=True)) as c:
+        c.execute('BEGIN')
+        return _assinatura_base(c)
+
+
+def _sem_mudancas(banco, cliente, sessao, resposta, base_inicial=None):
+    remotos = validar_snapshot(resposta, sessao.usuario_id)
+    with closing(sqlite3.connect(banco.resolve().as_uri() + '?mode=ro', uri=True)) as c:
+        c.execute('BEGIN')
+        if base_inicial is not None and _assinatura_base(c) != base_inicial:
+            return False
+        estado = c.execute('select projeto,usuario_id,pendente from nuvem_sync_estado where singleton=1').fetchone()
+        if not estado or estado[0] != cliente.url or estado[1] != sessao.usuario_id or estado[2]:
+            return False
+        locais, referencias = _locais(c, sessao.usuario_id), _referencias(c)
+        for tabela in TABELAS:
+            refs = [r for r in referencias if r['tabela'] == tabela]
+            if len(refs) != len(locais[tabela]) or len(refs) != len(remotos[tabela]):
+                return False
+            for r in refs:
+                remoto = remotos[tabela].get(r['remoto_id'])
+                if remoto is None or r['local_id'] not in locais[tabela] or not (r['local'] == _corpo(r['remoto']) == locais[tabela][r['local_id']] == _corpo(remoto)):
+                    return False
+        return True
+
+
+def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None):
     banco = Path(banco)
+    if somente_se_mudou and snapshot_inicial is not None and _sem_mudancas(banco, cliente, sessao, snapshot_inicial, base_inicial):
+        return dict(backup=None, enviadas=0, recebidas=0, retomada=False,
+                    registros={t: len(snapshot_inicial['dados'][t]) for t in TABELAS})
     backup = criar_backup(banco, 'antes-sincronizacao')
     enviadas, retomada = 0, False
     with closing(sqlite3.connect(banco.resolve().as_uri() + '?mode=rw', uri=True, timeout=5)) as c:
         try:
             c.execute('BEGIN IMMEDIATE')
             _estrutura(c)
+            if base_inicial is not None and _assinatura_base(c) != base_inicial:
+                snapshot_inicial = None  # Outra instância avançou a base durante a consulta.
             estado = c.execute('select projeto,usuario_id,pendente from nuvem_sync_estado where singleton=1').fetchone()
             retomada = bool(estado and estado[2])
             if estado and (estado[0] != cliente.url or estado[1] != sessao.usuario_id):
@@ -239,7 +279,9 @@ def sincronizar(banco, cliente, sessao):
                     c.execute('BEGIN IMMEDIATE')
                     enviadas += len(p['alteracoes'])
                 else:
-                    remotos = validar_snapshot(cliente.sincronizar(sessao), sessao.usuario_id)
+                    resposta = snapshot_inicial if snapshot_inicial is not None else cliente.sincronizar(sessao)
+                    snapshot_inicial = None
+                    remotos = validar_snapshot(resposta, sessao.usuario_id)
                 locais = _locais(c, sessao.usuario_id)
                 operacoes, referencias = planejar(locais, remotos, _referencias(c))
                 if not operacoes:

@@ -6,11 +6,20 @@ import os
 from pathlib import Path
 import re
 import tempfile
+import time
 from urllib import error, request
 
 
 class ErroNuvem(ValueError):
     """Mensagem segura para exibição, sem respostas ou credenciais do serviço."""
+
+
+class ErroTemporario(ErroNuvem):
+    """Rede ou serviço indisponível: permite uma nova tentativa com intervalo."""
+
+
+class SessaoExpirada(ErroNuvem):
+    """Exige um novo login; não deve gerar tentativas automáticas repetidas."""
 
 
 class LoteRecusado(ErroNuvem):
@@ -78,6 +87,8 @@ class Sessao:
     usuario_id: str
     email: str
     token: str = field(repr=False)
+    refresh_token: str = field(default='', repr=False)
+    expira_em: float = field(default=0, repr=False)
 
 
 class ClienteNuvem:
@@ -85,6 +96,7 @@ class ClienteNuvem:
         config = validar_config(url, chave)
         self.url = config['url']
         self.chave = config['chave_publica']
+        self._ultima_sessao = None
         self._abrir = request.build_opener(_SemRedirecionamento()).open
 
     def _post(self, caminho, dados, token=None):
@@ -128,15 +140,17 @@ class ClienteNuvem:
             if codigo in ('23505', '23514', '23502', '22P02', '22007', '22008'):
                 tipo = LoteRecusado if caminho.endswith('/sincronizar_desktop') else ErroNuvem
                 raise tipo('A nuvem recusou um valor, uma data, uma duplicidade ou uma sobreposição de taxas. A transferência inteira foi cancelada.') from None
-            if erro.code == 429:
-                mensagem = 'Muitas tentativas. Aguarde um pouco antes de tentar novamente.'
-            elif erro.code in (400, 401, 403):
+            if erro.code == 401 or (caminho.endswith('grant_type=refresh_token') and erro.code in (400, 403)):
+                raise SessaoExpirada('Entre novamente em Conexão com a nuvem para retomar a sincronização.') from None
+            if erro.code == 429 or erro.code >= 500:
+                raise ErroTemporario('A nuvem está temporariamente indisponível. Os dados continuam salvos no computador.') from None
+            if erro.code in (400, 401, 403):
                 mensagem = 'Acesso recusado. Confira URL, chave pública, e-mail, senha e a autorização da conta.'
             else:
                 mensagem = 'O serviço não concluiu a conexão. Tente novamente mais tarde.'
             raise ErroNuvem(mensagem) from None
         except (OSError, ValueError):
-            raise ErroNuvem('Não foi possível conectar ao Supabase. Verifique a internet e a configuração do projeto.') from None
+            raise ErroTemporario('Não foi possível conectar ao Supabase. Os dados continuam salvos neste computador.') from None
 
     def entrar(self, email, senha):
         email = email.strip()
@@ -153,7 +167,8 @@ class ClienteNuvem:
             raise ErroNuvem('O serviço retornou uma sessão inválida. Tente entrar novamente.') from None
         if self._post('/rest/v1/rpc/usuario_autorizado', {}, token) is not True:
             raise ErroNuvem('Esta conta não está autorizada neste projeto. Confira o proprietário configurado no Supabase.')
-        return Sessao(usuario_id, endereco, token)
+        self._ultima_sessao = self._sessao(dados, usuario_id, endereco, token)
+        return self._ultima_sessao
 
     def migrar(self, sessao, dados, aplicar=False):
         return self._post('/rest/v1/rpc/migrar_desktop', {'dados': dados, 'aplicar': aplicar}, sessao.token)
@@ -163,3 +178,32 @@ class ClienteNuvem:
             'alteracoes': [] if alteracoes is None else alteracoes,
             'operacao_id': operacao_id,
         }, sessao.token)
+
+    @staticmethod
+    def _sessao(dados, usuario_id, email, token):
+        refresh = dados.get('refresh_token', '')
+        expiracao = dados.get('expires_in', 3600)
+        if not isinstance(refresh, str) or type(expiracao) not in (int, float) or not 0 < expiracao <= 86400:
+            raise ErroNuvem('O serviço retornou uma sessão inválida.')
+        return Sessao(usuario_id, email, token, refresh, time.time() + expiracao)
+
+    def garantir_sessao(self, sessao):
+        # Preserva a rotação do refresh token mesmo quando a consulta seguinte
+        # falha. Nada deste cache é persistido em disco.
+        if self._ultima_sessao and self._ultima_sessao.usuario_id == sessao.usuario_id and self._ultima_sessao.expira_em > sessao.expira_em:
+            sessao = self._ultima_sessao
+        if not sessao.expira_em or sessao.expira_em > time.time() + 60:
+            return sessao
+        if not sessao.refresh_token:
+            raise SessaoExpirada('Entre novamente em Conexão com a nuvem para retomar a sincronização.')
+        dados = self._post('/auth/v1/token?grant_type=refresh_token', {'refresh_token': sessao.refresh_token})
+        try:
+            token, usuario = dados['access_token'], dados['user']
+            if usuario['id'] != sessao.usuario_id or not isinstance(token, str) or not token:
+                raise ValueError()
+            nova = self._sessao(dados, usuario['id'], usuario.get('email') or sessao.email, token)
+        except (ValueError, KeyError, TypeError):
+            raise SessaoExpirada('A sessão não pôde ser renovada. Entre novamente na mesma conta.') from None
+        self._ultima_sessao = nova
+        # Cada RPC de sincronização verifica a autorização novamente no banco.
+        return nova

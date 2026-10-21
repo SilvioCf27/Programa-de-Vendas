@@ -261,3 +261,50 @@ class SincronizacaoTests(unittest.TestCase):
         self.assertNotIn(self.sessao.token, pendente)
         self.assertNotIn('senha', pendente)
         self.assertTrue(json.loads(pendente)['alteracoes'])
+
+    def test_consulta_automatica_sem_mudancas_nao_cria_backups_repetidos(self):
+        self.executar()
+        copias = list((self.banco.parent / 'backups').glob('*.db'))
+        chamadas = self.servidor.chamadas
+        snapshot = self.servidor.sincronizar(self.sessao)
+        r = sync.sincronizar(self.banco,self.servidor,self.sessao,snapshot_inicial=snapshot,somente_se_mudou=True)
+        self.assertIsNone(r['backup'])
+        self.assertEqual(list((self.banco.parent / 'backups').glob('*.db')), copias)
+        self.assertEqual(self.servidor.chamadas, chamadas+1)
+
+    def test_consulta_automatica_com_mudanca_recebe_e_cria_backup(self):
+        self.executar()
+        venda = self.servidor.venda('2030-01-01')
+        self.servidor.editar('vendas',venda['id'],pix_centavos=777)
+        snapshot = self.servidor.sincronizar(self.sessao)
+        chamadas = self.servidor.chamadas
+        r = sync.sincronizar(self.banco,self.servidor,self.sessao,snapshot_inicial=snapshot,somente_se_mudou=True)
+        self.assertEqual(r['recebidas'],1)
+        self.assertTrue(Path(r['backup']).exists())
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(7.77,)])
+        self.assertEqual(self.servidor.chamadas,chamadas)
+
+    def test_automacao_nao_pula_lote_pendente_mesmo_quando_valores_ja_coincidem(self):
+        self.executar()
+        self.sql('update vendas set pix=10 where id=1')
+        self.servidor.perder_resposta = True
+        with self.assertRaises(ErroNuvem):
+            self.executar()
+        snapshot = self.servidor.sincronizar(self.sessao)
+        r = sync.sincronizar(self.banco,self.servidor,self.sessao,snapshot_inicial=snapshot,somente_se_mudou=True)
+        self.assertTrue(r['retomada'])
+        self.assertTrue(Path(r['backup']).exists())
+        self.assertIsNone(self.sql('select pendente from nuvem_sync_estado')[0][0])
+        self.assertEqual(self.servidor.venda('2030-01-01')['versao'],2)
+
+    def test_consulta_antiga_nao_reverte_base_avancada_por_outra_instancia(self):
+        self.executar()
+        base = sync.assinatura_base(self.banco)
+        snapshot_antigo = self.servidor.sincronizar(self.sessao)
+        self.sql('update vendas set pix=15 where id=1')
+        self.executar()  # Outra instância já enviou e atualizou a mesma base local.
+        r = sync.sincronizar(self.banco,self.servidor,self.sessao,
+            snapshot_inicial=snapshot_antigo,somente_se_mudou=True,base_inicial=base)
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(15.0,)])
+        self.assertEqual(self.servidor.venda('2030-01-01')['pix_centavos'],1500)
+        self.assertEqual(r['recebidas'],0)

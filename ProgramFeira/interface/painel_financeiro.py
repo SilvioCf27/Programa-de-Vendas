@@ -20,7 +20,8 @@ def valor_br(centavos):
 
 
 class PainelFinanceiro(ttk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, ao_alterar=None):
+        self.ao_alterar = ao_alterar
         super().__init__(parent, padding=(0, 10, 0, 0))
         self.columnconfigure(0, weight=1)
         self.rowconfigure(3, weight=1)
@@ -167,6 +168,8 @@ class PainelFinanceiro(ttk.Frame):
             try:
                 f.excluir_lancamento(int(selecionado[0]), anual)
                 self.consultar()
+                if self.ao_alterar:
+                    self.ao_alterar()
             except (OSError, sqlite3.Error, ValueError) as erro:
                 messagebox.showerror('Exclusão não realizada', str(erro), parent=self)
 
@@ -211,6 +214,8 @@ class PainelFinanceiro(ttk.Frame):
                 return
             popup.destroy()
             self.consultar()
+            if self.ao_alterar:
+                self.ao_alterar()
         ttk.Button(corpo, text='Salvar', command=salvar, style='Primary.TButton').grid(row=7, column=1, sticky='e')
         ttk.Button(corpo, text='Cancelar', command=popup.destroy).grid(row=7, column=0, sticky='w')
         return popup
@@ -241,6 +246,8 @@ class PainelFinanceiro(ttk.Frame):
                 return
             popup.destroy()
             self.consultar()
+            if self.ao_alterar:
+                self.ao_alterar()
         ttk.Button(corpo, text='Salvar taxa anual', command=salvar, style='Primary.TButton').grid(row=7, column=1, sticky='e')
         ttk.Button(corpo, text='Cancelar', command=popup.destroy).grid(row=7, column=0, sticky='w')
         return popup

@@ -316,6 +316,8 @@ def atualizar_anos_disponiveis():
 
 
 def cadastrar():
+    if conexao_nuvem.bloqueando_edicao:
+        return
     global venda_em_edicao
 
     try:
@@ -369,6 +371,7 @@ def cadastrar():
 
             atualizar_tabela()
             cancelar_edicao()
+            conexao_nuvem.notificar_alteracao()
             return
 
         #  Venda existente recebe o valor inserido da data, pelo utilizador e verifica se já consta no sistema.
@@ -407,6 +410,7 @@ def cadastrar():
 
         atualizar_tabela()
         cancelar_edicao()
+        conexao_nuvem.notificar_alteracao()
 
     except ValueError:
         messagebox.showerror(
@@ -455,6 +459,8 @@ def preencher_venda(venda):
 
 
 def editar_venda_selecionada(event=None):
+    if conexao_nuvem.bloqueando_edicao:
+        return
     if event is not None and event.type == tk.EventType.ButtonPress and tabela.identify_region(event.x, event.y) not in ('cell', 'tree'):
         return
     selecao = tabela.selection()
@@ -471,6 +477,8 @@ def editar_venda_selecionada(event=None):
 
 
 def excluir_venda_selecionada():
+    if conexao_nuvem.bloqueando_edicao:
+        return
     selecao = tabela.selection()
 
     if not selecao:
@@ -498,6 +506,7 @@ def excluir_venda_selecionada():
     atualizar_tabela()
 
     messagebox.showinfo("Sucesso", "Venda excluída com sucesso!")
+    conexao_nuvem.notificar_alteracao()
 
 def cancelar_edicao():
     global venda_em_edicao
@@ -527,6 +536,8 @@ def fazer_backup_manual():
 
 
 def restaurar_copia():
+    if conexao_nuvem.bloqueando_edicao:
+        return
     arquivo = filedialog.askopenfilename(title="Selecionar backup", filetypes=[("Banco SQLite", "*.db")])
     if not arquivo:
         return
@@ -542,6 +553,7 @@ def restaurar_copia():
     atualizar_anos_disponiveis()
     limpar_filtros()
     messagebox.showinfo("Backup restaurado", f"Dados restaurados. Cópia anterior preservada em:\n{anterior}")
+    conexao_nuvem.banco_restaurado()
 
 
 def exportar_visualizacao(formato):
@@ -610,6 +622,8 @@ def mostrar_formulario():
 
 
 def nova_venda():
+    if conexao_nuvem.bloqueando_edicao:
+        return
     cancelar_edicao()
     hoje = date.today()
     entrada_ano.set(str(hoje.year))
@@ -694,6 +708,57 @@ menu_dados.add_command(label='Backup no Google Drive…', command=backup_drive.c
 def verificar_formulario_sincronizacao():
     if formulario.state() == 'normal':
         raise ErroNuvem('Conclua ou cancele o formulário de venda antes de sincronizar.')
+    def janelas_visiveis(widget):
+        for filho in widget.winfo_children():
+            if isinstance(filho, tk.Toplevel):
+                if filho is not conexao_nuvem.popup and filho.winfo_viewable():
+                    return True
+            elif janelas_visiveis(filho):
+                return True
+        return False
+    if janelas_visiveis(janela) or janela.grab_current() not in (None, conexao_nuvem.popup):
+        raise ErroNuvem('Conclua ou feche a janela aberta antes de sincronizar.')
+
+
+def verificar_automatico():
+    verificar_formulario_sincronizacao()
+    if filtros_aplicados is not None and filtros_aplicados != assinatura_filtros():
+        raise ErroNuvem('Aplique os filtros de vendas antes da atualização automática.')
+    from ProgramFeira.comparacao import interpretar_data
+    from ProgramFeira.financeiro import limites
+    periodo = limites(painel_financeiro.tipo.get(), interpretar_data(painel_financeiro.referencia.get()).isoformat())
+    if periodo != (painel_financeiro.inicio, painel_financeiro.fim):
+        raise ErroNuvem('Confirme a consulta financeira antes da atualização automática.')
+
+
+controles_bloqueados = []
+menus_bloqueados = []
+
+
+def bloquear_edicao_sincronizacao(bloquear):
+    if bloquear:
+        def visitar(widget):
+            for filho in widget.winfo_children():
+                if isinstance(filho, tk.Toplevel):
+                    continue
+                if isinstance(filho, (ttk.Button, ttk.Menubutton, ttk.Entry, ttk.Combobox, ttk.Checkbutton)):
+                    controles_bloqueados.append((filho, 'disabled' in filho.state()))
+                    filho.state(['disabled'])
+                visitar(filho)
+        visitar(janela)
+        for i in range((menu_dados.index('end') or 0) + 1):
+            if menu_dados.type(i) == 'command':
+                menus_bloqueados.append((i, menu_dados.entrycget(i, 'state')))
+                menu_dados.entryconfigure(i, state='disabled')
+    else:
+        for widget, desativado in controles_bloqueados:
+            if widget.winfo_exists() and not desativado:
+                widget.state(['!disabled'])
+        controles_bloqueados.clear()
+        for indice, estado in menus_bloqueados:
+            menu_dados.entryconfigure(indice, state=estado)
+        menus_bloqueados.clear()
+        atualizar_botoes_selecao()
 
 
 def atualizar_apos_sincronizacao():
@@ -704,7 +769,9 @@ def atualizar_apos_sincronizacao():
 
 conexao_nuvem = ConexaoNuvem(janela, CAMINHO_BANCO.parent,
     ao_sincronizar=atualizar_apos_sincronizacao,
-    antes_sincronizar=verificar_formulario_sincronizacao)
+    antes_sincronizar=verificar_formulario_sincronizacao,
+    antes_automatico=verificar_automatico,
+    bloquear_edicao=bloquear_edicao_sincronizacao)
 menu_dados.add_command(label='Conexão com a nuvem…', command=conexao_nuvem.configurar)
 menu_dados.add_separator()
 menu_dados.add_command(label='Local dos dados', command=mostrar_pasta_dados)
@@ -816,7 +883,7 @@ aba_analises.columnconfigure(0, weight=1)
 abas.add(aba_analises, text='Análises')
 painel_analises = PainelAnalises(aba_analises)
 painel_analises.grid(row=0, column=0, sticky='nsew')
-painel_financeiro = PainelFinanceiro(abas)
+painel_financeiro = PainelFinanceiro(abas, ao_alterar=conexao_nuvem.notificar_alteracao)
 abas.add(painel_financeiro, text='Finanças')
 def alternar_pagina(evento):
     if evento.widget is not abas:
@@ -988,6 +1055,9 @@ botao_cadastrar.pack(side='right')
 botao_cancelar_edicao = ttk.Button(acoes_formulario, text='Cancelar', command=cancelar_edicao)
 botao_cancelar_edicao.pack(side='left')
 
+rodape_nuvem = ttk.Label(janela, textvariable=conexao_nuvem.resumo, style='Muted.TLabel', padding=(24, 6))
+rodape_nuvem.grid(row=4, column=0, sticky='ew')
+rodape_nuvem.bind('<Button-1>', lambda e: conexao_nuvem.configurar())
 aplicar_tema(janela, tema_atual.get())
 layout_compacto = None
 organizar_cartoes()

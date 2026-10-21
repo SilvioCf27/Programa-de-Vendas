@@ -45,6 +45,6 @@ Para atualizar o código, feche o programa e execute `git pull --ff-only`. Um ex
 
 ## Versão para celular — em desenvolvimento
 
-A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. Análises e comparações completas ainda estão no desktop. O executável v1.0.1 ainda não inclui a integração com a nuvem.
+A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões automaticamente a cada minuto enquanto estiver aberto e autenticado, ou pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. Análises e comparações completas ainda estão no desktop. O executável v1.0.1 ainda não inclui a integração com a nuvem.
 
 O guia de configuração e os limites desta etapa estão em [CELULAR.md](docs/CELULAR.md).

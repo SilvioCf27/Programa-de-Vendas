@@ -2,7 +2,7 @@
 
 A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular como PWA. O programa de Windows continua funcionando com seu banco local.
 
-Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises, comparações e exportação ainda serão aproximadas do desktop.
+Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises permite consultar pagamentos, dias da semana e comparar datas, meses, fechamentos e intervalos. Exportação continua disponível no desktop.
 
 **A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Dados → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
@@ -146,8 +146,8 @@ for revogada ou não puder ser recuperada, entre novamente. Em sistemas sem DPAP
 o login continua sendo necessário a cada abertura; não há gravação em texto aberto.
 Falhas de internet não impedem o uso local. O backup no Drive segue independente.
 
-Esta opção está no código-fonte atualizado. O executável publicado v1.0.1 ainda
-não a inclui. Para testar pelo VS Code, atualize a cópia do repositório com
+Esta opção está no código-fonte atualizado e no executável v1.1.0. O pacote antigo
+v1.0.1 não a inclui. Para testar pelo VS Code, atualize a cópia do repositório com
 `git pull` e execute `python executar.py` na pasta principal.
 
 ## Transferência inicial do desktop
@@ -341,5 +341,41 @@ A automação não funciona com o PC desligado ou o programa fechado. O celular
 continua salvando online; o PC recebe essas alterações depois de abrir o programa
 (no Windows, recuperando a sessão salva). Ao encerrar durante um envio, pode haver um lote pendente,
 retomado com segurança no próximo acesso. Não depende de outro SQL nem de novos
-serviços pagos. O executável publicado v1.0.1 ainda não contém essas funções;
-use o código atualizado enquanto uma nova versão portátil não for publicada.
+serviços pagos. O executável v1.1.0 contém essas funções; o pacote antigo v1.0.1 não.
+
+
+## Análises e comparação no celular
+
+A aba **Análises** tem uma consulta própria: não altera os filtros de Vendas ou
+Finanças. Escolha Mês, Ano, Fechamento ou Todas as vendas e use **Consultar análises**.
+A data de referência identifica o mês/ano. Fechamento de outubro significa
+10/10 a 09/11, independentemente do dia escolhido dentro de outubro.
+
+São mostrados total bruto, quantidade de dias de feira, média incluindo os dias
+zerados, participação das formas de pagamento e resultados por dia da semana.
+As tabelas mais largas podem ser deslizadas na horizontal. Os valores não descontam
+taxas nem despesas; esse resultado está na aba Finanças.
+
+Em **Comparar A e B**, escolha datas, meses, fechamentos ou intervalos e pressione
+**Comparar períodos**. A diferença é B menos A e o percentual usa A como base.
+Quando um período não tem registros ou A tem total zero, não é exibido percentual.
+O resumo do período também compara automaticamente mês/ano/fechamento com o
+período anterior. Os dois lados são calculados a partir da mesma consulta dos dados.
+
+## Atualização da tela web
+
+A área visível (Vendas, Finanças ou Análises) é consultada automaticamente a cada
+minuto. Voltar ao aplicativo ou recuperar a conexão também solicita uma consulta.
+Não depende de configurar Supabase Realtime ou instalar outro SQL.
+
+Com um formulário aberto ou uma gravação em andamento, a consulta aguarda. Filtros
+alterados e ainda não aplicados ficam intactos: os resultados seguem a seleção
+já aplicada. Comparações A/B já consultadas também são atualizadas. O status perto
+das abas informa a hora da conferência ou uma falha de conexão. Os botões de
+atualizar continuam disponíveis. Não há consultas periódicas da tela oculta ou
+sem internet, nem gravações offline. Ao sair da conta, o agendamento e os resultados
+são limpos.
+
+Isso não é uma atualização instantânea por notificações: se salvar no PC, aguarde
+primeiro o envio do desktop e depois a consulta da web (até cerca de um minuto,
+mais o tempo de rede). A sincronização do desktop continua independente da tela web.

@@ -507,3 +507,133 @@ test('falha no armazenamento da confirmação impede enviar a despesa', async ({
   );
   expect(vendas.financeiro.lancamentos).toHaveLength(0);
 });
+
+test('análises: pagamentos, dias zerados e comparação independente no celular', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  vendas.push(
+    {
+      id: 'ana1',
+      versao: 1,
+      data: '2026-09-18',
+      dinheiro_centavos: 10000,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    },
+    {
+      id: 'ana2',
+      versao: 1,
+      data: '2026-10-16',
+      dinheiro_centavos: 10000,
+      pix_centavos: 2000,
+      cartao_centavos: 3000,
+    },
+    {
+      id: 'ana3',
+      versao: 1,
+      data: '2026-10-23',
+      dinheiro_centavos: 0,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    }
+  );
+  await page.locator('#aba-analises').click();
+  await page.locator('#ana-tipo').selectOption('Mês');
+  await page.locator('#ana-referencia').fill('2026-10-01');
+  await page
+    .getByRole('button', { name: 'Consultar análises', exact: true })
+    .click();
+  await expect(page.locator('#ana-total')).toHaveText('R$ 150,00');
+  await expect(page.locator('#ana-quantidade')).toHaveText('2');
+  await expect(page.locator('#ana-media')).toHaveText('R$ 75,00');
+  await expect(page.locator('#ana-pagamentos')).toContainText('20%');
+  await expect(page.locator('#ana-semana tr').nth(4)).toContainText('75,00');
+  await expect(page.locator('#ana-anterior')).toContainText('50%');
+  for (const [p, data] of [
+    ['cmp-a', '2026-09-01'],
+    ['cmp-b', '2026-10-01'],
+  ]) {
+    await page.locator('#' + p + '-tipo').selectOption('Mês');
+    await page.locator('#' + p + '-referencia').fill(data);
+  }
+  await page.getByRole('button', { name: 'Comparar períodos' }).click();
+  await expect(page.locator('#cmp-diferenca')).toContainText('R$ 50,00');
+  await expect(page.locator('#cmp-diferenca')).toContainText('50%');
+  await page.locator('#cmp-b-tipo').selectOption('Data');
+  await page.locator('#cmp-b-referencia').fill('2026-10-23');
+  await page.getByRole('button', { name: 'Comparar períodos' }).click();
+  await expect(page.locator('#cmp-diferenca')).toContainText('-100%');
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth
+    )
+  ).toBe(true);
+  if (process.env.CAPTURAR_WEB_DIR)
+    await page.screenshot({
+      path: `${process.env.CAPTURAR_WEB_DIR}/feira-analises.png`,
+      fullPage: true,
+    });
+  await page.locator('#aba-vendas').click();
+  await expect(page.locator('#tipo')).toHaveValue('Fechamento');
+});
+
+test('consulta automática recebe mudanças sem botão, preserva edição e atualiza as três áreas', async ({
+  page,
+}) => {
+  await page.clock.install();
+  const vendas = await preparar(page);
+  vendas.push({
+    id: 'auto1',
+    versao: 1,
+    data: '2030-10-16',
+    dinheiro_centavos: 10000,
+    pix_centavos: 0,
+    cartao_centavos: 0,
+  });
+  await page.locator('#tipo').selectOption('Todas');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#total')).toHaveText('R$ 100,00');
+  // Campo ainda não aplicado não muda a seleção que recebe atualizações.
+  await page.locator('#tipo').selectOption('Ano');
+  await page.locator('#ano').fill('2025');
+  vendas[0].pix_centavos = 2000;
+  vendas[0].versao++;
+  await page.clock.fastForward(60100);
+  await expect(page.locator('#total')).toHaveText('R$ 120,00');
+  await expect(page.locator('#ano')).toHaveValue('2025');
+  await expect(page.locator('#periodo')).toHaveText('Todas as vendas');
+  await expect(page.locator('#atualizacao-web')).toContainText('Conferido às');
+  await page.getByRole('button', { name: 'Editar', exact: true }).click();
+  await page.getByLabel('Dinheiro', { exact: true }).fill('999');
+  vendas[0].pix_centavos = 3000;
+  vendas[0].versao++;
+  await page.clock.fastForward(60100);
+  await expect(page.getByLabel('Dinheiro', { exact: true })).toHaveValue('999');
+  await expect(page.locator('#total')).toHaveText('R$ 120,00');
+  await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page.clock.fastForward(5100);
+  await expect(page.locator('#total')).toHaveText('R$ 130,00');
+  await page.locator('#aba-financas').click();
+  await consultarFinancas(page);
+  await expect(page.locator('#fin-bruto')).toHaveText('R$ 130,00');
+  vendas[0].pix_centavos = 4000;
+  vendas[0].versao++;
+  await page.clock.fastForward(60100);
+  await expect(page.locator('#fin-bruto')).toHaveText('R$ 140,00');
+  await page.locator('#aba-analises').click();
+  await page.locator('#ana-tipo').selectOption('Mês');
+  await page.locator('#ana-referencia').fill('2030-10-01');
+  await page
+    .getByRole('button', { name: 'Consultar análises', exact: true })
+    .click();
+  await expect(page.locator('#ana-total')).toHaveText('R$ 140,00');
+  vendas[0].pix_centavos = 5000;
+  vendas[0].versao++;
+  await page.clock.fastForward(60100);
+  await expect(page.locator('#ana-total')).toHaveText('R$ 150,00');
+  await page.locator('#sair').click();
+  await expect(page.locator('#conteudo')).toBeHidden();
+  await page.clock.fastForward(60100);
+  await expect(page.locator('#ana-total')).toHaveText('—');
+});

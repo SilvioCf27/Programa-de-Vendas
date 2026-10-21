@@ -205,11 +205,13 @@ export function criarPainelFinanceiro({ api, sessao }) {
         limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value);
       desenhar();
       $('fin-status').textContent =
-        'Dados consultados na nuvem. Use Sincronizar agora no PC para enviar e receber alterações.';
+        'Dados consultados na nuvem. O PC recebe as alterações enquanto estiver aberto e conectado.';
+      return true;
     } catch (erro) {
       if (atual === geracao)
         $('fin-status').textContent =
           erroFinanceiro(erro) + ' A consulta não foi atualizada.';
+      return false;
     } finally {
       if (atual === geracao) {
         ocupado = false;
@@ -346,7 +348,18 @@ export function criarPainelFinanceiro({ api, sessao }) {
   window.addEventListener('offline', controles);
   return {
     atualizar,
-    ocupado: () => ocupado || $('fin-dialogo').open || $('anual-dialogo').open,
+    ocupado: () => {
+      try {
+        return (
+          ocupado ||
+          $('fin-dialogo').open ||
+          $('anual-dialogo').open ||
+          !!pendente()
+        );
+      } catch {
+        return true;
+      }
+    },
     limpar() {
       geracao++;
       ocupado = false;

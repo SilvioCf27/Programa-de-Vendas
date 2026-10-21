@@ -10,6 +10,18 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
+## Versão 1.1.0
+
+Inclui conexão com a nuvem, conferência e migração, sincronização bidirecional de
+vendas e finanças e recuperação da sessão protegida no Windows. Depois do login
+inicial, a opção automática consulta a nuvem a cada minuto e agenda o envio após
+salvar no PC. A senha não é salva. **Desconectar** remove a sessão deste computador.
+
+Se já usava essas funções pelo VS Code, basta abrir o novo executável: ele usa a
+mesma pasta de dados e configurações. Não é necessário migrar novamente. Para
+configurar do início, consulte [CELULAR.md](CELULAR.md). A nuvem requer internet;
+as funções locais e os backups continuam disponíveis sem conexão.
+
 ## Seus dados e atualizações
 
 O programa continua usando `%LOCALAPPDATA%\ProgramFeira\vendas.db`, o mesmo banco usado ao executar pelo VS Code. Vendas, taxas, despesas, parcelas, tema e configuração de backup existentes são preservados. Se `PROGRAMFEIRA_DATA_DIR` estiver definido, esse caminho personalizado continua tendo prioridade.

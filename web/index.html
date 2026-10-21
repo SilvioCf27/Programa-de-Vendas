@@ -61,11 +61,6 @@
         <p class="nota">Acesso restrito. Não há cadastro público.</p>
       </section>
       <section id="conteudo" hidden>
-        <p class="aviso etapa">
-          Vendas online. No computador, use Dados → Conexão com a nuvem →
-          Sincronizar agora para enviar e receber alterações. Análises e
-          comparações completas ainda estão no desktop.
-        </p>
         <nav class="abas" aria-label="Áreas do aplicativo">
           <button
             id="aba-vendas"
@@ -81,7 +76,17 @@
           >
             Finanças
           </button>
+          <button
+            id="aba-analises"
+            aria-pressed="false"
+            aria-controls="area-analises"
+          >
+            Análises
+          </button>
         </nav>
+        <p id="atualizacao-web" class="nota" role="status" aria-live="polite">
+          Atualização automática ativa enquanto esta tela estiver aberta.
+        </p>
         <section id="area-vendas">
           <div class="titulo">
             <div>
@@ -128,6 +133,181 @@
             </p>
             <p id="vazio" class="painel" hidden>Nenhuma venda neste período.</p>
             <ul id="vendas" aria-label="Vendas do período"></ul>
+          </section>
+        </section>
+        <section id="area-analises" hidden>
+          <div class="titulo">
+            <div>
+              <span class="etiqueta">ENTENDA OS RESULTADOS</span>
+              <h2>Análises</h2>
+            </div>
+            <button id="ana-atualizar">Atualizar análises</button>
+          </div>
+          <p class="nota introducao">
+            Valores brutos, antes de taxas e despesas. Esta consulta é
+            independente das abas Vendas e Finanças.
+          </p>
+          <form id="ana-filtros" class="painel filtros fin-filtros">
+            <label
+              >Tipo de período<select id="ana-tipo">
+                <option>Fechamento</option>
+                <option>Mês</option>
+                <option>Ano</option>
+                <option value="Todas">Todas as vendas</option>
+              </select></label
+            >
+            <label
+              >Data de referência<input
+                id="ana-referencia"
+                type="date"
+                required
+            /></label>
+            <label id="ana-fim-rotulo" hidden
+              >Data final<input id="ana-fim" type="date" /></label
+            ><button type="submit">Consultar análises</button>
+          </form>
+          <p id="ana-status" role="status"></p>
+          <p id="ana-periodo" class="nota"></p>
+          <div class="indicadores">
+            <article class="painel">
+              <span>Total bruto</span><strong id="ana-total">—</strong>
+            </article>
+            <article class="painel">
+              <span>Dias de feira</span><strong id="ana-quantidade">—</strong>
+            </article>
+            <article class="painel">
+              <span>Média por dia</span><strong id="ana-media">—</strong>
+            </article>
+          </div>
+          <details class="painel explicacao">
+            <summary>Por que dias zerados entram na média?</summary>
+            <p>
+              São dias de feira registrados, mesmo sem vendas. A média divide o
+              total pelo número de registros, incluindo esses dias; datas sem
+              registro não entram.
+            </p>
+          </details>
+          <p id="ana-vazio" class="nota" hidden>Nenhuma venda neste período.</p>
+          <section class="painel bloco-analise">
+            <h3>Comparação com o período anterior</h3>
+            <p id="ana-anterior"></p>
+          </section>
+          <section class="painel bloco-analise">
+            <h3>Formas de pagamento</h3>
+            <p class="nota">
+              Participação de cada forma no total bruto do período. Total zero
+              não tem participação percentual.
+            </p>
+            <div class="tabela-rolavel">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Forma</th>
+                    <th>Total</th>
+                    <th>Participação</th>
+                  </tr>
+                </thead>
+                <tbody id="ana-pagamentos"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="painel bloco-analise">
+            <h3>Resultados por dia da semana</h3>
+            <div class="tabela-rolavel">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Dia</th>
+                    <th>Dias de feira</th>
+                    <th>Total</th>
+                    <th>Média</th>
+                  </tr>
+                </thead>
+                <tbody id="ana-semana"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="painel bloco-analise">
+            <h3>Comparar A e B</h3>
+            <p class="nota">
+              Compare duas datas, meses, fechamentos ou intervalos. No
+              fechamento, o mês escolhido começa no dia 10 e termina no dia 09
+              do mês seguinte. A data de referência identifica o mês escolhido.
+            </p>
+            <form id="cmp-form">
+              <div class="comparadores">
+                <fieldset>
+                  <legend>Período A · base</legend>
+                  <label
+                    >Tipo de período<select id="cmp-a-tipo">
+                      <option>Fechamento</option>
+                      <option>Mês</option>
+                      <option>Data</option>
+                      <option>Intervalo</option>
+                    </select></label
+                  >
+                  <label
+                    >Data de referência<input
+                      id="cmp-a-referencia"
+                      type="date"
+                      required
+                  /></label>
+                  <label id="cmp-a-fim-rotulo" hidden
+                    >Data final<input id="cmp-a-fim" type="date"
+                  /></label>
+                </fieldset>
+                <fieldset>
+                  <legend>Período B</legend>
+                  <label
+                    >Tipo de período<select id="cmp-b-tipo">
+                      <option>Fechamento</option>
+                      <option>Mês</option>
+                      <option>Data</option>
+                      <option>Intervalo</option>
+                    </select></label
+                  >
+                  <label
+                    >Data de referência<input
+                      id="cmp-b-referencia"
+                      type="date"
+                      required
+                  /></label>
+                  <label id="cmp-b-fim-rotulo" hidden
+                    >Data final<input id="cmp-b-fim" type="date"
+                  /></label>
+                </fieldset>
+              </div>
+              <button type="submit" class="primario">Comparar períodos</button>
+            </form>
+            <div id="cmp-resultado" hidden>
+              <p class="nota">
+                A: <span id="cmp-periodo-a"></span><br />B:
+                <span id="cmp-periodo-b"></span>
+              </p>
+              <div class="tabela-rolavel">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Indicador</th>
+                      <th>A</th>
+                      <th>B</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cmp-valores"></tbody>
+                </table>
+              </div>
+              <p id="cmp-diferenca"></p>
+            </div>
+            <details class="explicacao">
+              <summary>Como interpretar a diferença e a variação?</summary>
+              <p>
+                A diferença é B menos A. A variação compara essa diferença com o
+                total de A. Sem registros em um período ou com total zero em A,
+                não há percentual calculável. Períodos de tamanhos diferentes
+                podem ter quantidades diferentes de dias de feira; confira
+                também a média.
+              </p>
+            </details>
           </section>
         </section>
         <section id="area-financas" hidden>

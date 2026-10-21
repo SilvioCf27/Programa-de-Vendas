@@ -67,3 +67,15 @@ no banco local e serão enviados quando a conexão retornar. O botão **Sincroni
 agora** continua disponível; desmarque a opção automática se preferir usá-lo.
 Confira o status antes de fechar, pois não há um envio final garantido na saída.
 Veja a configuração completa em [CELULAR.md](CELULAR.md).
+
+
+## Conferir pelo celular
+
+A versão web tem as abas Vendas, Finanças e Análises. Em Análises, a comparação
+A/B é independente dos filtros das outras abas. A diferença usa B menos A; dias
+zerados entram na quantidade e na média. Valores dessa aba são brutos.
+
+Com o aplicativo visível e conectado, a área atual consulta a nuvem a cada minuto.
+A consulta aguarda formulários abertos e preserva filtros que ainda não foram
+aplicados. Após alterar no computador, aguarde o envio e a próxima consulta no
+celular ou use o botão de atualizar. Não é necessário sair e entrar na conta.

@@ -45,9 +45,25 @@ def verificar_pacote(relatorio):
                 livro = load_workbook(Path(pasta) / 'teste.xlsx')
                 assert livro['Vendas'].max_row == 1
                 livro.close()
+                # Verifica os módulos de nuvem e a DPAPI dentro do binário, sem rede.
+                from ProgramFeira import nuvem, sessao_windows, sincronizacao
+                config = nuvem.validar_config('https://teste-pacote.supabase.co', 'sb_publishable_somente_teste')
+                sessao = nuvem.Sessao('conta-ficticia', 'teste@example.invalid', 'acesso-ficticio', 'renovavel-ficticio', 1)
+                sessao_protegida = False
+                if sys.platform == 'win32':
+                    assert sessao_windows.DISPONIVEL
+                    sessao_windows.salvar(pasta, config['url'], sessao)
+                    restaurada = sessao_windows.carregar(pasta, config['url'])
+                    assert restaurada.refresh_token == sessao.refresh_token
+                    assert restaurada.token == ''
+                    sessao_windows.remover(pasta)
+                    assert sessao_windows.carregar(pasta, config['url']) is None
+                    sessao_protegida = True
+                assert not sincronizacao.vinculado(banco.CAMINHO_BANCO)
+                assert app.conexao_nuvem.agendador.INTERVALO == 60000
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True,
-                                 banco_isolado=True)
+                                 banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida)
             finally:
                 app.janela.destroy()
     except Exception:

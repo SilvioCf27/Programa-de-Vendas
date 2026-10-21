@@ -11,6 +11,8 @@ import {
   erroAmigavel,
 } from './regras.js';
 import './style.css';
+import { criarAtualizacao } from './atualizacao.js';
+import { criarPainelAnalises } from './painel-analises.js';
 import { criarPainelFinanceiro } from './painel-financeiro.js';
 
 const $ = (id) => document.getElementById(id);
@@ -29,17 +31,20 @@ const financeiro = criarPainelFinanceiro({
   api: () => api,
   sessao: () => sessao,
 });
+const analises = criarPainelAnalises({ api: () => api, sessao: () => sessao });
 function mudarArea(area) {
-  for (const nome of ['vendas', 'financas']) {
+  for (const nome of ['vendas', 'financas', 'analises']) {
     $('area-' + nome).hidden = nome !== area;
     $('aba-' + nome).setAttribute('aria-pressed', String(nome === area));
   }
   if (area === 'financas') financeiro.atualizar();
+  if (area === 'analises') analises.atualizar();
 }
 $('aba-vendas').addEventListener('click', () => {
   mudarArea('vendas');
   carregar();
 });
+$('aba-analises').addEventListener('click', () => mudarArea('analises'));
 $('aba-financas').addEventListener('click', () => mudarArea('financas'));
 const referencia = mesFechamento();
 $('ano').value = referencia.ano;
@@ -132,7 +137,7 @@ function desenhar() {
   }
 }
 async function carregar(novaSelecao = selecao) {
-  if (!sessao || carregando) return;
+  if (!sessao || carregando) return false;
   if (!navigator.onLine)
     return mensagem(
       'Conecte-se para atualizar. A lista pode estar desatualizada.'
@@ -150,34 +155,44 @@ async function carregar(novaSelecao = selecao) {
       ? `${dataBr(selecao.inicio)} a ${dataBr(selecao.fim)}`
       : 'Todas as vendas';
     desenhar();
+    return true;
   } catch (erro) {
     mensagem(`${erroAmigavel(erro)} A lista não foi atualizada.`);
+    return false;
   } finally {
     carregando = false;
     $('atualizar').disabled = false;
     $('filtros').querySelector('button').disabled = false;
   }
 }
-// Ao voltar do desktop para o celular, consulta novamente sem tocar em
-// formulários abertos ou filtros que ainda não foram aplicados.
-function atualizarAoVoltar() {
-  if (
+// Mantém a seleção já aplicada; campos de filtros em preparação não são lidos.
+const atualizacao = criarAtualizacao({
+  disponivel: () =>
     document.visibilityState === 'visible' &&
     navigator.onLine &&
     sessao &&
-    !$('conteudo').hidden &&
-    !modal.open &&
-    !gravando &&
-    selecao
-  ) {
-    if (!$('area-financas').hidden) {
-      if (!financeiro.ocupado()) financeiro.atualizar();
-    } else if (!financeiro.ocupado()) carregar();
-  }
-}
-window.addEventListener('focus', atualizarAoVoltar);
-window.addEventListener('online', atualizarAoVoltar);
-document.addEventListener('visibilitychange', atualizarAoVoltar);
+    !$('conteudo').hidden,
+  ocupado: () =>
+    carregando ||
+    gravando ||
+    modal.open ||
+    financeiro.ocupado() ||
+    analises.ocupado(),
+  atualizar: () =>
+    !$('area-financas').hidden
+      ? financeiro.atualizar()
+      : !$('area-analises').hidden
+        ? analises.atualizar()
+        : carregar(),
+  informar: (sucesso) => {
+    $('atualizacao-web').textContent = sucesso
+      ? `Conferido às ${new Date().toLocaleTimeString('pt-BR')}. Nova consulta em cerca de 1 minuto.`
+      : 'Não foi possível conferir a nuvem. Tentaremos novamente em cerca de 1 minuto.';
+  },
+});
+window.addEventListener('focus', () => atualizacao.verificar());
+window.addEventListener('online', () => atualizacao.verificar());
+document.addEventListener('visibilitychange', () => atualizacao.verificar());
 $('filtros').addEventListener('submit', (event) => {
   event.preventDefault();
   mensagem('');
@@ -245,11 +260,13 @@ form.addEventListener('submit', async (event) => {
   }
 });
 async function receberSessao(nova) {
+  atualizacao.parar();
   const mudouConta = sessao?.user.id !== nova?.user.id;
   sessao = nova;
   geracao++;
   if (mudouConta) {
     financeiro.limpar();
+    analises.limpar();
     mudarArea('vendas');
     registros = [];
     desenhar();
@@ -259,6 +276,7 @@ async function receberSessao(nova) {
   }
   $('sair').hidden = !nova;
   if (!nova) {
+    $('atualizacao-web').textContent = '';
     registros = [];
     desenhar();
     modal.close();
@@ -279,6 +297,7 @@ async function receberSessao(nova) {
     $('sair').hidden = false;
     selecao ??= periodo($('tipo').value, $('ano').value, $('mes').value);
     await carregar();
+    if (sessao === nova) atualizacao.iniciar();
   } catch {
     mensagem(
       'Não foi possível acessar os dados. Confira a conexão e tente entrar novamente.'

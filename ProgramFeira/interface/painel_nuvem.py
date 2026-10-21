@@ -4,14 +4,17 @@ import queue
 import threading
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ProgramFeira import nuvem, migracao_nuvem
+from ProgramFeira import nuvem, migracao_nuvem, sincronizacao
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.resumos import moeda
 
 
 class ConexaoNuvem:
-    def __init__(self, janela, pasta):
+    def __init__(self, janela, pasta, ao_sincronizar=None, antes_sincronizar=None):
         self.janela, self.pasta = janela, pasta
+        self.ao_sincronizar = ao_sincronizar
+        self.antes_sincronizar = antes_sincronizar
+        self.vinculado = sincronizacao.vinculado(pasta / 'vendas.db')
         self.popup = None
         self.sessao = self.cliente = self.preparacao = None
         self.ocupado = False
@@ -28,7 +31,7 @@ class ConexaoNuvem:
         corpo.pack(fill='both', expand=True)
         corpo.columnconfigure(1, weight=1)
         ttk.Label(corpo, text='Sua conta no Gestão da Feira', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
-        ttk.Label(corpo, text='Verifique o acesso, confira o backup e depois transfira os registros iniciais.\nAinda não há sincronização: continue fazendo lançamentos reais no desktop até concluirmos a integração.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
+        ttk.Label(corpo, text='Após a transferência inicial, use Sincronizar agora para enviar e receber alterações.\nSem internet, o desktop continua salvando localmente. O celular precisa de conexão.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
         try:
             config = nuvem.carregar_config(self.pasta)
         except nuvem.ErroNuvem as erro:
@@ -61,18 +64,21 @@ class ConexaoNuvem:
         self.botao_conferir.pack(side='left')
         self.botao_transferir = ttk.Button(migrar, text='Transferir dados conferidos', command=self.transferir)
         self.botao_transferir.pack(side='left', padx=8)
+        self.botao_sincronizar = ttk.Button(corpo, text='Sincronizar agora', command=self.sincronizar, style='Primary.TButton')
+        self.botao_sincronizar.grid(row=9, column=0, columnspan=2, sticky='w', pady=(12, 0))
         popup.protocol('WM_DELETE_WINDOW', self.fechar)
         popup.bind('<Escape>', lambda e: self.fechar())
         self._controles()
         if self.sessao:
-            self.status.set(f'Acesso verificado para {self.sessao.email}. Ainda não há sincronização de dados.')
+            self.status.set(f'Acesso verificado para {self.sessao.email}. Use Sincronizar agora para enviar e receber alterações.')
         return popup
 
     def _controles(self):
         for controle in [*self.campos.values(), self.botao_entrar, self.botao_sair]:
             controle.configure(state='disabled' if self.ocupado else 'normal')
-        self.botao_conferir.configure(state='normal' if self.sessao and not self.ocupado else 'disabled')
-        self.botao_transferir.configure(state='normal' if self.preparacao and not self.ocupado else 'disabled')
+        self.botao_sincronizar.configure(state='normal' if self.sessao and not self.ocupado else 'disabled')
+        self.botao_conferir.configure(state='normal' if self.sessao and not self.ocupado and not self.vinculado else 'disabled')
+        self.botao_transferir.configure(state='normal' if self.preparacao and not self.ocupado and not self.vinculado else 'disabled')
 
     def sair(self):
         self.sessao = self.cliente = self.preparacao = None
@@ -117,6 +123,7 @@ class ConexaoNuvem:
             else:
                 self.preparacao = None
                 self.status.set(resultado)
+            self.vinculado = sincronizacao.vinculado(self.pasta / 'vendas.db')
             self._controles()
 
         threading.Thread(target=trabalhar, daemon=True).start()
@@ -160,7 +167,7 @@ class ConexaoNuvem:
             raise nuvem.ErroNuvem('A configuração da conta mudou. Verifique o acesso novamente.')
 
     def conferir(self):
-        if self.ocupado:
+        if self.ocupado or self.vinculado:
             return
         self.preparacao = None
         try:
@@ -187,7 +194,7 @@ class ConexaoNuvem:
         self._rodar(lambda: migracao_nuvem.preparar(self.pasta / 'vendas.db', cliente, sessao), concluir, 'Criando backup verificado e comparando os registros com a nuvem…')
 
     def transferir(self):
-        if self.ocupado or not self.preparacao:
+        if self.ocupado or self.vinculado or not self.preparacao:
             return
         try:
             self._validar_conta()
@@ -205,6 +212,31 @@ class ConexaoNuvem:
         self.preparacao = None
 
         def concluir(relatorio):
-            self.status.set(f"Transferência concluída e validada registro por registro.\nRegistros inseridos: {sum(relatorio['inseridos'].values())}.\nRelatório: {p['caminho']}\n\nAbra o aplicativo web e clique em Atualizar para conferir as vendas. Continue usando apenas o desktop para lançamentos reais: a sincronização ainda será implementada.")
+            self.status.set(f"Transferência concluída e validada registro por registro.\nRegistros inseridos: {sum(relatorio['inseridos'].values())}.\nRelatório: {p['caminho']}\n\nAbra o aplicativo web e clique em Atualizar para conferir as vendas. O próximo passo é clicar em Sincronizar agora para estabelecer o vínculo entre os registros.")
 
         self._rodar(lambda: migracao_nuvem.transferir(p), concluir, 'Transferindo e validando os dados. Aguarde sem fechar o programa…')
+
+    def sincronizar(self):
+        if self.ocupado:
+            return
+        try:
+            self._validar_conta()
+            if self.antes_sincronizar:
+                self.antes_sincronizar()
+        except nuvem.ErroNuvem as erro:
+            self.status.set(str(erro))
+            return
+        self.preparacao = None
+        cliente, sessao = self.cliente, self.sessao
+
+        def concluir(resultado):
+            self.vinculado = True
+            self.status.set(
+                f"Sincronização concluída. Alterações enviadas: {resultado['enviadas']}; recebidas: {resultado['recebidas']}.\n"
+                f"Vendas: {resultado['registros']['vendas']}. Backup: {resultado['backup']}\n\n"
+                'No celular, use Atualizar ou reabra o aplicativo. Depois de editar em qualquer dispositivo, clique em Sincronizar agora no desktop. Não há envio automático ao fechar.'
+            )
+            if self.ao_sincronizar:
+                self.ao_sincronizar()
+
+        self._rodar(lambda: sincronizacao.sincronizar(self.pasta / 'vendas.db', cliente, sessao), concluir, 'Comparando versões, enviando e recebendo alterações… Aguarde sem fechar o programa.')

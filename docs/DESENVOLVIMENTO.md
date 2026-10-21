@@ -13,6 +13,9 @@ ProgramFeira/
   resumos.py               indicadores das vendas
   exportacao.py            CSV e Excel
   backup_drive.py          cópias para a pasta sincronizada
+  nuvem.py                 autenticação e chamadas ao Supabase
+  migracao_nuvem.py         transferência inicial com conferência
+  sincronizacao.py         comparação de alterações e retomada de envios
   preferencias.py          tema salvo no computador
 tests/                    testes e gerador de dados fictícios
 tools/                    geração e verificação do executável

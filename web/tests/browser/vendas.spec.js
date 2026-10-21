@@ -181,3 +181,33 @@ test('layout não estoura a largura, sair limpa a lista e o cache não contém d
   await expect(page.locator('#conteudo')).toBeHidden();
   await expect(page.locator('#vendas li')).toHaveCount(0);
 });
+
+test('ao voltar ao celular atualiza os dados, preservando formulário em edição', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  vendas.push({
+    id: crypto.randomUUID(),
+    versao: 1,
+    data: '2030-10-16',
+    dinheiro_centavos: 100,
+    pix_centavos: 0,
+    cartao_centavos: 0,
+  });
+  await page.locator('#tipo').selectOption('Todas');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#total')).toHaveText('R$ 1,00');
+  vendas[0].pix_centavos = 200;
+  vendas[0].versao++;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(page.locator('#total')).toHaveText('R$ 3,00');
+  await page.getByRole('button', { name: 'Editar', exact: true }).click();
+  await page.getByLabel('Pix', { exact: true }).fill('99,00');
+  vendas[0].pix_centavos = 300;
+  vendas[0].versao++;
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(page.getByLabel('Pix', { exact: true })).toHaveValue('99,00');
+  await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(page.locator('#total')).toHaveText('R$ 4,00');
+});

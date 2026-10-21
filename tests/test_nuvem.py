@@ -126,3 +126,22 @@ class NuvemTests(unittest.TestCase):
             self.assertNotIn('senha-nao-exibir', str(contexto.exception))
             if codigo == 'PFM01':
                 self.assertIn('2030-01-01', str(contexto.exception))
+
+    def test_sincronizacao_usa_rpc_autenticado_com_id_de_retomada(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock(return_value=resposta({'protocolo': 1}))
+        sessao = nuvem.Sessao('usuario', 'email', 'token-ficticio')
+        cliente.sincronizar(sessao, [], 'identificador-ficticio')
+        req = cliente._abrir.call_args.args[0]
+        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/sincronizar_desktop')
+        self.assertEqual(json.loads(req.data), {'alteracoes': [], 'operacao_id': 'identificador-ficticio'})
+        self.assertEqual(req.get_header('Authorization'), 'Bearer token-ficticio')
+
+    def test_conflito_de_sincronizacao_e_funcao_ausente_tem_erros_distintos(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock(side_effect=HTTPError(URL, 400, 'erro', {}, resposta({'code': 'PFS01'})))
+        with self.assertRaises(nuvem.ConflitoSincronizacao):
+            cliente.sincronizar(nuvem.Sessao('usuario', 'email', 'token'))
+        cliente._abrir = Mock(side_effect=HTTPError(URL, 404, 'erro', {}, resposta({'code': 'PGRST202'})))
+        with self.assertRaisesRegex(nuvem.ErroNuvem, '004_sincronizacao.sql'):
+            cliente.sincronizar(nuvem.Sessao('usuario', 'email', 'token'))

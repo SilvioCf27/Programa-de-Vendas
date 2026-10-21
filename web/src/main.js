@@ -141,6 +141,23 @@ async function carregar(novaSelecao = selecao) {
     $('filtros').querySelector('button').disabled = false;
   }
 }
+// Ao voltar do desktop para o celular, consulta novamente sem tocar em
+// formulários abertos ou filtros que ainda não foram aplicados.
+function atualizarAoVoltar() {
+  if (
+    document.visibilityState === 'visible' &&
+    navigator.onLine &&
+    sessao &&
+    !$('conteudo').hidden &&
+    !modal.open &&
+    !gravando &&
+    selecao
+  )
+    carregar();
+}
+window.addEventListener('focus', atualizarAoVoltar);
+window.addEventListener('online', atualizarAoVoltar);
+document.addEventListener('visibilitychange', atualizarAoVoltar);
 $('filtros').addEventListener('submit', (event) => {
   event.preventDefault();
   mensagem('');

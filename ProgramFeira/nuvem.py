@@ -13,6 +13,14 @@ class ErroNuvem(ValueError):
     """Mensagem segura para exibição, sem respostas ou credenciais do serviço."""
 
 
+class LoteRecusado(ErroNuvem):
+    """O servidor cancelou a transação inteira; o lote pode ser replanejado."""
+
+
+class ConflitoSincronizacao(LoteRecusado):
+    """O servidor recusou integralmente um lote por mudança concorrente."""
+
+
 def validar_config(url, chave):
     if not isinstance(url, str) or not isinstance(chave, str):
         raise ErroNuvem('Informe a URL e a chave pública do projeto.')
@@ -103,6 +111,10 @@ class ClienteNuvem:
                         pass
             except (OSError, ValueError, AttributeError):
                 pass
+            if codigo == 'PFS01':
+                raise ConflitoSincronizacao('A sincronização encontrou uma alteração concorrente ou uma operação inválida. Nenhum lote novo foi aplicado. Clique em Sincronizar agora para conferir novamente.') from None
+            if codigo == 'PFS02':
+                raise LoteRecusado('A nuvem recusou a operação de sincronização. O banco local foi preservado.') from None
             if codigo == 'PFM01':
                 referencia = ''
                 if isinstance(detalhe, dict) and detalhe.get('tabela') in ('vendas', 'financeiro_lancamentos', 'financeiro_taxas_anuais') and re.fullmatch(r'[0-9a-f-]{1,40}', str(detalhe.get('chave', ''))):
@@ -111,9 +123,11 @@ class ClienteNuvem:
             if codigo == 'PFM02':
                 raise ErroNuvem('A nuvem recusou o formato dos dados. Migração interrompida.') from None
             if codigo == 'PGRST202':
-                raise ErroNuvem('Instale o SQL 003_migracao_desktop.sql no Supabase antes de conferir a migração.') from None
+                script = '004_sincronizacao.sql' if caminho.endswith('/sincronizar_desktop') else '003_migracao_desktop.sql'
+                raise ErroNuvem(f'Instale o SQL {script} no Supabase antes de continuar.') from None
             if codigo in ('23505', '23514', '23502', '22P02', '22007', '22008'):
-                raise ErroNuvem('A nuvem recusou um valor, uma data, uma duplicidade ou uma sobreposição de taxas. A transferência inteira foi cancelada.') from None
+                tipo = LoteRecusado if caminho.endswith('/sincronizar_desktop') else ErroNuvem
+                raise tipo('A nuvem recusou um valor, uma data, uma duplicidade ou uma sobreposição de taxas. A transferência inteira foi cancelada.') from None
             if erro.code == 429:
                 mensagem = 'Muitas tentativas. Aguarde um pouco antes de tentar novamente.'
             elif erro.code in (400, 401, 403):
@@ -143,3 +157,9 @@ class ClienteNuvem:
 
     def migrar(self, sessao, dados, aplicar=False):
         return self._post('/rest/v1/rpc/migrar_desktop', {'dados': dados, 'aplicar': aplicar}, sessao.token)
+
+    def sincronizar(self, sessao, alteracoes=None, operacao_id=None):
+        return self._post('/rest/v1/rpc/sincronizar_desktop', {
+            'alteracoes': [] if alteracoes is None else alteracoes,
+            'operacao_id': operacao_id,
+        }, sessao.token)

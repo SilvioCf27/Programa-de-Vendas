@@ -4,7 +4,7 @@ A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular 
 
 Nesta etapa estão prontos o login de uma única conta, cadastro, edição, exclusão e consulta de vendas. Os filtros incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. A tela mostra valores brutos; taxas, despesas, parcelas, comparação e exportação ainda serão levadas para a versão web.
 
-**Ainda não há sincronização com o desktop.** Não faça lançamentos reais nas duas versões esperando que sejam combinados. A transferência inicial está descrita abaixo; ela ainda não integra as alterações posteriores dos dois aplicativos. Nenhum dado pessoal acompanha o código ou é importado automaticamente.
+**A sincronização é manual:** depois da migração e do vínculo inicial, use **Sincronizar agora** no desktop para enviar e receber alterações. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
 ## Serviços escolhidos
 
@@ -69,7 +69,7 @@ No Android, abra pelo Chrome e procure **Instalar aplicativo** ou **Adicionar à
 
 A interface pode abrir pelo cache, mas consultar e gravar vendas exige conexão. Não existe fila de alterações off-line. O cache da PWA guarda apenas arquivos da interface; respostas de login e dados financeiros não são armazenados pelo service worker. A sessão de login permanece no navegador até você sair ou ela expirar.
 
-Edições e exclusões verificam a versão do registro. Se ele mudou em outro acesso, a operação é recusada para evitar sobrescrever a alteração. Novas consultas buscam os dados online; nesta etapa use **Atualizar** para conferir alterações de outro navegador. Isso ainda não é sincronização do SQLite do computador.
+Edições e exclusões verificam a versão do registro. Se ele mudou em outro acesso, a operação é recusada para evitar sobrescrever a alteração. Novas consultas buscam os dados online. O site também consulta novamente ao voltar para a janela, desde que não haja formulário aberto. Use **Atualizar** para conferir imediatamente. O SQLite do computador é atualizado pelo botão **Sincronizar agora** do desktop.
 
 ## Verificações do código
 
@@ -135,7 +135,7 @@ Somente depois do sucesso, URL e chave pública ficam em `nuvem.json`, na pasta
 local dos dados, fora do repositório. A senha não é gravada em arquivo e o campo
 é limpo ao iniciar a tentativa. A sessão fica apenas na memória desse processo;
 **Desconectar** a remove do desktop, sem encerrar sessões em outros dispositivos.
-Ainda não há renovação automática da sessão: esta etapa apenas verifica o acesso.
+Ainda não há renovação automática da sessão no desktop: se expirar, use **Verificar acesso** novamente. Operações pendentes não são perdidas ao sair.
 
 A conexão só acontece por ação explícita nessa janela. Falhas de internet não
 impedem o uso normal do programa. O backup no Drive segue independente.
@@ -191,10 +191,64 @@ repetição automática. Faça uma nova conferência. Registros já iguais não 
 inseridos novamente. Se houver divergência, pare e examine a indicação da tabela
 e do registro, sem excluir ou substituir dados para contornar o bloqueio.
 
-**Transferência inicial não é sincronização.** Após ela, continue registrando
-vendas reais apenas no desktop até implementarmos a integração contínua. Novos
-lançamentos locais não serão enviados automaticamente; alterações na web também
-não são baixadas. Não use a migração para sincronizar edições ou exclusões.
+**Transferência inicial não é sincronização.** Depois dela, configure o vínculo
+na seção seguinte. Não use a migração para sincronizar edições ou exclusões.
+Quando o vínculo existe, os botões de migração ficam desativados no desktop.
 
 As verificações automáticas usam somente bancos e dados fictícios. Não acessam
 sua conta Supabase. A conferência na conta real é realizada por você no programa.
+
+## Sincronizar alterações entre PC e celular
+
+1. Instale [`004_sincronizacao.sql`](../supabase/migrations/004_sincronizacao.sql)
+   no SQL Editor. A estrutura financeira anterior deve estar pronta. Esse script
+   pode ser reaplicado e não modifica vendas ou despesas por conta própria.
+2. No desktop atualizado, abra **Dados → Conexão com a nuvem…**, verifique o acesso
+   e clique em **Sincronizar agora**. No primeiro vínculo, os dados devem coincidir
+   com a migração concluída. Se já houver diferenças, o programa para, pois ainda
+   não tem uma base anterior para distinguir edições de exclusões com segurança.
+3. Aguarde a confirmação. A partir daí, depois de cadastrar, editar ou excluir em
+   qualquer dispositivo, clique em **Sincronizar agora** no desktop. São enviados
+   e recebidos vendas, despesas, taxas e parcelas. O site continua sem telas
+   financeiras: sincronizar esses dados não cria a interface financeira web.
+
+O desktop mantém o SQLite como banco de trabalho e continua funcionando sem
+internet. Não há envio automático ao fechar nem consulta periódica no desktop.
+Ele precisa estar aberto e autenticado para sincronizar. Cada abertura exige
+login; senha e tokens não são salvos em arquivo. Um botão desabilitado durante o
+processo evita iniciar duas sincronizações na mesma janela. Conclua ou cancele
+qualquer formulário de venda antes de sincronizar.
+
+O primeiro vínculo associa cada registro local ao seu UUID remoto. Depois disso,
+mudanças de data continuam sendo edições da mesma venda. O programa compara a
+última base sincronizada, o conteúdo atual do SQLite e o conteúdo online. Mudanças
+em registros diferentes são combinadas; mudanças iguais convergem sem duplicar.
+Exclusões também são propagadas. Se o mesmo registro foi alterado de formas
+incompatíveis, ou excluído de um lado e editado do outro, a sincronização para e
+indica o registro. Não usa o relógio dos dispositivos para escolher qual valor
+sobrescrever. Confira as duas versões antes de resolver um conflito.
+
+O servidor verifica as versões novamente, dentro de uma transação. Uma alteração
+feita pelo celular depois da leitura inicial impede o lote desatualizado. Dados
+financeiros continuam sujeitos às regras de valores, parcelas e cobertura de taxas.
+
+Cada lote fica registrado no SQLite antes do envio, sem senha ou token. O servidor
+guarda apenas seu identificador e a assinatura do conteúdo. Se a resposta se
+perder, o mesmo lote é reconhecido na próxima tentativa e não é aplicado outra
+vez. Edições locais feitas após a interrupção são comparadas antes de receber a
+nuvem; conflitos permanecem protegidos. Não apague as tabelas `nuvem_sync_*` para
+contornar um erro. O vínculo também bloqueia a troca acidental de conta ou projeto
+nesse mesmo banco.
+
+Antes de sincronizar, o programa cria um backup SQLite verificado. O recebimento
+é aplicado junto com as referências de sincronização em uma transação local e
+validado novamente. Uma falha nessa etapa preserva os valores locais; se o envio
+online já tiver terminado, a retomada o reconhecerá. O backup no Drive continua
+sendo feito pelo desktop. Dados novos da web só entram nessa cópia depois de
+serem recebidos no PC e enviados pelo Drive; o banco Supabase ainda precisa de
+uma política própria de recuperação.
+
+Para validar o fluxo, use uma data livre com uma venda fictícia: cadastre no PC,
+sincronize e confira no site; edite no site, sincronize e confira no PC; exclua o
+teste e sincronize novamente. Confira também se os totais voltaram ao valor
+anterior. Faça esse teste antes de usar os dois dispositivos no dia a dia.

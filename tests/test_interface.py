@@ -291,6 +291,27 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.migrar', side_effect=resposta_migrac
     assert 'concluída e validada' in a.conexao_nuvem.status.get()
     assert a.conexao_nuvem.preparacao is None
 assert len(a.listar_vendas()) == 9
+# Vínculo e recebimento passam pelo botão real; o servidor é fictício.
+from test_sincronizacao import Servidor
+servidor = Servidor(a.CAMINHO_BANCO)
+with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.sincronizar):
+    a.conexao_nuvem.botao_sincronizar.invoke()
+    aguardar_nuvem()
+    assert a.conexao_nuvem.vinculado, a.conexao_nuvem.status.get()
+    assert str(a.conexao_nuvem.botao_conferir.cget('state')) == 'disabled'
+    registro = servidor.venda('2026-01-02')
+    servidor.editar('vendas', registro['id'], pix_centavos=321)
+    a.conexao_nuvem.botao_sincronizar.invoke()
+    aguardar_nuvem()
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 3.21
+    assert len(a.tabela.get_children()) == 9
+    assert 'Sincronização concluída' in a.conexao_nuvem.status.get()
+    a.nova_venda()
+    chamadas = servidor.chamadas
+    a.conexao_nuvem.botao_sincronizar.invoke()
+    assert 'formulário' in a.conexao_nuvem.status.get()
+    assert servidor.chamadas == chamadas
+    a.cancelar_edicao()
 a.conexao_nuvem.botao_sair.invoke()
 assert a.conexao_nuvem.sessao is None
 a.conexao_nuvem.fechar()

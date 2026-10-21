@@ -722,13 +722,6 @@ def verificar_formulario_sincronizacao():
 
 def verificar_automatico():
     verificar_formulario_sincronizacao()
-    if filtros_aplicados is not None and filtros_aplicados != assinatura_filtros():
-        raise ErroNuvem('Aplique os filtros de vendas antes da atualização automática.')
-    from ProgramFeira.comparacao import interpretar_data
-    from ProgramFeira.financeiro import limites
-    periodo = limites(painel_financeiro.tipo.get(), interpretar_data(painel_financeiro.referencia.get()).isoformat())
-    if periodo != (painel_financeiro.inicio, painel_financeiro.fim):
-        raise ErroNuvem('Confirme a consulta financeira antes da atualização automática.')
 
 
 controles_bloqueados = []
@@ -762,9 +755,30 @@ def bloquear_edicao_sincronizacao(bloquear):
 
 
 def atualizar_apos_sincronizacao():
-    atualizar_anos_disponiveis()
-    atualizar_tabela()
-    painel_financeiro.consultar()
+    global sincronizando_filtros
+    # Atualiza os resultados já aplicados sem consumir seleções em preparação.
+    pendentes = assinatura_filtros()
+    aplicada = filtros_aplicados or pendentes
+
+    def selecionar(assinatura):
+        tipo, ano, mes, fechamento, dias = assinatura
+        filtro_tipo.set(tipo)
+        filtro_ano.set(ano)
+        filtro_mes.set(mes)
+        filtro_fechamento.set(fechamento)
+        for dia, variavel in filtros_dias_semana.items():
+            variavel.set(dia in dias)
+
+    sincronizando_filtros = True
+    try:
+        atualizar_anos_disponiveis()
+        selecionar(aplicada)
+        atualizar_tabela()
+    finally:
+        selecionar(pendentes)
+        sincronizando_filtros = False
+        atualizar_aviso_filtros()
+    painel_financeiro.consultar(manter_periodo=True)
 
 
 conexao_nuvem = ConexaoNuvem(janela, CAMINHO_BANCO.parent,

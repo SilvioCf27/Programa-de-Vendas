@@ -324,8 +324,8 @@ class ConexaoNuvem:
                 self._validar_conta()
             if self.antes_automatico:
                 self.antes_automatico()
-        except (ValueError, KeyError, tk.TclError):
-            self.resumo.set('Nuvem: aguardando finalizar a edição ou aplicar a consulta.')
+        except (ValueError, KeyError, tk.TclError) as erro:
+            self.resumo.set(f'Nuvem: aguardando. {erro}')
             return False
         return True
 

@@ -109,10 +109,13 @@ class PainelFinanceiro(ttk.Frame):
         tabela.configure(yscrollcommand=scroll.set, xscrollcommand=horizontal.set)
         return tabela
 
-    def consultar(self):
+    def consultar(self, manter_periodo=False):
         try:
-            referencia = interpretar_data(self.referencia.get()).isoformat()
-            inicio, fim = f.limites(self.tipo.get(), referencia)
+            if manter_periodo and hasattr(self, 'inicio'):
+                inicio, fim = self.inicio, self.fim
+            else:
+                referencia = interpretar_data(self.referencia.get()).isoformat()
+                inicio, fim = f.limites(self.tipo.get(), referencia)
             resumo = f.resumo_periodo(inicio, fim)
             linhas = f.listar_lancamentos(inicio, fim)
             anuais = f.listar_taxas_anuais()

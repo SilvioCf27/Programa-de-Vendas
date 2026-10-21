@@ -348,12 +348,16 @@ assert not a.conexao_nuvem.ocupado
 assert servidor.chamadas == chamadas
 editor_financeiro.destroy()
 a.conexao_nuvem.agendador.parar()
-# Alterar filtros sem aplicar não deve atualizar a consulta por conta própria.
+# Filtros pendentes, inclusive texto inválido em Finanças, não bloqueiam a rede.
 a.filtro_ano.set('2025')
-a.conexao_nuvem.agendador._disparar()
-assert not a.conexao_nuvem.ocupado
-assert servidor.chamadas == chamadas
-a.limpar_filtros()
+f.referencia.set('data incompleta')
+periodo_aplicado = (f.inicio, f.fim)
+a.verificar_automatico()
+a.atualizar_apos_sincronizacao()
+assert a.filtro_ano.get() == '2025'
+assert a.aviso_filtros.get()
+assert f.referencia.get() == 'data incompleta'
+assert (f.inicio, f.fim) == periodo_aplicado
 a.conexao_nuvem.agendador.parar()
 a.conexao_nuvem.fechar()
 servidor.editar('vendas', registro['id'], pix_centavos=555)
@@ -380,6 +384,13 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=consultar_
         aguardar_nuvem()
     assert not a.conexao_nuvem.bloqueando_edicao
     assert a.buscar_venda_por_data('2026-01-02')[3] == 5.55
+    assert a.filtro_ano.get() == '2025'
+    assert a.aviso_filtros.get()
+    assert f.referencia.get() == 'data incompleta'
+    assert (f.inicio, f.fim) == periodo_aplicado
+    a.limpar_filtros()
+    f.referencia.set('02/01/2026')
+    f.consultar()
     assert 'Automática ativa' in a.conexao_nuvem.resumo.get()
     assert not a.conexao_nuvem.agendador.pausado
     # Salvar no formulário marca pendência e envia sem o botão manual.

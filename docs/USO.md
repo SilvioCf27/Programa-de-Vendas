@@ -56,8 +56,8 @@ Não é preciso inserir vendas fictícias no seu banco para fazer essa conferên
 
 Depois de configurar a nuvem e validar o vínculo, abra **Dados → Conexão com a
 nuvem** e entre na sua conta. A opção automática consulta a cada minuto e agenda
-um envio logo após salvar ou excluir no PC. Ela aguarda formulários e consultas
-pendentes antes de aplicar mudanças. O rodapé mostra alterações aguardando envio,
+um envio logo após salvar ou excluir no PC. Ela aguarda o fechamento de formulários de edição. Filtros ainda não
+aplicados são preservados e não interrompem a sincronização. O rodapé mostra alterações aguardando envio,
 a última atualização ou uma pausa por conflito.
 
 O programa precisa estar aberto e autenticado. Sem conexão, os registros ficam

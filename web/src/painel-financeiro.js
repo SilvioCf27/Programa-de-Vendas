@@ -196,13 +196,14 @@ export function criarPainelFinanceiro({ api, sessao }) {
     controles();
     $('fin-status').textContent = 'Consultando dados financeiros…';
     try {
+      const consulta =
+        nova ||
+        limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value);
       await retomar(uid);
       const resposta = await api().financeiro();
       if (atual !== geracao) return;
       dados = resposta;
-      selecao =
-        nova ||
-        limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value);
+      selecao = consulta;
       desenhar();
       $('fin-status').textContent =
         'Dados consultados na nuvem. O PC recebe as alterações enquanto estiver aberto e conectado.';

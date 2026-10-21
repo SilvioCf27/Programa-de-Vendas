@@ -121,16 +121,25 @@ export function criarPainelAnalises({ api, sessao }) {
         (c.motivo || `Variação: ${percentual(c.variacao)}.`);
     }
   }
+  function controles() {
+    for (const botao of $('area-analises').querySelectorAll('button'))
+      botao.disabled = ocupado;
+  }
   async function atualizar(nova = selecao, novaComparacao = comparacao) {
     if (!sessao() || ocupado || !navigator.onLine) return false;
     const conta = sessao().user.id,
       atual = geracao;
     ocupado = true;
+    controles();
     $('ana-status').textContent = 'Consultando análises…';
     try {
+      const consulta = nova || {
+        tipo: $('ana-tipo').value,
+        periodo: ler('ana'),
+      };
       const dados = await api().financeiro();
       if (atual !== geracao || conta !== sessao()?.user.id) return false;
-      selecao = nova || { tipo: $('ana-tipo').value, periodo: ler('ana') };
+      selecao = consulta;
       comparacao = novaComparacao;
       desenhar(dados.vendas);
       $('ana-status').textContent = '';
@@ -141,7 +150,10 @@ export function criarPainelAnalises({ api, sessao }) {
           'Não foi possível atualizar as análises. Confira a conexão.';
       return false;
     } finally {
-      if (atual === geracao) ocupado = false;
+      if (atual === geracao) {
+        ocupado = false;
+        controles();
+      }
     }
   }
   $('ana-filtros').addEventListener('submit', (e) => {
@@ -182,6 +194,7 @@ export function criarPainelAnalises({ api, sessao }) {
       ])
         $(id).textContent = '';
       $('cmp-resultado').hidden = true;
+      controles();
     },
   };
 }

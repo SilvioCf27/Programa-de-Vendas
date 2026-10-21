@@ -637,3 +637,40 @@ test('consulta automática recebe mudanças sem botão, preserva edição e atua
   await page.clock.fastForward(60100);
   await expect(page.locator('#ana-total')).toHaveText('—');
 });
+
+test('consulta lenta não aplica filtros digitados enquanto a resposta está chegando', async ({
+  page,
+}) => {
+  await preparar(page);
+  for (const [area, prefixo] of [
+    ['analises', 'ana'],
+    ['financas', 'fin'],
+  ]) {
+    let liberar;
+    const espera = new Promise((resolve) => (liberar = resolve));
+    const atrasar = async (route) => {
+      await espera;
+      await route.fallback();
+    };
+    await page.route('**/rest/v1/rpc/sincronizar_desktop', atrasar);
+    await page.locator('#aba-' + area).click();
+    await expect(page.locator('#' + prefixo + '-status')).toContainText(
+      'Consultando'
+    );
+    await page.locator('#' + prefixo + '-referencia').fill('2001-01-10');
+    await expect(
+      page.locator('#' + prefixo + '-filtros button')
+    ).toBeDisabled();
+    liberar();
+    await expect(page.locator('#' + prefixo + '-status')).not.toContainText(
+      'Consultando'
+    );
+    await expect(page.locator('#' + prefixo + '-referencia')).toHaveValue(
+      '2001-01-10'
+    );
+    await expect(page.locator('#' + prefixo + '-periodo')).not.toContainText(
+      '2001'
+    );
+    await page.unroute('**/rest/v1/rpc/sincronizar_desktop', atrasar);
+  }
+});

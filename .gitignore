@@ -24,3 +24,10 @@ dist/
 backup_drive.json
 preferencias.json
 *.log
+node_modules/
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+web/dist/

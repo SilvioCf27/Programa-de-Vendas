@@ -42,3 +42,9 @@ Para atualizar o código, feche o programa e execute `git pull --ff-only`. Um ex
 - [Vendas, finanças e backups](docs/USO.md)
 - [Executável: instalar, atualizar e gerar](docs/EXECUTAVEL.md)
 - [Estrutura do projeto e testes](docs/DESENVOLVIMENTO.md)
+
+## Versão para celular — em desenvolvimento
+
+A primeira etapa da PWA está em `web/`, com login pessoal e vendas online. O acesso ainda precisa ser configurado nas contas gratuitas do Supabase e Cloudflare Pages. Não há sincronização com o desktop nesta etapa, nem importação dos seus dados. O executável atual continua funcionando normalmente.
+
+O guia de configuração e os limites desta etapa estão em [CELULAR.md](docs/CELULAR.md).

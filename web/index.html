@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0f1929" />
+    <meta
+      name="description"
+      content="Suas feiras, seus resultados. Acesso pessoal às vendas."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <title>Gestão da Feira</title>
+  </head>
+  <body>
+    <header class="cabecalho">
+      <img src="/icon-192.png" alt="" width="52" height="52" />
+      <div>
+        <h1>Gestão da Feira</h1>
+        <p>Suas feiras, seus resultados.</p>
+      </div>
+      <button id="sair" class="discreto" hidden>Sair</button>
+    </header>
+    <main>
+      <p id="rede" class="aviso" hidden>
+        Você está sem conexão. Para consultar e salvar vendas, conecte-se à
+        internet.
+      </p>
+      <p id="mensagem" role="status" aria-live="polite"></p>
+      <section id="acesso" class="painel acesso">
+        <span class="etiqueta">ACESSO PESSOAL</span>
+        <h2>Seu painel, onde estiver</h2>
+        <p>
+          Entre com sua conta para consultar e registrar as vendas da feira.
+        </p>
+        <form id="login" method="post">
+          <fieldset disabled>
+            <label
+              >E-mail<input
+                name="email"
+                type="email"
+                autocomplete="username"
+                required
+            /></label>
+            <label
+              >Senha<input
+                name="senha"
+                type="password"
+                autocomplete="current-password"
+                required
+                minlength="6"
+            /></label>
+            <button type="submit" class="primario">Entrar</button>
+          </fieldset>
+        </form>
+        <p class="nota">Acesso restrito. Não há cadastro público.</p>
+      </section>
+      <section id="conteudo" hidden>
+        <p class="aviso etapa">
+          Primeira etapa da versão para celular: vendas online. Os registros do
+          programa no computador ainda não estão conectados a esta versão.
+        </p>
+        <div class="titulo">
+          <div>
+            <span class="etiqueta">VISÃO DO PERÍODO</span>
+            <h2>Como foram as feiras?</h2>
+          </div>
+          <button id="nova" class="primario">+ Nova venda</button>
+        </div>
+        <div class="indicadores">
+          <article class="painel">
+            <span>Total bruto</span><strong id="total">—</strong>
+          </article>
+          <article class="painel">
+            <span>Dias de feira</span><strong id="quantidade">—</strong>
+          </article>
+          <article class="painel">
+            <span>Média por dia</span><strong id="media">—</strong>
+          </article>
+        </div>
+        <form id="filtros" class="painel filtros">
+          <label
+            >Consultar<select id="tipo">
+              <option>Fechamento</option>
+              <option>Mês</option>
+              <option>Ano</option>
+              <option value="Todas">Todas as vendas</option>
+            </select></label
+          >
+          <label>Mês<select id="mes"></select></label
+          ><label
+            >Ano<input id="ano" type="number" min="1900" max="9998" required
+          /></label>
+          <button type="submit">Aplicar</button>
+          <p id="periodo" class="nota"></p>
+        </form>
+        <section class="historico">
+          <div class="titulo">
+            <h2>Histórico de vendas</h2>
+            <button id="atualizar" class="discreto">Atualizar</button>
+          </div>
+          <p class="nota">
+            Valores brutos, antes de taxas e despesas. Dias zerados também
+            contam na média.
+          </p>
+          <p id="vazio" class="painel" hidden>Nenhuma venda neste período.</p>
+          <ul id="vendas" aria-label="Vendas do período"></ul>
+        </section>
+      </section>
+    </main>
+    <dialog id="formulario">
+      <form id="venda" method="post">
+        <div class="titulo">
+          <h2 id="titulo-form">Nova venda</h2>
+          <button
+            type="button"
+            id="fechar-form"
+            class="discreto"
+            aria-label="Fechar formulário"
+          >
+            ×
+          </button>
+        </div>
+        <label>Data da feira<input name="data" type="date" required /></label>
+        <div class="pagamentos">
+          <label
+            >Dinheiro<input
+              name="dinheiro"
+              inputmode="decimal"
+              placeholder="0,00"
+              autocomplete="off" /></label
+          ><label
+            >Pix<input
+              name="pix"
+              inputmode="decimal"
+              placeholder="0,00"
+              autocomplete="off" /></label
+          ><label
+            >Cartão<input
+              name="cartao"
+              inputmode="decimal"
+              placeholder="0,00"
+              autocomplete="off"
+          /></label>
+        </div>
+        <p class="nota">
+          Informe o cartão antes das taxas. Campos vazios valem zero. Cada data
+          pode ter apenas um registro.
+        </p>
+        <p id="erro-venda" role="alert"></p>
+        <div class="acoes">
+          <button type="button" id="cancelar">Cancelar</button
+          ><button type="submit" class="primario" id="salvar">
+            Salvar venda
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <footer>Gestão da Feira · Acesso pessoal</footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

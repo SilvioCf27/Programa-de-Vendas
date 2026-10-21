@@ -17,6 +17,8 @@ ProgramFeira/
 tests/                    testes e gerador de dados fictícios
 tools/                    geração e verificação do executável
 docs/                     guias de uso e desenvolvimento
+web/                      PWA em desenvolvimento, testes JS e navegador
+supabase/migrations/      estrutura e autorização do banco online
 ```
 
 `executar.py` é a entrada do pacote portátil. `GestaoDaFeira.spec` define os arquivos incluídos pelo PyInstaller. O banco distribuído é `ProgramFeira/assets/banco_inicial.db`: ele contém a estrutura de vendas, sem registros. As tabelas financeiras são preparadas na pasta local do usuário na primeira abertura.

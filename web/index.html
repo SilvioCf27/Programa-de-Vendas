@@ -63,54 +63,225 @@
       <section id="conteudo" hidden>
         <p class="aviso etapa">
           Vendas online. No computador, use Dados → Conexão com a nuvem →
-          Sincronizar agora para enviar e receber alterações. Finanças e
-          análises completas ainda estão disponíveis apenas no desktop.
+          Sincronizar agora para enviar e receber alterações. Análises e
+          comparações completas ainda estão no desktop.
         </p>
-        <div class="titulo">
-          <div>
-            <span class="etiqueta">VISÃO DO PERÍODO</span>
-            <h2>Como foram as feiras?</h2>
-          </div>
-          <button id="nova" class="primario">+ Nova venda</button>
-        </div>
-        <div class="indicadores">
-          <article class="painel">
-            <span>Total bruto</span><strong id="total">—</strong>
-          </article>
-          <article class="painel">
-            <span>Dias de feira</span><strong id="quantidade">—</strong>
-          </article>
-          <article class="painel">
-            <span>Média por dia</span><strong id="media">—</strong>
-          </article>
-        </div>
-        <form id="filtros" class="painel filtros">
-          <label
-            >Consultar<select id="tipo">
-              <option>Fechamento</option>
-              <option>Mês</option>
-              <option>Ano</option>
-              <option value="Todas">Todas as vendas</option>
-            </select></label
+        <nav class="abas" aria-label="Áreas do aplicativo">
+          <button
+            id="aba-vendas"
+            aria-pressed="true"
+            aria-controls="area-vendas"
           >
-          <label>Mês<select id="mes"></select></label
-          ><label
-            >Ano<input id="ano" type="number" min="1900" max="9998" required
-          /></label>
-          <button type="submit">Aplicar</button>
-          <p id="periodo" class="nota"></p>
-        </form>
-        <section class="historico">
+            Vendas
+          </button>
+          <button
+            id="aba-financas"
+            aria-pressed="false"
+            aria-controls="area-financas"
+          >
+            Finanças
+          </button>
+        </nav>
+        <section id="area-vendas">
           <div class="titulo">
-            <h2>Histórico de vendas</h2>
-            <button id="atualizar" class="discreto">Atualizar</button>
+            <div>
+              <span class="etiqueta">VISÃO DO PERÍODO</span>
+              <h2>Como foram as feiras?</h2>
+            </div>
+            <button id="nova" class="primario">+ Nova venda</button>
           </div>
-          <p class="nota">
-            Valores brutos, antes de taxas e despesas. Dias zerados também
-            contam na média.
+          <div class="indicadores">
+            <article class="painel">
+              <span>Total bruto</span><strong id="total">—</strong>
+            </article>
+            <article class="painel">
+              <span>Dias de feira</span><strong id="quantidade">—</strong>
+            </article>
+            <article class="painel">
+              <span>Média por dia</span><strong id="media">—</strong>
+            </article>
+          </div>
+          <form id="filtros" class="painel filtros">
+            <label
+              >Consultar<select id="tipo">
+                <option>Fechamento</option>
+                <option>Mês</option>
+                <option>Ano</option>
+                <option value="Todas">Todas as vendas</option>
+              </select></label
+            >
+            <label>Mês<select id="mes"></select></label
+            ><label
+              >Ano<input id="ano" type="number" min="1900" max="9998" required
+            /></label>
+            <button type="submit">Aplicar</button>
+            <p id="periodo" class="nota"></p>
+          </form>
+          <section class="historico">
+            <div class="titulo">
+              <h2>Histórico de vendas</h2>
+              <button id="atualizar" class="discreto">Atualizar</button>
+            </div>
+            <p class="nota">
+              Valores brutos, antes de taxas e despesas. Dias zerados também
+              contam na média.
+            </p>
+            <p id="vazio" class="painel" hidden>Nenhuma venda neste período.</p>
+            <ul id="vendas" aria-label="Vendas do período"></ul>
+          </section>
+        </section>
+        <section id="area-financas" hidden>
+          <div class="titulo">
+            <div>
+              <span class="etiqueta">CONTAS E RESULTADOS</span>
+              <h2>Finanças</h2>
+            </div>
+            <button id="fin-atualizar" class="discreto">
+              Atualizar finanças
+            </button>
+          </div>
+          <p class="nota introducao">
+            Vendas menos taxas e despesas informadas. Inclui gastos pessoais
+            cadastrados, despesas futuras e parcelas pelo vencimento.
           </p>
-          <p id="vazio" class="painel" hidden>Nenhuma venda neste período.</p>
-          <ul id="vendas" aria-label="Vendas do período"></ul>
+          <form id="fin-filtros" class="painel filtros fin-filtros">
+            <label
+              >Consultar finanças<select id="fin-tipo">
+                <option>Fechamento</option>
+                <option>Semana</option>
+                <option>Mês</option>
+                <option>Ano</option>
+              </select></label
+            >
+            <label
+              >Data de referência<input
+                id="fin-referencia"
+                type="date"
+                required
+            /></label>
+            <button type="submit">Consultar finanças</button>
+            <p id="fin-periodo" class="nota"></p>
+          </form>
+          <p id="fin-status" role="status" class="nota"></p>
+          <div id="fin-dados" hidden>
+            <div class="indicadores financeiros">
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Vendas brutas</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Vendas brutas">?</summary>
+                    <p>
+                      Soma de dinheiro, Pix e cartão antes de qualquer desconto.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-bruto">—</strong>
+              </article>
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Taxas descontadas</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Taxas descontadas">?</summary>
+                    <p>
+                      Taxas diárias e ajustes anuais inteiramente contidos no
+                      período. Ajustes anuais parciais não são rateados.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-taxas">—</strong>
+              </article>
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Após taxas</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Após taxas">?</summary>
+                    <p>
+                      Vendas brutas menos as taxas consideradas. Ainda não
+                      desconta despesas.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-liquido">—</strong>
+              </article>
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Despesas</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Despesas">?</summary>
+                    <p>
+                      Gastos cadastrados neste período, inclusive pessoais e
+                      futuros. Cada parcela entra na data de vencimento.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-despesas">—</strong>
+              </article>
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Saldo do período</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Saldo do período">?</summary>
+                    <p>
+                      Vendas menos taxas e despesas informadas. Não é um cálculo
+                      contábil de lucro e não inclui gastos que você não
+                      cadastrou.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-saldo">—</strong>
+              </article>
+              <article class="painel">
+                <div class="nome-indicador">
+                  <span>Falta para cobrir</span>
+                  <details class="ajuda">
+                    <summary aria-label="Ajuda: Falta para cobrir">?</summary>
+                    <p>
+                      Quanto ainda falta vender para cobrir taxas e despesas
+                      consideradas. Zero indica que os gastos informados já
+                      foram cobertos.
+                    </p>
+                  </details>
+                </div>
+                <strong id="fin-falta">—</strong>
+              </article>
+            </div>
+            <p id="fin-aviso" class="aviso"></p>
+            <div class="acoes acoes-financeiras">
+              <button id="fin-despesa" class="primario">+ Despesa</button
+              ><button id="fin-taxa">+ Taxa diária</button
+              ><button id="fin-anual">+ Ajuste anual</button>
+            </div>
+            <section class="historico">
+              <h2>Lançamentos do período</h2>
+              <p class="nota introducao">
+                Parcelamentos mostram uma linha por vencimento. Editar ou
+                excluir afeta somente a parcela selecionada.
+              </p>
+              <p id="fin-vazio" class="painel" hidden>
+                Nenhum lançamento neste período.
+              </p>
+              <ul
+                id="fin-lancamentos"
+                aria-label="Lançamentos financeiros"
+              ></ul>
+            </section>
+            <section class="historico">
+              <h2>Despesas por semana</h2>
+              <p class="nota introducao">
+                Semanas de segunda a domingo. Nas semanas que cruzam o filtro,
+                soma somente os lançamentos dentro do período consultado.
+              </p>
+              <ul id="fin-semanas" aria-label="Despesas semanais"></ul>
+            </section>
+            <section class="historico">
+              <h2>Ajustes anuais de taxas</h2>
+              <p class="nota introducao">
+                Todos os anos cadastrados, independentemente do filtro. Valores
+                estimados continuam identificados.
+              </p>
+              <ul id="fin-anuais" aria-label="Ajustes anuais"></ul>
+            </section>
+          </div>
         </section>
       </section>
     </main>
@@ -159,6 +330,105 @@
           ><button type="submit" class="primario" id="salvar">
             Salvar venda
           </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="fin-dialogo">
+      <form id="fin-form" method="post">
+        <h2 id="fin-titulo-form">Nova despesa</h2>
+        <input name="tipo" type="hidden" />
+        <label
+          >Data de pagamento ou vencimento<input
+            name="data"
+            type="date"
+            required
+        /></label>
+        <label
+          >Descrição<input name="descricao" maxlength="200" required
+        /></label>
+        <label
+          >Valor de cada parcela ou lançamento<input
+            name="valor"
+            inputmode="decimal"
+            required
+            placeholder="0,00"
+        /></label>
+        <label
+          >Meio de pagamento<select name="meio">
+            <option>Dinheiro</option>
+            <option>Pix</option>
+            <option>Cartão de crédito</option>
+            <option>Outro</option>
+          </select></label
+        >
+        <label
+          >Categoria<select name="categoria">
+            <option>Casa</option>
+            <option>Feira</option>
+            <option>Outros</option>
+            <option>Compromisso inicial</option>
+          </select></label
+        >
+        <label
+          >Quantidade de parcelas<input
+            name="parcelas"
+            type="number"
+            min="1"
+            max="120"
+            value="1"
+            required
+        /></label>
+        <p id="fin-ajuda-form" class="nota">
+          Para parcelar, escolha Cartão de crédito. O valor é de cada parcela. A
+          data é o primeiro vencimento; os próximos serão mensais. Um
+          compromisso já lançado não deve ser cadastrado de novo como parte da
+          fatura.
+        </p>
+        <p id="fin-erro-form" role="alert"></p>
+        <div class="acoes">
+          <button id="fin-cancelar" type="button">Cancelar</button
+          ><button id="fin-salvar" class="primario">Salvar lançamento</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="anual-dialogo">
+      <form id="anual-form" method="post">
+        <h2 id="anual-titulo-form">Ajuste anual de taxas</h2>
+        <label
+          >Ano do ajuste<input
+            name="ano"
+            type="number"
+            min="1"
+            max="9999"
+            required
+        /></label>
+        <label
+          >Início da cobertura<input name="inicio" type="date" required
+        /></label>
+        <label>Fim da cobertura<input name="fim" type="date" required /></label>
+        <label
+          >Valor das taxas<input
+            name="valor"
+            inputmode="decimal"
+            required
+            placeholder="0,00"
+        /></label>
+        <label
+          >Natureza<select name="natureza">
+            <option>Confirmada</option>
+            <option>Estimada</option>
+          </select></label
+        >
+        <label>Observação<input name="observacao" /></label>
+        <p class="nota">
+          Use o valor total das taxas do intervalo, sem somar taxas diárias já
+          cadastradas na mesma cobertura. O ajuste só é descontado quando o
+          filtro inclui todo o intervalo.
+        </p>
+        <p id="anual-erro-form" role="alert"></p>
+        <div class="acoes">
+          <button id="anual-cancelar" type="button">Cancelar</button
+          ><button id="anual-salvar" class="primario">Salvar ajuste</button>
         </div>
       </form>
     </dialog>

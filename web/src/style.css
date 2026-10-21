@@ -350,3 +350,132 @@ fieldset {
   display: grid;
   gap: 18px;
 }
+
+.abas {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 24px;
+  padding: 5px;
+  background: #142238;
+  border-radius: 16px;
+}
+.abas button {
+  flex: 1;
+  background: transparent;
+  border-color: transparent;
+}
+.abas button[aria-pressed='true'] {
+  background: #294568;
+  color: #cfe1ff;
+  border-color: #486b97;
+}
+.introducao {
+  margin: 12px 0 18px;
+}
+.fin-filtros {
+  grid-template-columns: 1fr 1fr auto;
+}
+.financeiros {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.nome-indicador {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ajuda {
+  position: relative;
+  margin-left: auto;
+}
+.ajuda summary {
+  list-style: none;
+  cursor: pointer;
+  border: 1px solid var(--linha);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 23px;
+  color: var(--azul);
+}
+.ajuda summary::-webkit-details-marker {
+  display: none;
+}
+.ajuda p {
+  position: absolute;
+  right: -8px;
+  top: 30px;
+  z-index: 2;
+  width: min(230px, 70vw);
+  padding: 14px;
+  background: #142238;
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  box-shadow: 0 8px 22px #0006;
+}
+.negativo {
+  color: #ffacb5;
+}
+.acoes-financeiras {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+#fin-status {
+  margin: 12px 0;
+}
+#fin-erro-form,
+#anual-erro-form {
+  color: #ffacb5;
+  margin: 12px 0;
+}
+#fin-lancamentos p {
+  overflow-wrap: anywhere;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .financeiros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .financeiros .painel {
+    padding: 16px 12px;
+  }
+  .financeiros strong {
+    font-size: 1.2rem;
+  }
+  .fin-filtros {
+    grid-template-columns: 1fr;
+  }
+  .acoes-financeiras button {
+    flex: 1;
+  }
+}
+
+.financeiros article {
+  position: relative;
+}
+.ajuda {
+  position: static;
+}
+.ajuda p {
+  left: 12px;
+  right: auto;
+  top: 46px;
+  width: min(230px, calc(100vw - 60px));
+}
+.ajuda summary:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 3px;
+}
+.etapa {
+  background: #172d45;
+  color: #b8ceed;
+  border-color: #314f70;
+}
+@media (max-width: 600px) {
+  .financeiros article:nth-child(even) .ajuda p {
+    left: auto;
+    right: 12px;
+  }
+}

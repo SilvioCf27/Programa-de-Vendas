@@ -101,3 +101,43 @@ test('salvar uma edição exige que a versão anterior ainda exista', async () =
     ['versao', 3],
   ]);
 });
+
+test('consulta financeira usa snapshot único e recusa respostas incompletas', async () => {
+  const chamadas = [];
+  const dados = {
+    vendas: [],
+    financeiro_lancamentos: [],
+    financeiro_taxas_anuais: [],
+  };
+  const api = criarApi({
+    rpc: async (nome, parametros) => {
+      chamadas.push([nome, parametros]);
+      return { data: { protocolo: 1, dados } };
+    },
+  });
+  assert.deepEqual(await api.financeiro(), dados);
+  assert.deepEqual(chamadas, [
+    ['sincronizar_desktop', { alteracoes: [], operacao_id: null }],
+  ]);
+  const incompleta = criarApi({
+    rpc: async () => ({ data: { protocolo: 1, dados: { vendas: [] } } }),
+  });
+  await assert.rejects(incompleta.financeiro(), /incompleta/);
+});
+test('lote financeiro mantém identificador de retomada e verifica confirmação', async () => {
+  const lote = { operacao_id: 'id-ficticio', alteracoes: [] };
+  const chamadas = [];
+  const api = criarApi({
+    rpc: async (nome, parametros) => {
+      chamadas.push(parametros);
+      return { data: { protocolo: 1, operacao_id: 'id-ficticio' } };
+    },
+  });
+  await api.aplicarFinanceiro(lote);
+  await api.aplicarFinanceiro(lote);
+  assert.deepEqual(chamadas, [lote, lote]);
+  const incorreta = criarApi({
+    rpc: async () => ({ data: { protocolo: 1, operacao_id: 'outro' } }),
+  });
+  await assert.rejects(incorreta.aplicarFinanceiro(lote), /não confirmado/);
+});

@@ -2,7 +2,7 @@
 
 A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular como PWA. O programa de Windows continua funcionando com seu banco local.
 
-Nesta etapa estão prontos o login de uma única conta, cadastro, edição, exclusão e consulta de vendas. Os filtros incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. A tela mostra valores brutos; taxas, despesas, parcelas, comparação e exportação ainda serão levadas para a versão web.
+Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises, comparações e exportação ainda serão aproximadas do desktop.
 
 **A sincronização é manual:** depois da migração e do vínculo inicial, use **Sincronizar agora** no desktop para enviar e receber alterações. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
@@ -163,8 +163,7 @@ Antes de usar os dados reais na web:
    Não edite dados em outro computador, celular ou instância durante o envio.
 6. Aguarde **Transferência concluída e validada registro por registro**. O relatório
    recebe as contagens inseridas e o resumo da nuvem para comparação. Abra o site e
-   use **Atualizar** para conferir as vendas. As telas financeiras web ainda serão
-   criadas; os registros financeiros já podem ser transferidos para o banco.
+   use **Atualizar** para conferir as vendas. A aba Finanças consulta os mesmos registros financeiros transferidos.
 
 O banco SQLite é preservado. Valores de dinheiro, Pix e cartão são convertidos
 para centavos sem arredondamento; datas antigas nos formatos conhecidos são
@@ -209,8 +208,7 @@ sua conta Supabase. A conferência na conta real é realizada por você no progr
    não tem uma base anterior para distinguir edições de exclusões com segurança.
 3. Aguarde a confirmação. A partir daí, depois de cadastrar, editar ou excluir em
    qualquer dispositivo, clique em **Sincronizar agora** no desktop. São enviados
-   e recebidos vendas, despesas, taxas e parcelas. O site continua sem telas
-   financeiras: sincronizar esses dados não cria a interface financeira web.
+   e recebidos vendas, despesas, taxas e parcelas. A aba Finanças no site permite consultar e editar os mesmos registros financeiros.
 
 O desktop mantém o SQLite como banco de trabalho e continua funcionando sem
 internet. Não há envio automático ao fechar nem consulta periódica no desktop.
@@ -252,3 +250,46 @@ Para validar o fluxo, use uma data livre com uma venda fictícia: cadastre no PC
 sincronize e confira no site; edite no site, sincronize e confira no PC; exclua o
 teste e sincronize novamente. Confira também se os totais voltaram ao valor
 anterior. Faça esse teste antes de usar os dois dispositivos no dia a dia.
+
+## Finanças no celular
+
+A aba **Finanças** tem consulta própria por semana, mês, ano ou fechamento,
+independente do filtro de vendas. Semana começa na segunda e termina no domingo.
+No fechamento, o mês da data de referência corresponde ao dia 10 desse mês até
+09 do próximo. A consulta inicial usa o fechamento atual.
+
+Os cartões mostram vendas brutas, taxas descontadas, valor após taxas, despesas,
+saldo e quanto falta para cobrir os gastos. O ponto de interrogação abre uma
+explicação por toque ou teclado. Saldo inclui somente o que foi cadastrado,
+inclusive despesas pessoais e compromissos futuros: não é lucro contábil.
+
+A regra dos ajustes anuais é a mesma do desktop. O valor só é descontado quando
+sua cobertura inteira cabe no filtro. Um recorte parcial recebe aviso de saldo
+provisório, sem ratear ou inventar taxas. Ajustes estimados continuam identificados.
+A lista de ajustes mostra todos os anos, mesmo quando o resumo usa outro período.
+
+Para despesas parceladas, informe o primeiro vencimento, o valor **de cada parcela**
+e a quantidade, usando Cartão de crédito. Os vencimentos seguintes são mensais;
+quando o dia não existe no mês, usa o último dia disponível e retorna ao dia
+original nos meses seguintes. O lote é gravado numa única transação. Editar ou
+excluir uma linha altera somente aquela parcela. Número e grupo são preservados.
+Não cadastre novamente uma despesa já incluída no compromisso inicial da fatura.
+
+Taxas diárias e ajustes anuais não podem cobrir o mesmo dia. Duplicidades,
+sobreposições e alterações concorrentes são recusadas no servidor. As operações
+usam a função `sincronizar_desktop` do SQL 004, já instalada; esta atualização da
+interface não exige outro script SQL.
+
+Antes de enviar uma alteração financeira, o navegador registra o lote pendente
+no `sessionStorage`, separado por usuário, sem senha ou token. Enquanto a sessão
+da aba existir, é possível confirmar o mesmo envio depois de uma queda de rede ou
+recarregamento, sem repeti-lo. Na confirmação incerta, campos ficam bloqueados:
+use **Confirmar envio**, ou feche o formulário e use **Atualizar finanças**.
+Não há cadastro off-line: esse registro serve para retomar um envio iniciado com
+conexão. A sessão da aba pode ser perdida ao fechar o navegador; confira a lista
+online antes de recriar manualmente uma despesa após uma interrupção.
+
+O service worker continua sem armazenar respostas financeiras. Sair da conta
+limpa a tela; uma operação pendente só é retomada pela mesma conta. Depois de
+alterar no celular, use **Sincronizar agora** no PC para receber os dados. O envio
+no desktop continua manual nesta versão.

@@ -8,6 +8,9 @@ function token() {
 }
 async function preparar(page) {
   const vendas = [];
+  const financeiro = { lancamentos: [], anuais: [] };
+  vendas.financeiro = financeiro;
+  const recibos = new Set();
   await page.route('https://projeto-teste.supabase.co/**', async (route) => {
     const request = route.request();
     const url = new URL(request.url());
@@ -41,6 +44,56 @@ async function preparar(page) {
       return route.fulfill({ status: 204, headers });
     if (url.pathname === '/rest/v1/rpc/usuario_autorizado')
       return responder(true);
+    if (url.pathname === '/rest/v1/rpc/sincronizar_desktop') {
+      const lote = request.postDataJSON();
+      if (lote.operacao_id && !recibos.has(lote.operacao_id)) {
+        const copia = structuredClone({
+          financeiro_lancamentos: financeiro.lancamentos,
+          financeiro_taxas_anuais: financeiro.anuais,
+        });
+        for (const op of lote.alteracoes) {
+          const linhas = copia[op.tabela];
+          const index = linhas.findIndex((r) => r.id === op.id);
+          if (
+            op.acao !== 'inserir' &&
+            (index < 0 || linhas[index].versao !== op.versao)
+          )
+            return responder({ code: 'PFS01' }, 400);
+          if (op.acao === 'excluir') linhas.splice(index, 1);
+          else if (op.acao === 'inserir')
+            linhas.push({ ...op.dados, id: op.id, versao: 1 });
+          else
+            linhas[index] = { ...op.dados, id: op.id, versao: op.versao + 1 };
+        }
+        for (const l of copia.financeiro_lancamentos.filter(
+          (r) => r.tipo === 'taxa'
+        ))
+          if (
+            copia.financeiro_taxas_anuais.some(
+              (a) => a.inicio <= l.data && a.fim >= l.data
+            )
+          )
+            return responder({ code: '23505' }, 409);
+        financeiro.lancamentos = copia.financeiro_lancamentos;
+        financeiro.anuais = copia.financeiro_taxas_anuais;
+        recibos.add(lote.operacao_id);
+        if (financeiro.perderResposta) {
+          financeiro.perderResposta = false;
+          return route.abort('failed');
+        }
+      }
+      return responder({
+        protocolo: 1,
+        usuario_id: USER,
+        operacao_id: lote.operacao_id,
+        repetida: false,
+        dados: {
+          vendas,
+          financeiro_lancamentos: financeiro.lancamentos,
+          financeiro_taxas_anuais: financeiro.anuais,
+        },
+      });
+    }
     if (url.pathname === '/rest/v1/vendas') {
       if (request.method() === 'GET') {
         const filtros = url.searchParams.getAll('data');
@@ -210,4 +263,247 @@ test('ao voltar ao celular atualiza os dados, preservando formulário em ediçã
   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
   await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(page.locator('#total')).toHaveText('R$ 4,00');
+});
+
+async function consultarFinancas(
+  page,
+  tipo = 'Mês',
+  referencia = '2030-10-01'
+) {
+  await page.locator('#fin-tipo').selectOption(tipo);
+  await page.locator('#fin-referencia').fill(referencia);
+  await page.locator('#fin-filtros button').click();
+  await expect(page.locator('#fin-status')).toContainText('Dados consultados');
+}
+test('finanças mostra saldo, semanas e ajustes estimados sem ratear taxa anual parcial', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  vendas.push({
+    id: crypto.randomUUID(),
+    versao: 1,
+    data: '2030-10-16',
+    dinheiro_centavos: 10000,
+    pix_centavos: 0,
+    cartao_centavos: 0,
+  });
+  vendas.financeiro.lancamentos.push({
+    id: crypto.randomUUID(),
+    versao: 1,
+    tipo: 'despesa',
+    data: '2030-10-16',
+    descricao: '<img src=x onerror=alert(1)>',
+    valor_centavos: 3000,
+    meio: 'Pix',
+    categoria: 'Casa',
+    grupo: null,
+    parcela: 1,
+    parcelas: 1,
+  });
+  vendas.financeiro.anuais.push({
+    id: crypto.randomUUID(),
+    versao: 1,
+    ano: 2030,
+    inicio: '2030-01-01',
+    fim: '2030-12-31',
+    valor_centavos: 500,
+    natureza: 'Estimada',
+    observacao: 'Ajuste fictício',
+  });
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page);
+  await expect(page.locator('#fin-bruto')).toHaveText('R$ 100,00');
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 0,00');
+  await expect(page.locator('#fin-saldo')).toHaveText('R$ 70,00');
+  await expect(page.locator('#fin-aviso')).toContainText('saldo provisório');
+  await expect(page.locator('#fin-aviso')).toContainText('Taxas estimadas');
+  await expect(page.locator('#fin-semanas')).toContainText('R$ 30,00');
+  expect(await page.locator('#fin-lancamentos img').count()).toBe(0);
+  await consultarFinancas(page, 'Ano');
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 5,00');
+  await expect(page.locator('#fin-saldo')).toHaveText('R$ 65,00');
+  await page.getByLabel('Ajuda: Saldo do período').click();
+  await expect(
+    page.getByText('Não é um cálculo contábil de lucro', { exact: false })
+  ).toBeVisible();
+  const ajuda = await page.locator('details[open] p').boundingBox();
+  expect(ajuda.x).toBeGreaterThanOrEqual(0);
+  expect(ajuda.x + ajuda.width).toBeLessThanOrEqual(390);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth
+    )
+  ).toBe(true);
+  if (process.env.CAPTURAR_WEB_DIR)
+    await page.screenshot({
+      path: `${process.env.CAPTURAR_WEB_DIR}/feira-financas.png`,
+      fullPage: true,
+    });
+  await page.getByRole('button', { name: 'Sair', exact: true }).click();
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
+  await expect(page.locator('#fin-saldo')).toHaveText('—');
+});
+test('despesas parceladas: cria lote, edita e exclui somente a parcela escolhida', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Ano');
+  await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
+  const f = page.locator('#fin-form');
+  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-31');
+  await f.getByLabel('Descrição', { exact: true }).fill('Compra fictícia');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('123,45');
+  await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
+  await f.getByLabel('Quantidade de parcelas').fill('2');
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(2);
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 246,90');
+  const primeira = page
+    .locator('#fin-lancamentos li')
+    .filter({ hasText: 'Parcela 1/2' });
+  await primeira.getByRole('button', { name: 'Editar', exact: true }).click();
+  await expect(f.getByLabel('Quantidade de parcelas')).toBeDisabled();
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('120,00');
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 243,45');
+  expect(
+    vendas.financeiro.lancamentos.find((r) => r.parcela === 2).valor_centavos
+  ).toBe(12345);
+  await primeira.getByRole('button', { name: 'Editar', exact: true }).click();
+  const alterada = vendas.financeiro.lancamentos.find((r) => r.parcela === 1);
+  alterada.versao++;
+  alterada.valor_centavos = 22000;
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('999,00');
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-erro-form')).toContainText(
+    'mudou em outro acesso'
+  );
+  expect(alterada.valor_centavos).toBe(22000);
+  await f.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Atualizar finanças', exact: true })
+    .click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 343,45');
+  page.once('dialog', (d) => d.accept());
+  await primeira.getByRole('button', { name: 'Excluir', exact: true }).click();
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(1);
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 123,45');
+});
+test('taxa diária sobreposta é recusada; ajuste anual pode ser editado e excluído', async ({
+  page,
+}) => {
+  await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Ano');
+  await page
+    .getByRole('button', { name: '+ Ajuste anual', exact: true })
+    .click();
+  const a = page.locator('#anual-form');
+  await a.getByLabel('Ano do ajuste').fill('2030');
+  await a.getByLabel('Início da cobertura').fill('2030-01-01');
+  await a.getByLabel('Fim da cobertura').fill('2030-01-31');
+  await a.getByLabel('Valor das taxas').fill('50,01');
+  await a.getByLabel('Natureza').selectOption('Estimada');
+  await a.getByRole('button', { name: 'Salvar ajuste', exact: true }).click();
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 50,01');
+  await page
+    .getByRole('button', { name: '+ Taxa diária', exact: true })
+    .click();
+  const f = page.locator('#fin-form');
+  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-01-15');
+  await f.getByLabel('Descrição', { exact: true }).fill('Taxa fictícia');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('1,00');
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-erro-form')).toContainText('ajuste anual');
+  await f.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page
+    .locator('#fin-anuais')
+    .getByRole('button', { name: 'Editar', exact: true })
+    .click();
+  await a.getByLabel('Valor das taxas').fill('50,02');
+  await a.getByRole('button', { name: 'Salvar ajuste', exact: true }).click();
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 50,02');
+  page.once('dialog', (d) => d.accept());
+  await page
+    .locator('#fin-anuais')
+    .getByRole('button', { name: 'Excluir', exact: true })
+    .click();
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 0,00');
+});
+test('resposta perdida retoma a operação após recarregar sem duplicar despesa', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
+  const f = page.locator('#fin-form');
+  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-16');
+  await f.getByLabel('Descrição', { exact: true }).fill('Teste de retomada');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
+  vendas.financeiro.perderResposta = true;
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-erro-form')).toContainText(
+    'Não foi possível confirmar'
+  );
+  expect(vendas.financeiro.lancamentos).toHaveLength(1);
+  await expect(f.getByLabel('Descrição', { exact: true })).toBeDisabled();
+  await page.reload();
+  await expect(
+    page.getByRole('button', { name: 'Finanças', exact: true })
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-status')).toContainText('Dados consultados');
+  await consultarFinancas(page);
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(1);
+  expect(vendas.financeiro.lancamentos).toHaveLength(1);
+  expect(
+    await page.evaluate(() =>
+      Object.keys(sessionStorage).some((k) =>
+        k.startsWith('feira-financeiro-pendente:')
+      )
+    )
+  ).toBe(false);
+});
+
+test('falha no armazenamento da confirmação impede enviar a despesa', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
+  const f = page.locator('#fin-form');
+  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-16');
+  await f.getByLabel('Descrição', { exact: true }).fill('Teste sem envio');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (chave, valor) {
+      if (chave.startsWith('feira-financeiro-pendente:'))
+        throw new DOMException('Indisponível', 'QuotaExceededError');
+      return original.call(this, chave, valor);
+    };
+  });
+  await f
+    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .click();
+  await expect(page.locator('#fin-erro-form')).toContainText(
+    'Permita armazenamento local'
+  );
+  expect(vendas.financeiro.lancamentos).toHaveLength(0);
 });

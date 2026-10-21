@@ -11,6 +11,7 @@ import {
   erroAmigavel,
 } from './regras.js';
 import './style.css';
+import { criarPainelFinanceiro } from './painel-financeiro.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('venda');
@@ -24,6 +25,22 @@ let cliente,
   gravando = false;
 let selecao;
 let geracao = 0;
+const financeiro = criarPainelFinanceiro({
+  api: () => api,
+  sessao: () => sessao,
+});
+function mudarArea(area) {
+  for (const nome of ['vendas', 'financas']) {
+    $('area-' + nome).hidden = nome !== area;
+    $('aba-' + nome).setAttribute('aria-pressed', String(nome === area));
+  }
+  if (area === 'financas') financeiro.atualizar();
+}
+$('aba-vendas').addEventListener('click', () => {
+  mudarArea('vendas');
+  carregar();
+});
+$('aba-financas').addEventListener('click', () => mudarArea('financas'));
 const referencia = mesFechamento();
 $('ano').value = referencia.ano;
 const meses = [
@@ -152,8 +169,11 @@ function atualizarAoVoltar() {
     !modal.open &&
     !gravando &&
     selecao
-  )
-    carregar();
+  ) {
+    if (!$('area-financas').hidden) {
+      if (!financeiro.ocupado()) financeiro.atualizar();
+    } else if (!financeiro.ocupado()) carregar();
+  }
 }
 window.addEventListener('focus', atualizarAoVoltar);
 window.addEventListener('online', atualizarAoVoltar);
@@ -229,6 +249,8 @@ async function receberSessao(nova) {
   sessao = nova;
   geracao++;
   if (mudouConta) {
+    financeiro.limpar();
+    mudarArea('vendas');
     registros = [];
     desenhar();
     modal.close();

@@ -20,6 +20,28 @@ export function criarApi(cliente) {
         if (data.length < 500) return resultado;
       }
     },
+    async financeiro() {
+      const { data, error } = await cliente.rpc('sincronizar_desktop', {
+        alteracoes: [],
+        operacao_id: null,
+      });
+      if (error) throw error;
+      if (
+        data?.protocolo !== 1 ||
+        !['vendas', 'financeiro_lancamentos', 'financeiro_taxas_anuais'].every(
+          (t) => Array.isArray(data?.dados?.[t])
+        )
+      )
+        throw Error('Resposta financeira incompleta.');
+      return data.dados;
+    },
+    async aplicarFinanceiro(lote) {
+      const { data, error } = await cliente.rpc('sincronizar_desktop', lote);
+      if (error) throw error;
+      if (data?.protocolo !== 1 || data.operacao_id !== lote.operacao_id)
+        throw Error('Envio não confirmado.');
+      return data;
+    },
     async salvar(venda, anterior = null) {
       const q = anterior
         ? cliente

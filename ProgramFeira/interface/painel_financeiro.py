@@ -111,7 +111,10 @@ class PainelFinanceiro(ttk.Frame):
 
     def consultar(self, manter_periodo=False):
         try:
-            if manter_periodo and hasattr(self, 'inicio'):
+            if manter_periodo:
+                # A aba é carregada sob demanda e pode nunca ter sido aberta.
+                if self.inicio is None or self.fim is None:
+                    return
                 inicio, fim = self.inicio, self.fim
             else:
                 referencia = interpretar_data(self.referencia.get()).isoformat()

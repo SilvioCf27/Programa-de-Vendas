@@ -29,6 +29,14 @@ a.janela.report_callback_exception = lambda *args: errors.append(args)
 a.janela.update()
 assert len(a.tabela.get_children()) == 9
 assert a.formulario.state() == 'withdrawn'
+# Sincronizar antes da primeira visita a Finanças preserva a carga sob demanda.
+assert a.painel_financeiro.inicio is None
+assert a.painel_financeiro.fim is None
+with patch('ProgramFeira.financeiro.resumo_periodo') as consultar_financas:
+    a.atualizar_apos_sincronizacao()
+    consultar_financas.assert_not_called()
+assert a.painel_financeiro.inicio is None
+assert not errors
 # O acabamento usa controles ttk reais: seletor, teclado e estados permanecem nativos.
 combo = a.filtro_mes_combobox
 combo.event_generate('<ButtonPress-1>', x=combo.winfo_width()-12, y=combo.winfo_height()//2)

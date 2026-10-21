@@ -249,7 +249,7 @@ assert a.conexao_nuvem.configurar() is popup
 campos = a.conexao_nuvem.campos
 for nome, valor in {'url': 'https://projeto-ficticio.supabase.co', 'chave': 'sb_publishable_apenas_teste', 'email': 'teste@example.invalid', 'senha': 'senha-ficticia'}.items():
     campos[nome].insert(0, valor)
-with patch('ProgramFeira.nuvem.ClienteNuvem.entrar', return_value=Sessao('usuario', 'teste@example.invalid', 'token-ficticio')) as login:
+with patch('ProgramFeira.nuvem.ClienteNuvem.entrar', return_value=Sessao('11111111-1111-4111-8111-111111111111', 'teste@example.invalid', 'token-ficticio')) as login:
     a.conexao_nuvem.botao_entrar.invoke()
     assert campos['senha'].get() == ''
     assert a.conexao_nuvem.ocupado
@@ -265,6 +265,32 @@ assert 'Nenhum registro foi transferido' in a.conexao_nuvem.status.get()
 assert carregar_nuvem(a.CAMINHO_BANCO.parent)['url'] == 'https://projeto-ficticio.supabase.co'
 assert len(a.listar_vendas()) == 9
 assert 'senha-ficticia' not in (a.CAMINHO_BANCO.parent / 'nuvem.json').read_text()
+# Conferência real cria backup; somente a resposta do serviço é simulada.
+import copy
+def resposta_migracao(sessao, dados, aplicar):
+    return dict(aplicado=aplicar, novos={t: len(dados[t]) for t in dados}, dados=copy.deepcopy(dados) if aplicar else {t: [] for t in dados})
+def aguardar_nuvem():
+    prazo = time.monotonic() + 5
+    while a.conexao_nuvem.ocupado and time.monotonic() < prazo:
+        a.janela.update()
+        time.sleep(0.01)
+    assert not a.conexao_nuvem.ocupado
+with patch('ProgramFeira.nuvem.ClienteNuvem.migrar', side_effect=resposta_migracao) as rpc:
+    a.conexao_nuvem.botao_conferir.invoke()
+    aguardar_nuvem()
+    assert a.conexao_nuvem.preparacao is not None, a.conexao_nuvem.status.get()
+    assert a.conexao_nuvem.preparacao['relatorio']['resumo']['registros']['vendas'] == 9
+    assert Path(a.conexao_nuvem.preparacao['relatorio']['backup']).exists()
+    with patch.object(a.messagebox, 'askyesno', return_value=False):
+        a.conexao_nuvem.botao_transferir.invoke()
+    assert rpc.call_count == 1
+    with patch.object(a.messagebox, 'askyesno', return_value=True):
+        a.conexao_nuvem.botao_transferir.invoke()
+        aguardar_nuvem()
+    assert rpc.call_count == 2
+    assert 'concluída e validada' in a.conexao_nuvem.status.get()
+    assert a.conexao_nuvem.preparacao is None
+assert len(a.listar_vendas()) == 9
 a.conexao_nuvem.botao_sair.invoke()
 assert a.conexao_nuvem.sessao is None
 a.conexao_nuvem.fechar()

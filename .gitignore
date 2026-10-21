@@ -33,3 +33,5 @@ node_modules/
 playwright-report/
 test-results/
 web/dist/
+
+migracoes-nuvem/

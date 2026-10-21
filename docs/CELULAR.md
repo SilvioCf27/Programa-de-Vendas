@@ -4,7 +4,7 @@ A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular 
 
 Nesta etapa estão prontos o login de uma única conta, cadastro, edição, exclusão e consulta de vendas. Os filtros incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. A tela mostra valores brutos; taxas, despesas, parcelas, comparação e exportação ainda serão levadas para a versão web.
 
-**Ainda não há sincronização com o desktop.** Não faça lançamentos reais nas duas versões esperando que sejam combinados. Primeiro vamos configurar e testar o acesso online; depois preparar a migração dos dados e a integração do computador. Nenhum dado pessoal acompanha o código ou é importado automaticamente.
+**Ainda não há sincronização com o desktop.** Não faça lançamentos reais nas duas versões esperando que sejam combinados. A transferência inicial está descrita abaixo; ela ainda não integra as alterações posteriores dos dois aplicativos. Nenhum dado pessoal acompanha o código ou é importado automaticamente.
 
 ## Serviços escolhidos
 
@@ -137,12 +137,64 @@ local dos dados, fora do repositório. A senha não é gravada em arquivo e o ca
 **Desconectar** a remove do desktop, sem encerrar sessões em outros dispositivos.
 Ainda não há renovação automática da sessão: esta etapa apenas verifica o acesso.
 
-A janela não envia vendas ou informações financeiras. Ela também não baixa nem
-substitui o banco local. A conexão só acontece ao clicar em Verificar acesso;
-falhas de internet não impedem o uso normal do programa. O backup no Drive segue
-independente dessa configuração.
+A conexão só acontece por ação explícita nessa janela. Falhas de internet não
+impedem o uso normal do programa. O backup no Drive segue independente.
 
 Esta opção está no código-fonte atualizado. O executável publicado v1.0.1 ainda
 não a inclui. Para testar pelo VS Code, atualize a cópia do repositório com
-`git pull` e execute `python executar.py` na pasta principal. A migração e a
-sincronização serão implementadas em etapas posteriores, com backup e validação.
+`git pull` e execute `python executar.py` na pasta principal.
+
+## Transferência inicial do desktop
+
+Antes de usar os dados reais na web:
+
+1. No Supabase, execute [`003_migracao_desktop.sql`](../supabase/migrations/003_migracao_desktop.sql)
+   no SQL Editor do mesmo projeto. As migrações 001 e 002 devem estar instaladas.
+   Esse script apenas instala uma função; não transfere registros. Pode ser
+   reaplicado para atualizar a função, sem recriar tabelas.
+2. Atualize e abra o desktop. Em **Dados → Conexão com a nuvem…**, verifique o acesso.
+3. Clique em **Conferir migração**. O programa cria um snapshot SQLite verificado,
+   valida todas as linhas e compara os registros com a nuvem, sem gravar nela.
+4. Confira as quantidades e o total bruto apresentados. O relatório JSON completo
+   fica na pasta `migracoes-nuvem`, junto aos dados locais. Ele registra contagens,
+   vendas por ano, dias zerados, totais por meio de recebimento, despesas, taxas,
+   identificação SHA-256 dos dados e do backup e o resultado da conferência.
+5. Só depois clique em **Transferir dados conferidos** e confira a confirmação.
+   Não edite dados em outro computador, celular ou instância durante o envio.
+6. Aguarde **Transferência concluída e validada registro por registro**. O relatório
+   recebe as contagens inseridas e o resumo da nuvem para comparação. Abra o site e
+   use **Atualizar** para conferir as vendas. As telas financeiras web ainda serão
+   criadas; os registros financeiros já podem ser transferidos para o banco.
+
+O banco SQLite é preservado. Valores de dinheiro, Pix e cartão são convertidos
+para centavos sem arredondamento; datas antigas nos formatos conhecidos são
+normalizadas, e duplicidades após conversão interrompem a operação. Dias zerados
+são mantidos. Parcelas preservam seus vencimentos e grupos, e ajustes anuais
+mantêm a classificação Confirmada/Estimada. Descrições e observações não são
+reescritas. Valores inválidos ou taxas sobrepostas interrompem a migração.
+
+O banco online compara cada campo dos registros existentes e bloqueia valores
+divergentes ou registros extras. Registros idênticos são preservados. As vendas
+são identificadas pela data, ajustes anuais pelo ano e lançamentos por UUID
+estável, derivado da conta e do identificador local. A transferência só insere o
+que falta, em uma única transação. Ela nunca atualiza nem exclui registros remotos.
+Qualquer erro SQL desfaz a operação inteira. Permissões e RLS continuam em vigor.
+
+Antes do envio, o backup é verificado novamente e alterações no SQLite após a
+conferência bloqueiam a transferência. Durante o envio, uma transação local sem
+alterações impede outras instâncias de gravar, e o servidor bloqueia gravações
+concorrentes durante a comparação e a inserção. Leituras remotas continuam.
+
+Se a conexão cair, não presuma que nada foi enviado: o servidor pode ter concluído
+antes da perda da resposta. O relatório fica como resultado a confirmar, sem
+repetição automática. Faça uma nova conferência. Registros já iguais não serão
+inseridos novamente. Se houver divergência, pare e examine a indicação da tabela
+e do registro, sem excluir ou substituir dados para contornar o bloqueio.
+
+**Transferência inicial não é sincronização.** Após ela, continue registrando
+vendas reais apenas no desktop até implementarmos a integração contínua. Novos
+lançamentos locais não serão enviados automaticamente; alterações na web também
+não são baixadas. Não use a migração para sincronizar edições ou exclusões.
+
+As verificações automáticas usam somente bancos e dados fictícios. Não acessam
+sua conta Supabase. A conferência na conta real é realizada por você no programa.

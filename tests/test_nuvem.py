@@ -105,3 +105,24 @@ class NuvemTests(unittest.TestCase):
                     nuvem.salvar_config(pasta, 'https://outro.supabase.co', CHAVE)
             self.assertEqual(nuvem.carregar_config(pasta), original)
             self.assertEqual(len(list(Path(pasta).iterdir())), 1)
+
+    def test_migracao_envia_dados_so_ao_rpc_autenticado(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock(return_value=resposta({'aplicado': False}))
+        sessao = nuvem.Sessao('usuario', 'teste@example.invalid', 'token-ficticio')
+        cliente.migrar(sessao, {'vendas': []}, False)
+        req = cliente._abrir.call_args.args[0]
+        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/migrar_desktop')
+        self.assertEqual(json.loads(req.data), {'dados': {'vendas': []}, 'aplicar': False})
+        self.assertEqual(req.get_header('Authorization'), 'Bearer token-ficticio')
+
+    def test_erros_de_migracao_explicam_conflito_sem_exibir_resposta_bruta(self):
+        for codigo, trecho in [('PFM01', 'divergentes'), ('PFM02', 'formato'), ('PGRST202', '003_migracao'), ('23505', 'cancelada')]:
+            cliente = nuvem.ClienteNuvem(URL, CHAVE)
+            corpo = {'code': codigo, 'message': 'senha-nao-exibir', 'details': json.dumps({'tabela': 'vendas', 'chave': '2030-01-01'})}
+            cliente._abrir = Mock(side_effect=HTTPError(URL, 400, 'erro', {}, resposta(corpo)))
+            with self.assertRaisesRegex(nuvem.ErroNuvem, trecho) as contexto:
+                cliente.migrar(nuvem.Sessao('usuario', 'email', 'token'), {}, False)
+            self.assertNotIn('senha-nao-exibir', str(contexto.exception))
+            if codigo == 'PFM01':
+                self.assertIn('2030-01-01', str(contexto.exception))

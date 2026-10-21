@@ -91,6 +91,29 @@ class ClienteNuvem:
             with self._abrir(requisicao, timeout=20) as resposta:
                 return json.loads(resposta.read(1_000_001))
         except error.HTTPError as erro:
+            codigo = None
+            detalhe = {}
+            try:
+                if erro.fp is not None:
+                    corpo = json.loads(erro.read(4096))
+                    codigo = corpo.get('code')
+                    try:
+                        detalhe = json.loads(corpo.get('details') or '{}')
+                    except (ValueError, TypeError):
+                        pass
+            except (OSError, ValueError, AttributeError):
+                pass
+            if codigo == 'PFM01':
+                referencia = ''
+                if isinstance(detalhe, dict) and detalhe.get('tabela') in ('vendas', 'financeiro_lancamentos', 'financeiro_taxas_anuais') and re.fullmatch(r'[0-9a-f-]{1,40}', str(detalhe.get('chave', ''))):
+                    referencia = f" Tabela: {detalhe['tabela']}; registro: {detalhe['chave']}."
+                raise ErroNuvem('Há dados divergentes ou extras na nuvem.' + referencia + ' Nada foi substituído; migração interrompida.') from None
+            if codigo == 'PFM02':
+                raise ErroNuvem('A nuvem recusou o formato dos dados. Migração interrompida.') from None
+            if codigo == 'PGRST202':
+                raise ErroNuvem('Instale o SQL 003_migracao_desktop.sql no Supabase antes de conferir a migração.') from None
+            if codigo in ('23505', '23514', '23502', '22P02', '22007', '22008'):
+                raise ErroNuvem('A nuvem recusou um valor, uma data, uma duplicidade ou uma sobreposição de taxas. A transferência inteira foi cancelada.') from None
             if erro.code == 429:
                 mensagem = 'Muitas tentativas. Aguarde um pouco antes de tentar novamente.'
             elif erro.code in (400, 401, 403):
@@ -117,3 +140,6 @@ class ClienteNuvem:
         if self._post('/rest/v1/rpc/usuario_autorizado', {}, token) is not True:
             raise ErroNuvem('Esta conta não está autorizada neste projeto. Confira o proprietário configurado no Supabase.')
         return Sessao(usuario_id, endereco, token)
+
+    def migrar(self, sessao, dados, aplicar=False):
+        return self._post('/rest/v1/rpc/migrar_desktop', {'dados': dados, 'aplicar': aplicar}, sessao.token)

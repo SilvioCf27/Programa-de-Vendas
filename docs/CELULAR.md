@@ -83,3 +83,42 @@ npm run test:browser
 ```
 
 Os testes SQL usam PostgreSQL em WebAssembly, sem acessar um projeto real. Eles verificam acesso anônimo, outra conta, proprietário, valores monetários, duplicidades e edição concorrente. Os testes de navegador simulam as respostas do serviço e usam apenas dados fictícios. Eles não comprovam a configuração de um projeto Supabase real: essa conferência será feita depois de criá-lo na sua conta.
+
+## Preparar as tabelas financeiras
+
+Depois de configurar o acesso e testar as vendas, execute uma única vez
+[`supabase/migrations/002_financeiro.sql`](../supabase/migrations/002_financeiro.sql)
+no SQL Editor do mesmo projeto Supabase. A migração depende da `001_vendas.sql`.
+Ela é transacional: se algum comando falhar, a criação não fica pela metade.
+Não repita a migração depois de uma execução bem-sucedida.
+
+O script cria lançamentos de despesas e taxas diárias, além de ajustes anuais
+confirmados ou estimados. Valores são inteiros em centavos. Parcelas preservam
+grupo, número, quantidade e data de vencimento: cada parcela corresponde a um
+lançamento, como no desktop. O valor gravado é o de cada parcela, não o total da
+compra. Não há geração automática de parcelas pela API nesta etapa.
+
+As tabelas têm RLS e permitem acesso apenas ao proprietário já configurado.
+Alterações incrementam a versão; a futura integração deverá informar a versão
+anterior ao editar ou excluir, assim como o cadastro web de vendas já faz.
+Reservas privadas de datas impedem taxas anuais e diárias sobrepostas. A chave
+única dessas reservas também protege gravações simultâneas; uma colisão cancela
+a operação inteira, inclusive qualquer mudança anterior nas reservas.
+A tabela privada não pode ser consultada ou alterada pelo aplicativo.
+
+Para conferir a instalação no SQL Editor:
+
+```sql
+select tablename, rowsecurity
+from pg_tables
+where schemaname = 'public'
+  and tablename in ('financeiro_lancamentos', 'financeiro_taxas_anuais')
+order by tablename;
+```
+
+Devem aparecer duas linhas com `rowsecurity = true`.
+
+**Isso prepara somente o banco online.** Não altera as vendas existentes, não
+transfere o SQLite, não conecta o desktop e não cria telas financeiras no celular.
+Continue usando o desktop para os dados reais até validarmos a migração.
+Não é necessário reinstalar o executável nesta etapa.

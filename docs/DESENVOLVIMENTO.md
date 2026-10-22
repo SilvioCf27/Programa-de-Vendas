@@ -80,6 +80,9 @@ injetadas. Os gráficos têm valores textuais e não introduzem biblioteca gráf
 `diagnostico.py` registra somente posições da pilha, sem mensagens, argumentos,
 variáveis locais ou trechos de código.
 
-A tentativa de `npm audit --omit=dev` desta revisão não foi concluída: o serviço
-do registro npm retornou HTTP 503. Isso não equivale a uma auditoria aprovada;
-a checagem deve ser repetida quando o serviço estiver disponível.
+A primeira consulta de auditoria npm retornou HTTP 503. Após a recuperação do
+serviço, a checagem apontou o aviso GHSA-px8p-9vwx-vf98 em fflate 0.8.2. A versão
+foi atualizada para 0.8.3, inclusive na árvore usada pela exportação. A nova
+execução de `npm audit --omit=dev` retornou zero avisos conhecidos nas dependências
+de produção. Isso complementa os testes; não substitui a revisão das regras de
+acesso ou o acompanhamento de novas correções.

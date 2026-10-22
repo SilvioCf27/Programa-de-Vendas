@@ -1,4 +1,5 @@
 from dados_ficticios import criar_banco
+from contextlib import closing
 import hashlib
 import importlib.util
 import sqlite3
@@ -107,7 +108,7 @@ class RecuperacaoTests(unittest.TestCase):
         from ProgramFeira.recuperacao import testar_recuperacao
         with tempfile.TemporaryDirectory() as pasta:
             origem = criar_banco(Path(pasta) / 'backup.db')
-            with sqlite3.connect(origem) as c:
+            with closing(sqlite3.connect(origem)) as c, c:
                 c.executescript("CREATE TABLE financeiro_lancamentos(id INTEGER, valor_centavos INTEGER); INSERT INTO financeiro_lancamentos VALUES(1,12345); CREATE TABLE financeiro_taxas_anuais(ano INTEGER, valor_centavos INTEGER); INSERT INTO financeiro_taxas_anuais VALUES(2030,456); CREATE TABLE nuvem_sync_estado(pendente TEXT); INSERT INTO nuvem_sync_estado VALUES('lote pendente ficticio');")
             antes = origem.read_bytes()
             resultado = testar_recuperacao(origem)

@@ -1,3 +1,5 @@
+A versão 1.2.1 coloca as funções de dados em Configurações, pela engrenagem na tela principal, com explicações breves ao passar o mouse sobre **?**. A opção de conferir a cópia passa a se chamar **Verificar integridade do backup** e informa claramente que não altera os dados em uso. Tema, exportação e Nova venda mantêm suas posições. Dados e configurações existentes são preservados.
+
 A versão 1.2.0 acrescenta:
 
 - Teste de recuperação de backup em pasta temporária, conferindo todas as tabelas sem alterar o banco em uso.
@@ -16,4 +18,4 @@ O pacote acompanha um banco vazio, as fontes e a exportação Excel. Para quem j
 
 `VALIDACAO_WINDOWS.json` registra o teste automático do binário no Windows; `SHA256.txt` identifica o arquivo distribuído.
 
-Para quem já usa a nuvem pelo código-fonte, as configurações e a sessão protegida existentes são reaproveitadas. Quem ainda usa a versão 1.0.1 pode configurar em **Dados → Conexão com a nuvem**; não substitua os dados locais nem refaça a migração se já a concluiu. A versão web também recebeu Análises, comparações de períodos e atualização automática da área visível.
+Para quem já usa a nuvem pelo código-fonte, as configurações e a sessão protegida existentes são reaproveitadas. Quem ainda usa a versão 1.0.1 pode configurar em **Configurações → Conexão com a nuvem**; não substitua os dados locais nem refaça a migração se já a concluiu. A versão web também recebeu Análises, comparações de períodos e atualização automática da área visível.

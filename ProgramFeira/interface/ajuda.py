@@ -63,3 +63,50 @@ def rotulo_com_ajuda(parent, texto, chave, estilo='Surface.TLabel'):
     ttk.Label(linha, text=texto, style=estilo).pack(side='left')
     botao_ajuda(linha, chave).pack(side='left', padx=(6, 0))
     return linha
+
+
+class Dica:
+    """Texto breve ao passar o mouse ou focar pelo teclado, sem abrir um diálogo."""
+    def __init__(self, widget, texto):
+        self.widget, self.texto = widget, texto
+        self.tarefa = self.popup = None
+        widget.bind('<Enter>', self.agendar, add='+')
+        widget.bind('<FocusIn>', self.agendar, add='+')
+        for evento in ('<Leave>', '<FocusOut>', '<ButtonPress>', '<Destroy>'):
+            widget.bind(evento, self.fechar, add='+')
+
+    def agendar(self, evento=None):
+        self.fechar()
+        self.tarefa = self.widget.after(350, self.mostrar)
+
+    def mostrar(self):
+        self.fechar()
+        self.tarefa = None
+        if not self.widget.winfo_exists() or not self.widget.winfo_viewable():
+            return
+        popup = self.popup = tk.Toplevel(self.widget)
+        popup.withdraw()
+        popup._dica_informativa = True
+        popup.overrideredirect(True)
+        ttk.Label(popup, text=self.texto, wraplength=330, padding=12, style='Surface.TLabel', relief='solid', borderwidth=1).pack()
+        popup.update_idletasks()
+        x = min(self.widget.winfo_rootx(), self.widget.winfo_screenwidth() - popup.winfo_reqwidth() - 8)
+        y = self.widget.winfo_rooty() + self.widget.winfo_height() + 6
+        if y + popup.winfo_reqheight() > self.widget.winfo_screenheight():
+            y = self.widget.winfo_rooty() - popup.winfo_reqheight() - 6
+        popup.geometry(f'+{max(0, x)}+{max(0, y)}')
+        popup.deiconify()
+
+    def fechar(self, evento=None):
+        if self.tarefa is not None:
+            try:
+                self.widget.after_cancel(self.tarefa)
+            except tk.TclError:
+                pass
+            self.tarefa = None
+        if self.popup is not None:
+            try:
+                self.popup.destroy()
+            except tk.TclError:
+                pass
+            self.popup = None

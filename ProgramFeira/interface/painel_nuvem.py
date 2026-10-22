@@ -21,7 +21,7 @@ class ConexaoNuvem:
         self.bloqueando_edicao = False
         self.em_segundo_plano = False
         self.status = tk.StringVar(master=janela, value='Entre para conectar à nuvem. No Windows, a sessão fica protegida na sua conta; sua senha não é salva.')
-        self.resumo = tk.StringVar(master=janela, value='Nuvem: entre em Dados → Conexão com a nuvem.')
+        self.resumo = tk.StringVar(master=janela, value='Nuvem: entre em Configurações → Conexão com a nuvem.')
         self.automatico = tk.BooleanVar(master=janela, value=automacao_nuvem.carregar_preferencia(pasta))
         self.agendador = automacao_nuvem.Agendador(janela,
             lambda: bool(self.automatico.get() and self.sessao and self.vinculado),

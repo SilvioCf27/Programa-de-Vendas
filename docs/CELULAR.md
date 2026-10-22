@@ -4,7 +4,7 @@ A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular 
 
 Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises permite consultar pagamentos, dias da semana e comparar datas, meses, fechamentos e intervalos. CSV e Excel também podem ser exportados na aba Vendas do celular.
 
-**A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Dados → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
+**A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Configurações → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
 ## Serviços escolhidos
 
@@ -125,7 +125,7 @@ Não é necessário reinstalar o executável nesta etapa.
 
 ## Conferir a conta pelo desktop
 
-Com o código atualizado, abra **Dados → Conexão com a nuvem…**. Preencha a
+Com o código atualizado, abra **Configurações → Conexão com a nuvem…**. Preencha a
 Project URL e a mesma chave pública Publishable/anon configuradas no Cloudflare.
 Use o e-mail e a senha do usuário do aplicativo, criado em Authentication → Users,
 e clique em **Verificar acesso**. Não use a senha administrativa do banco.
@@ -158,7 +158,7 @@ Antes de usar os dados reais na web:
    no SQL Editor do mesmo projeto. As migrações 001 e 002 devem estar instaladas.
    Esse script apenas instala uma função; não transfere registros. Pode ser
    reaplicado para atualizar a função, sem recriar tabelas.
-2. Atualize e abra o desktop. Em **Dados → Conexão com a nuvem…**, verifique o acesso.
+2. Atualize e abra o desktop. Em **Configurações → Conexão com a nuvem…**, verifique o acesso.
 3. Clique em **Conferir migração**. O programa cria um snapshot SQLite verificado,
    valida todas as linhas e compara os registros com a nuvem, sem gravar nela.
 4. Confira as quantidades e o total bruto apresentados. O relatório JSON completo
@@ -208,7 +208,7 @@ sua conta Supabase. A conferência na conta real é realizada por você no progr
 1. Instale [`004_sincronizacao.sql`](../supabase/migrations/004_sincronizacao.sql)
    no SQL Editor. A estrutura financeira anterior deve estar pronta. Esse script
    pode ser reaplicado e não modifica vendas ou despesas por conta própria.
-2. No desktop atualizado, abra **Dados → Conexão com a nuvem…**, verifique o acesso
+2. No desktop atualizado, abra **Configurações → Conexão com a nuvem…**, verifique o acesso
    e clique em **Sincronizar agora**. No primeiro vínculo, os dados devem coincidir
    com a migração concluída. Se já houver diferenças, o programa para, pois ainda
    não tem uma base anterior para distinguir edições de exclusões com segurança.
@@ -304,7 +304,7 @@ no desktop também pode ser automático, conforme a seção abaixo.
 
 ## Sincronização automática no desktop
 
-Atualize o código, abra **Dados → Conexão com a nuvem** e use **Verificar acesso**.
+Atualize o código, abra **Configurações → Conexão com a nuvem** e use **Verificar acesso**.
 Depois do vínculo inicial, a opção **Sincronizar automaticamente a cada minuto**
 fica ativa por padrão. Depois de salvar ou excluir um registro no PC, agenda
 um envio em cerca de dois segundos quando não há edição aberta. Desmarque para continuar no modo manual; essa preferência

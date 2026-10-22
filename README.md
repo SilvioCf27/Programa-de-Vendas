@@ -46,7 +46,7 @@ Para atualizar o código, feche o programa e execute `git pull --ff-only`. Um ex
 
 ## Versão para celular — em desenvolvimento
 
-A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões automaticamente a cada minuto enquanto estiver aberto e autenticado, ou pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. A aba Análises mostra pagamentos e dias da semana, além de comparar datas, meses, fechamentos e intervalos. A tela web consulta a nuvem automaticamente a cada minuto enquanto estiver visível, preservando formulários e filtros em preparação. O executável Windows v1.2.0 inclui a integração com a nuvem e a recuperação da sessão protegida.
+A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões automaticamente a cada minuto enquanto estiver aberto e autenticado, ou pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. A aba Análises mostra pagamentos e dias da semana, além de comparar datas, meses, fechamentos e intervalos. A tela web consulta a nuvem automaticamente a cada minuto enquanto estiver visível, preservando formulários e filtros em preparação. O executável Windows v1.2.1 inclui a integração com a nuvem e a recuperação da sessão protegida.
 
 O guia de configuração e os limites desta etapa estão em [CELULAR.md](docs/CELULAR.md).
 
@@ -54,3 +54,8 @@ A versão 1.2.0 acrescenta ensaio de recuperação, revisão das versões em con
 gráficos por mês/fechamento e exportação CSV/Excel no celular. Os dados e as
 configurações existentes são preservados. Os testes usam bancos temporários e
 dados fictícios; o banco público distribuído continua vazio.
+
+Na versão 1.2.1, a engrenagem ao lado do nome abre Configurações, com as funções
+de backup, nuvem e informações do programa. Os botões **?** mostram dicas ao passar
+o mouse. **Verificar integridade do backup** confere uma cópia sem alterar o banco
+em uso; **Restaurar backup** aplica a cópia escolhida.

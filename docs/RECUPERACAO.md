@@ -2,7 +2,7 @@
 
 ## Conferir uma cópia antes de precisar dela
 
-No computador, abra **Dados → Testar recuperação de backup…** e selecione uma cópia
+No computador, abra **Configurações → Verificar integridade do backup…** e selecione uma cópia
 `.db`, inclusive a salva na pasta do Google Drive. Aguarde o Drive terminar de
 sincronizar o arquivo antes de escolher.
 
@@ -23,10 +23,10 @@ do Google Drive e da conexão. CSV e Excel são relatórios, não backups comple
    Preserve outra cópia antes de começar. Se não houver cópia utilizável, mas os
    dados estiverem na web, não tente refazer a migração sobre eles: peça orientação
    para recuperar a partir da nuvem.
-3. No programa, use **Dados → Testar recuperação de backup…**. Confira as quantidades
-   informadas e, após aprovação, use **Dados → Restaurar backup…**.
+3. No programa, use **Configurações → Verificar integridade do backup…**. Confira as quantidades
+   informadas e, após aprovação, use **Configurações → Restaurar backup…**.
 4. Abra Vendas e Finanças e confira as últimas datas, totais e despesas.
-5. Em **Dados → Conexão com a nuvem**, configure o mesmo projeto e a mesma conta.
+5. Em **Configurações → Conexão com a nuvem**, configure o mesmo projeto e a mesma conta.
    Faça login e use **Sincronizar agora** para comparar com os dados online. Não
    use Conferir migração/Transferir dados novamente em uma base já vinculada.
 6. Se houver conflito, confira as duas versões antes de escolher. Depois da
@@ -45,7 +45,7 @@ novo pacote em outra pasta e abra o novo executável. Ele usa os mesmos dados em
 Não abra duas versões ao mesmo tempo para editar.
 
 Se uma atualização apresentar problema, interrompa as edições e preserve um backup
-do estado atual. Envie a versão exibida em **Dados → Sobre esta versão…**, a ação
+do estado atual. Envie a versão exibida em **Configurações → Sobre esta versão…**, a ação
 realizada e a mensagem do erro. Não restaure um backup antigo só para trocar de
 executável: ele pode apagar vendas e despesas mais recentes. A reversão deve
 considerar a compatibilidade da estrutura do banco.

@@ -26,7 +26,7 @@ A consulta de Finanças é independente de Vendas. Ela pode ser semanal, mensal,
 
 ## Backup no Google Drive
 
-Instale e conecte o **Google Drive para computador**. No programa, abra **Dados → Backup no Google Drive**, escolha uma pasta sincronizada, salve e use **Fazer cópia agora** para testar.
+Instale e conecte o **Google Drive para computador**. No programa, abra **Configurações → Backup no Google Drive**, escolha uma pasta sincronizada, salve e use **Fazer cópia agora** para testar.
 
 Ao fechar normalmente, o programa cria uma cópia local verificada e a envia para a pasta escolhida. Mantém o arquivo `gestao-da-feira-ultimo.db` e as sete versões datadas mais recentes. A subpasta se chama `Gestao-da-Feira-Backups`. As cópias incluem vendas, taxas, despesas e parcelas.
 
@@ -36,7 +36,7 @@ Se houver erro, veja a etapa e os caminhos na mensagem. Confira o espaço no dis
 
 ## Recuperar os dados
 
-Baixe uma cópia `.db` do Drive, ou escolha um backup local, e use **Dados → Restaurar backup**. O programa verifica o arquivo e preserva uma cópia do banco atual antes da troca. Feche outras instâncias do aplicativo durante a restauração.
+Baixe uma cópia `.db` do Drive, ou escolha um backup local, e use **Configurações → Restaurar backup**. O programa verifica o arquivo e preserva uma cópia do banco atual antes da troca. Feche outras instâncias do aplicativo durante a restauração.
 
 Em outro computador, será necessário configurar novamente o Drive e o tema. O banco ativo fica em `%LOCALAPPDATA%\ProgramFeira` no Windows. No Linux fica em `~/.local/share/ProgramFeira`; no macOS, em `~/Library/Application Support/ProgramFeira`. `PROGRAMFEIRA_DATA_DIR` permite escolher outra pasta.
 
@@ -54,7 +54,7 @@ Não é preciso inserir vendas fictícias no seu banco para fazer essa conferên
 
 ## Usar junto com o celular
 
-Depois de configurar a nuvem e validar o vínculo, abra **Dados → Conexão com a
+Depois de configurar a nuvem e validar o vínculo, abra **Configurações → Conexão com a
 nuvem** e entre na sua conta uma vez. No Windows, a sessão fica protegida pela
 sua conta do sistema e é recuperada nas próximas aberturas; a senha não é salva.
 **Desconectar** remove essa sessão salva do computador. A opção automática consulta a cada minuto e agenda
@@ -82,9 +82,9 @@ celular ou use o botão de atualizar. Não é necessário sair e entrar na conta
 
 ## Conferir recuperação, conflitos e evolução
 
-- **Dados → Testar recuperação de backup…** faz um ensaio em pasta temporária,
+- **Configurações → Verificar integridade do backup…** faz um ensaio em pasta temporária,
   sem substituir os dados em uso. Veja [RECUPERACAO.md](RECUPERACAO.md).
-- **Dados → Conexão com a nuvem → Conferir conflitos…** mostra os registros que
+- **Configurações → Conexão com a nuvem → Conferir conflitos…** mostra os registros que
   foram alterados nos dois lados. Escolha PC ou Nuvem para cada um e use Aplicar
   escolhas. Um registro excluído é mostrado explicitamente. O programa cria backup
   e confere se as versões ainda são as mesmas antes de aplicar. Cancelar não altera
@@ -102,10 +102,15 @@ celular ou use o botão de atualizar. Não é necessário sair e entrar na conta
 
 ## Relatar um problema
 
-Informe a versão (Dados → Sobre esta versão), a ação feita, o resultado esperado e
+Informe a versão (Configurações → Sobre esta versão), a ação feita, o resultado esperado e
 uma captura da mensagem. Erros inesperados da interface e das operações em segundo
 plano geram `logs/erros.jsonl` na pasta de dados, quando houver permissão para escrita.
 Esse registro tem somente versão, tipo de erro e posições do código: não contém
 mensagens do servidor, valores financeiros, senha ou tokens. O histórico é limitado
 a dois arquivos de aproximadamente 1 MB. Não publique seu banco ou exportações para
 relatar um problema. Erros de inicialização continuam no `logs/inicializacao.log`.
+
+As funções antes agrupadas em Dados ficam na engrenagem ao lado do nome do programa.
+Ao passar o mouse sobre **?**, aparece uma explicação breve. **Verificar integridade
+do backup** confere uma cópia sem aplicar os dados; **Restaurar backup** substitui
+os dados atuais pelos da cópia escolhida, preservando antes uma cópia do estado atual.

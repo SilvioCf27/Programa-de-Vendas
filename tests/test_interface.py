@@ -29,6 +29,32 @@ a.janela.report_callback_exception = lambda *args: errors.append(args)
 a.janela.update()
 assert len(a.tabela.get_children()) == 9
 assert a.formulario.state() == 'withdrawn'
+# Configurações substitui Dados e as dicas abrem por hover, sem clique.
+a.botao_configuracoes.invoke()
+a.janela.update()
+cfg = a.configuracoes
+assert a.abrir_configuracoes() is cfg
+assert len(cfg.acoes) == 7
+titulo_verificar = 'Verificar integridade do backup…'
+dica = cfg.ajudas[titulo_verificar]
+dica.widget.event_generate('<Enter>')
+a.janela.after(450, lambda: None)
+import time
+prazo = time.monotonic() + 2
+while dica.popup is None and time.monotonic() < prazo:
+    a.janela.update(); time.sleep(.01)
+assert dica.popup is not None
+assert 'Não altera' in dica.texto
+dica.widget.event_generate('<Leave>'); a.janela.update()
+assert dica.popup is None
+with patch.object(a.filedialog, 'askopenfilename', return_value='') as escolher_backup:
+    cfg.acoes[titulo_verificar].invoke()
+    escolher_backup.assert_called_once()
+assert not cfg.winfo_exists()
+a.dica_configuracoes.mostrar(); a.janela.update()
+a.verificar_formulario_sincronizacao()  # A dica não é um formulário pendente.
+a.dica_configuracoes.fechar()
+assert not any(a.menu.entrycget(i,'label') == 'Dados' for i in range(a.menu.index('end') + 1))
 # Sincronizar antes da primeira visita a Finanças preserva a carga sob demanda.
 assert a.painel_financeiro.inicio is None
 assert a.painel_financeiro.fim is None
@@ -511,7 +537,8 @@ from ProgramFeira.database.armazenamento import criar_backup as copiar_backup
 copia = copiar_backup(a.CAMINHO_BANCO)
 with patch.object(a.filedialog, 'askopenfilename', return_value=str(copia)), patch.object(a.messagebox, 'showinfo') as aviso:
     a.testar_copia()
-    assert aviso.call_args.args[0] == 'Recuperação verificada'
+    assert aviso.call_args.args[0] == 'Backup verificado'
+    assert 'Nenhum dado do programa foi alterado' in aviso.call_args.args[1]
 a.conexao_nuvem.botao_sair.invoke()
 assert a.conexao_nuvem.sessao is None
 a.conexao_nuvem.fechar()

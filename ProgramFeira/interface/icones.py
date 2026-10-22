@@ -6,6 +6,7 @@ from tkinter import ttk
 from ProgramFeira.interface.acabamento import _png, _rgb
 
 TRACOS = {
+    'configuracoes': [[(9, 2), (15, 2), (16, 5), (19, 5), (22, 10), (20, 12), (22, 14), (19, 19), (16, 19), (15, 22), (9, 22), (8, 19), (5, 19), (2, 14), (4, 12), (2, 10), (5, 5), (8, 5), (9, 2)]],
     'baixo': [[(6, 9), (12, 15), (18, 9)]],
     'mais': [[(12, 4), (12, 20)], [(4, 12), (20, 12)]],
     'editar': [[(4, 17), (16, 5), (20, 9), (8, 21), (3, 22), (4, 17)], [(14, 7), (18, 11)]],
@@ -50,6 +51,8 @@ def imagem_icone(root, nome, cor, tamanho=18):
                     if nome == 'marca':
                         # Lua crescente: diferença entre dois discos.
                         linha |= math.hypot(px - 29, py - 9) <= 5 and math.hypot(px - 31.5, py - 7) > 4.7
+                    if nome == 'configuracoes':
+                        linha |= abs(math.hypot(px - 12, py - 12) - 3.5) <= 0.9
                     if nome == 'tema':
                         linha |= abs(math.hypot(px - 12, py - 12) - 5) <= 0.9
                     cobertos += bool(linha)

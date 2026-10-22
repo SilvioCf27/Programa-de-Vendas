@@ -30,7 +30,7 @@ def carregar_config(pasta):
             raise ValueError('formato inválido')
         return dados
     except (OSError, ValueError) as erro:
-        raise ValueError('Não foi possível ler a configuração do backup. Abra Dados → Backup no Google Drive para reconfigurar.') from erro
+        raise ValueError('Não foi possível ler a configuração do backup. Abra Configurações → Backup no Google Drive para reconfigurar.') from erro
 
 
 def salvar_config(pasta, dados):

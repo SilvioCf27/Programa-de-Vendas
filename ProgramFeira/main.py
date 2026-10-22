@@ -538,20 +538,20 @@ def fazer_backup_manual():
 
 
 def testar_copia():
-    arquivo = filedialog.askopenfilename(title='Testar recuperação de backup sem alterar dados', filetypes=[('Banco SQLite', '*.db')])
+    arquivo = filedialog.askopenfilename(title='Verificar integridade do backup', filetypes=[('Banco SQLite', '*.db')])
     if not arquivo:
         return
     from ProgramFeira.recuperacao import testar_recuperacao
     try:
         resultado = testar_recuperacao(arquivo)
         tabelas = resultado['tabelas']
-        messagebox.showinfo('Recuperação verificada',
-            f"Restauração concluída em pasta temporária. Seu banco em uso não foi alterado.\n\n"
+        messagebox.showinfo('Backup verificado',
+            f"Backup verificado. Nenhum dado do programa foi alterado.\n\n"
             f"Vendas: {tabelas.get('vendas', 0)}\nLançamentos financeiros: {tabelas.get('financeiro_lancamentos', 0)}\n"
             f"Ajustes anuais: {tabelas.get('financeiro_taxas_anuais', 0)}\n\n"
             'Estrutura, conteúdo de todas as tabelas e cópia anterior conferidos. A sessão de login e a configuração do Drive não fazem parte deste backup.')
     except (ValueError, OSError, sqlite3.Error, RuntimeError) as erro:
-        messagebox.showerror('Recuperação não confirmada', str(erro))
+        messagebox.showerror('Backup não verificado', str(erro))
 
 
 def restaurar_copia():
@@ -721,7 +721,7 @@ menu = tk.Menu(janela)
 menu_dados = tk.Menu(menu, tearoff=False)
 menu_dados.add_command(label='Criar backup agora', command=fazer_backup_manual)
 menu_dados.add_command(label='Restaurar backup…', command=restaurar_copia)
-menu_dados.add_command(label='Testar recuperação de backup…', command=testar_copia)
+menu_dados.add_command(label='Verificar integridade do backup…', command=testar_copia)
 menu_dados.add_command(label='Sobre esta versão…', command=lambda: messagebox.showinfo('Gestão da Feira',
     f'Versão {VERSAO}\n\nDados locais: {CAMINHO_BANCO.parent}\nDiagnósticos: {CAMINHO_BANCO.parent / "logs"}\n\nOs registros de diagnóstico não incluem valores financeiros, mensagens do serviço, senha ou tokens.'))
 
@@ -735,7 +735,7 @@ def verificar_formulario_sincronizacao():
     def janelas_visiveis(widget):
         for filho in widget.winfo_children():
             if isinstance(filho, tk.Toplevel):
-                if filho is not conexao_nuvem.popup and filho.winfo_viewable():
+                if filho is not conexao_nuvem.popup and not getattr(filho, '_dica_informativa', False) and filho.winfo_viewable():
                     return True
             elif janelas_visiveis(filho):
                 return True
@@ -813,7 +813,7 @@ conexao_nuvem = ConexaoNuvem(janela, CAMINHO_BANCO.parent,
 menu_dados.add_command(label='Conexão com a nuvem…', command=conexao_nuvem.configurar)
 menu_dados.add_separator()
 menu_dados.add_command(label='Local dos dados', command=mostrar_pasta_dados)
-menu.add_cascade(label='Dados', menu=menu_dados)
+# Os comandos são apresentados na janela Configurações; este menu guarda suas ações.
 menu_exportar = tk.Menu(menu, tearoff=False)
 menu_exportar.add_command(label='Excel (.xlsx)…', command=lambda: exportar_visualizacao('xlsx'))
 menu_exportar.add_command(label='CSV (.csv)…', command=lambda: exportar_visualizacao('csv'))
@@ -838,6 +838,21 @@ resumo_participacao = tk.StringVar()
 resumo_comparacao = tk.StringVar()
 indicadores_visuais = {chave: tk.StringVar() for chave in ('total', 'quantidade', 'media', 'dinheiro', 'pix', 'cartao')}
 
+configuracoes = None
+
+
+def abrir_configuracoes():
+    global configuracoes
+    if conexao_nuvem.bloqueando_edicao:
+        return
+    if configuracoes is not None and configuracoes.winfo_exists():
+        configuracoes.lift()
+        return configuracoes
+    from ProgramFeira.interface.configuracoes import Configuracoes
+    configuracoes = Configuracoes(janela, menu_dados)
+    return configuracoes
+
+
 # Cabeçalho e ações principais.
 cabecalho = ttk.Frame(janela, padding=(24, 18, 24, 12))
 cabecalho.grid(row=0, column=0, sticky='ew')
@@ -849,6 +864,12 @@ texto_marca = ttk.Frame(marca)
 texto_marca.pack(side='left')
 ttk.Label(texto_marca, text='Gestão da Feira', style='Title.TLabel').pack(anchor='w')
 ttk.Label(texto_marca, text='Suas feiras, seus resultados.', style='Muted.TLabel').pack(anchor='w')
+botao_configuracoes = ttk.Button(marca, text='', width=3, command=abrir_configuracoes)
+botao_configuracoes.icone_nome = 'configuracoes'
+botao_configuracoes.icone_tamanho = 22
+botao_configuracoes.pack(side='left', padx=(16, 0))
+from ProgramFeira.interface.ajuda import Dica
+dica_configuracoes = Dica(botao_configuracoes, 'Configurações: backups, sincronização e informações do programa.')
 acoes = ttk.Frame(cabecalho)
 acoes.grid(row=0, column=1, rowspan=2, sticky='e')
 texto_botao_tema = tk.StringVar(value='Tema claro' if tema_atual.get() == 'escuro' else 'Tema escuro')

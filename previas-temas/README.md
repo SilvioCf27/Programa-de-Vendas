@@ -1,10 +1,8 @@
-# Prévias dos temas
+# Prévias atualizadas
 
-Capturas da interface com dados fictícios, para aprovação visual. O código em `main` não foi alterado.
+Interface real com dados fictícios. Apenas imagens nesta branch; o código em main não foi alterado.
 
-## Comparação
-
-![Quatro temas](comparacao.png)
+A tabela agora ocupa a área do histórico. Barras de rolagem aparecem apenas quando há conteúdo fora da área visível, com trilhos discretos e sem setas. Areia agora é escuro; Aurora é a nova opção violeta.
 
 ## Noite
 
@@ -18,6 +16,11 @@ Capturas da interface com dados fictícios, para aprovação visual. O código e
 
 ![Grafite](grafite.png)
 
-## Areia
+## Areia escura
 
-![Areia](areia.png)
+![Areia escura](areia.png)
+
+## Aurora
+
+![Aurora](aurora.png)
+

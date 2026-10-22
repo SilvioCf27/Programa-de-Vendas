@@ -486,6 +486,13 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.s
     a.conexao_nuvem.botao_conflitos.invoke()
     aguardar_nuvem()
     revisao = a.conexao_nuvem.revisao_popup
+    assert a.conexao_nuvem.agendador.pausado
+    revisao.destroy()  # Cancelar não aplica escolhas nem reativa uma sincronização em conflito.
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 6
+    assert a.conexao_nuvem.agendador.pausado
+    a.conexao_nuvem.botao_conflitos.invoke()
+    aguardar_nuvem()
+    revisao = a.conexao_nuvem.revisao_popup
     assert '6,00' in revisao.textos['pc'].get('1.0','end')
     assert '7,77' in revisao.textos['nuvem'].get('1.0','end')
     revisao.usar_nuvem.invoke()
@@ -494,6 +501,11 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.s
     aguardar_nuvem()
     assert a.buscar_venda_por_data('2026-01-02')[3] == 7.77
     assert not a.conexao_nuvem.agendador.pausado
+    a.conexao_nuvem.botao_conflitos.invoke()
+    aguardar_nuvem()
+    assert 'Nenhum conflito' in a.conexao_nuvem.status.get()
+    assert not a.conexao_nuvem.agendador.pausado
+    assert a.conexao_nuvem.agendador.tarefa is not None
 # Teste do backup pela ação da interface, com dados isolados.
 from ProgramFeira.database.armazenamento import criar_backup as copiar_backup
 copia = copiar_backup(a.CAMINHO_BANCO)

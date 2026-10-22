@@ -354,8 +354,11 @@ class ConexaoNuvem:
             nova, revisao = resposta
             self.sessao = nova
             if not revisao['conflitos']:
-                self.status.set('Nenhum conflito encontrado. Use Sincronizar agora para atualizar os dados e retomar a automação.')
+                self.status.set('Nenhum conflito encontrado. A consulta automática pode continuar; Sincronizar agora também está disponível.')
+                self.agendador.ativar()
                 return
+            self.agendador.pausado = True
+            self.resumo.set('Nuvem: sincronização pausada; conflitos aguardando sua revisão.')
             from ProgramFeira.interface.conflitos import RevisaoConflitos
 
             def aplicar(escolhas):

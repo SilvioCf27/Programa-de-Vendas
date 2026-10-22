@@ -59,6 +59,8 @@ class FiltrosTests(unittest.TestCase):
                             ('resumo_cartao', ''), ('resumo_total', ''), ('resumo_quantidade', ''), ('resumo_media', ''), ('resumo_participacao', ''), ('resumo_comparacao', '')]:
             n[name] = tk.StringVar(master=self.tcl, value=value)
         n['indicadores_visuais'] = {k: tk.StringVar(master=self.tcl) for k in ('total', 'quantidade', 'media', 'dinheiro', 'pix', 'cartao')}
+        n['detalhes_cartoes'] = {k: tk.StringVar(master=self.tcl) for k in n['indicadores_visuais']}
+        n['barras_cartoes'] = {k: {} for k in ('dinheiro', 'pix', 'cartao')}
         n['filtro_fechamento'] = tk.BooleanVar(master=self.tcl)
         n['filtros_dias_semana'] = {d: tk.BooleanVar(master=self.tcl) for d in range(7)}
         exec(compile(ast.Module(body=[node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in names], type_ignores=[]), 'main.py', 'exec'), n)

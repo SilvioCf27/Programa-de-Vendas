@@ -18,6 +18,12 @@ O programa começa vazio para quem está usando pela primeira vez. Se você já 
 
 A aba **Vendas** mostra valores brutos. A aba **Finanças** desconta as taxas e despesas que você informar. Os botões **?** explicam os cálculos na própria tela.
 
+O código atual oferece cinco temas: **Noite, Claro, Grafite, Areia escura e Aurora**.
+Escolha no botão **Tema**; a preferência fica salva neste computador. Os cartões
+mostram a participação de cada pagamento, e as barras de rolagem do histórico e
+dos filtros aparecem apenas quando necessárias. Essas mudanças ainda não estão
+no executável v1.2.2 disponível em Releases.
+
 ## Onde estão os dados
 
 No Windows, o banco fica em `%LOCALAPPDATA%\ProgramFeira\vendas.db`, fora da pasta do programa. A configuração do Drive e o tema também ficam nessa pasta. O repositório só contém um banco inicial vazio; vendas, planilhas, relatórios e backups pessoais não devem ser enviados ao GitHub.

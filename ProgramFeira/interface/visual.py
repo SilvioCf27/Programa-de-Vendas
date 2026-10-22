@@ -25,7 +25,49 @@ PALETAS = {
         'aviso': '#F3C97E', 'botao': '#2468DB', 'botao_hover': '#347DF1', 'scroll': '#53657D',
     },
 }
+# Os nomes internos antigos são mantidos para preservar as preferências existentes.
+NOMES_TEMAS = {'escuro': 'Noite', 'claro': 'Claro', 'grafite': 'Grafite', 'areia': 'Areia'}
+PALETAS['grafite'] = {
+    'fundo': '#171A20', 'superficie': '#232830', 'texto': '#F0F2F5',
+    'muted': '#B5BDC9', 'borda': '#414953', 'azul': '#9CCFC7',
+    'azul_hover': '#32776C', 'verde': '#90D9B5', 'vermelho': '#FFA5AD',
+    'hover': '#333D46', 'disabled': '#89939F', 'cabecalho': '#2D343D',
+    'selecionado': '#34544F', 'texto_selecionado': '#FFFFFF', 'alternada': '#292F38',
+    'aviso': '#F2CA87', 'botao': '#286E63', 'botao_hover': '#348276', 'scroll': '#59636E',
+}
+PALETAS['areia'] = {
+    'fundo': '#201B17', 'superficie': '#2D2620', 'texto': '#F5EBDD',
+    'muted': '#C8B6A3', 'borda': '#554638', 'azul': '#E8BA83',
+    'azul_hover': '#A7733E', 'verde': '#A9CF9D', 'vermelho': '#F4A49B',
+    'hover': '#403329', 'disabled': '#A18B76', 'cabecalho': '#382E25',
+    'selecionado': '#63482F', 'texto_selecionado': '#FFF4E5', 'alternada': '#332A22',
+    'aviso': '#EBC681', 'botao': '#986131', 'botao_hover': '#AD7340', 'scroll': '#79624E',
+}
+PALETAS['aurora'] = {
+    'fundo': '#191625', 'superficie': '#262137', 'texto': '#F3EFFB',
+    'muted': '#BCB2D2', 'borda': '#4B405F', 'azul': '#C5ACFA',
+    'azul_hover': '#8654C2', 'verde': '#91D4BD', 'vermelho': '#FFABB9',
+    'hover': '#39304D', 'disabled': '#9D8EB4', 'cabecalho': '#302940',
+    'selecionado': '#53406F', 'texto_selecionado': '#FFFFFF', 'alternada': '#2C263C',
+    'aviso': '#EFCC92', 'botao': '#7548AC', 'botao_hover': '#895DC1', 'scroll': '#716085',
+}
+NOMES_TEMAS['aurora'] = 'Aurora'
 CORES = dict(PALETAS['claro'])
+
+
+def misturar(base, destaque, proporcao):
+    canais = lambda cor: [int(cor[i:i + 2], 16) for i in (1, 3, 5)]
+    return '#' + ''.join(f'{round(a * (1 - proporcao) + b * proporcao):02x}'
+                         for a, b in zip(canais(base), canais(destaque)))
+
+
+def cores_indicadores(cores):
+    escuro = sum(int(cores['fundo'][i:i + 2], 16) for i in (1, 3, 5)) < 380
+    acentos = (('#42D5AD', '#66B7F2', '#63D7BA', '#F2BD59', '#A999FF', '#64B5F8') if escuro
+               else ('#10765B', '#2462A4', '#187661', '#996116', '#7252B2', '#2462A4'))
+    return {chave: (cor, misturar(cores['superficie'], cor, .10 if escuro else .06),
+                   misturar(cores['borda'], cor, .48))
+            for chave, cor in zip(('total', 'quantidade', 'media', 'dinheiro', 'pix', 'cartao'), acentos)}
 
 
 def aplicar_tema(janela, tema='claro'):
@@ -44,28 +86,28 @@ def aplicar_tema(janela, tema='claro'):
     estilo.configure('Surface.TFrame', background=CORES['superficie'])
     estilo.configure('TLabel', background=CORES['fundo'], foreground=CORES['texto'])
     estilo.configure('Muted.TLabel', foreground=CORES['muted'])
-    estilo.configure('Title.TLabel', font=(titulo, 24, 'bold'))
-    estilo.configure('Section.TLabel', font=(familia, 12, 'bold'), background=CORES['superficie'])
+    estilo.configure('Title.TLabel', font=(titulo, 26, 'bold'))
+    estilo.configure('Section.TLabel', font=(familia, 13, 'bold'), background=CORES['superficie'])
     estilo.configure('Surface.TLabel', background=CORES['superficie'])
     estilo.configure('CardTitle.TLabel', background=CORES['superficie'], foreground=CORES['muted'], font=(familia, 9))
     estilo.configure('CardValue.TLabel', background=CORES['superficie'], font=(familia, 18, 'bold'))
     estilo.configure('Accent.CardValue.TLabel', foreground=CORES['azul'])
-    estilo.configure('TButton', padding=(7, 3), background=CORES['superficie'], bordercolor=CORES['borda'], relief='flat')
+    estilo.configure('TButton', padding=(9, 5), background=CORES['superficie'], bordercolor=CORES['borda'], relief='flat')
     estilo.map('TButton', background=[('active', CORES['hover'])], foreground=[('disabled', CORES['disabled'])])
     estilo.configure('Primary.TButton', background=CORES['fundo'], foreground='white', bordercolor=CORES['botao'])
     estilo.map('Primary.TButton', background=[('active', CORES['botao_hover']), ('pressed', CORES['botao_hover'])], foreground=[('disabled', '#CBD5E1'), ('!disabled', 'white')])
     estilo.configure('Danger.TButton', foreground=CORES['vermelho'])
-    estilo.configure('TMenubutton', padding=(7, 3), background=CORES['superficie'], bordercolor=CORES['borda'], relief='flat')
+    estilo.configure('TMenubutton', padding=(9, 5), background=CORES['superficie'], bordercolor=CORES['borda'], relief='flat')
     estilo.map('TMenubutton', background=[('active', CORES['hover'])])
-    estilo.configure('TEntry', padding=(4, 2), fieldbackground=CORES['superficie'], bordercolor=CORES['borda'])
-    estilo.configure('TCombobox', padding=(4, 2), fieldbackground=CORES['superficie'], background=CORES['superficie'], bordercolor=CORES['borda'], arrowsize=14)
+    estilo.configure('TEntry', padding=(6, 4), fieldbackground=CORES['superficie'], bordercolor=CORES['borda'])
+    estilo.configure('TCombobox', padding=(6, 4), fieldbackground=CORES['superficie'], background=CORES['superficie'], bordercolor=CORES['borda'], arrowsize=14)
     estilo.map('TCombobox', fieldbackground=[('readonly', CORES['superficie'])], selectbackground=[('readonly', CORES['superficie'])], selectforeground=[('readonly', CORES['texto'])])
     estilo.configure('TCheckbutton', background=CORES['superficie'], padding=(0, 3))
     estilo.map('TCheckbutton', background=[('active', CORES['superficie'])])
-    estilo.configure('Treeview', background=CORES['superficie'], fieldbackground=CORES['superficie'], rowheight=34,
+    estilo.configure('Treeview', background=CORES['superficie'], fieldbackground=CORES['superficie'], rowheight=36,
                      borderwidth=0, font=(familia, 10))
     estilo.configure('Treeview.Heading', background=CORES['cabecalho'], foreground=CORES['muted'],
-                     padding=(10, 11), relief='flat', font=(familia, 9, 'bold'))
+                     padding=(10, 12), relief='flat', font=(familia, 10, 'bold'))
     estilo.map('Treeview', background=[('selected', CORES['selecionado'])], foreground=[('selected', CORES['texto_selecionado'])])
     estilo.map('Treeview.Heading', background=[('active', CORES['hover'])])
     estilo.configure('Vertical.TScrollbar', background=CORES['scroll'], troughcolor=CORES['fundo'], borderwidth=0, arrowsize=12)
@@ -74,11 +116,18 @@ def aplicar_tema(janela, tema='claro'):
     for nome in ('Vertical.TScrollbar', 'Horizontal.TScrollbar'):
         estilo.configure(nome, background=CORES['scroll'], troughcolor=CORES['superficie'], borderwidth=0)
         estilo.map(nome, background=[('active', CORES['muted'])])
+    # Trilho discreto, sem as setas e os relevos do tema nativo.
+    for orientacao, direcao in (('Vertical', 'ns'), ('Horizontal', 'ew')):
+        estilo.layout(orientacao + '.TScrollbar', [
+            (orientacao + '.Scrollbar.trough', {'sticky': direcao, 'children': [
+                (orientacao + '.Scrollbar.thumb', {'sticky': direcao, 'expand': '1'})]})])
+        estilo.configure(orientacao + '.TScrollbar', width=8, arrowsize=8,
+                         gripcount=0, relief='flat', borderwidth=0)
     estilo.configure('Aviso.TLabel', background=CORES['superficie'], foreground=CORES['aviso'])
     estilo.configure('Ajuda.TButton', padding=(3, 1), foreground=CORES['azul'], font=(familia, 9, 'bold'))
     estilo.configure('TNotebook', background=CORES['fundo'], borderwidth=0, bordercolor=CORES['fundo'], lightcolor=CORES['fundo'], darkcolor=CORES['fundo'])
-    estilo.configure('TNotebook.Tab', padding=(12, 4), background=CORES['superficie'], foreground=CORES['muted'])
-    estilo.map('TNotebook.Tab', background=[('selected', CORES['cabecalho']), ('active', CORES['hover'])], foreground=[('selected', CORES['azul']), ('!selected', CORES['muted'])])
+    estilo.configure('TNotebook.Tab', font=(familia, 10, 'bold'), padding=(24, 8), background=CORES['superficie'], foreground=CORES['muted'])
+    estilo.map('TNotebook.Tab', background=[('selected', CORES['selecionado']), ('active', CORES['hover'])], foreground=[('selected', CORES['texto_selecionado']), ('!selected', CORES['muted'])])
     estilo.configure('Filtro.TLabel', background=CORES['superficie'], foreground=CORES['azul'])
     estilo.configure('TEntry', foreground=CORES['texto'], insertcolor=CORES['texto'])
     estilo.configure('TCheckbutton', foreground=CORES['texto'], indicatorbackground=CORES['superficie'], indicatorforeground=CORES['texto'])
@@ -87,23 +136,39 @@ def aplicar_tema(janela, tema='claro'):
     for option, valor in (('background', CORES['superficie']), ('foreground', CORES['texto']),
                           ('selectBackground', CORES['selecionado']), ('selectForeground', CORES['texto_selecionado'])):
         janela.option_add('*TCombobox*Listbox.' + option, valor)
+    estilo.configure('Horizontal.TProgressbar', background=CORES['botao'],
+                     troughcolor=CORES['alternada'], borderwidth=0, thickness=8)
+    for chave, (cor, fundo, borda) in cores_indicadores(CORES).items():
+        estilo.configure(f'{chave}.Indicador.TFrame', background=fundo)
+        for nome, tamanho, peso, texto in (
+                ('Titulo', 8, 'bold', cor), ('Valor', 24, 'bold', cor if chave == 'total' else CORES['texto']),
+                ('Detalhe', 10, 'normal', CORES['muted']), ('Icone', 10, 'normal', cor)):
+            estilo.configure(f'{chave}.{nome}.TLabel', background=fundo,
+                             foreground=texto, font=(familia, tamanho, peso))
     instalar_elementos(janela, estilo, CORES, tema)
     # Atualiza também popups já abertos anteriormente.
     def visitar(widget):
-        aplicar_icones(widget, CORES)
+        cores_widget = CORES
+        indicador = getattr(widget, 'indicador', None)
+        if indicador:
+            cor, fundo, _ = cores_indicadores(CORES)[indicador]
+            cores_widget = dict(CORES, azul=cor, superficie=fundo)
+        aplicar_icones(widget, cores_widget)
         if isinstance(widget, (ttk.Button, ttk.Menubutton, ttk.Entry, ttk.Combobox)):
             base = getattr(widget, '_estilo_base', widget.cget('style') or widget.winfo_class())
             widget._estilo_base = base
             pai = widget.master
             estilo_pai = str(pai.cget('style')) if isinstance(pai, ttk.Frame) else ''
-            superficie = estilo_pai in ('Surface.TFrame', 'Panel.TFrame', 'Card.TFrame')
-            cor = CORES['superficie'] if superficie else CORES['fundo']
-            derivado = ('Superficie.' if superficie else 'Pagina.') + base
+            superficie = estilo_pai in ('Surface.TFrame', 'Panel.TFrame', 'Card.TFrame') or estilo_pai.endswith('.Indicador.TFrame')
+            cor = cores_widget['superficie'] if superficie else CORES['fundo']
+            derivado = ((indicador + '.') if indicador else '') + ('Superficie.' if superficie else 'Pagina.') + base
             estilo.configure(derivado, background=cor)
             estilo.map(derivado, background=[('disabled', cor), ('!disabled', cor)])
             widget.configure(style=derivado)
         if isinstance(widget, tk.Canvas):
             widget.configure(background=CORES['superficie'])
+            if hasattr(widget, 'atualizar_aparencia'):
+                widget.atualizar_aparencia()
         if isinstance(widget, (tk.Menu, tk.Toplevel)):
             widget.configure(background=CORES['superficie'] if isinstance(widget, tk.Menu) else CORES['fundo'])
         if isinstance(widget, tk.Menu):
@@ -114,6 +179,14 @@ def aplicar_tema(janela, tema='claro'):
                 widget.tk.call(str(popup) + '.f.l', 'configure', '-background', CORES['superficie'], '-foreground', CORES['texto'], '-selectbackground', CORES['selecionado'], '-selectforeground', CORES['texto_selecionado'])
             except tk.TclError:
                 pass  # O menu do seletor pode ser nativo da plataforma.
+        if isinstance(widget, ttk.Notebook):
+            widget._icones_abas = []
+            for aba in widget.tabs():
+                nome = {'Vendas': 'total', 'Análises': 'media', 'Finanças': 'dinheiro'}.get(widget.tab(aba, 'text'))
+                if nome:
+                    icone = imagem_icone(janela, nome, CORES['azul'], 20)
+                    widget._icones_abas.append(icone)
+                    widget.tab(aba, image=icone, compound='left')
         for filho in widget.winfo_children():
             visitar(filho)
     visitar(janela)

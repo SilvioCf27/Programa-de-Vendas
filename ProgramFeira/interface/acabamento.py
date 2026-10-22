@@ -7,6 +7,7 @@ import base64
 import struct
 import zlib
 import tkinter as tk
+from functools import lru_cache
 
 
 def _rgb(cor):
@@ -20,30 +21,46 @@ def _png(largura, altura, pixels):
     return b'\x89PNG\r\n\x1a\n' + parte(b'IHDR', struct.pack('!2I5B', largura, altura, 8, 6, 0, 0, 0)) + parte(b'IDAT', zlib.compress(dados)) + parte(b'IEND', b'')
 
 
-def imagem_arredondada(root, fundo, borda, raio=9):
-    cache = root.__dict__.setdefault('_fundos_arredondados', {})
-    chave = (fundo, borda, raio)
-    if chave in cache:
-        return cache[chave]
+@lru_cache(maxsize=16)
+def cobertura_arredondada(raio):
     tamanho = raio * 2 + 6
     def dentro(x, y, margem):
         r = max(0, raio - margem)
         cx = min(max(x, margem + r), tamanho - margem - r)
         cy = min(max(y, margem + r), tamanho - margem - r)
         return margem <= x <= tamanho - margem and margem <= y <= tamanho - margem and (x - cx) ** 2 + (y - cy) ** 2 <= r ** 2
-    pixels = []
-    cores = (_rgb(fundo), _rgb(borda))
+    cobertura = []
     for y in range(tamanho):
         for x in range(tamanho):
-            amostras = []
-            for sy in (0.125, 0.375, 0.625, 0.875):
-                for sx in (0.125, 0.375, 0.625, 0.875):
+            total = interno = 0
+            for sy in (.125, .375, .625, .875):
+                for sx in (.125, .375, .625, .875):
                     if dentro(x + sx, y + sy, 0):
-                        amostras.append(cores[0 if dentro(x + sx, y + sy, 1) else 1])
-            if amostras:
-                pixels.extend([round(sum(c[i] for c in amostras) / len(amostras)) for i in range(3)] + [round(len(amostras) * 255 / 16)])
-            else:
-                pixels.extend((0, 0, 0, 0))
+                        total += 1
+                        interno += dentro(x + sx, y + sy, 1)
+            cobertura.append((total, interno))
+    return tuple(cobertura)
+
+
+def imagem_arredondada(root, fundo, borda, raio=9, realce=False):
+    cache = root.__dict__.setdefault('_fundos_arredondados', {})
+    chave = (fundo, borda, raio, realce)
+    if chave in cache:
+        return cache[chave]
+    tamanho = raio * 2 + 6
+    pixels = bytearray()
+    cor_fundo, cor_borda = _rgb(fundo), _rgb(borda)
+    for i, (total, interno) in enumerate(cobertura_arredondada(raio)):
+        if total:
+            cor = [round((a * interno + b * (total - interno)) / total)
+                   for a, b in zip(cor_fundo, cor_borda)]
+            y = i // tamanho
+            if realce and y < raio + 1:
+                intensidade = .055 * (1 - y / (raio + 1))
+                cor = [round(c + (255 - c) * intensidade) for c in cor]
+            pixels.extend((*cor, round(total * 255 / 16)))
+        else:
+            pixels.extend((0, 0, 0, 0))
     # ttk repete o miolo da imagem para preencher o controle. Um miolo de
     # poucos pixels multiplica as operações de composição, sobretudo em painéis.
     # Expandir apenas a área lisa preserva os cantos e reduz essas repetições.
@@ -70,14 +87,14 @@ def instalar_elementos(root, estilo, cores, tema):
     def elemento(nome, normal, borda, raio=9, estados=()):
         identificador = f'Gestao.{tema}.{nome}'
         if identificador not in estilo.element_names():
-            imagens = [imagem_arredondada(root, normal, borda, raio)]
+            imagens = [imagem_arredondada(root, normal, borda, raio, realce=(nome == 'Panel' or nome.startswith('Indicador') or nome == 'Primary.TButton'))]
             specs = []
             for estado, preenchimento, contorno in estados:
                 imagem = imagem_arredondada(root, preenchimento, contorno, raio)
                 imagens.append(imagem)
                 specs.append((estado, imagem))
             # A imagem maior não deve aumentar o tamanho mínimo dos controles.
-            estilo.element_create(identificador, 'image', imagens[0], *specs, width=raio * 2 + 6, height=raio * 2 + 6, border=raio + 1, padding=(0 if nome == 'Panel' else 3 if nome == 'Ajuda' else raio + 1), sticky='nsew')
+            estilo.element_create(identificador, 'image', imagens[0], *specs, width=raio * 2 + 6, height=raio * 2 + 6, border=raio + 1, padding=(0 if nome == 'Panel' else 3 if nome.startswith('Ajuda') else raio + 1), sticky='nsew')
             cache[identificador] = imagens
         return identificador
 
@@ -101,7 +118,7 @@ def instalar_elementos(root, estilo, cores, tema):
     ajuda = elemento('Ajuda', cores['superficie'], cores['borda'], raio=7, estados=(('active', cores['hover'], cores['azul']), ('focus', cores['superficie'], cores['azul'])))
     estilo.layout('Ajuda.TButton', [(ajuda, {'sticky': 'nsew', 'children': [('Button.label', {'sticky': 'nsew'})]})])
     for classe, antigo in (('TEntry', 'Entry.field'), ('TCombobox', 'Combobox.field'), ('TMenubutton', 'Menubutton.border')):
-        imagem = elemento(classe, cores['superficie'], cores['borda'], raio=7, estados=(('focus', cores['superficie'], cores['azul']),))
+        imagem = elemento(classe, cores['superficie'], cores['borda'], raio=8, estados=(('focus', cores['superficie'], cores['azul']),))
         estilo.layout(classe, trocar(root._layouts_originais[classe], {antigo: imagem}))
     from ProgramFeira.interface.icones import imagem_icone, _distancia
     seta_nome = f'Gestao.{tema}.Combobox.downarrow'
@@ -131,9 +148,26 @@ def instalar_elementos(root, estilo, cores, tema):
         cache[nome_check] = imagens_check
         estilo.element_create(nome_check, 'image', imagens_check[0], ('selected', imagens_check[1]), width=24, sticky='')
     estilo.layout('TCheckbutton', trocar(root._layouts_originais['TCheckbutton'], {'Checkbutton.indicator': nome_check}))
-    painel = elemento('Panel', cores['superficie'], cores['borda'], raio=12)
+    painel = elemento('Panel', cores['superficie'], cores['borda'], raio=16)
     for classe in ('Panel.TFrame', 'Card.TFrame'):
         estilo.configure(classe, background=cores['fundo'])
         estilo.layout(classe, [(painel, {'sticky': 'nsew', 'border': 0})])
-    aba = elemento('Tab', cores['superficie'], cores['borda'], raio=8, estados=(('selected', cores['cabecalho'], cores['azul']), ('active', cores['hover'], cores['borda'])))
-    estilo.layout('TNotebook.Tab', trocar(root._layouts_originais['TNotebook.Tab'], {'Notebook.tab': aba}))
+    aba = elemento('Tab', cores['superficie'], cores['borda'], raio=8, estados=(('selected', cores['selecionado'], cores['azul']), ('active', cores['hover'], cores['borda'])))
+    margem_aba = 'Gestao.TabMargem'
+    if margem_aba not in estilo.element_names():
+        transparente = tk.PhotoImage(master=root, width=8, height=1)
+        cache[margem_aba] = transparente
+        estilo.element_create(margem_aba, 'image', transparente, padding=(0, 0, 7, 0), sticky='nsew')
+    estilo.layout('TNotebook.Tab', [(margem_aba, {'sticky': 'nsew', 'children':
+        trocar(root._layouts_originais['TNotebook.Tab'], {'Notebook.tab': aba})})])
+
+    from ProgramFeira.interface.visual import cores_indicadores
+    for chave, (cor, fundo, borda) in cores_indicadores(cores).items():
+        nome = elemento('Indicador' + chave, fundo, borda, raio=14)
+        estilo.configure(f'{chave}.Card.TFrame', background=cores['fundo'])
+        estilo.layout(f'{chave}.Card.TFrame', [(nome, {'sticky': 'nsew', 'border': 0})])
+        ajuda_card = elemento('Ajuda' + chave, fundo, borda, raio=10,
+                              estados=(('active', cores['hover'], cor), ('focus', fundo, cor)))
+        estilo.layout(f'{chave}.Superficie.Ajuda.TButton', [
+            (ajuda_card, {'sticky': 'nsew', 'children': [('Button.label', {'sticky': 'nsew'})]})])
+        estilo.configure(f'{chave}.Superficie.Ajuda.TButton', foreground=cor, padding=(2, 0))

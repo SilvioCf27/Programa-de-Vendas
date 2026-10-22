@@ -10,13 +10,15 @@ import sqlite3
 from ProgramFeira.resumos import calcular_indicadores, periodo_anterior, descrever_comparacao, moeda
 from ProgramFeira.exportacao import montar_relatorio, exportar
 from ProgramFeira.interface.fontes import registrar_fontes
+from ProgramFeira.interface.rolagem import BarraDiscreta
 from ProgramFeira.interface.painel_backup import BackupDrive
 from ProgramFeira.interface.painel_nuvem import ConexaoNuvem
 from ProgramFeira.nuvem import ErroNuvem
 from ProgramFeira.versao import VERSAO
 from ProgramFeira.diagnostico import registrar as registrar_erro
 from ProgramFeira.interface.icones import rotulo_icone
-from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES
+from ProgramFeira.interface.indicadores import BarraParticipacao
+from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES, NOMES_TEMAS
 from ProgramFeira.preferencias import carregar_tema, salvar_tema
 from ProgramFeira.interface.ajuda import botao_ajuda, rotulo_com_ajuda
 from ProgramFeira.interface.analises import PainelAnalises
@@ -263,6 +265,13 @@ def atualizar_resumo(data_inicial, data_final, dias_semana, quantidade_vendas, v
         indicadores_visuais[chave].set(valor)
     resumo_media.set(f"Média por dia de feira: {moeda(indicadores['media'])} (inclui dias zerados)")
     partes = indicadores['participacoes']
+    detalhes_cartoes['total'].set(f"{indicadores['quantidade']} dias de feira")
+    detalhes_cartoes['quantidade'].set('Média: ' + moeda(indicadores['media']))
+    detalhes_cartoes['media'].set('Inclui dias zerados')
+    for chave, percentual in zip(('dinheiro', 'pix', 'cartao'), partes):
+        detalhes_cartoes[chave].set(f'{percentual:.1f}% do período'.replace('.', ','))
+        barras_cartoes[chave]['value'] = float(percentual)
+
     if indicadores['total']:
         texto = " | ".join(f"{nome}: {valor:.1f}%".replace('.', ',') for nome, valor in zip(("Dinheiro", "Pix", "Cartão"), partes))
         resumo_participacao.set("Participação: " + texto)
@@ -673,20 +682,27 @@ def ajustar_larguras_colunas(event=None):
     for indice, coluna in enumerate(colunas):
         valores = {str(linha[indice]) for linha in linhas}
         largura = max([medir(titulos_colunas[coluna] + ' ▼'), *(medir(v) for v in valores)]) + 26
-        tabela.column(coluna, width=max(48, largura), minwidth=48, stretch=False, anchor='center')
+        larguras_tabela[coluna] = max(48, largura)
     ajustar_area_tabela()
 
 
 def ajustar_area_tabela(event=None):
-    largura = sum(tabela.column(c, 'width') for c in colunas) + scroll_vertical.winfo_reqwidth() + 4
-    container_tabela.configure(width=min(largura, max(100, area_tabela.winfo_width() - 28)))
+    # Usa toda a área do histórico sem alargar desnecessariamente os valores.
+    disponivel = max(100, container_tabela.winfo_width() - (
+        scroll_vertical.winfo_reqwidth() if scroll_vertical.winfo_manager() else 0) - 4)
+    sobra = max(0, disponivel - sum(larguras_tabela.values()))
+    partes = {'data': .30, 'dia_semana': .40, 'total': .30}
+    for coluna in colunas:
+        tabela.column(coluna, width=larguras_tabela[coluna] + int(sobra * partes.get(coluna, 0)),
+                      minwidth=48, stretch=False, anchor='center')
 
 
-def alternar_tema():
-    novo = 'claro' if tema_atual.get() == 'escuro' else 'escuro'
+def alternar_tema(novo=None):
+    if novo is None:
+        novo = 'claro' if tema_atual.get() == 'escuro' else 'escuro'
     aplicar_tema(janela, novo)
     tema_atual.set(novo)
-    texto_botao_tema.set('Tema claro' if novo == 'escuro' else 'Tema escuro')
+    texto_botao_tema.set('Tema: ' + NOMES_TEMAS[novo])
     tabela.tag_configure('par', background=CORES['superficie'])
     tabela.tag_configure('impar', background=CORES['alternada'])
     global layout_compacto
@@ -859,21 +875,28 @@ cabecalho.grid(row=0, column=0, sticky='ew')
 cabecalho.columnconfigure(0, weight=1)
 marca = ttk.Frame(cabecalho)
 marca.grid(row=0, column=0, rowspan=2, sticky='w')
-rotulo_icone(marca, 'marca', CORES, tamanho=58, estilo='TLabel').pack(side='left', padx=(0, 12))
+rotulo_icone(marca, 'marca', CORES, tamanho=64, estilo='TLabel').pack(side='left', padx=(0, 12))
 texto_marca = ttk.Frame(marca)
 texto_marca.pack(side='left')
 ttk.Label(texto_marca, text='Gestão da Feira', style='Title.TLabel').pack(anchor='w')
 ttk.Label(texto_marca, text='Suas feiras, seus resultados.', style='Muted.TLabel').pack(anchor='w')
-botao_configuracoes = ttk.Button(marca, text='', width=3, command=abrir_configuracoes)
-botao_configuracoes.icone_nome = 'configuracoes'
-botao_configuracoes.icone_tamanho = 22
-botao_configuracoes.pack(side='left', padx=(16, 0))
-from ProgramFeira.interface.ajuda import Dica
-dica_configuracoes = Dica(botao_configuracoes, 'Configurações: backups, sincronização e informações do programa.')
 acoes = ttk.Frame(cabecalho)
 acoes.grid(row=0, column=1, rowspan=2, sticky='e')
-texto_botao_tema = tk.StringVar(value='Tema claro' if tema_atual.get() == 'escuro' else 'Tema escuro')
-ttk.Button(acoes, textvariable=texto_botao_tema, command=alternar_tema).pack(side='left', padx=(0, 10))
+botao_configuracoes = ttk.Button(acoes, text='', width=3, command=abrir_configuracoes)
+botao_configuracoes.icone_nome = 'configuracoes'
+botao_configuracoes.icone_tamanho = 22
+botao_configuracoes.pack(side='left', padx=(0, 10))
+from ProgramFeira.interface.ajuda import Dica
+dica_configuracoes = Dica(botao_configuracoes, 'Configurações: backups, sincronização e informações do programa.')
+texto_botao_tema = tk.StringVar(value='Tema: ' + NOMES_TEMAS[tema_atual.get()])
+menu_temas = tk.Menu(janela, tearoff=False)
+for chave, nome in NOMES_TEMAS.items():
+    menu_temas.add_radiobutton(label=nome, variable=tema_atual, value=chave,
+                              command=lambda tema=chave: alternar_tema(tema))
+botao_tema = ttk.Menubutton(acoes, textvariable=texto_botao_tema, menu=menu_temas)
+botao_tema.icone_nome = 'tema'
+botao_tema.pack(side='left', padx=(0, 10))
+Dica(botao_tema, 'Escolha a paleta de cores. A preferência fica salva neste computador.')
 botao_exportar = ttk.Menubutton(acoes, text='Exportar relatório', menu=menu_exportar)
 botao_exportar.pack(side='left', padx=(0, 10))
 ttk.Button(acoes, text='Nova venda', style='Primary.TButton', command=nova_venda).pack(side='left')
@@ -882,14 +905,29 @@ ttk.Button(acoes, text='Nova venda', style='Primary.TButton', command=nova_venda
 area_cartoes = ttk.Frame(janela)
 area_cartoes.grid(row=1, column=0, sticky='ew', padx=24, pady=(0, 10))
 cartoes = []
+detalhes_cartoes = {chave: tk.StringVar() for chave in indicadores_visuais}
+barras_cartoes = {}
 for chave, titulo in [('total', 'TOTAL DO PERÍODO'), ('quantidade', 'DIAS DE FEIRA'), ('media', 'MÉDIA POR DIA'),
                       ('dinheiro', 'DINHEIRO'), ('pix', 'PIX'), ('cartao', 'CARTÃO')]:
-    card = ttk.Frame(area_cartoes, style='Card.TFrame', padding=(14, 11))
-    linha_titulo = ttk.Frame(card, style='Surface.TFrame')
-    linha_titulo.pack(anchor='w')
-    rotulo_icone(linha_titulo, chave, CORES, tamanho=16).pack(side='left', padx=(0, 5))
-    rotulo_com_ajuda(linha_titulo, titulo, chave, 'CardTitle.TLabel').pack(side='left')
-    ttk.Label(card, textvariable=indicadores_visuais[chave], style='Accent.CardValue.TLabel' if chave == 'total' else 'CardValue.TLabel').pack(anchor='w', pady=(5, 0))
+    card = ttk.Frame(area_cartoes, style=f'{chave}.Card.TFrame', padding=(16, 16))
+    linha_titulo = ttk.Frame(card, style=f'{chave}.Indicador.TFrame')
+    linha_titulo.pack(fill='x')
+    icone = rotulo_icone(linha_titulo, 'media' if chave == 'total' else chave, CORES,
+                         tamanho=24, estilo=f'{chave}.Icone.TLabel')
+    icone.indicador = chave
+    icone.pack(side='left', padx=(0, 8))
+    ttk.Label(linha_titulo, text=titulo, style=f'{chave}.Titulo.TLabel').pack(side='left')
+    ajuda = botao_ajuda(linha_titulo, chave)
+    ajuda.indicador = chave
+    ajuda.pack(side='right', padx=(4, 0))
+    ttk.Label(card, textvariable=indicadores_visuais[chave], style=f'{chave}.Valor.TLabel').pack(anchor='w', pady=(12, 10))
+    ttk.Label(card, textvariable=detalhes_cartoes[chave], style=f'{chave}.Detalhe.TLabel').pack(anchor='w')
+    if chave in ('dinheiro', 'pix', 'cartao'):
+        barra = BarraParticipacao(card, chave)
+        barra.pack(fill='x', pady=(8, 0))
+        barras_cartoes[chave] = barra
+    card.detalhes = card.winfo_children()[2:]
+    card.packs_detalhes = [widget.pack_info() for widget in card.detalhes]
     cartoes.append(card)
 layout_colunas = None
 layout_compacto = None
@@ -902,8 +940,12 @@ def organizar_cartoes(event=None):
         layout_compacto = compacto
         familia = font.nametofont('TkDefaultFont').actual('family')
         ttk.Style(janela).configure('CardValue.TLabel', font=(familia, 14 if compacto else 18, 'bold'))
-        for card in cartoes:
-            card.configure(padding=(12, 7) if compacto else (14, 11))
+        for chave, card in zip(indicadores_visuais, cartoes):
+            card.configure(padding=(12, 7) if compacto else (16, 16))
+            card.winfo_children()[1].pack_configure(pady=(4, 0) if compacto else (12, 10))
+            for widget, opcoes in zip(card.detalhes, card.packs_detalhes):
+                widget.pack_forget() if compacto else widget.pack(**opcoes)
+            ttk.Style(janela).configure(f'{chave}.Valor.TLabel', font=(familia, 16 if compacto else 24, 'bold'))
     colunas = 6 if area_cartoes.winfo_width() >= 1120 else 3
     if colunas == layout_colunas:
         return
@@ -922,12 +964,31 @@ analises = ttk.Frame(janela, style='Panel.TFrame', padding=(14, 8))
 analises.grid(row=2, column=0, sticky='ew', padx=24, pady=(0, 10))
 label_participacao = ttk.Label(analises, textvariable=resumo_participacao, style='Surface.TLabel')
 label_participacao.grid(row=0, column=1, sticky='w', pady=(0, 4))
-botao_ajuda(analises, 'participacao').grid(row=0, column=0, sticky='w', padx=(0, 7), pady=(0, 4))
+ajuda_participacao = botao_ajuda(analises, 'participacao')
+ajuda_participacao.grid(row=0, column=0, sticky='w', padx=(0, 7), pady=(0, 4))
 label_comparacao = ttk.Label(analises, textvariable=resumo_comparacao, style='Surface.TLabel', justify='left')
 label_comparacao.grid(row=1, column=1, sticky='w')
-botao_ajuda(analises, 'comparacao').grid(row=1, column=0, sticky='nw', padx=(0, 7))
+ajuda_comparacao = botao_ajuda(analises, 'comparacao')
+ajuda_comparacao.grid(row=1, column=0, sticky='nw', padx=(0, 7))
 analises.columnconfigure(1, weight=1)
-analises.bind('<Configure>', lambda e: label_comparacao.configure(wraplength=max(100, e.width - 65)))
+resumo_lado_a_lado = None
+
+
+def organizar_resumo(event):
+    global resumo_lado_a_lado
+    horizontal = event.width >= 1240
+    if horizontal != resumo_lado_a_lado:
+        resumo_lado_a_lado = horizontal
+        ajuda_comparacao.grid(row=0 if horizontal else 1, column=2 if horizontal else 0,
+                              padx=(16, 8) if horizontal else (0, 7))
+        label_comparacao.grid(row=0 if horizontal else 1, column=3 if horizontal else 1)
+        analises.columnconfigure(1, weight=1)
+        analises.columnconfigure(3, weight=1 if horizontal else 0)
+    label_participacao.configure(wraplength=max(100, int(event.width * .44) - 55) if horizontal else 0)
+    label_comparacao.configure(wraplength=max(100, int(event.width * .54) - 55) if horizontal else max(100, event.width - 65))
+
+
+analises.bind('<Configure>', organizar_resumo)
 
 # Abas compartilham a mesma seleção aplicada e os indicadores superiores.
 abas = ttk.Notebook(janela)
@@ -969,10 +1030,10 @@ painel_filtros.columnconfigure(0, weight=1)
 painel_filtros.rowconfigure(0, weight=1)
 canvas_filtros = tk.Canvas(painel_filtros, width=272, height=1, background=CORES['superficie'], highlightthickness=0)
 canvas_filtros.grid(row=0, column=0, sticky='nsew')
-scroll_filtros = ttk.Scrollbar(painel_filtros, orient='vertical', command=canvas_filtros.yview)
+scroll_filtros = BarraDiscreta(painel_filtros, orient='vertical', command=canvas_filtros.yview)
 scroll_filtros.grid(row=0, column=1, sticky='ns')
 canvas_filtros.configure(yscrollcommand=scroll_filtros.set)
-frame_filtros = ttk.Frame(canvas_filtros, style='Surface.TFrame', padding=(16, 14))
+frame_filtros = ttk.Frame(canvas_filtros, style='Surface.TFrame', padding=(16, 8))
 janela_filtros = canvas_filtros.create_window((0, 0), window=frame_filtros, anchor='nw')
 canvas_filtros.bind('<Configure>', lambda e: canvas_filtros.itemconfigure(janela_filtros, width=e.width))
 frame_filtros.bind('<Configure>', lambda e: canvas_filtros.configure(scrollregion=canvas_filtros.bbox('all')))
@@ -980,7 +1041,7 @@ frame_filtros.columnconfigure(0, weight=1)
 
 
 def rolar_painel_filtros(event):
-    if event.widget is canvas_filtros or str(event.widget).startswith(str(frame_filtros)):
+    if (event.widget is canvas_filtros or str(event.widget).startswith(str(frame_filtros))) and scroll_filtros.winfo_manager():
         if getattr(event, 'num', None) in (4, 5):
             unidades = -1 if event.num == 4 else 1
         else:
@@ -993,7 +1054,10 @@ janela.bind('<MouseWheel>', rolar_painel_filtros, add='+')
 janela.bind('<Button-4>', rolar_painel_filtros, add='+')
 janela.bind('<Button-5>', rolar_painel_filtros, add='+')
 
-rotulo_com_ajuda(frame_filtros, 'Filtrar vendas', 'filtros', 'Section.TLabel').grid(row=0, column=0, sticky='w', pady=(0, 14))
+titulo_filtros = ttk.Frame(frame_filtros, style='Surface.TFrame')
+titulo_filtros.grid(row=0, column=0, sticky='ew', pady=(0, 10))
+rotulo_icone(titulo_filtros, 'filtro', CORES, tamanho=24).pack(side='left', padx=(0, 8))
+rotulo_com_ajuda(titulo_filtros, 'Filtrar vendas', 'filtros', 'Section.TLabel').pack(side='left')
 rotulo_com_ajuda(frame_filtros, 'Ano', 'ano').grid(row=1, column=0, sticky='w')
 filtro_ano_combobox = ttk.Combobox(frame_filtros, textvariable=filtro_ano, values=('Todos os anos', *ANOS), state='readonly', width=16)
 filtro_ano_combobox.grid(row=2, column=0, sticky='ew', pady=(4, 10))
@@ -1031,35 +1095,39 @@ area_tabela.columnconfigure(0, weight=1)
 area_tabela.rowconfigure(2, weight=1)
 barra_tabela = ttk.Frame(area_tabela, style='Surface.TFrame')
 barra_tabela.grid(row=0, column=0, sticky='ew', pady=(0, 8))
+rotulo_icone(barra_tabela, 'total', CORES, tamanho=26).pack(side='left', padx=(0, 10))
 rotulo_com_ajuda(barra_tabela, 'Histórico de vendas', 'historico', 'Section.TLabel').pack(side='left')
 label_filtro = ttk.Label(area_tabela, textvariable=texto_filtro_atual, style='Filtro.TLabel', justify='left')
 label_filtro.grid(row=1, column=0, sticky='ew', pady=(0, 10))
 acoes_historico = ttk.Frame(area_tabela, style='Surface.TFrame')
-acoes_historico.grid(row=3, column=0, sticky='w', pady=(10, 0))
+acoes_historico.grid(row=3, column=0, sticky='ew', pady=(10, 0))
 botao_editar = ttk.Button(acoes_historico, text='Editar venda', command=editar_venda_selecionada, state='disabled')
 botao_editar.pack(side='left', padx=(0, 8))
 botao_excluir_venda = ttk.Button(acoes_historico, text='Excluir', style='Danger.TButton', command=excluir_venda_selecionada, state='disabled')
 botao_excluir_venda.pack(side='left')
+ttk.Label(acoes_historico, textvariable=resumo_quantidade, style='Surface.TLabel').pack(side='right')
 container_tabela = ttk.Frame(area_tabela, style='Surface.TFrame')
-container_tabela.grid(row=2, column=0, sticky='nsw')
+container_tabela.grid(row=2, column=0, sticky='nsew')
 container_tabela.grid_propagate(False)
 container_tabela.columnconfigure(0, weight=1)
 container_tabela.rowconfigure(0, weight=1)
 colunas = ('id', 'data', 'dia_semana', 'dinheiro', 'pix', 'cartao', 'total')
+larguras_tabela = dict(zip(colunas, (55, 110, 160, 130, 130, 130, 150)))
 titulos_colunas = dict(zip(colunas, ('ID', 'Data', 'Dia da semana', 'Dinheiro', 'Pix', 'Cartão', 'Total')))
 tabela = ttk.Treeview(container_tabela, columns=colunas, show='headings', selectmode='browse', height=7)
 tabela.grid(row=0, column=0, sticky='nsew')
 for coluna, largura_coluna in zip(colunas, (55, 110, 160, 130, 130, 130, 150)):
     tabela.column(coluna, width=largura_coluna, minwidth=48, stretch=False, anchor='center')
     tabela.heading(coluna, anchor='center', command=lambda c=coluna: ordenar_tabela(c))
-scroll_vertical = ttk.Scrollbar(container_tabela, orient='vertical', command=tabela.yview)
+scroll_vertical = BarraDiscreta(container_tabela, orient='vertical', command=tabela.yview)
 scroll_vertical.grid(row=0, column=1, sticky='ns')
-scroll_horizontal = ttk.Scrollbar(container_tabela, orient='horizontal', command=tabela.xview)
+scroll_horizontal = BarraDiscreta(container_tabela, orient='horizontal', command=tabela.xview)
 scroll_horizontal.grid(row=1, column=0, sticky='ew')
 tabela.configure(yscrollcommand=scroll_vertical.set, xscrollcommand=scroll_horizontal.set)
 area_tabela.bind('<Configure>', lambda e: (ajustar_area_tabela(), label_filtro.configure(wraplength=max(100, e.width - 28))))
 tabela.tag_configure('par', background=CORES['superficie'])
 tabela.tag_configure('impar', background=CORES['alternada'])
+container_tabela.bind('<Configure>', ajustar_area_tabela)
 tabela.bind('<<TreeviewSelect>>', atualizar_botoes_selecao)
 tabela.bind('<Double-1>', editar_venda_selecionada)
 tabela.bind('<Return>', editar_venda_selecionada)

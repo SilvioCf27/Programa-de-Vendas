@@ -8,13 +8,13 @@ import tempfile
 def carregar_tema(pasta):
     try:
         valor = json.loads((Path(pasta) / 'preferencias.json').read_text(encoding='utf-8')).get('tema')
-        return valor if valor in ('claro', 'escuro') else 'escuro'
+        return valor if valor in ('claro', 'escuro', 'grafite', 'areia', 'aurora') else 'escuro'
     except (OSError, ValueError, AttributeError):
         return 'escuro'
 
 
 def salvar_tema(pasta, tema):
-    if tema not in ('claro', 'escuro'):
+    if tema not in ('claro', 'escuro', 'grafite', 'areia', 'aurora'):
         raise ValueError('Tema inválido')
     pasta = Path(pasta)
     pasta.mkdir(parents=True, exist_ok=True)

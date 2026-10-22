@@ -86,3 +86,27 @@ foi atualizada para 0.8.3, inclusive na árvore usada pela exportação. A nova
 execução de `npm audit --omit=dev` retornou zero avisos conhecidos nas dependências
 de produção. Isso complementa os testes; não substitui a revisão das regras de
 acesso ou o acompanhamento de novas correções.
+
+## Abertura e acabamento visual
+
+Os contornos e ícones mantêm em memória a cobertura dos desenhos, separada das
+cores. Assim, aplicar uma paleta não recalcula os mesmos cantos e traços para
+cada cor. Os caches têm limite; as imagens do Tk pertencem à janela que as usa.
+Não há animações nem um temporizador para redesenhar a interface.
+
+Para medir a primeira exibição e uma nova consulta, com sessão gráfica disponível:
+
+```sh
+python tools/medir_abertura.py --registros 224
+python tools/medir_abertura.py --registros 5000
+```
+
+O comando cria e remove seu próprio banco temporário. Os tempos incluem a
+montagem da interface e a primeira atualização gráfica, mas não a inicialização
+do interpretador, a rede ou a extração de um executável.
+
+Na medição local de 22/10/2026 (Linux, Python 3.12, Tk 9), sem profiler, a abertura
+com 224 registros caiu de 1,59 s para 0,71 s após reutilizar os desenhos. Com
+5.000 registros, caiu de 1,89 s para 1,09 s. A nova consulta levou cerca de
+0,02 s e 0,30 s, respectivamente. São medições deste ambiente; o tempo do
+executável no Windows depende também do computador e do antivírus.

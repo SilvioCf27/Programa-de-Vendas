@@ -1,6 +1,7 @@
 """Ícones vetoriais originais, rasterizados em memória sem dependências extras."""
 import base64
 import math
+from functools import lru_cache
 import tkinter as tk
 from tkinter import ttk
 from ProgramFeira.interface.acabamento import _png, _rgb
@@ -31,16 +32,11 @@ def _distancia(x, y, a, b):
     return math.hypot(x - a[0] - t * vx, y - a[1] - t * vy)
 
 
-def imagem_icone(root, nome, cor, tamanho=18):
-    if not hasattr(root, '_icones'):
-        root._icones = {}
-    chave = (nome, cor, tamanho)
-    if chave in root._icones:
-        return root._icones[chave]
+@lru_cache(maxsize=128)
+def cobertura_icone(nome, tamanho):
     escala = 36 if nome == 'marca' else 24
     segmentos = [(a, b, min(a[0], b[0]) - 1, min(a[1], b[1]) - 1, max(a[0], b[0]) + 1, max(a[1], b[1]) + 1) for traco in TRACOS[nome] for a, b in zip(traco, traco[1:])]
-    pixels = []
-    rgb = _rgb(cor)
+    cobertura = bytearray()
     for y in range(tamanho):
         for x in range(tamanho):
             cobertos = 0
@@ -56,7 +52,20 @@ def imagem_icone(root, nome, cor, tamanho=18):
                     if nome == 'tema':
                         linha |= abs(math.hypot(px - 12, py - 12) - 5) <= 0.9
                     cobertos += bool(linha)
-            pixels.extend((*rgb, round(255 * cobertos / 9)))
+            cobertura.append(round(255 * cobertos / 9))
+    return bytes(cobertura)
+
+
+def imagem_icone(root, nome, cor, tamanho=18):
+    if not hasattr(root, '_icones'):
+        root._icones = {}
+    chave = (nome, cor, tamanho)
+    if chave in root._icones:
+        return root._icones[chave]
+    rgb = _rgb(cor)
+    pixels = bytearray()
+    for alfa in cobertura_icone(nome, tamanho):
+        pixels.extend((*rgb, alfa))
     imagem = tk.PhotoImage(master=root, data=base64.b64encode(_png(tamanho, tamanho, pixels)))
     root._icones[chave] = imagem
     return imagem

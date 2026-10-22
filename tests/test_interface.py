@@ -94,7 +94,15 @@ a.janela.update()
 assert a.tema_atual.get() == 'escuro'
 assert str(a.formulario.cget('background')) == PALETAS['escuro']['fundo']
 assert str(a.tabela.tag_configure('impar', 'background')) == PALETAS['escuro']['alternada']
+for tema in ('grafite', 'areia', 'aurora', 'claro', 'escuro'):
+    a.alternar_tema(tema); a.janela.update()
+    assert carregar_tema(a.CAMINHO_BANCO.parent) == tema
+    assert str(a.tabela.tag_configure('impar', 'background')) == PALETAS[tema]['alternada']
+    assert str(a.formulario.cget('background')) == PALETAS[tema]['fundo']
 assert a.indicadores_visuais['total'].get() == 'R$ 561,25'
+assert a.detalhes_cartoes['media'].get() == 'Inclui dias zerados'
+assert a.detalhes_cartoes['total'].get() == '9 dias de feira'
+assert a.detalhes_cartoes['dinheiro'].get() == '44,5% do período'
 assert [a.abas.tab(i, 'text') for i in range(3)] == ['Vendas', 'Análises', 'Finanças']
 a.abas.select(1)
 a.janela.update()

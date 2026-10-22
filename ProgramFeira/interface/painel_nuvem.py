@@ -80,7 +80,7 @@ class ConexaoNuvem:
         corpo = ttk.Frame(popup, padding=20)
         corpo.pack(fill='both', expand=True)
         corpo.columnconfigure(1, weight=1)
-        ttk.Label(corpo, text='Sua conta no Gestão da Feira', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
+        ttk.Label(corpo, text='Conecte sua conta', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
         ttk.Label(corpo, text='No Windows, a sessão é recuperada ao abrir o programa, sem salvar sua senha.\nA opção automática consulta alterações a cada minuto. Desconectar remove a sessão salva.', wraplength=570, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=12)
         try:
             config = nuvem.carregar_config(self.pasta)
@@ -89,7 +89,7 @@ class ConexaoNuvem:
             messagebox.showwarning('Reconfigurar nuvem', str(erro), parent=popup)
         self.campos = {}
         for linha, (nome, rotulo, inicial) in enumerate((
-            ('url', 'Project URL', config.get('url', '')),
+            ('url', 'URL do projeto Supabase', config.get('url', '')),
             ('chave', 'Chave pública', config.get('chave_publica', '')),
             ('email', 'E-mail do aplicativo', self.sessao.email if self.sessao else ''),
             ('senha', 'Senha do aplicativo', ''),

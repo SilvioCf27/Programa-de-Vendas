@@ -17,7 +17,7 @@ class PreferenciasTests(unittest.TestCase):
             self.assertEqual(carregar_tema(self.pasta), 'escuro')
 
     def test_preferencia_persistida(self):
-        for tema in ('claro', 'escuro'):
+        for tema in ('claro', 'escuro', 'grafite', 'areia', 'aurora'):
             salvar_tema(self.pasta, tema)
             self.assertEqual(carregar_tema(self.pasta), tema)
         self.assertEqual(list(self.pasta.glob('.preferencias-*')), [])

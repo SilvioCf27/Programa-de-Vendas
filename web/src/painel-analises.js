@@ -30,27 +30,86 @@ export function criarPainelAnalises({ api, sessao }) {
     geracao = 0;
   const ref = mesFechamento();
   const data = `${ref.ano}-${String(ref.mes).padStart(2, '0')}-10`;
-  for (const prefixo of ['ana', 'cmp-a', 'cmp-b']) {
-    $(prefixo + '-referencia').value =
-      prefixo === 'cmp-a'
-        ? anterior('Fechamento', limitesAnalise('Fechamento', data)).inicio
-        : data;
-    $(prefixo + '-fim').value = hoje();
+  $('ana-referencia').value = data;
+  $('ana-fim').value = hoje();
+  const ajustarAnalise = () => {
+    const tipo = $('ana-tipo').value;
+    $('ana-referencia').disabled = tipo === 'Todas';
+    $('ana-fim-rotulo').hidden = tipo !== 'Intervalo';
+    $('ana-fim').disabled = tipo !== 'Intervalo';
+  };
+  $('ana-tipo').addEventListener('change', ajustarAnalise);
+  ajustarAnalise();
+  const meses = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
+  const hojeData = hoje();
+  const anoAtual = Number(hojeData.slice(0, 4));
+  const mesAtual = Number(hojeData.slice(5, 7));
+  const anoAnterior = mesAtual === 1 ? anoAtual - 1 : anoAtual;
+  const mesAnterior = mesAtual === 1 ? 12 : mesAtual - 1;
+  function atualizarAnos(vendas = []) {
+    const anos = new Set([anoAtual - 1, anoAtual, anoAtual + 1]);
+    vendas.forEach((v) => anos.add(Number(v.data.slice(0, 4))));
+    for (const p of ['cmp-a', 'cmp-b']) {
+      const campo = $(p + '-ano'),
+        escolhido = campo.value;
+      if (escolhido) anos.add(Number(escolhido));
+    }
+    for (const p of ['cmp-a', 'cmp-b']) {
+      const campo = $(p + '-ano'),
+        escolhido = campo.value;
+      campo.replaceChildren(
+        ...[...anos].sort((a, b) => a - b).map((ano) => new Option(ano, ano))
+      );
+      if (escolhido) campo.value = escolhido;
+    }
+  }
+  atualizarAnos();
+  for (const p of ['cmp-a', 'cmp-b']) {
+    const inicial =
+      p === 'cmp-a'
+        ? `${anoAnterior}-${String(mesAnterior).padStart(2, '0')}-01`
+        : hojeData;
+    meses.forEach((mes, i) => $(p + '-mes').add(new Option(mes, i + 1)));
+    $(p + '-mes').value = Number(inicial.slice(5, 7));
+    $(p + '-ano').value = inicial.slice(0, 4);
+    $(p + '-referencia').value = inicial;
+    $(p + '-fim').value = inicial;
     const ajustar = () => {
-      const tipo = $(prefixo + '-tipo').value;
-      $(prefixo + '-referencia').disabled = tipo === 'Todas';
-      $(prefixo + '-fim-rotulo').hidden = tipo !== 'Intervalo';
-      $(prefixo + '-fim').disabled = tipo !== 'Intervalo';
+      const tipo = $(p + '-tipo').value;
+      const datas = ['Data', 'Intervalo'].includes(tipo);
+      $(p + '-mes-ano').hidden = datas;
+      $(p + '-datas').hidden = !datas;
+      $(p + '-mes').disabled = $(p + '-ano').disabled = datas;
+      $(p + '-referencia').disabled = !datas;
+      $(p + '-inicio-rotulo').textContent =
+        tipo === 'Intervalo' ? 'De' : 'Data';
+      $(p + '-fim-rotulo').hidden = tipo !== 'Intervalo';
+      $(p + '-fim').disabled = tipo !== 'Intervalo';
     };
-    $(prefixo + '-tipo').addEventListener('change', ajustar);
+    $(p + '-tipo').addEventListener('change', ajustar);
     ajustar();
   }
-  const ler = (p) =>
-    limitesAnalise(
-      $(p + '-tipo').value,
-      $(p + '-referencia').value,
-      $(p + '-fim').value
-    );
+  const ler = (p) => {
+    const tipo = $(p + '-tipo').value;
+    const mensal = p !== 'ana' && ['Mês', 'Fechamento'].includes(tipo);
+    const referencia = mensal
+      ? `${$(p + '-ano').value}-${String($(p + '-mes').value).padStart(2, '0')}-01`
+      : $(p + '-referencia').value;
+    return limitesAnalise(tipo, referencia, $(p + '-fim').value);
+  };
   function desenhar(vendas) {
     const atual = selecionar(vendas, selecao.periodo);
     const r = indicadores(atual);
@@ -139,6 +198,7 @@ export function criarPainelAnalises({ api, sessao }) {
       };
       const dados = await api().financeiro();
       if (atual !== geracao || conta !== sessao()?.user.id) return false;
+      atualizarAnos(dados.vendas);
       selecao = consulta;
       comparacao = novaComparacao;
       desenhar(dados.vendas);

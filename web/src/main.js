@@ -33,7 +33,7 @@ const financeiro = criarPainelFinanceiro({
 });
 const analises = criarPainelAnalises({ api: () => api, sessao: () => sessao });
 function mudarArea(area) {
-  for (const nome of ['vendas', 'financas', 'analises']) {
+  for (const nome of ['vendas', 'analises', 'financas']) {
     $('area-' + nome).hidden = nome !== area;
     $('aba-' + nome).setAttribute('aria-pressed', String(nome === area));
   }

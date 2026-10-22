@@ -538,6 +538,11 @@ test('análises: pagamentos, dias zerados e comparação independente no celular
       cartao_centavos: 0,
     }
   );
+  await expect(page.locator('nav.abas button')).toHaveText([
+    'Vendas',
+    'Análises',
+    'Finanças',
+  ]);
   await page.locator('#aba-analises').click();
   await page.locator('#ana-tipo').selectOption('Mês');
   await page.locator('#ana-referencia').fill('2026-10-01');
@@ -555,15 +560,79 @@ test('análises: pagamentos, dias zerados e comparação independente no celular
     ['cmp-b', '2026-10-01'],
   ]) {
     await page.locator('#' + p + '-tipo').selectOption('Mês');
-    await page.locator('#' + p + '-referencia').fill(data);
+    await page
+      .locator('#' + p + '-mes')
+      .selectOption(String(Number(data.slice(5, 7))));
+    await page.locator('#' + p + '-ano').selectOption(data.slice(0, 4));
   }
   await page.getByRole('button', { name: 'Comparar períodos' }).click();
   await expect(page.locator('#cmp-diferenca')).toContainText('R$ 50,00');
   await expect(page.locator('#cmp-diferenca')).toContainText('50%');
+  await expect(page.locator('#cmp-b-referencia')).toBeHidden();
+  await expect(page.locator('#cmp-b-mes')).toBeVisible();
   await page.locator('#cmp-b-tipo').selectOption('Data');
+  await expect(page.locator('#cmp-b-mes')).toBeDisabled();
   await page.locator('#cmp-b-referencia').fill('2026-10-23');
   await page.getByRole('button', { name: 'Comparar períodos' }).click();
   await expect(page.locator('#cmp-diferenca')).toContainText('-100%');
+  vendas.push(
+    {
+      id: 'limite1',
+      versao: 1,
+      data: '2026-12-09',
+      dinheiro_centavos: 50000,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    },
+    {
+      id: 'limite2',
+      versao: 1,
+      data: '2026-12-10',
+      dinheiro_centavos: 1000,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    },
+    {
+      id: 'limite3',
+      versao: 1,
+      data: '2027-01-09',
+      dinheiro_centavos: 2000,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    },
+    {
+      id: 'limite4',
+      versao: 1,
+      data: '2027-01-10',
+      dinheiro_centavos: 70000,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    }
+  );
+  for (const [p, mes, ano] of [
+    ['cmp-a', '12', '2026'],
+    ['cmp-b', '1', '2027'],
+  ]) {
+    await page.locator('#' + p + '-tipo').selectOption('Fechamento');
+    await page.locator('#' + p + '-mes').selectOption(mes);
+    await page.locator('#' + p + '-ano').selectOption(ano);
+    await expect(page.locator('#' + p + '-referencia')).toBeDisabled();
+  }
+  await page.getByRole('button', { name: 'Comparar períodos' }).click();
+  await expect(page.locator('#cmp-periodo-a')).toHaveText(
+    '10/12/2026 a 09/01/2027'
+  );
+  await expect(page.locator('#cmp-valores tr').first()).toHaveText(
+    'Total brutoR$ 30,00R$ 700,00'
+  );
+  await expect(page.locator('#cmp-diferenca')).toContainText('R$ 670,00');
+  await page.locator('#cmp-b-tipo').selectOption('Intervalo');
+  await page.locator('#cmp-b-referencia').fill('2026-12-10');
+  await page.locator('#cmp-b-fim').fill('2027-01-09');
+  await page.getByRole('button', { name: 'Comparar períodos' }).click();
+  await expect(page.locator('#cmp-diferenca')).toContainText('Variação: 0%');
+  await expect(page.locator('#cmp-a-ano')).toHaveValue('2026');
+
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth

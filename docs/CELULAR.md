@@ -356,7 +356,9 @@ zerados, participação das formas de pagamento e resultados por dia da semana.
 As tabelas mais largas podem ser deslizadas na horizontal. Os valores não descontam
 taxas nem despesas; esse resultado está na aba Finanças.
 
-Em **Comparar A e B**, escolha datas, meses, fechamentos ou intervalos e pressione
+Em **Comparar A e B**, use **Comparar por**. Para Mês e Fechamento, selecione
+o mês e o ano nos seletores lado a lado, como no desktop. Para Data ou Intervalo,
+informe as datas; no intervalo, os dois limites são incluídos. Depois pressione
 **Comparar períodos**. A diferença é B menos A e o percentual usa A como base.
 Quando um período não tem registros ou A tem total zero, não é exibido percentual.
 O resumo do período também compara automaticamente mês/ano/fechamento com o

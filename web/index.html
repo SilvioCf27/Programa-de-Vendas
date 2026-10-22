@@ -70,18 +70,18 @@
             Vendas
           </button>
           <button
-            id="aba-financas"
-            aria-pressed="false"
-            aria-controls="area-financas"
-          >
-            Finanças
-          </button>
-          <button
             id="aba-analises"
             aria-pressed="false"
             aria-controls="area-analises"
           >
             Análises
+          </button>
+          <button
+            id="aba-financas"
+            aria-pressed="false"
+            aria-controls="area-financas"
+          >
+            Finanças
           </button>
         </nav>
         <p id="atualizacao-web" class="nota" role="status" aria-live="polite">
@@ -232,49 +232,63 @@
             <p class="nota">
               Compare duas datas, meses, fechamentos ou intervalos. No
               fechamento, o mês escolhido começa no dia 10 e termina no dia 09
-              do mês seguinte. A data de referência identifica o mês escolhido.
+              do mês seguinte. Escolha mês e ano como no computador.
             </p>
             <form id="cmp-form">
               <div class="comparadores">
                 <fieldset>
                   <legend>Período A · base</legend>
                   <label
-                    >Tipo de período<select id="cmp-a-tipo">
-                      <option>Fechamento</option>
-                      <option>Mês</option>
+                    >Comparar por<select id="cmp-a-tipo">
                       <option>Data</option>
+                      <option selected>Mês</option>
+                      <option>Fechamento</option>
                       <option>Intervalo</option>
                     </select></label
                   >
-                  <label
-                    >Data de referência<input
-                      id="cmp-a-referencia"
-                      type="date"
-                      required
-                  /></label>
-                  <label id="cmp-a-fim-rotulo" hidden
-                    >Data final<input id="cmp-a-fim" type="date"
-                  /></label>
+                  <div id="cmp-a-mes-ano" class="mes-ano">
+                    <label>Mês<select id="cmp-a-mes" required></select></label>
+                    <label>Ano<select id="cmp-a-ano" required></select></label>
+                  </div>
+                  <div id="cmp-a-datas" hidden>
+                    <label
+                      ><span id="cmp-a-inicio-rotulo">Data</span
+                      ><input id="cmp-a-referencia" type="date" required
+                    /></label>
+                    <label id="cmp-a-fim-rotulo" hidden
+                      >Até (inclusive)<input
+                        id="cmp-a-fim"
+                        type="date"
+                        required
+                    /></label>
+                  </div>
                 </fieldset>
                 <fieldset>
                   <legend>Período B</legend>
                   <label
-                    >Tipo de período<select id="cmp-b-tipo">
-                      <option>Fechamento</option>
-                      <option>Mês</option>
+                    >Comparar por<select id="cmp-b-tipo">
                       <option>Data</option>
+                      <option selected>Mês</option>
+                      <option>Fechamento</option>
                       <option>Intervalo</option>
                     </select></label
                   >
-                  <label
-                    >Data de referência<input
-                      id="cmp-b-referencia"
-                      type="date"
-                      required
-                  /></label>
-                  <label id="cmp-b-fim-rotulo" hidden
-                    >Data final<input id="cmp-b-fim" type="date"
-                  /></label>
+                  <div id="cmp-b-mes-ano" class="mes-ano">
+                    <label>Mês<select id="cmp-b-mes" required></select></label>
+                    <label>Ano<select id="cmp-b-ano" required></select></label>
+                  </div>
+                  <div id="cmp-b-datas" hidden>
+                    <label
+                      ><span id="cmp-b-inicio-rotulo">Data</span
+                      ><input id="cmp-b-referencia" type="date" required
+                    /></label>
+                    <label id="cmp-b-fim-rotulo" hidden
+                      >Até (inclusive)<input
+                        id="cmp-b-fim"
+                        type="date"
+                        required
+                    /></label>
+                  </div>
                 </fieldset>
               </div>
               <button type="submit" class="primario">Comparar períodos</button>

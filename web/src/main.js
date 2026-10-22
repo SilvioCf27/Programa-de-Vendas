@@ -33,6 +33,7 @@ let cliente,
   gravando = false;
 let selecao;
 let exportando = false;
+let consultaConfirmada = false;
 let geracao = 0;
 const financeiro = criarPainelFinanceiro({
   api: () => api,
@@ -157,6 +158,7 @@ async function carregar(novaSelecao = selecao) {
     const linhas = await api.listar(novaSelecao);
     if (atual !== geracao || !sessao) return;
     registros = linhas;
+    consultaConfirmada = true;
     selecao = novaSelecao;
     $('periodo').textContent = selecao.inicio
       ? `${dataBr(selecao.inicio)} a ${dataBr(selecao.fim)}`
@@ -230,7 +232,9 @@ function abrir(registro = null) {
   modal.showModal();
 }
 async function exportarVendas(formato) {
-  if (!sessao || !selecao || carregando || exportando) return;
+  if (!sessao || carregando || exportando) return;
+  if (!consultaConfirmada || !selecao)
+    return mensagem('Atualize a lista com sucesso antes de exportar os dados.');
   const conta = sessao.user.id;
   const relatorio = montarExportacao(registros, selecao);
   exportando = true;
@@ -301,6 +305,7 @@ async function receberSessao(nova) {
   sessao = nova;
   geracao++;
   if (mudouConta) {
+    consultaConfirmada = false;
     financeiro.limpar();
     analises.limpar();
     mudarArea('vendas');

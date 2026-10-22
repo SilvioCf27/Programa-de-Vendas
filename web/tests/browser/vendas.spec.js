@@ -6,7 +6,7 @@ function token() {
     Buffer.from(JSON.stringify(obj)).toString('base64url');
   return `${codificar({ alg: 'HS256', typ: 'JWT' })}.${codificar({ sub: USER, role: 'authenticated', exp: Math.floor(Date.now() / 1000) + 3600 })}.teste`;
 }
-async function preparar(page) {
+async function preparar(page, { falharListagem = false } = {}) {
   const vendas = [];
   const financeiro = { lancamentos: [], anuais: [] };
   vendas.financeiro = financeiro;
@@ -96,6 +96,8 @@ async function preparar(page) {
     }
     if (url.pathname === '/rest/v1/vendas') {
       if (request.method() === 'GET') {
+        if (falharListagem)
+          return responder({ message: 'Consulta recusada no teste' }, 400);
         const filtros = url.searchParams.getAll('data');
         return responder(
           vendas.filter((r) =>
@@ -804,4 +806,17 @@ test('exporta somente a seleção aplicada em CSV e Excel e mostra evolução co
       () => document.documentElement.scrollWidth <= innerWidth
     )
   ).toBe(true);
+});
+
+test('falha na primeira consulta não gera exportação vazia como se tivesse sido conferida', async ({
+  page,
+}) => {
+  await preparar(page, { falharListagem: true });
+  await expect(page.locator('#mensagem')).toContainText(
+    'A lista não foi atualizada'
+  );
+  await page.locator('#exportar-csv').click();
+  await expect(page.locator('#mensagem')).toHaveText(
+    'Atualize a lista com sucesso antes de exportar os dados.'
+  );
 });

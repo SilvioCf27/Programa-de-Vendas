@@ -1,4 +1,4 @@
-A versão 1.2.1 coloca as funções de dados em Configurações, pela engrenagem na tela principal, com explicações breves ao passar o mouse sobre **?**. A opção de conferir a cópia passa a se chamar **Verificar integridade do backup** e informa claramente que não altera os dados em uso. Tema, exportação e Nova venda mantêm suas posições. Dados e configurações existentes são preservados.
+A versão 1.2.2 coloca as funções de dados em Configurações, pela engrenagem na tela principal, com explicações breves ao passar o mouse sobre **?**. A opção de conferir a cópia passa a se chamar **Verificar integridade do backup** e informa claramente que não altera os dados em uso. Tema, exportação e Nova venda mantêm suas posições. Dados e configurações existentes são preservados.
 
 A versão 1.2.0 acrescenta:
 

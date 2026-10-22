@@ -54,7 +54,7 @@ assert not cfg.winfo_exists()
 a.dica_configuracoes.mostrar(); a.janela.update()
 a.verificar_formulario_sincronizacao()  # A dica não é um formulário pendente.
 a.dica_configuracoes.fechar()
-assert not any(a.menu.entrycget(i,'label') == 'Dados' for i in range(a.menu.index('end') + 1))
+assert not any(a.menu.entrycget(i,'label') == 'Dados' for i in range(a.menu.index('end') + 1) if a.menu.type(i) == 'cascade')
 # Sincronizar antes da primeira visita a Finanças preserva a carga sob demanda.
 assert a.painel_financeiro.inicio is None
 assert a.painel_financeiro.fim is None

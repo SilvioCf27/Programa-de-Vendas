@@ -22,6 +22,11 @@ def verificar_pacote(relatorio):
                 tk.Tk.mainloop = original
             try:
                 app.janela.update()
+                configuracoes = app.abrir_configuracoes()
+                app.janela.update()
+                assert len(configuracoes.acoes) == 7
+                assert 'Verificar integridade do backup…' in configuracoes.acoes
+                configuracoes.destroy()
                 from ProgramFeira.interface.fontes import PASTA_FONTES
                 from ProgramFeira.database import banco
                 from ProgramFeira import financeiro, backup_drive
@@ -68,7 +73,7 @@ def verificar_pacote(relatorio):
                 from ProgramFeira.interface.conflitos import descrever
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
-                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True,
+                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True,
                                  banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()

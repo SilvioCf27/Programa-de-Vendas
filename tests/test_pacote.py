@@ -27,5 +27,6 @@ class PacoteTests(unittest.TestCase):
             self.assertEqual(resultado['registros_iniciais'], 0)
             self.assertEqual(resultado['fontes'], 4)
             self.assertTrue(resultado['excel'])
+            self.assertTrue(resultado['configuracoes'])
             self.assertTrue(resultado['backup'])
             self.assertEqual(banco.read_bytes(), b'nao tocar neste arquivo')

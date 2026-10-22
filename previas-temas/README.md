@@ -2,7 +2,7 @@
 
 Interface real com dados fictícios. Apenas imagens nesta branch; o código em main não foi alterado.
 
-A tabela agora ocupa a área do histórico. Barras de rolagem aparecem apenas quando há conteúdo fora da área visível, com trilhos discretos e sem setas. Areia agora é escuro; Aurora é a nova opção violeta.
+Nova proposta baseada na referência: cartões com cores por indicador, ícones maiores, contexto abaixo dos valores, barras arredondadas de participação, ícones nas abas e cabeçalho reorganizado. Tabela e filtros preservam as funções atuais. Busca, paginação e ações por linha da imagem de referência não foram acrescentadas nesta etapa visual. Capturas em 1400 × 940, com dados fictícios.
 
 ## Noite
 

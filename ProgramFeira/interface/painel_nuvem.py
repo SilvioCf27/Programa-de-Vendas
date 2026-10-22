@@ -8,6 +8,7 @@ from tkinter import ttk, messagebox
 from ProgramFeira import nuvem, migracao_nuvem, sincronizacao, automacao_nuvem, sessao_windows
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.resumos import moeda
+from ProgramFeira.diagnostico import registrar
 
 
 class ConexaoNuvem:
@@ -113,7 +114,9 @@ class ConexaoNuvem:
         self.botao_transferir = ttk.Button(migrar, text='Transferir dados conferidos', command=self.transferir)
         self.botao_transferir.pack(side='left', padx=8)
         self.botao_sincronizar = ttk.Button(corpo, text='Sincronizar agora', command=self.sincronizar, style='Primary.TButton')
-        self.botao_sincronizar.grid(row=9, column=0, columnspan=2, sticky='w', pady=(12, 0))
+        self.botao_sincronizar.grid(row=9, column=0, sticky='w', pady=(12, 0))
+        self.botao_conflitos = ttk.Button(corpo, text='Conferir conflitos…', command=self.conferir_conflitos)
+        self.botao_conflitos.grid(row=9, column=1, sticky='w', pady=(12, 0))
         self.check_automatico = ttk.Checkbutton(corpo,
             text='Sincronizar automaticamente a cada minuto enquanto estiver conectado',
             variable=self.automatico, command=self.alterar_automatico)
@@ -132,6 +135,7 @@ class ConexaoNuvem:
         for controle in [*self.campos.values(), self.botao_entrar, self.botao_sair]:
             controle.configure(state='disabled' if self.ocupado else 'normal')
         self.botao_sincronizar.configure(state='normal' if self.sessao and not self.ocupado else 'disabled')
+        self.botao_conflitos.configure(state='normal' if self.sessao and self.vinculado and not self.ocupado else 'disabled')
         self.botao_conferir.configure(state='normal' if self.sessao and not self.ocupado and not self.vinculado else 'disabled')
         self.botao_transferir.configure(state='normal' if self.preparacao and not self.ocupado and not self.vinculado else 'disabled')
 
@@ -175,7 +179,8 @@ class ConexaoNuvem:
                 resultados.put((True, operacao()))
             except nuvem.ErroNuvem as erro:
                 resultados.put((False, erro))
-            except Exception:
+            except Exception as erro:
+                registrar(erro, self.pasta)
                 resultados.put((False, nuvem.ErroNuvem('Operação não confirmada. Confira a conexão e o espaço em disco antes de continuar.')))
 
         def acompanhar():
@@ -327,6 +332,42 @@ class ConexaoNuvem:
                 self.agendador.concluir()
             else:
                 self.agendador.ativar()
+
+    def conferir_conflitos(self):
+        if self.ocupado:
+            return
+        try:
+            self._validar_conta()
+            if self.antes_sincronizar:
+                self.antes_sincronizar()
+        except nuvem.ErroNuvem as erro:
+            self.status.set(str(erro))
+            return
+        self.agendador.parar()
+        cliente, sessao = self.cliente, self.sessao
+
+        def consultar():
+            nova = cliente.garantir_sessao(sessao)
+            return nova, sincronizacao.conferir_conflitos(self.pasta / 'vendas.db', cliente, nova)
+
+        def concluir(resposta):
+            nova, revisao = resposta
+            self.sessao = nova
+            if not revisao['conflitos']:
+                self.status.set('Nenhum conflito encontrado. Use Sincronizar agora para atualizar os dados e retomar a automação.')
+                return
+            from ProgramFeira.interface.conflitos import RevisaoConflitos
+
+            def aplicar(escolhas):
+                def gravar():
+                    atual = cliente.garantir_sessao(nova)
+                    return atual, sincronizacao.sincronizar(self.pasta / 'vendas.db', cliente, atual,
+                        revisao=revisao, escolhas=escolhas)
+                self._rodar(gravar, lambda r: self._concluiu_sincronizacao(*r),
+                    'Verificando novamente as versões e aplicando escolhas…', ao_erro=self._falha_sincronizacao, travar=True)
+
+            self.revisao_popup = RevisaoConflitos(self.janela, revisao, aplicar)
+        self._rodar(consultar, concluir, 'Conferindo as versões em conflito…', ao_erro=self._falha_sincronizacao)
 
     def sincronizar(self):
         if self.ocupado:

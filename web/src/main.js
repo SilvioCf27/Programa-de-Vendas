@@ -11,6 +11,12 @@ import {
   erroAmigavel,
 } from './regras.js';
 import './style.css';
+import {
+  montarExportacao,
+  gerarCsv,
+  gerarExcel,
+  baixar,
+} from './exportacao.js';
 import { criarAtualizacao } from './atualizacao.js';
 import { criarPainelAnalises } from './painel-analises.js';
 import { criarPainelFinanceiro } from './painel-financeiro.js';
@@ -26,6 +32,7 @@ let cliente,
   carregando = false,
   gravando = false;
 let selecao;
+let exportando = false;
 let geracao = 0;
 const financeiro = criarPainelFinanceiro({
   api: () => api,
@@ -174,6 +181,7 @@ const atualizacao = criarAtualizacao({
     !$('conteudo').hidden,
   ocupado: () =>
     carregando ||
+    exportando ||
     gravando ||
     modal.open ||
     financeiro.ocupado() ||
@@ -221,6 +229,34 @@ function abrir(registro = null) {
   conexao();
   modal.showModal();
 }
+async function exportarVendas(formato) {
+  if (!sessao || !selecao || carregando || exportando) return;
+  const conta = sessao.user.id;
+  const relatorio = montarExportacao(registros, selecao);
+  exportando = true;
+  $('exportar-csv').disabled = $('exportar-excel').disabled = true;
+  try {
+    const blob =
+      formato === 'csv'
+        ? new Blob([gerarCsv(relatorio)], { type: 'text/csv;charset=utf-8' })
+        : await gerarExcel(relatorio);
+    if (sessao?.user.id !== conta) return;
+    baixar(blob, `vendas-filtradas.${formato}`);
+    mensagem(
+      'Arquivo gerado. Confira a pasta Downloads ou a opção de compartilhar do navegador.'
+    );
+  } catch {
+    if (sessao?.user.id === conta)
+      mensagem(
+        'Não foi possível gerar o arquivo. Confira a conexão para carregar a exportação Excel e tente novamente.'
+      );
+  } finally {
+    exportando = false;
+    $('exportar-csv').disabled = $('exportar-excel').disabled = false;
+  }
+}
+$('exportar-csv').addEventListener('click', () => exportarVendas('csv'));
+$('exportar-excel').addEventListener('click', () => exportarVendas('xlsx'));
 $('nova').addEventListener('click', () => abrir());
 function fechar() {
   if (!gravando) modal.close();

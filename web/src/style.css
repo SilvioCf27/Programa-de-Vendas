@@ -546,3 +546,32 @@ fieldset {
   grid-template-columns: minmax(0, 1fr) minmax(75px, 0.6fr);
   gap: 10px;
 }
+
+.exportacao-web {
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.grafico-barras {
+  list-style: none;
+  margin-top: 16px;
+}
+.grafico-barras li {
+  display: grid;
+  grid-template-columns: 65px minmax(25px, 1fr) 135px;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0;
+  font-size: 0.78rem;
+}
+.trilho-barra {
+  height: 12px;
+  border-radius: 8px;
+  background: var(--linha);
+  overflow: hidden;
+}
+.trilho-barra span {
+  display: block;
+  height: 100%;
+  background: var(--azul);
+  border-radius: 8px;
+}

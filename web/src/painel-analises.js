@@ -6,6 +6,7 @@ import {
   indicadores,
   comparar,
   formas,
+  evolucao,
 } from './analises.js';
 const $ = (id) => document.getElementById(id);
 const br = (data) => data.split('-').reverse().join('/');
@@ -28,6 +29,7 @@ export function criarPainelAnalises({ api, sessao }) {
     comparacao = null,
     ocupado = false,
     geracao = 0;
+  let vendasGrafico = [];
   const ref = mesFechamento();
   const data = `${ref.ano}-${String(ref.mes).padStart(2, '0')}-10`;
   $('ana-referencia').value = data;
@@ -110,8 +112,35 @@ export function criarPainelAnalises({ api, sessao }) {
       : $(p + '-referencia').value;
     return limitesAnalise(tipo, referencia, $(p + '-fim').value);
   };
+  function desenharGrafico() {
+    const grupos = evolucao(vendasGrafico, $('ana-grafico-tipo').value);
+    const maximo = Math.max(1, ...grupos.map((g) => g.total));
+    $('ana-evolucao').replaceChildren();
+    for (const g of grupos) {
+      const item = document.createElement('li');
+      const rotulo = document.createElement('span');
+      rotulo.textContent = g.rotulo;
+      const trilho = document.createElement('span');
+      trilho.className = 'trilho-barra';
+      trilho.setAttribute('aria-hidden', 'true');
+      const barra = document.createElement('span');
+      barra.style.width = `${(g.total * 100) / maximo}%`;
+      trilho.append(barra);
+      const valor = document.createElement('span');
+      valor.textContent = g.quantidade
+        ? `${moeda(g.total)} · ${g.quantidade} ${g.quantidade === 1 ? 'dia' : 'dias'}`
+        : 'Sem registros';
+      item.append(rotulo, trilho, valor);
+      $('ana-evolucao').append(item);
+    }
+    if (!grupos.length)
+      $('ana-evolucao').textContent = 'Sem registros para este gráfico.';
+  }
+  $('ana-grafico-tipo').addEventListener('change', desenharGrafico);
   function desenhar(vendas) {
     const atual = selecionar(vendas, selecao.periodo);
+    vendasGrafico = atual;
+    desenharGrafico();
     const r = indicadores(atual);
     $('ana-periodo').textContent = descrever(selecao.periodo);
     for (const campo of ['total', 'quantidade', 'media'])
@@ -238,6 +267,8 @@ export function criarPainelAnalises({ api, sessao }) {
     ocupado: () => ocupado,
     limpar() {
       geracao++;
+      vendasGrafico = [];
+      $('ana-evolucao').replaceChildren();
       ocupado = false;
       selecao = comparacao = null;
       for (const id of ['ana-pagamentos', 'ana-semana', 'cmp-valores'])

@@ -2,7 +2,7 @@
 
 A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular como PWA. O programa de Windows continua funcionando com seu banco local.
 
-Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises permite consultar pagamentos, dias da semana e comparar datas, meses, fechamentos e intervalos. Exportação continua disponível no desktop.
+Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de vendas, além da aba Finanças. Os filtros de vendas incluem mês, ano e fechamento de 10 a 09. Valores zerados contam como dias de feira. Finanças mostra valores após taxas, despesas e saldo, com lançamentos, parcelas e ajustes anuais. Análises permite consultar pagamentos, dias da semana e comparar datas, meses, fechamentos e intervalos. CSV e Excel também podem ser exportados na aba Vendas do celular.
 
 **A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Dados → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
@@ -381,3 +381,19 @@ são limpos.
 Isso não é uma atualização instantânea por notificações: se salvar no PC, aguarde
 primeiro o envio do desktop e depois a consulta da web (até cerca de um minuto,
 mais o tempo de rede). A sincronização do desktop continua independente da tela web.
+
+
+## Exportar e acompanhar evolução
+
+Em Vendas, use **Exportar CSV** ou **Exportar Excel**. O arquivo usa os registros
+já exibidos pela consulta aplicada e traz um resumo, incluindo dias zerados.
+O download é gerado no aparelho; não envia seus dados para outro serviço.
+Não inclui despesas nem taxas. Para recuperar todo o programa, mantenha o backup
+SQLite. A biblioteca Excel é carregada no primeiro uso; esse carregamento precisa
+de internet se ainda não estiver em cache.
+
+Em Análises, **Evolução das vendas** mostra até 12 meses ou fechamentos consecutivos
+da seleção aplicada. Selecione Ano ou Todas as vendas para comparar a evolução.
+A barra é proporcional ao total bruto, e os valores e quantidades também estão
+escritos. Um período sem registros não é tratado como um dia de feira zerado.
+A revisão de conflitos está disponível no desktop em Conexão com a nuvem.

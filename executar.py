@@ -61,9 +61,15 @@ def verificar_pacote(relatorio):
                     sessao_protegida = True
                 assert not sincronizacao.vinculado(banco.CAMINHO_BANCO)
                 assert app.conexao_nuvem.agendador.INTERVALO == 60000
+                from ProgramFeira.recuperacao import testar_recuperacao
+                assert testar_recuperacao(copia['arquivo'])['sucesso']
+                from ProgramFeira.tendencias import evolucao
+                assert evolucao(banco.listar_vendas())[0]['quantidade'] == 1
+                from ProgramFeira.interface.conflitos import descrever
+                assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True,
-                                 banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida)
+                                 banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()
     except Exception:

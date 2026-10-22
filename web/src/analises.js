@@ -62,3 +62,39 @@ export function comparar(a, b) {
     motivo,
   };
 }
+
+export function evolucao(vendas, tipo = 'Mês') {
+  const grupos = new Map();
+  for (const r of vendas) {
+    let [ano, mes, dia] = r.data.split('-').map(Number);
+    if (tipo === 'Fechamento' && dia <= 9) {
+      mes--;
+      if (!mes) {
+        mes = 12;
+        ano--;
+      }
+    }
+    const chave = `${ano}-${String(mes).padStart(2, '0')}`;
+    if (!grupos.has(chave)) grupos.set(chave, []);
+    grupos.get(chave).push(r);
+  }
+  if (!grupos.size) return [];
+  const chaves = [...grupos.keys()].sort();
+  let [ano, mes] = chaves.at(-1).split('-').map(Number);
+  const resultado = [];
+  for (let i = 0; i < 12; i++) {
+    const chave = `${ano}-${String(mes).padStart(2, '0')}`;
+    if (chave < chaves[0]) break;
+    resultado.unshift({
+      chave,
+      rotulo: `${String(mes).padStart(2, '0')}/${ano}`,
+      ...resumo(grupos.get(chave) || []),
+    });
+    mes--;
+    if (!mes) {
+      mes = 12;
+      ano--;
+    }
+  }
+  return resultado;
+}

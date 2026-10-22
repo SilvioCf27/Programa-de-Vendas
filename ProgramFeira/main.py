@@ -13,6 +13,8 @@ from ProgramFeira.interface.fontes import registrar_fontes
 from ProgramFeira.interface.painel_backup import BackupDrive
 from ProgramFeira.interface.painel_nuvem import ConexaoNuvem
 from ProgramFeira.nuvem import ErroNuvem
+from ProgramFeira.versao import VERSAO
+from ProgramFeira.diagnostico import registrar as registrar_erro
 from ProgramFeira.interface.icones import rotulo_icone
 from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES
 from ProgramFeira.preferencias import carregar_tema, salvar_tema
@@ -535,6 +537,23 @@ def fazer_backup_manual():
         messagebox.showerror("Backup não realizado", str(erro))
 
 
+def testar_copia():
+    arquivo = filedialog.askopenfilename(title='Testar recuperação de backup sem alterar dados', filetypes=[('Banco SQLite', '*.db')])
+    if not arquivo:
+        return
+    from ProgramFeira.recuperacao import testar_recuperacao
+    try:
+        resultado = testar_recuperacao(arquivo)
+        tabelas = resultado['tabelas']
+        messagebox.showinfo('Recuperação verificada',
+            f"Restauração concluída em pasta temporária. Seu banco em uso não foi alterado.\n\n"
+            f"Vendas: {tabelas.get('vendas', 0)}\nLançamentos financeiros: {tabelas.get('financeiro_lancamentos', 0)}\n"
+            f"Ajustes anuais: {tabelas.get('financeiro_taxas_anuais', 0)}\n\n"
+            'Estrutura, conteúdo de todas as tabelas e cópia anterior conferidos. A sessão de login e a configuração do Drive não fazem parte deste backup.')
+    except (ValueError, OSError, sqlite3.Error, RuntimeError) as erro:
+        messagebox.showerror('Recuperação não confirmada', str(erro))
+
+
 def restaurar_copia():
     if conexao_nuvem.bloqueando_edicao:
         return
@@ -681,7 +700,7 @@ def alternar_tema():
 
 registrar_fontes()
 janela = tk.Tk()
-janela.title('Gestão da Feira · Controle de vendas')
+janela.title(f'Gestão da Feira · {VERSAO} · Controle de vendas')
 largura = min(1280, janela.winfo_screenwidth() - 60)
 altura = min(900, janela.winfo_screenheight() - 90)
 janela.geometry(f'{largura}x{altura}')
@@ -693,6 +712,7 @@ janela.rowconfigure(3, weight=1)
 
 
 def informar_erro_callback(tipo, erro, traceback):
+    registrar_erro(erro, CAMINHO_BANCO.parent)
     messagebox.showerror('Operação não concluída', f'Não foi possível concluir a operação.\n{erro}')
 
 
@@ -701,6 +721,10 @@ menu = tk.Menu(janela)
 menu_dados = tk.Menu(menu, tearoff=False)
 menu_dados.add_command(label='Criar backup agora', command=fazer_backup_manual)
 menu_dados.add_command(label='Restaurar backup…', command=restaurar_copia)
+menu_dados.add_command(label='Testar recuperação de backup…', command=testar_copia)
+menu_dados.add_command(label='Sobre esta versão…', command=lambda: messagebox.showinfo('Gestão da Feira',
+    f'Versão {VERSAO}\n\nDados locais: {CAMINHO_BANCO.parent}\nDiagnósticos: {CAMINHO_BANCO.parent / "logs"}\n\nOs registros de diagnóstico não incluem valores financeiros, mensagens do serviço, senha ou tokens.'))
+
 backup_drive = BackupDrive(janela, CAMINHO_BANCO)
 menu_dados.add_command(label='Backup no Google Drive…', command=backup_drive.configurar)
 

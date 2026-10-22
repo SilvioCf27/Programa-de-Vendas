@@ -25,3 +25,16 @@ class AnalisesTests(unittest.TestCase):
         self.assertIn('não lucro', AJUDAS['total'][1])
         self.assertIn('R$ 150', AJUDAS['media'][1])
         self.assertIn('10/10/2026', AJUDAS['fechamento'][1])
+
+
+class EvolucaoTests(unittest.TestCase):
+    def test_fechamentos_incluem_virada_do_ano_e_lacunas_nao_viram_dias_de_feira(self):
+        from ProgramFeira.tendencias import evolucao
+        from decimal import Decimal
+        vendas = [(1,'2030-12-10',10,0,0),(2,'2031-01-09',20,0,0),(3,'2031-03-10',0,0,0)]
+        grupos = evolucao(vendas,'Fechamento')
+        self.assertEqual([g['rotulo'] for g in grupos],['12/2030','01/2031','02/2031','03/2031'])
+        self.assertEqual(grupos[0]['total'],Decimal(30))
+        self.assertEqual(grupos[1]['quantidade'],0)
+        self.assertEqual(grupos[-1]['quantidade'],1)
+        self.assertEqual(evolucao([]),[])

@@ -7,6 +7,7 @@ from ProgramFeira.resumos import calcular_indicadores, moeda
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.interface.ajuda import rotulo_com_ajuda
 from ProgramFeira.interface.painel_comparacao import PainelComparacao
+from ProgramFeira.interface.grafico import GraficoEvolucao
 
 DIAS = ('Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo')
 
@@ -71,6 +72,8 @@ class PainelAnalises(ttk.Frame):
         semana.grid(row=0, column=1, sticky='new')
         rotulo_com_ajuda(semana, 'Resultados por dia da semana', 'por_dia', 'Section.TLabel').pack(anchor='w', pady=(0, 10))
         self.semana = self._tabela(semana, ('dia', 'quantidade', 'total', 'media'), ('Dia da semana', 'Dias de feira', 'Total', 'Média por dia'), 7)
+        self.grafico = GraficoEvolucao(self.corpo)
+        self.grafico.grid(row=3, column=0, sticky='ew', pady=12)
         self._colunas = None
         def organizar(event):
             colunas = 2 if event.width >= 1100 else 1
@@ -100,6 +103,7 @@ class PainelAnalises(ttk.Frame):
         return tabela
 
     def atualizar(self, vendas, filtro, comparacao):
+        self.grafico.atualizar(vendas)
         self.filtro.set(filtro)
         self.comparacao.set(comparacao)
         indicadores = calcular_indicadores(vendas)

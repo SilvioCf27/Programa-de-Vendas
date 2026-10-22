@@ -1,3 +1,11 @@
+A versão 1.2.0 acrescenta:
+
+- Teste de recuperação de backup em pasta temporária, conferindo todas as tabelas sem alterar o banco em uso.
+- Revisão das versões em conflito no PC e na nuvem, com escolha explícita, backup e nova conferência das versões antes de aplicar.
+- Gráficos de evolução por mês e fechamento no desktop e na web.
+- Exportação CSV/Excel no celular, seguindo a seleção aplicada em Vendas.
+- Identificação da versão, diagnósticos sem mensagens ou credenciais e guia de recuperação incluído no pacote.
+
 Esta versão inclui a conexão com a nuvem, migração conferida e sincronização de vendas, despesas, taxas e parcelas entre o PC e a versão web. No Windows, a sessão é protegida pela conta do sistema e recuperada nas próximas aberturas, sem salvar a senha. A sincronização automática continua enquanto o programa estiver aberto, conectado e sem formulário em edição.
 
 Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**. Não precisa instalar Python ou VS Code. Mantenha a pasta `_internal` junto do executável.

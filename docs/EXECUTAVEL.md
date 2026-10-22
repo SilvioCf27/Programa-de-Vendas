@@ -10,7 +10,14 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.1.0
+## Versão 1.2.0
+
+Acrescenta **Testar recuperação de backup**, revisão explícita de conflitos na
+conexão com a nuvem, evolução das vendas e identificação da versão. O ensaio de
+recuperação não substitui os dados em uso. Os guias `RECUPERACAO.md`, `USO.md` e
+`CELULAR.md` acompanham o pacote. Dados e configurações da versão 1.1 são reaproveitados.
+
+## Integração com a nuvem
 
 Inclui conexão com a nuvem, conferência e migração, sincronização bidirecional de
 vendas e finanças e recuperação da sessão protegida no Windows. Depois do login

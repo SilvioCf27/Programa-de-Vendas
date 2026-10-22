@@ -100,3 +100,32 @@ class ArmazenamentoTests(unittest.TestCase):
             self.assertEqual(a.pasta_dados(), self.root / 'ProgramFeira')
         with patch.object(a.sys, 'platform', 'linux'), patch.dict(a.os.environ, {'XDG_DATA_HOME': str(self.root)}, clear=True):
             self.assertEqual(a.pasta_dados(), self.root / 'ProgramFeira')
+
+
+class RecuperacaoTests(unittest.TestCase):
+    def test_ensaio_recupera_financas_e_metadados_sem_tocar_na_origem(self):
+        from ProgramFeira.recuperacao import testar_recuperacao
+        with tempfile.TemporaryDirectory() as pasta:
+            origem = criar_banco(Path(pasta) / 'backup.db')
+            with sqlite3.connect(origem) as c:
+                c.executescript("CREATE TABLE financeiro_lancamentos(id INTEGER, valor_centavos INTEGER); INSERT INTO financeiro_lancamentos VALUES(1,12345); CREATE TABLE financeiro_taxas_anuais(ano INTEGER, valor_centavos INTEGER); INSERT INTO financeiro_taxas_anuais VALUES(2030,456); CREATE TABLE nuvem_sync_estado(pendente TEXT); INSERT INTO nuvem_sync_estado VALUES('lote pendente ficticio');")
+            antes = origem.read_bytes()
+            resultado = testar_recuperacao(origem)
+            self.assertTrue(resultado['sucesso'])
+            self.assertEqual(resultado['tabelas']['vendas'], 9)
+            self.assertEqual(resultado['tabelas']['financeiro_lancamentos'], 1)
+            self.assertEqual(resultado['tabelas']['financeiro_taxas_anuais'], 1)
+            self.assertEqual(resultado['tabelas']['nuvem_sync_estado'], 1)
+            self.assertEqual(origem.read_bytes(), antes)
+
+    def test_arquivo_invalido_e_banco_em_uso_sao_recusados(self):
+        from ProgramFeira.recuperacao import testar_recuperacao
+        with tempfile.TemporaryDirectory() as pasta:
+            origem = Path(pasta) / 'invalido.db'
+            origem.write_bytes(b'invalido')
+            with self.assertRaises(sqlite3.DatabaseError):
+                testar_recuperacao(origem)
+            origem = criar_banco(Path(pasta) / 'backup.db')
+            Path(str(origem) + '-wal').write_bytes(b'em uso')
+            with self.assertRaises(ValueError):
+                testar_recuperacao(origem)

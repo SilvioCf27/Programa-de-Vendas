@@ -1,6 +1,7 @@
 """Sincronização por registro com base local, versões remotas e envio retomável."""
 from contextlib import closing
 import json
+import hashlib
 from pathlib import Path
 import sqlite3
 from uuid import UUID, uuid4, uuid5
@@ -103,10 +104,40 @@ def _vincular(locais, remotos, usuario_id):
     return referencias
 
 
-def planejar(locais, remotos, referencias):
+class ConflitosPendentes(ErroNuvem):
+    def __init__(self, conflitos, detalhes):
+        super().__init__('Conflitos de sincronização. Nenhum lote novo foi enviado; os dados locais foram preservados.\n' + '\n'.join(conflitos[:10]))
+        self.detalhes = detalhes
+
+
+def _assinatura_revisao(c, usuario_id):
+    estado = c.execute('select projeto,usuario_id,pendente from nuvem_sync_estado where singleton=1').fetchone()
+    return hashlib.sha256(_json([tuple(estado) if estado else None, _referencias(c), _locais(c, usuario_id)]).encode('utf-8')).hexdigest()
+
+
+def conferir_conflitos(banco, cliente, sessao):
+    remotos = validar_snapshot(cliente.sincronizar(sessao), sessao.usuario_id)
+    with closing(sqlite3.connect(Path(banco).resolve().as_uri() + '?mode=ro', uri=True)) as c:
+        c.execute('BEGIN')
+        estado = c.execute('select projeto,usuario_id,pendente from nuvem_sync_estado where singleton=1').fetchone()
+        if not estado or estado[:2] != (cliente.url, sessao.usuario_id):
+            raise ErroNuvem('Confira primeiro o vínculo deste banco com a conta.')
+        if estado[2]:
+            raise ErroNuvem('Há um envio pendente. Use Sincronizar agora para confirmar a tentativa anterior antes de resolver conflitos.')
+        detalhes = []
+        try:
+            planejar(_locais(c, sessao.usuario_id), remotos, _referencias(c))
+        except ConflitosPendentes as erro:
+            detalhes = erro.detalhes
+        return dict(projeto=cliente.url, usuario_id=sessao.usuario_id,
+                    assinatura=_assinatura_revisao(c, sessao.usuario_id), remotos=remotos, conflitos=detalhes)
+
+
+def planejar(locais, remotos, referencias, escolhas=None):
     """Mescla mudanças independentes. Divergências no mesmo registro bloqueiam o lote."""
     refs = {(r['tabela'], r['remoto_id']): dict(r) for r in referencias}
-    conflitos = []
+    conflitos, detalhes = [], []
+    escolhas = escolhas or {}
     # Novos registros locais ganham identidade estável no próximo envio pendente.
     for tabela in TABELAS:
         vinculados = {r['local_id'] for r in referencias if r['tabela'] == tabela}
@@ -119,6 +150,7 @@ def planejar(locais, remotos, referencias):
                 remoto = candidatos[0]
                 if (tabela, remoto['id']) in refs or _corpo(remoto) != corpo:
                     conflitos.append(f'{tabela}: {corpo.get(chave)} (cadastros diferentes)')
+                    detalhes.append(dict(tabela=tabela, id=remoto['id'], local_id=local_id, pc=corpo, nuvem=remoto, resolvivel=False))
                     continue
                 identificador = remoto['id']
             else:
@@ -131,13 +163,17 @@ def planejar(locais, remotos, referencias):
         local = locais[tabela].get(ref['local_id'])
         remoto = remotos[tabela].get(identificador)
         corpo_remoto = _corpo(remoto)
-        if local == ref['local']:
+        escolha = escolhas.get(tabela + ':' + identificador)
+        if escolha:
+            desejado = local if escolha == 'pc' else corpo_remoto
+        elif local == ref['local']:
             desejado = corpo_remoto
         elif corpo_remoto == _corpo(ref['remoto']):
             # Uma exclusão recebida antes de uma falha não deve ressuscitar em
             # silêncio se o usuário editou a cópia antiga durante a recuperação.
             if ref['local'] != _corpo(ref['remoto']) and local != corpo_remoto:
                 conflitos.append(f'{tabela}: {local.get("data", local.get("ano", identificador))} (edição durante recuperação)')
+                detalhes.append(dict(tabela=tabela, id=identificador, local_id=ref['local_id'], pc=local, nuvem=remoto, resolvivel=True))
                 continue
             desejado = local
         elif local == corpo_remoto:
@@ -145,6 +181,7 @@ def planejar(locais, remotos, referencias):
         else:
             referencia = local or corpo_remoto or ref['local'] or _corpo(ref['remoto']) or {}
             conflitos.append(f'{tabela}: {referencia.get("data", referencia.get("ano", identificador))}')
+            detalhes.append(dict(tabela=tabela, id=identificador, local_id=ref['local_id'], pc=local, nuvem=remoto, resolvivel=True))
             continue
         previsto = remoto
         if desejado != corpo_remoto:
@@ -153,7 +190,7 @@ def planejar(locais, remotos, referencias):
             previsto = None if desejado is None else dict(desejado, id=identificador, versao=remoto['versao'] + 1 if remoto else 1)
         proximas.append(dict(tabela=tabela, remoto_id=identificador, local_id=ref['local_id'], local=local, remoto=previsto))
     if conflitos:
-        raise ErroNuvem('Conflitos de sincronização. Nenhum lote novo foi enviado; os dados locais foram preservados.\n' + '\n'.join(conflitos[:10]))
+        raise ConflitosPendentes(conflitos, detalhes)
     return operacoes, proximas
 
 
@@ -234,8 +271,10 @@ def _sem_mudancas(banco, cliente, sessao, resposta, base_inicial=None):
         return True
 
 
-def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None):
+def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None, revisao=None, escolhas=None):
     banco = Path(banco)
+    if (revisao is None) != (escolhas is None):
+        raise ErroNuvem('Confira os conflitos e escolha cada versão antes de aplicar.')
     if somente_se_mudou and snapshot_inicial is not None and _sem_mudancas(banco, cliente, sessao, snapshot_inicial, base_inicial):
         return dict(backup=None, enviadas=0, recebidas=0, retomada=False,
                     registros={t: len(snapshot_inicial['dados'][t]) for t in TABELAS})
@@ -258,6 +297,17 @@ def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=
                 c.execute('insert into nuvem_sync_estado values(1,?,?,null)', (cliente.url, sessao.usuario_id))
                 c.commit()
                 c.execute('BEGIN IMMEDIATE')
+            if revisao is not None:
+                chaves = {r['tabela'] + ':' + r['id'] for r in revisao['conflitos']}
+                if (not chaves or set(escolhas) != chaves or any(v not in ('pc', 'nuvem') for v in escolhas.values())
+                        or any(not r['resolvivel'] for r in revisao['conflitos'])):
+                    raise ErroNuvem('Escolha uma versão para cada conflito. Cadastros independentes exigem revisão manual.')
+                if (revisao['projeto'] != cliente.url or revisao['usuario_id'] != sessao.usuario_id
+                        or not estado or estado[2] or _assinatura_revisao(c, sessao.usuario_id) != revisao['assinatura']):
+                    raise ErroNuvem('Os dados locais mudaram desde a revisão. Confira os conflitos novamente; nenhuma escolha foi aplicada.')
+                snapshot_inicial = cliente.sincronizar(sessao)
+                if validar_snapshot(snapshot_inicial, sessao.usuario_id) != revisao['remotos']:
+                    raise ErroNuvem('Os dados na nuvem mudaram desde a revisão. Confira os conflitos novamente; nenhuma escolha foi aplicada.')
             # Cada tentativa reconhecida atualiza bases, nunca os valores locais
             # antes da comparação com eventuais edições feitas durante uma falha.
             for tentativa in range(4):
@@ -283,7 +333,8 @@ def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=
                     snapshot_inicial = None
                     remotos = validar_snapshot(resposta, sessao.usuario_id)
                 locais = _locais(c, sessao.usuario_id)
-                operacoes, referencias = planejar(locais, remotos, _referencias(c))
+                operacoes, referencias = planejar(locais, remotos, _referencias(c), escolhas)
+                escolhas = None  # A decisão foi incorporada ao lote retomável; não é reaplicada.
                 if not operacoes:
                     recebidas = _aplicar(c, remotos, referencias, sessao.usuario_id)
                     c.commit()

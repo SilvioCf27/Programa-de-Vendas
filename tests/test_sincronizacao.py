@@ -308,3 +308,84 @@ class SincronizacaoTests(unittest.TestCase):
         self.assertEqual(self.sql('select pix from vendas where id=1'),[(15.0,)])
         self.assertEqual(self.servidor.venda('2030-01-01')['pix_centavos'],1500)
         self.assertEqual(r['recebidas'],0)
+
+
+    def preparar_conflito(self):
+        self.executar()
+        self.sql('update vendas set pix=10 where id=1')
+        registro = self.servidor.venda('2030-01-01')
+        self.servidor.editar('vendas', registro['id'], pix_centavos=2000)
+        revisao = sync.conferir_conflitos(self.banco, self.servidor, self.sessao)
+        self.assertEqual(len(revisao['conflitos']), 1)
+        return revisao, {'vendas:' + registro['id']: 'pc'}
+
+    def test_resolver_conflito_pc_cria_backup_e_envia_versao_escolhida(self):
+        revisao, escolhas = self.preparar_conflito()
+        resultado = sync.sincronizar(self.banco, self.servidor, self.sessao, revisao=revisao, escolhas=escolhas)
+        self.assertTrue(Path(resultado['backup']).exists())
+        self.assertEqual(self.servidor.venda('2030-01-01')['pix_centavos'],1000)
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(10.0,)])
+
+    def test_resolver_conflito_nuvem_preserva_remoto_e_recebe(self):
+        revisao, escolhas = self.preparar_conflito()
+        escolhas = {k:'nuvem' for k in escolhas}
+        sync.sincronizar(self.banco, self.servidor, self.sessao, revisao=revisao, escolhas=escolhas)
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(20.0,)])
+        self.assertFalse(self.servidor.recibos)
+
+    def test_revisao_expirada_por_edicao_local_ou_remota_nao_aplica_escolhas(self):
+        revisao, escolhas = self.preparar_conflito()
+        self.sql('update vendas set dinheiro=25 where id=1')
+        with self.assertRaisesRegex(ErroNuvem,'locais mudaram'):
+            sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        revisao = sync.conferir_conflitos(self.banco,self.servidor,self.sessao)
+        registro = self.servidor.venda('2030-01-01')
+        self.servidor.editar('vendas',registro['id'],pix_centavos=3000)
+        with self.assertRaisesRegex(ErroNuvem,'nuvem mudaram'):
+            sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        self.assertEqual(self.sql('select dinheiro,pix from vendas where id=1'),[(25.0,10.0)])
+        self.assertFalse(self.servidor.recibos)
+
+    def test_resolucao_com_resposta_perdida_retoma_sem_reaplicar_decisao(self):
+        revisao, escolhas = self.preparar_conflito()
+        self.servidor.perder_resposta = True
+        with self.assertRaises(ErroNuvem):
+            sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        resultado = self.executar()
+        self.assertTrue(resultado['retomada'])
+        self.assertEqual(self.servidor.venda('2030-01-01')['versao'],3)
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(10.0,)])
+
+    def test_exclusao_no_pc_e_edicao_remota_podem_ser_resolvidas_explicitamente(self):
+        revisao, escolhas = self.preparar_conflito()
+        self.sql('delete from vendas where id=1')
+        revisao = sync.conferir_conflitos(self.banco,self.servidor,self.sessao)
+        self.assertIsNone(revisao['conflitos'][0]['pc'])
+        sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        self.assertEqual(len(self.servidor.dados['vendas']),1)
+        self.assertEqual(self.sql('select count(*) from vendas'),[(1,)])
+
+    def test_mudanca_no_servidor_entre_revisao_e_envio_recusa_sem_sobrescrever(self):
+        revisao, escolhas = self.preparar_conflito()
+        registro = self.servidor.venda('2030-01-01')
+        self.servidor.antes_envio = lambda: self.servidor.editar('vendas',registro['id'],pix_centavos=3000)
+        with self.assertRaises(ConflitoSincronizacao):
+            sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        self.assertEqual(self.sql('select pix from vendas where id=1'),[(10.0,)])
+        self.assertEqual(self.servidor.venda('2030-01-01')['pix_centavos'],3000)
+
+    def test_revisao_financeira_recebe_taxa_anual_e_envia_despesa_escolhida(self):
+        self.executar()
+        self.sql('update financeiro_lancamentos set valor_centavos=2222 where id=1')
+        self.sql('update financeiro_taxas_anuais set valor_centavos=700 where ano=2030')
+        despesa = next(iter(self.servidor.dados['financeiro_lancamentos'].values()))
+        anual = next(iter(self.servidor.dados['financeiro_taxas_anuais'].values()))
+        self.servidor.editar('financeiro_lancamentos',despesa['id'],valor_centavos=3333)
+        self.servidor.editar('financeiro_taxas_anuais',anual['id'],valor_centavos=900)
+        revisao = sync.conferir_conflitos(self.banco,self.servidor,self.sessao)
+        self.assertEqual(len(revisao['conflitos']),2)
+        escolhas = {'financeiro_lancamentos:'+despesa['id']:'pc', 'financeiro_taxas_anuais:'+anual['id']:'nuvem'}
+        sync.sincronizar(self.banco,self.servidor,self.sessao,revisao=revisao,escolhas=escolhas)
+        self.assertEqual(self.sql('select valor_centavos from financeiro_lancamentos'),[(2222,)])
+        self.assertEqual(self.sql('select valor_centavos from financeiro_taxas_anuais'),[(900,)])
+        self.assertEqual(self.servidor.dados['financeiro_lancamentos'][despesa['id']]['valor_centavos'],2222)

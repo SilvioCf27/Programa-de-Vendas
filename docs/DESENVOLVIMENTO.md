@@ -58,3 +58,28 @@ contém apenas um blob protegido, vinculado ao projeto; nunca a senha ou o token
 de acesso. A renovação grava o novo refresh token antes de consultar os dados.
 O teste de DPAPI real é executado somente no Windows; nos demais sistemas são
 testados o formato, as falhas e a integração com o provedor substituído.
+
+
+## Revisão da versão 1.2
+
+Os testes incluem atualização com dados e vínculo existentes, ensaio de restauração
+com tabelas financeiras, resposta perdida e retomada de uma resolução de conflito,
+mudança de versão entre revisão e envio, download CSV/Excel real no navegador e
+agrupamento de fechamentos na virada do ano. O teste de recuperação compara conteúdo
+e estrutura de todas as tabelas, sem abrir SQLite na unidade virtual do Drive.
+
+A revisão de conflitos não usa data/hora como desempate: carrega uma fotografia,
+confere novamente o conteúdo local e as versões remotas e usa o protocolo de lote
+já existente. As escolhas entram na fila durável antes do envio. Nenhuma migração
+SQL nova é necessária. Cadastros independentes com a mesma chave natural permanecem
+bloqueados para revisão manual.
+
+A exportação web usa `write-excel-file` 4.1.1, carregado sob demanda. Os testes leem
+o ZIP/XML do Excel para conferir abas, números, datas e ausência de fórmulas
+injetadas. Os gráficos têm valores textuais e não introduzem biblioteca gráfica.
+`diagnostico.py` registra somente posições da pilha, sem mensagens, argumentos,
+variáveis locais ou trechos de código.
+
+A tentativa de `npm audit --omit=dev` desta revisão não foi concluída: o serviço
+do registro npm retornou HTTP 503. Isso não equivale a uma auditoria aprovada;
+a checagem deve ser repetida quando o serviço estiver disponível.

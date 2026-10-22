@@ -743,3 +743,65 @@ test('consulta lenta não aplica filtros digitados enquanto a resposta está che
     await page.unroute('**/rest/v1/rpc/sincronizar_desktop', atrasar);
   }
 });
+
+test('exporta somente a seleção aplicada em CSV e Excel e mostra evolução com lacunas', async ({
+  page,
+}) => {
+  const vendas = await preparar(page);
+  vendas.push(
+    {
+      id: 'exp1',
+      versao: 1,
+      data: '2030-10-11',
+      dinheiro_centavos: 10025,
+      pix_centavos: 2050,
+      cartao_centavos: 3000,
+    },
+    {
+      id: 'exp2',
+      versao: 1,
+      data: '2030-12-13',
+      dinheiro_centavos: 0,
+      pix_centavos: 0,
+      cartao_centavos: 0,
+    }
+  );
+  await page.locator('#tipo').selectOption('Todas');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#total')).toHaveText('R$ 150,75');
+  // Alteração não aplicada não pode vazar para o arquivo exportado.
+  await page.locator('#tipo').selectOption('Ano');
+  await page.locator('#ano').fill('2001');
+  for (const [id, extensao] of [
+    ['exportar-csv', 'csv'],
+    ['exportar-excel', 'xlsx'],
+  ]) {
+    const espera = page.waitForEvent('download');
+    await page.locator('#' + id).click();
+    const download = await espera;
+    expect(download.suggestedFilename()).toBe('vendas-filtradas.' + extensao);
+    const fs = await import('node:fs/promises');
+    const corpo = await fs.readFile(await download.path());
+    if (extensao === 'csv') {
+      expect(corpo.toString('utf8')).toContain('Todas as vendas');
+      expect(corpo.toString('utf8')).toContain('150,75');
+    } else expect(corpo.subarray(0, 2).toString()).toBe('PK');
+  }
+  await page.locator('#aba-analises').click();
+  await page.locator('#ana-tipo').selectOption('Todas');
+  await page
+    .getByRole('button', { name: 'Consultar análises', exact: true })
+    .click();
+  await expect(page.locator('#ana-evolucao li')).toHaveCount(3);
+  await expect(page.locator('#ana-evolucao li').nth(1)).toContainText(
+    'Sem registros'
+  );
+  await expect(page.locator('#ana-evolucao li').nth(2)).toContainText(
+    'R$ 0,00 · 1 dia'
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth
+    )
+  ).toBe(true);
+});

@@ -67,3 +67,19 @@ test('comparação usa A como base e distingue ausência de registros de total z
   );
   assert.match(comparar([], [venda('2026-10-16')]).motivo, /Sem registros/);
 });
+
+test('evolução agrupa fechamento por mês inicial e distingue lacunas de registros zerados', async () => {
+  const { evolucao } = await import('../src/analises.js');
+  const grupos = evolucao(
+    [venda('2030-12-10', 1000), venda('2031-01-09', 2000), venda('2031-03-10')],
+    'Fechamento'
+  );
+  assert.deepEqual(
+    grupos.map((g) => g.rotulo),
+    ['12/2030', '01/2031', '02/2031', '03/2031']
+  );
+  assert.equal(grupos[0].total, 3000);
+  assert.equal(grupos[1].quantidade, 0);
+  assert.equal(grupos[3].quantidade, 1);
+  assert.equal(evolucao([]).length, 0);
+});

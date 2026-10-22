@@ -480,7 +480,26 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=consultar_
     assert 'Conflitos' in a.conexao_nuvem.status.get()
     assert a.buscar_venda_por_data('2026-01-02')[3] == 6
     assert not a.conexao_nuvem.bloqueando_edicao
+# A revisão mostra valores do PC e da nuvem e aplica a escolha explícita.
 popup = a.conexao_nuvem.configurar()
+with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.sincronizar):
+    a.conexao_nuvem.botao_conflitos.invoke()
+    aguardar_nuvem()
+    revisao = a.conexao_nuvem.revisao_popup
+    assert '6,00' in revisao.textos['pc'].get('1.0','end')
+    assert '7,77' in revisao.textos['nuvem'].get('1.0','end')
+    revisao.usar_nuvem.invoke()
+    with patch.object(a.messagebox, 'askyesno', return_value=True):
+        revisao.botao_aplicar.invoke()
+    aguardar_nuvem()
+    assert a.buscar_venda_por_data('2026-01-02')[3] == 7.77
+    assert not a.conexao_nuvem.agendador.pausado
+# Teste do backup pela ação da interface, com dados isolados.
+from ProgramFeira.database.armazenamento import criar_backup as copiar_backup
+copia = copiar_backup(a.CAMINHO_BANCO)
+with patch.object(a.filedialog, 'askopenfilename', return_value=str(copia)), patch.object(a.messagebox, 'showinfo') as aviso:
+    a.testar_copia()
+    assert aviso.call_args.args[0] == 'Recuperação verificada'
 a.conexao_nuvem.botao_sair.invoke()
 assert a.conexao_nuvem.sessao is None
 a.conexao_nuvem.fechar()

@@ -79,3 +79,33 @@ Com o aplicativo visível e conectado, a área atual consulta a nuvem a cada min
 A consulta aguarda formulários abertos e preserva filtros que ainda não foram
 aplicados. Após alterar no computador, aguarde o envio e a próxima consulta no
 celular ou use o botão de atualizar. Não é necessário sair e entrar na conta.
+
+## Conferir recuperação, conflitos e evolução
+
+- **Dados → Testar recuperação de backup…** faz um ensaio em pasta temporária,
+  sem substituir os dados em uso. Veja [RECUPERACAO.md](RECUPERACAO.md).
+- **Dados → Conexão com a nuvem → Conferir conflitos…** mostra os registros que
+  foram alterados nos dois lados. Escolha PC ou Nuvem para cada um e use Aplicar
+  escolhas. Um registro excluído é mostrado explicitamente. O programa cria backup
+  e confere se as versões ainda são as mesmas antes de aplicar. Cancelar não altera
+  nada. Cadastros independentes na mesma data/ano exigem revisão manual dos cadastros;
+  não são unidos automaticamente.
+- Em **Análises**, Evolução das vendas agrupa por mês ou fechamento usando os
+  filtros aplicados em Vendas. Mostra até 12 períodos consecutivos, com total bruto
+  e quantidade de dias. Períodos sem registros ficam identificados; não contam como
+  dias de feira. Na web, o gráfico segue a seleção aplicada em Análises.
+- No celular, **Vendas → Exportar CSV / Exportar Excel** gera os registros e o resumo
+  da seleção aplicada. Alterações de filtros ainda não aplicadas não entram no arquivo.
+  O Excel tem abas Vendas e Resumo, com datas e números próprios para cálculos.
+  Os arquivos ficam nos downloads ou no local escolhido pelo navegador. Não incluem
+  despesas nem ajustes de taxas e não substituem o backup SQLite.
+
+## Relatar um problema
+
+Informe a versão (Dados → Sobre esta versão), a ação feita, o resultado esperado e
+uma captura da mensagem. Erros inesperados da interface e das operações em segundo
+plano geram `logs/erros.jsonl` na pasta de dados, quando houver permissão para escrita.
+Esse registro tem somente versão, tipo de erro e posições do código: não contém
+mensagens do servidor, valores financeiros, senha ou tokens. O histórico é limitado
+a dois arquivos de aproximadamente 1 MB. Não publique seu banco ou exportações para
+relatar um problema. Erros de inicialização continuam no `logs/inicializacao.log`.

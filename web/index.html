@@ -122,6 +122,17 @@
             <button type="submit">Aplicar</button>
             <p id="periodo" class="nota"></p>
           </form>
+          <div
+            class="acoes exportacao-web"
+            aria-label="Exportar vendas filtradas"
+          >
+            <button id="exportar-csv">Exportar CSV</button>
+            <button id="exportar-excel">Exportar Excel</button>
+          </div>
+          <p class="nota">
+            Exporta a seleção aplicada em Vendas, incluindo os dias zerados e um
+            resumo. Não inclui despesas nem taxas.
+          </p>
           <section class="historico">
             <div class="titulo">
               <h2>Histórico de vendas</h2>
@@ -188,6 +199,26 @@
             </p>
           </details>
           <p id="ana-vazio" class="nota" hidden>Nenhuma venda neste período.</p>
+          <section class="painel bloco-analise">
+            <h3>Evolução das vendas</h3>
+            <label
+              >Agrupar por<select id="ana-grafico-tipo">
+                <option>Mês</option>
+                <option>Fechamento</option>
+              </select></label
+            >
+            <p class="nota">
+              Usa a seleção aplicada acima. Escolha Ano ou Todas as vendas para
+              ver a evolução. Mostra até 12 períodos consecutivos; “sem
+              registros” é diferente de um dia de feira zerado. Fechamento: dia
+              10 ao dia 09 seguinte.
+            </p>
+            <ul
+              id="ana-evolucao"
+              class="grafico-barras"
+              aria-label="Evolução do total bruto por período"
+            ></ul>
+          </section>
           <section class="painel bloco-analise">
             <h3>Comparação com o período anterior</h3>
             <p id="ana-anterior"></p>
@@ -626,7 +657,7 @@
         </div>
       </form>
     </dialog>
-    <footer>Gestão da Feira · Acesso pessoal</footer>
+    <footer>Gestão da Feira · 1.2.0 · Acesso pessoal</footer>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

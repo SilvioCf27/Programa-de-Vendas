@@ -1,8 +1,24 @@
-# Prévias atualizadas
+# Nova rodada de acabamento
 
-Interface real com dados fictícios. Apenas imagens nesta branch; o código em main não foi alterado.
+Capturas reais em 1400 × 940, com dados fictícios. Apenas imagens nesta branch; código em main intacto.
 
-Nova proposta baseada na referência: cartões com cores por indicador, ícones maiores, contexto abaixo dos valores, barras arredondadas de participação, ícones nas abas e cabeçalho reorganizado. Tabela e filtros preservam as funções atuais. Busca, paginação e ações por linha da imagem de referência não foram acrescentadas nesta etapa visual. Capturas em 1400 × 940, com dados fictícios.
+Ajustes desta rodada: totais maiores e destaque colorido no faturamento, relevo sutil na borda superior, ajudas dos cartões com contornos por indicador, abas com seleção mais evidente, cabeçalho da tabela mais legível e contagem dos registros ao lado das ações. Em janelas largas, participação e comparação ficam lado a lado; em janelas menores, voltam a duas linhas.
+
+## Comparação com a rodada anterior
+
+### Antes
+
+![Grafite anterior](grafite-anterior.png)
+
+### Agora
+
+![Grafite atual](grafite.png)
+
+### Seleção de uma venda
+
+![Seleção e ações habilitadas](grafite-selecao.png)
+
+## Os cinco temas
 
 ## Noite
 

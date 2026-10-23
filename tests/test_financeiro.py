@@ -198,3 +198,18 @@ class FinanceiroTests(unittest.TestCase):
         registro['natureza'] = 'Estimada'
         f.salvar_taxa_anual(2025, registro['inicio'], registro['fim'], '200', 'Estimada', 'Estimativa manual')
         self.assertEqual(f.listar_taxas_anuais()[0]['natureza'], 'Estimada')
+
+    def test_taxas_semanais_preservam_data_e_atualizam_sem_duplicar(self):
+        self.assertEqual(f.salvar_taxas_semana('2026-10-05', {'2026-10-09': '2,00', '2026-10-11': '3,00'}), 2)
+        linhas = self.linhas()
+        ids = {r['data']: r['id'] for r in linhas}
+        self.assertEqual(f.salvar_taxas_semana('2026-10-05', {'2026-10-09': '2,50', '2026-10-11': '3,00'}), 1)
+        self.assertEqual({r['data']: r['id'] for r in self.linhas()}, ids)
+        self.assertEqual(f.resumo_periodo('2026-09-10', '2026-10-09')['taxas'], Decimal('2.50'))
+        self.assertEqual(f.resumo_periodo('2026-10-10', '2026-11-09')['taxas'], Decimal('3'))
+
+    def test_taxas_semanais_sao_atomicas_quando_um_dia_esta_no_historico(self):
+        f.salvar_taxa_anual(2026, '2026-10-11', '2026-10-12', '10,00')
+        with self.assertRaises(ValueError):
+            f.salvar_taxas_semana('2026-10-05', {'2026-10-09': '2,00', '2026-10-11': '3,00'})
+        self.assertEqual(self.linhas(), [])

@@ -1,3 +1,4 @@
+import { definirFechamentos } from './fechamento.js';
 import { createClient } from '@supabase/supabase-js';
 import { criarApi } from './api.js';
 import { validarConfig } from './config.js';
@@ -144,7 +145,11 @@ function desenhar() {
     $('vendas').append(item);
   }
 }
-async function carregar(novaSelecao = selecao) {
+function lerSelecaoVendas() {
+  const tipo = $('tipo').value, ano = Number($('ano').value), mes = Number($('mes').value);
+  return { ...periodo(tipo, ano, mes), tipo, ano, mes };
+}
+async function carregar(novaSelecao = selecao, consultarConfiguracao = true) {
   if (!sessao || carregando) return false;
   if (!navigator.onLine)
     return mensagem(
@@ -155,11 +160,13 @@ async function carregar(novaSelecao = selecao) {
   $('filtros').querySelector('button').disabled = true;
   const atual = geracao;
   try {
-    const linhas = await api.listar(novaSelecao);
+    if (consultarConfiguracao) await api.fechamentos();
+    const consulta = novaSelecao?.tipo ? { ...novaSelecao, ...periodo(novaSelecao.tipo, novaSelecao.ano, novaSelecao.mes) } : novaSelecao;
+    const linhas = await api.listar(consulta);
     if (atual !== geracao || !sessao) return;
     registros = linhas;
     consultaConfirmada = true;
-    selecao = novaSelecao;
+    selecao = consulta;
     $('periodo').textContent = selecao.inicio
       ? `${dataBr(selecao.inicio)} a ${dataBr(selecao.fim)}`
       : 'Todas as vendas';
@@ -207,7 +214,7 @@ $('filtros').addEventListener('submit', (event) => {
   event.preventDefault();
   mensagem('');
   try {
-    carregar(periodo($('tipo').value, $('ano').value, $('mes').value));
+    carregar(lerSelecaoVendas());
   } catch (erro) {
     mensagem(erro.message);
   }
@@ -306,6 +313,7 @@ async function receberSessao(nova) {
   geracao++;
   if (mudouConta) {
     consultaConfirmada = false;
+    definirFechamentos({ versao: 0, historico: [] });
     financeiro.limpar();
     analises.limpar();
     mudarArea('vendas');
@@ -333,11 +341,16 @@ async function receberSessao(nova) {
       mensagem('Esta conta não está autorizada. Confira a conta de acesso.');
       return;
     }
+    await api.fechamentos();
+    if (sessao !== nova) return;
+    if (!consultaConfirmada) {
+      const ref = mesFechamento(); $('ano').value = ref.ano; $('mes').value = ref.mes; financeiro.definirPadrao();
+    }
     $('acesso').hidden = true;
     $('conteudo').hidden = false;
     $('sair').hidden = false;
-    selecao ??= periodo($('tipo').value, $('ano').value, $('mes').value);
-    await carregar();
+    selecao ??= lerSelecaoVendas();
+    await carregar(selecao, false);
     if (sessao === nova) atualizacao.iniciar();
   } catch {
     mensagem(

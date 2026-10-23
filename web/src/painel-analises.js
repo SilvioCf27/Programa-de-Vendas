@@ -110,7 +110,8 @@ export function criarPainelAnalises({ api, sessao }) {
     const referencia = mensal
       ? `${$(p + '-ano').value}-${String($(p + '-mes').value).padStart(2, '0')}-01`
       : $(p + '-referencia').value;
-    return limitesAnalise(tipo, referencia, $(p + '-fim').value);
+    const fimReferencia = $(p + '-fim').value;
+    return { ...limitesAnalise(tipo, referencia, fimReferencia), tipo, referencia, fimReferencia };
   };
   function desenharGrafico() {
     const grupos = evolucao(vendasGrafico, $('ana-grafico-tipo').value);
@@ -225,11 +226,13 @@ export function criarPainelAnalises({ api, sessao }) {
         tipo: $('ana-tipo').value,
         periodo: ler('ana'),
       };
+      if (api().fechamentos) await api().fechamentos();
+      if (consulta.periodo.tipo) consulta.periodo = { ...consulta.periodo, ...limitesAnalise(consulta.periodo.tipo, consulta.periodo.referencia, consulta.periodo.fimReferencia) };
       const dados = await api().financeiro();
       if (atual !== geracao || conta !== sessao()?.user.id) return false;
       atualizarAnos(dados.vendas);
       selecao = consulta;
-      comparacao = novaComparacao;
+      comparacao = novaComparacao ? Object.fromEntries(Object.entries(novaComparacao).map(([lado, p]) => [lado, p.tipo ? { ...p, ...limitesAnalise(p.tipo, p.referencia, p.fimReferencia) } : p])) : null;
       desenhar(dados.vendas);
       $('ana-status').textContent = '';
       return true;

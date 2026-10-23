@@ -1,3 +1,4 @@
+import { diaNoMes, periodoFechamento } from './fechamento.js';
 export function centavos(texto) {
   let valor = String(texto).trim();
   if (!valor) return 0;
@@ -30,7 +31,7 @@ export function hoje() {
 }
 export function mesFechamento(data = hoje()) {
   const [ano, mes, dia] = data.split('-').map(Number);
-  return dia > 9
+  return dia > diaNoMes(ano, mes)
     ? { ano, mes }
     : mes === 1
       ? { ano: ano - 1, mes: 12 }
@@ -56,11 +57,7 @@ export function periodo(tipo, ano, mes) {
       inicio: `${prefixo}-01`,
       fim: `${prefixo}-${new Date(Date.UTC(ano, mes, 0)).getUTCDate()}`,
     };
-  if (tipo === 'Fechamento')
-    return {
-      inicio: `${prefixo}-10`,
-      fim: `${mes === 12 ? ano + 1 : ano}-${String(mes === 12 ? 1 : mes + 1).padStart(2, '0')}-09`,
-    };
+  if (tipo === 'Fechamento') return periodoFechamento(ano, mes);
   throw Error('Escolha um período válido.');
 }
 export function resumo(vendas) {

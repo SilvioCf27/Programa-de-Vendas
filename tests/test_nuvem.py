@@ -180,3 +180,14 @@ class NuvemTests(unittest.TestCase):
             cliente._abrir = Mock(side_effect=HTTPError(URL,status,'segredo',{},None))
             with self.assertRaises(esperado):
                 cliente.sincronizar(nuvem.Sessao('usuario','email','token'))
+
+    def test_fechamento_usa_rpc_separado_sem_mudar_protocolo_financeiro(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        sessao = nuvem.Sessao('conta-ficticia', 'teste@example.invalid', 'token-ficticio')
+        config = {'versao': 1, 'historico': [{'vigencia': '2090-11-01', 'dia': 14}]}
+        with patch.object(cliente, '_post', return_value=config) as rpc:
+            self.assertEqual(cliente.fechamentos(sessao), config)
+            rpc.assert_called_once_with('/rest/v1/rpc/consultar_fechamentos', {}, sessao.token)
+        with patch.object(cliente, '_post', return_value=config) as rpc:
+            self.assertEqual(cliente.salvar_fechamento(sessao, 0, '2090-11-01', 14), config)
+            rpc.assert_called_once_with('/rest/v1/rpc/salvar_fechamento', {'versao_esperada': 0, 'vigencia': '2090-11-01', 'dia': 14}, sessao.token)

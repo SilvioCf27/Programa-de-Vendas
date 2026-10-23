@@ -8,11 +8,11 @@ Use **Nova venda** para cadastrar. Para corrigir um registro, selecione a linha 
 
 Os filtros só mudam a lista depois de clicar em **Aplicar filtros**. Enquanto houver uma mudança pendente, a tela avisa. **Limpar filtros** volta a mostrar tudo. Os relatórios exportados seguem a última seleção aplicada.
 
-Um mês normal vai do primeiro ao último dia. No fechamento, o mês escolhido é o de início: **Outubro considera 10/10 a 09/11**. A aba Análises permite comparar períodos sem mudar o filtro de Vendas.
+Um mês normal vai do primeiro ao último dia. No fechamento, o mês escolhido é o de início: **Na regra inicial, outubro considera 10/10 a 09/11**. Uma nova regra pode ser cadastrada em Finanças com vigência futura, preservando períodos encerrados. A aba Análises permite comparar períodos sem mudar o filtro de Vendas.
 
 ## Taxas e despesas
 
-Vendas continuam com os valores brutos. Cadastre as taxas separadamente em **Finanças**. Você pode informar a taxa exata de um dia ou um total anual, com as datas cobertas pelo extrato. Use a classificação **Estimada** quando o valor não for confirmado.
+Vendas continuam com os valores brutos. Cadastre as taxas separadamente em **Finanças**. Em Taxas da maquininha, escolha uma semana e preencha o desconto de cada dia. Totais anuais ficam no histórico opcional, para valores antigos consolidados. Use a classificação **Estimada** quando o valor não for confirmado.
 
 Uma taxa anual não é dividida entre os meses. Ela só é descontada quando a consulta inclui todo o intervalo informado. Em recortes menores, o programa avisa que o saldo é provisório. Também não permite descontar a mesma taxa como ajuste anual e lançamento diário.
 
@@ -114,3 +114,5 @@ As funções antes agrupadas em Dados ficam na engrenagem ao lado do nome do pro
 Ao passar o mouse sobre **?**, aparece uma explicação breve. **Verificar integridade
 do backup** confere uma cópia sem aplicar os dados; **Restaurar backup** substitui
 os dados atuais pelos da cópia escolhida, preservando antes uma cópia do estado atual.
+
+As regras de datas, primeira fatura, parcelas, taxas semanais e mudança de fechamento estão no [guia de finanças](FINANCAS.md).

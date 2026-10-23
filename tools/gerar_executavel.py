@@ -16,8 +16,9 @@ def gerar():
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', str(ROOT / 'GestaoDaFeira.spec')], cwd=ROOT, check=True)
     pasta = ROOT / 'dist/GestaoDaFeira'
     shutil.copy2(ROOT / 'docs/EXECUTAVEL.md', pasta / 'LEIA-ME.md')
-    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md'):
+    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md'):
         shutil.copy2(ROOT / 'docs' / guia, pasta / guia)
+    shutil.copy2(ROOT / 'supabase/migrations/005_fechamentos.sql', pasta / 'SQL_005_FECHAMENTOS.sql')
     shutil.copytree(ROOT / 'docs/imagens', pasta / 'imagens', dirs_exist_ok=True)
     relatorio = ROOT / 'dist/VALIDACAO_WINDOWS.json'
     # Popen é necessário: Python pode não aguardar processos GUI no Windows

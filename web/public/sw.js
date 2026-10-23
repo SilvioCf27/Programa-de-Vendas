@@ -1,5 +1,5 @@
 // Cache apenas da interface. Login, consultas e dados financeiros ficam fora.
-const CACHE = 'feira-interface-v2';
+const CACHE = 'feira-interface-v3';
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches

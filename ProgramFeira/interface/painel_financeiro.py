@@ -4,11 +4,12 @@ from decimal import Decimal
 import sqlite3
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ProgramFeira import financeiro as f
+from ProgramFeira import financeiro as f, fechamento
 from ProgramFeira.comparacao import interpretar_data
 from ProgramFeira.resumos import moeda
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.interface.ajuda import rotulo_com_ajuda
+from ProgramFeira.interface.seletor_financeiro import SeletorFinanceiro, CampoData
 
 
 def data_br(texto):
@@ -22,23 +23,28 @@ def valor_br(centavos):
 class PainelFinanceiro(ttk.Frame):
     def __init__(self, parent, ao_alterar=None):
         self.ao_alterar = ao_alterar
+        self.ao_configurar_fechamento = None
         super().__init__(parent, padding=(0, 10, 0, 0))
         self.columnconfigure(0, weight=1)
         self.rowconfigure(3, weight=1)
         self.tipo = tk.StringVar(value='Fechamento')
         hoje = date.today()
         # Abre no fechamento em andamento; o seletor continua nomeando o mês inicial.
-        referencia = hoje if hoje.day >= 10 else hoje.replace(day=1) - timedelta(days=1)
+        referencia = hoje if hoje.day > fechamento.dia_no_mes(hoje.year, hoje.month) else hoje.replace(day=1) - timedelta(days=1)
         self.referencia = tk.StringVar(value=referencia.strftime('%d/%m/%Y'))
         consulta = ttk.Frame(self, style='Panel.TFrame', padding=10)
         consulta.grid(row=0, column=0, sticky='ew')
-        rotulo_com_ajuda(consulta, 'Finanças', 'financas', 'Section.TLabel').pack(side='left', padx=(0, 18))
-        ttk.Combobox(consulta, textvariable=self.tipo, values=('Semana', 'Mês', 'Fechamento', 'Ano'), state='readonly', width=13).pack(side='left')
-        ttk.Label(consulta, text='Data de referência', style='Surface.TLabel').pack(side='left', padx=(12, 5))
-        ttk.Entry(consulta, textvariable=self.referencia, width=12).pack(side='left')
-        ttk.Button(consulta, text='Consultar', command=self.consultar, style='Primary.TButton').pack(side='left', padx=10)
+        consulta.columnconfigure(1, weight=1)
+        titulo_consulta = ttk.Frame(consulta, style='Surface.TFrame')
+        titulo_consulta.grid(row=0, column=0, sticky='w')
+        rotulo_com_ajuda(titulo_consulta, 'Finanças', 'financas', 'Section.TLabel').pack(side='left', padx=(0, 18))
+        ttk.Combobox(titulo_consulta, textvariable=self.tipo, values=('Semana', 'Mês', 'Fechamento', 'Ano'), state='readonly', width=13).pack(side='left')
+        self.seletor_periodo = SeletorFinanceiro(consulta, self.tipo, self.referencia)
+        self.seletor_periodo.grid(row=0, column=1, sticky='w', padx=(12, 0))
+        ttk.Button(consulta, text='Consultar', command=self.consultar, style='Primary.TButton').grid(row=0, column=2, sticky='e', padx=(10, 0))
+        ttk.Button(titulo_consulta, text='Configurar', command=lambda: self.ao_configurar_fechamento() if self.ao_configurar_fechamento else None).pack(side='left', padx=(8, 0))
         self.periodo = tk.StringVar()
-        ttk.Label(consulta, textvariable=self.periodo, style='Surface.TLabel').pack(side='right')
+        ttk.Label(consulta, textvariable=self.periodo, style='Surface.TLabel').grid(row=1, column=0, columnspan=3, sticky='w', pady=(4, 0))
         quadros = ttk.Frame(self)
         quadros.grid(row=1, column=0, sticky='ew', pady=8)
         self.valores = {}
@@ -59,7 +65,7 @@ class PainelFinanceiro(ttk.Frame):
         pagina.columnconfigure(0, weight=3)
         pagina.columnconfigure(1, weight=1)
         pagina.rowconfigure(1, weight=1)
-        self.abas.add(pagina, text='Despesas e taxas por dia')
+        self.abas.add(pagina, text='Despesas e taxas')
         rotulo_com_ajuda(pagina, 'Lançamentos do período', 'despesas', 'Section.TLabel').grid(row=0, column=0, sticky='w', pady=(0, 8))
         self.tabela = self._tabela(pagina, ('data', 'tipo', 'descricao', 'valor', 'meio'), ('Data de pagamento', 'Tipo', 'Descrição / parcela', 'Valor', 'Pagamento'), 0)
         self.tabela.column('descricao', width=240, stretch=True)
@@ -71,14 +77,14 @@ class PainelFinanceiro(ttk.Frame):
         self.tabela_semanas = self._tabela(semanas, ('semana', 'valor'), ('Segunda-feira', 'Despesas'), 0)
         acoes = ttk.Frame(pagina, style='Surface.TFrame')
         acoes.grid(row=2, column=0, columnspan=2, sticky='ew', pady=(8, 0))
-        for texto, comando in (('Nova despesa', lambda: self.formulario('despesa')), ('Nova taxa por dia', lambda: self.formulario('taxa')), ('Editar lançamento', self.editar), ('Excluir lançamento', self.excluir)):
+        for texto, comando in (('Nova despesa', lambda: self.formulario('despesa')), ('Taxas da maquininha', self.formulario_taxas), ('Editar lançamento', self.editar), ('Excluir lançamento', self.excluir)):
             ttk.Button(acoes, text=texto, command=comando).pack(side='left', padx=(0, 8))
         self.tabela.bind('<Double-1>', lambda e: self.editar())
         anual = ttk.Frame(self.abas, style='Panel.TFrame', padding=10)
         anual.columnconfigure(0, weight=1)
         anual.rowconfigure(1, weight=1)
-        self.abas.add(anual, text='Taxas históricas anuais')
-        rotulo_com_ajuda(anual, 'Taxas anuais — sem rateio por mês', 'taxas', 'Section.TLabel').grid(row=0, column=0, sticky='w', pady=(0, 8))
+        self.abas.add(anual, text='Histórico de taxas (opcional)')
+        rotulo_com_ajuda(anual, 'Totais históricos — não registrar novamente nas semanas', 'taxas', 'Section.TLabel').grid(row=0, column=0, sticky='w', pady=(0, 8))
         self.tabela_anuais = self._tabela(anual, ('ano', 'inicio', 'fim', 'valor', 'natureza'), ('Ano', 'Cobertura inicial', 'Cobertura final', 'Taxa total', 'Natureza'), 0)
         botoes = ttk.Frame(anual, style='Surface.TFrame')
         botoes.grid(row=2, column=0, sticky='w', pady=(8, 0))
@@ -116,9 +122,13 @@ class PainelFinanceiro(ttk.Frame):
                 if self.inicio is None or self.fim is None:
                     return
                 inicio, fim = self.inicio, self.fim
+                if getattr(self, 'versao_fechamento', 0) != fechamento.estado()['versao'] and hasattr(self, 'consulta_aplicada'):
+                    tipo, referencia = self.consulta_aplicada
+                    inicio, fim = f.limites(tipo, referencia)
             else:
                 referencia = interpretar_data(self.referencia.get()).isoformat()
                 inicio, fim = f.limites(self.tipo.get(), referencia)
+                self.consulta_aplicada = self.tipo.get(), referencia
             resumo = f.resumo_periodo(inicio, fim)
             linhas = f.listar_lancamentos(inicio, fim)
             anuais = f.listar_taxas_anuais()
@@ -126,6 +136,7 @@ class PainelFinanceiro(ttk.Frame):
             messagebox.showerror('Consulta não realizada', str(erro), parent=self)
             return
         self.inicio, self.fim = inicio, fim
+        self.versao_fechamento = fechamento.estado()['versao']
         self.periodo.set(f'{data_br(inicio)} a {data_br(fim)}')
         for chave, variavel in self.valores.items():
             variavel.set(moeda(resumo[chave]))
@@ -191,24 +202,61 @@ class PainelFinanceiro(ttk.Frame):
         corpo.columnconfigure(1, weight=1)
         return popup, corpo
 
-    def _campo(self, corpo, linha, titulo, valor='', opcoes=None):
+    def _campo(self, corpo, linha, titulo, valor='', opcoes=None, data=False):
         variavel = tk.StringVar(value=valor)
         ttk.Label(corpo, text=titulo).grid(row=linha, column=0, sticky='w', padx=(0, 14), pady=6)
         widget = ttk.Combobox(corpo, textvariable=variavel, values=opcoes, state='readonly') if opcoes else ttk.Entry(corpo, textvariable=variavel, width=35)
+        if data:
+            widget.destroy()
+            widget = CampoData(corpo, variavel)
         widget.grid(row=linha, column=1, sticky='ew', pady=6)
         return variavel
 
     def formulario(self, tipo, registro=None):
         r = registro or {}
         popup, corpo = self._janela(('Editar ' if r else 'Nova ') + ('despesa' if tipo == 'despesa' else 'taxa do cartão'))
-        data = self._campo(corpo, 0, 'Pagamento / competência', data_br(r.get('data', date.today().isoformat())))
+        data = self._campo(corpo, 0, 'Pagamento / competência', data_br(r.get('data', date.today().isoformat())), data=True)
         descricao = self._campo(corpo, 1, 'Descrição', r.get('descricao', '' if tipo == 'despesa' else 'Taxa do cartão'))
         valor = self._campo(corpo, 2, 'Valor em R$ (por parcela)', valor_br(r['valor_centavos']) if r else '')
         meio = self._campo(corpo, 3, 'Pagamento', r.get('meio', 'Cartão de crédito' if tipo == 'taxa' else 'Dinheiro'), f.MEIOS)
         categoria = self._campo(corpo, 4, 'Categoria', r.get('categoria', 'Outros'), f.CATEGORIAS)
         parcelas = self._campo(corpo, 5, 'Quantidade de parcelas', '1') if not r and tipo == 'despesa' else None
-        explicacao = ('Cartão: use a data em que a compra será paga na fatura. Para parcelas, informe o primeiro pagamento e o valor de CADA parcela.\nNão registre o pagamento da fatura outra vez. “Compromisso inicial” serve só para valores ainda não cadastrados.\nEditar ou excluir altera apenas a parcela selecionada.' if tipo == 'despesa' else 'Use a data da venda à qual a taxa corresponde. Informe a taxa exata em reais.\nUm ajuste anual e taxas diárias não podem cobrir a mesma data.')
-        ttk.Label(corpo, text=explicacao, wraplength=490, style='Muted.TLabel', justify='left').grid(row=6, column=0, columnspan=2, sticky='w', pady=12)
+        explicacao = ('Cartão: use a data em que a compra será paga na fatura. Para parcelas, informe o primeiro pagamento e o valor de CADA parcela.\nNão registre o pagamento da fatura outra vez. “Compromisso inicial” serve só para valores ainda não cadastrados.\nEditar ou excluir altera apenas a parcela selecionada.' if tipo == 'despesa' else 'São os descontos cobrados pela maquininha nas suas vendas no cartão, não gastos com o cartão de compras. Use a data da venda e informe a taxa em reais.\nUm ajuste anual e taxas diárias não podem cobrir a mesma data.')
+        previa = tk.StringVar(value=explicacao)
+        ttk.Label(corpo, textvariable=previa, wraplength=490, style='Muted.TLabel', justify='left').grid(row=6, column=0, columnspan=2, sticky='w', pady=12)
+        campo_data = corpo.grid_slaves(row=0, column=1)[0]
+        def calcular_fatura():
+            try:
+                compra = interpretar_data(data.get()).isoformat()
+                data.set(data_br(f.primeira_fatura(compra)))
+                campo_data.resumo.configure(text=f'Compra em {data_br(compra)} → primeira fatura em {data.get()}')
+            except ValueError as erro:
+                messagebox.showerror('Data não calculada', str(erro), parent=popup)
+        calcular = ttk.Button(campo_data, text='Calcular fatura pela data da compra', command=calcular_fatura)
+        def atualizar_previa(*args):
+            cartao = tipo == 'despesa' and meio.get() == 'Cartão de crédito'
+            corpo.grid_slaves(row=0, column=0)[0].configure(text='Primeira fatura' if cartao else 'Data da venda' if tipo == 'taxa' else 'Data de pagamento')
+            if cartao and not r:
+                calcular.grid(row=2, column=0, columnspan=3, sticky='w', pady=(6, 0))
+            else:
+                calcular.grid_remove()
+            try:
+                datas = f.datas_parcelas(interpretar_data(data.get()).isoformat(), int(parcelas.get()) if parcelas else 1)
+                mostra = datas if len(datas) <= 4 else [*datas[:3], '…', datas[-1]]
+                texto = ' · '.join(data_br(d) if d != '…' else d for d in mostra)
+                nota = ('Faturas previstas: ' if cartao else 'Lançamento em: ') + texto + '.\n'
+            except ValueError:
+                nota = ''
+            previa.set(nota + ('No cartão, use a primeira fatura. Compras no dia de fechamento entram na fatura seguinte. O botão calcula essa data sem alterar uma data já informada automaticamente.\n' if cartao else '') + explicacao)
+        traces = [(var, var.trace_add('write', atualizar_previa)) for var in (data, meio, parcelas) if var is not None]
+        def limpar(evento):
+            if evento.widget is popup:
+                for var, ident in traces:
+                    try: var.trace_remove('write', ident)
+                    except tk.TclError: pass
+        popup.bind('<Destroy>', limpar, add='+')
+        atualizar_previa()
+
         def salvar():
             try:
                 quantidade = int(parcelas.get()) if parcelas else 1
@@ -224,6 +272,62 @@ class PainelFinanceiro(ttk.Frame):
                 self.ao_alterar()
         ttk.Button(corpo, text='Salvar', command=salvar, style='Primary.TButton').grid(row=7, column=1, sticky='e')
         ttk.Button(corpo, text='Cancelar', command=popup.destroy).grid(row=7, column=0, sticky='w')
+        return popup
+
+    def formulario_taxas(self):
+        popup, corpo = self._janela('Taxas da maquininha por semana')
+        ttk.Label(corpo, text='Descontos das vendas no cartão', style='Section.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
+        ttk.Label(corpo, text='Preencha sexta e domingo juntos, ou outros dias em que vendeu.\nCada taxa fica na data da venda. Não são gastos do cartão de compras.', wraplength=540).grid(row=1, column=0, columnspan=2, sticky='w', pady=8)
+        tipo = tk.StringVar(value='Semana')
+        referencia = tk.StringVar(value=date.today().strftime('%d/%m/%Y'))
+        seletor = SeletorFinanceiro(corpo, tipo, referencia)
+        seletor.grid(row=2, column=0, columnspan=2, sticky='w', pady=(0, 8))
+        dias = ttk.Frame(corpo)
+        dias.grid(row=3, column=0, columnspan=2, sticky='ew')
+        campos = {}
+        anuais = f.listar_taxas_anuais()
+        def desenhar(*args):
+            for filho in dias.winfo_children():
+                filho.destroy()
+            campos.clear()
+            try:
+                inicio, fim = f.limites('Semana', interpretar_data(referencia.get()).isoformat())
+                registros = {r['data']: r for r in f.listar_lancamentos(inicio, fim) if r['tipo'] == 'taxa'}
+                primeira = date.fromisoformat(inicio)
+            except ValueError:
+                return
+            for i, nome in enumerate(('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo')):
+                data = (primeira + timedelta(days=i)).isoformat()
+                ttk.Label(dias, text=f'{nome} · {data_br(data)}').grid(row=i, column=0, sticky='w', pady=4)
+                coberto = next((a for a in anuais if a['inicio'] <= data <= a['fim']), None)
+                if coberto:
+                    ttk.Label(dias, text=f'Incluída no histórico de {coberto["ano"]}', style='Muted.TLabel').grid(row=i, column=1, sticky='w')
+                else:
+                    var = tk.StringVar(value=valor_br(registros[data]['valor_centavos']) if data in registros else '')
+                    ttk.Entry(dias, textvariable=var, width=15).grid(row=i, column=1, sticky='w', padx=(12, 0))
+                    campos[data] = var
+        trace = referencia.trace_add('write', desenhar)
+        def limpar(evento):
+            if evento.widget is popup:
+                try: referencia.trace_remove('write', trace)
+                except tk.TclError: pass
+        popup.bind('<Destroy>', limpar, add='+')
+        desenhar()
+        ttk.Label(corpo, text='Valores em reais. Campo vazio mantém a taxa já cadastrada.\nPara remover uma taxa, use Excluir no lançamento.', style='Muted.TLabel').grid(row=4, column=0, columnspan=2, sticky='w', pady=10)
+        def salvar():
+            try:
+                inicio, _ = f.limites('Semana', interpretar_data(referencia.get()).isoformat())
+                f.salvar_taxas_semana(inicio, {data: var.get() for data, var in campos.items()})
+            except (ValueError, OSError, sqlite3.Error) as erro:
+                messagebox.showerror('Taxas não salvas', str(erro), parent=popup)
+                return
+            popup.destroy()
+            self.consultar()
+            if self.ao_alterar:
+                self.ao_alterar()
+        ttk.Button(corpo, text='Cancelar', command=popup.destroy).grid(row=5, column=0, sticky='w')
+        ttk.Button(corpo, text='Salvar taxas da semana', command=salvar, style='Primary.TButton').grid(row=5, column=1, sticky='e')
+        popup.seletor_semana, popup.campos_taxas = seletor, campos
         return popup
 
     def formulario_anual(self, registro=None):

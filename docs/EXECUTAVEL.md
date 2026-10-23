@@ -10,17 +10,18 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.3.1
+## Versão 1.4.0
 
-A interface ganhou cinco temas, cartões com participação dos pagamentos, abas
-mais espaçadas e barras de rolagem discretas, exibidas somente quando necessárias
-no histórico e nos filtros. O tema Grafite usa verde esmeralda; Aurora tem roxo
-`#52057B` nas ações principais. As cores dos indicadores distinguem as formas de
-pagamento em todos os temas.
+A versão acrescenta datas explícitas e prévia das parcelas, filtros financeiros
+adaptativos e taxas da maquininha por semana. As cinco paletas e as configurações
+existentes são preservadas. O fechamento pode ser alterado por vigência futura,
+com histórico compartilhado entre PC e PWA.
 
-O programa reutiliza os desenhos dos ícones e contornos para abrir mais rápido.
-Vendas, análises, finanças, sincronização e backups mantêm suas funções. Veja
-[as capturas da interface](INTERFACE.md).
+Para habilitar a configuração compartilhada, execute apenas
+`SQL_005_FECHAMENTOS.sql`, incluído no pacote, no SQL Editor do projeto já
+configurado. Não é necessário refazer a migração de dados. O dia 09 continua sendo
+a regra inicial, e as outras melhorias funcionam com a estrutura atual.
+Leia [FINANCAS.md](FINANCAS.md) antes de revisar datas antigas ou mudar a regra.
 
 ## Recursos da versão 1.2.0
 

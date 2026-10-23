@@ -271,7 +271,7 @@ def _sem_mudancas(banco, cliente, sessao, resposta, base_inicial=None):
         return True
 
 
-def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None, revisao=None, escolhas=None):
+def _sincronizar_dados(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None, revisao=None, escolhas=None):
     banco = Path(banco)
     if (revisao is None) != (escolhas is None):
         raise ErroNuvem('Confira os conflitos e escolha cada versão antes de aplicar.')
@@ -354,3 +354,24 @@ def vinculado(banco):
             return c.execute('select 1 from nuvem_sync_estado where singleton=1').fetchone() is not None
     except sqlite3.Error:
         return False
+
+
+def sincronizar(banco, cliente, sessao, snapshot_inicial=None, somente_se_mudou=False, base_inicial=None, revisao=None, escolhas=None):
+    from ProgramFeira import fechamento
+    from ProgramFeira.nuvem import FechamentoIndisponivel
+    mudou = False
+    if callable(getattr(cliente, 'fechamentos', None)):
+        try:
+            config = cliente.fechamentos(sessao)
+        except FechamentoIndisponivel:
+            if fechamento.carregar(banco)['versao']:
+                raise
+        else:
+            try:
+                mudou = fechamento.guardar(banco, config, cliente.url, sessao.usuario_id)
+            except ValueError as erro:
+                raise ErroNuvem(str(erro)) from None
+    resultado = _sincronizar_dados(banco, cliente, sessao, snapshot_inicial, somente_se_mudou, base_inicial, revisao, escolhas)
+    if mudou:
+        resultado['fechamento_alterado'] = True
+    return resultado

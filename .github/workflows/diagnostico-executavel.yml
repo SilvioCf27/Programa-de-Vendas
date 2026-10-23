@@ -6,7 +6,7 @@ on:
       versao:
         description: Tag da versao a conferir
         required: true
-        default: v1.3.1
+        default: v1.4.0
   workflow_run:
     workflows: ['Executavel Windows']
     types: [completed]
@@ -26,17 +26,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - name: Registrar estado e falhas da compilacao
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          VERSAO: ${{ inputs.versao || 'v1.3.1' }}
+          VERSAO: ${{ inputs.versao || '' }}
+          COMMIT_CONFERIR: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           python - <<'PY'
           import json, os, subprocess
           from pathlib import Path
-          versao = os.environ['VERSAO']
-          sha = subprocess.check_output(['git', 'rev-parse', versao + '^{commit}'], text=True).strip()
+          from ProgramFeira.versao import VERSAO
+          versao = os.environ['VERSAO'] or 'v' + VERSAO
+          referencia = os.environ['VERSAO'] or os.environ['COMMIT_CONFERIR']
+          sha = subprocess.check_output(['git', 'rev-parse', referencia + '^{commit}'], text=True).strip()
           dados = subprocess.check_output(['gh', 'run', 'list', '--workflow', 'executavel-windows.yml', '--commit', sha, '--limit', '10', '--json', 'databaseId,status,conclusion,url,headBranch'], text=True)
           runs = json.loads(dados)
           for run in runs:
@@ -47,6 +51,7 @@ jobs:
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          VERSAO=$(python -c "import json; print(json.load(open('diagnostico.json'))['versao'])")
           TAG="diagnostico/executavel-$VERSAO-${{ github.run_id }}"
           git tag -a "$TAG" -F diagnostico.json
           git push origin "refs/tags/$TAG"

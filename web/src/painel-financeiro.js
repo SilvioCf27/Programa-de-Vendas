@@ -1,6 +1,11 @@
+import { criarConfiguracaoFechamento } from './painel-fechamento.js';
+import { criarCampoData } from './campo-data.js';
+import { criarSeletorFinanceiro } from './seletor-financeiro.js';
 import { hoje, mesFechamento, moeda } from './regras.js';
 import {
   limitesFinanceiros,
+  primeiraFatura,
+  taxasSemanaFormulario,
   resumoFinanceiro,
   lancamentoFormulario,
   anualFormulario,
@@ -15,7 +20,7 @@ const texto = (tag, conteudo, classe = '') => {
   e.className = classe;
   return e;
 };
-export function criarPainelFinanceiro({ api, sessao }) {
+export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () => {} }) {
   let dados = null,
     selecao = null,
     ocupado = false,
@@ -25,6 +30,16 @@ export function criarPainelFinanceiro({ api, sessao }) {
   const ref = mesFechamento();
   $('fin-referencia').value =
     `${ref.ano}-${String(ref.mes).padStart(2, '0')}-10`;
+  const seletorFinanceiro = criarSeletorFinanceiro();
+  const campoData = criarCampoData({
+    valor: $('fin-form').elements.data,
+    dia: $('fin-data-dia'), mes: $('fin-data-mes'), ano: $('fin-data-ano'),
+    resumo: $('fin-data-confirmada'), mudou: atualizarPrevia,
+  });
+  $('taxas-referencia').value = hoje();
+  const seletorTaxas = criarSeletorFinanceiro('taxas', desenharTaxas);
+  const dialogo = (prefixo) => $(prefixo + '-dialogo');
+  const configuracaoFechamento = criarConfiguracaoFechamento({ api, sessao, aoSalvar: async () => { aoFechamentoAlterado(); await atualizar(); } });
   const chave = (uid) => `feira-financeiro-pendente:${uid}`;
   function pendente(uid = sessao()?.user.id) {
     if (!uid) return null;
@@ -42,11 +57,12 @@ export function criarPainelFinanceiro({ api, sessao }) {
     for (const e of $('fin-dados').querySelectorAll('button'))
       e.disabled = ocupado || offline || pendencia;
     $('fin-atualizar').disabled = ocupado || offline;
-    $('fin-filtros').querySelector('button').disabled = ocupado || offline;
-    for (const prefixo of ['fin', 'anual']) {
+    $('fin-consultar').disabled = ocupado || offline;
+    $('fin-configurar-fechamento').disabled = ocupado || offline || pendencia;
+    for (const prefixo of ['fin', 'anual', 'taxas']) {
       const form = $(prefixo + '-form');
       for (const e of form.querySelectorAll('input,select'))
-        e.disabled = ocupado || pendencia;
+        e.disabled = ocupado || pendencia || e.dataset.somenteLeitura === '1';
       if (prefixo === 'fin' && !ocupado && !pendencia)
         form.elements.parcelas.disabled =
           !!editando || form.elements.tipo.value === 'taxa';
@@ -55,7 +71,7 @@ export function criarPainelFinanceiro({ api, sessao }) {
         ? 'Confirmar envio'
         : prefixo === 'fin'
           ? 'Salvar lançamento'
-          : 'Salvar ajuste';
+          : prefixo === 'taxas' ? 'Salvar taxas da semana' : 'Salvar ajuste';
       $(prefixo + '-cancelar').disabled = ocupado;
     }
   }
@@ -138,7 +154,7 @@ export function criarPainelFinanceiro({ api, sessao }) {
         texto('p', l.descricao),
         texto(
           'p',
-          `${l.tipo === 'taxa' ? 'Taxa diária' : 'Despesa'} · ${l.meio} · ${l.categoria}${l.parcelas > 1 ? ` · Parcela ${l.parcela}/${l.parcelas}` : ''}`,
+          `${l.tipo === 'taxa' ? 'Taxa das vendas no cartão' : 'Despesa'} · ${l.meio} · ${l.categoria}${l.parcelas > 1 ? ` · Parcela ${l.parcela}/${l.parcelas}` : ''}`,
           'nota'
         )
       );
@@ -192,13 +208,14 @@ export function criarPainelFinanceiro({ api, sessao }) {
     }
     const uid = sessao().user.id,
       atual = geracao;
+    const tipoConsulta = nova?.tipo || $('fin-tipo').value;
+    const referenciaConsulta = nova?.referencia || $('fin-referencia').value;
     ocupado = true;
     controles();
     $('fin-status').textContent = 'Consultando dados financeiros…';
     try {
-      const consulta =
-        nova ||
-        limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value);
+      if (api().fechamentos) await api().fechamentos();
+      const consulta = { ...limitesFinanceiros(tipoConsulta, referenciaConsulta), tipo: tipoConsulta, referencia: referenciaConsulta };
       await retomar(uid);
       const resposta = await api().financeiro();
       if (atual !== geracao) return;
@@ -220,6 +237,55 @@ export function criarPainelFinanceiro({ api, sessao }) {
       }
     }
   }
+  function desenharTaxas() {
+    if (!dados || !$('taxas-referencia').value) return;
+    const inicio = $('taxas-referencia').value;
+    const dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+    $('taxas-dias').replaceChildren();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(inicio + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + i);
+      const data = d.toISOString().slice(0, 10);
+      const anterior = dados.financeiro_lancamentos.find(r => r.tipo === 'taxa' && r.data === data);
+      const coberto = dados.financeiro_taxas_anuais.find(a => a.inicio <= data && a.fim >= data);
+      const label = texto('label', `${dias[i]} · ${br(data)} · Taxa em R$`);
+      const input = document.createElement('input');
+      input.name = data; input.inputMode = 'decimal'; input.placeholder = 'Sem taxa informada';
+      input.value = anterior ? (Number(anterior.valor_centavos) / 100).toFixed(2).replace('.', ',') : '';
+      if (coberto) { input.dataset.somenteLeitura = '1'; input.disabled = true; label.append(texto('small', `Incluída no histórico de ${coberto.ano}.`)); }
+      label.append(input); $('taxas-dias').append(label);
+    }
+  }
+  function abrirTaxas() {
+    if (ocupado || !dados) return;
+    $('taxas-erro-form').textContent = '';
+    seletorTaxas.definir(hoje());
+    controles();
+    $('taxas-dialogo').showModal();
+  }
+  function atualizarPrevia() {
+    const form = $('fin-form');
+    const cartao = form.elements.tipo.value === 'despesa' && form.elements.meio.value === 'Cartão de crédito';
+    $('fin-calcular-fatura').hidden = !cartao || !!editando;
+    $('fin-data-titulo').textContent = cartao ? 'Primeira fatura (competência)' :
+      form.elements.tipo.value === 'taxa' ? 'Data da venda no cartão' : 'Data de pagamento ou vencimento';
+    try {
+      const campos = Object.fromEntries(new FormData(form));
+      const ops = lancamentoFormulario(campos, editando, () => 'previa');
+      const datas = ops.map((op) => br(op.dados.data));
+      const mostra = datas.length > 4 ? [...datas.slice(0, 3), '…', datas.at(-1)] : datas;
+      $('fin-previa').textContent = `${cartao ? 'Faturas previstas' : 'Lançamento em'}: ${mostra.join(' · ')}.`;
+    } catch { $('fin-previa').textContent = ''; }
+  }
+  $('fin-form').addEventListener('change', atualizarPrevia);
+  $('fin-form').addEventListener('input', atualizarPrevia);
+  $('fin-calcular-fatura').addEventListener('click', () => {
+    try {
+      const compra = $('fin-form').elements.data.value;
+      campoData.definir(primeiraFatura(compra));
+      $('fin-data-confirmada').textContent = `Compra em ${br(compra)} → primeira fatura em ${br($('fin-form').elements.data.value)}. Compras no dia de fechamento entram na fatura seguinte.`;
+      atualizarPrevia();
+    } catch (erro) { $('fin-erro-form').textContent = erro.message; }
+  });
   function abrir(tipo, anterior = null) {
     if (ocupado) return;
     editando = anterior;
@@ -237,16 +303,20 @@ export function criarPainelFinanceiro({ api, sessao }) {
       parcelas: anterior?.parcelas || 1,
     };
     for (const [k, v] of Object.entries(valores)) form.elements[k].value = v;
+    campoData.definir(valores.data);
     $('fin-titulo-form').textContent = anterior
       ? 'Editar lançamento'
       : tipo === 'taxa'
-        ? 'Nova taxa diária'
+        ? 'Taxa da maquininha'
         : 'Nova despesa';
     $('fin-ajuda-form').textContent = anterior
       ? 'Edição altera somente este lançamento. Número e grupo das parcelas são preservados.'
-      : 'Para parcelar, escolha Cartão de crédito. Informe o valor de cada parcela e o primeiro vencimento. Os próximos serão mensais. Não cadastre novamente um gasto que já entrou no compromisso inicial da fatura.';
+      : tipo === 'taxa'
+        ? 'Informe em reais o desconto cobrado pela maquininha nas vendas desta data. Não é uma despesa nem uma taxa do cartão usado para fazer compras.'
+        : 'No cartão, a data é a primeira fatura, não a compra. Você pode calcular a fatura pelo botão acima; compras no próprio dia de fechamento entram na fatura seguinte. Para parcelar, escolha Cartão de crédito. Informe o valor de cada parcela e o primeiro vencimento. Os próximos serão mensais. Não cadastre novamente um gasto que já entrou no compromisso inicial da fatura.';
     $('fin-erro-form').textContent = '';
     controles();
+    atualizarPrevia();
     $('fin-dialogo').showModal();
   }
   function abrirAnual(anterior = null) {
@@ -288,7 +358,7 @@ export function criarPainelFinanceiro({ api, sessao }) {
       await enviar(lote, uid);
       if (atual !== geracao) return;
       if (prefixo)
-        $(prefixo === 'fin' ? 'fin-dialogo' : 'anual-dialogo').close();
+        dialogo(prefixo).close();
       $('fin-status').textContent = 'Alteração salva.';
     } catch (erro) {
       if (atual === geracao)
@@ -303,7 +373,7 @@ export function criarPainelFinanceiro({ api, sessao }) {
     }
     if (atual === geracao) await atualizar();
   }
-  for (const prefixo of ['fin', 'anual']) {
+  for (const prefixo of ['fin', 'anual', 'taxas']) {
     $(prefixo + '-form').addEventListener('submit', (event) => {
       event.preventDefault();
       if (ocupado || !navigator.onLine) return;
@@ -314,7 +384,9 @@ export function criarPainelFinanceiro({ api, sessao }) {
           ? existente.alteracoes
           : prefixo === 'fin'
             ? lancamentoFormulario(dadosForm, editando)
-            : anualFormulario(dadosForm, anual);
+            : prefixo === 'taxas'
+              ? taxasSemanaFormulario($('taxas-referencia').value, dadosForm, dados.financeiro_lancamentos, dados.financeiro_taxas_anuais)
+              : anualFormulario(dadosForm, anual);
         gravar(operacoes, prefixo);
       } catch (erro) {
         $(prefixo + '-erro-form').textContent = erro.message;
@@ -322,9 +394,9 @@ export function criarPainelFinanceiro({ api, sessao }) {
     });
     $(prefixo + '-cancelar').addEventListener('click', () => {
       if (!ocupado)
-        $(prefixo === 'fin' ? 'fin-dialogo' : 'anual-dialogo').close();
+        dialogo(prefixo).close();
     });
-    $(prefixo === 'fin' ? 'fin-dialogo' : 'anual-dialogo').addEventListener(
+    dialogo(prefixo).addEventListener(
       'cancel',
       (event) => {
         if (ocupado) event.preventDefault();
@@ -332,14 +404,14 @@ export function criarPainelFinanceiro({ api, sessao }) {
     );
   }
   $('fin-despesa').addEventListener('click', () => abrir('despesa'));
-  $('fin-taxa').addEventListener('click', () => abrir('taxa'));
+  $('fin-taxa').addEventListener('click', abrirTaxas);
   $('fin-anual').addEventListener('click', () => abrirAnual());
   $('fin-atualizar').addEventListener('click', () => atualizar());
   $('fin-filtros').addEventListener('submit', (event) => {
     event.preventDefault();
     try {
       atualizar(
-        limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value)
+        { ...limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value), tipo: $('fin-tipo').value, referencia: $('fin-referencia').value }
       );
     } catch (erro) {
       $('fin-status').textContent = erro.message;
@@ -349,12 +421,17 @@ export function criarPainelFinanceiro({ api, sessao }) {
   window.addEventListener('offline', controles);
   return {
     atualizar,
+    definirPadrao() {
+      if (!selecao) { const ref = mesFechamento(); seletorFinanceiro.definir(`${ref.ano}-${String(ref.mes).padStart(2, '0')}-01`); }
+    },
     ocupado: () => {
       try {
         return (
           ocupado ||
+          configuracaoFechamento.ocupado() ||
           $('fin-dialogo').open ||
           $('anual-dialogo').open ||
+          $('taxas-dialogo').open ||
           !!pendente()
         );
       } catch {
@@ -363,13 +440,16 @@ export function criarPainelFinanceiro({ api, sessao }) {
     },
     limpar() {
       geracao++;
+      configuracaoFechamento.limpar();
       ocupado = false;
       dados = null;
       selecao = null;
       editando = anual = null;
-      for (const id of ['fin-dialogo', 'anual-dialogo']) $(id).close();
+      for (const id of ['fin-dialogo', 'anual-dialogo', 'taxas-dialogo']) $(id).close();
       $('fin-form').reset();
       $('anual-form').reset();
+      $('taxas-form').reset();
+      $('taxas-dias').replaceChildren();
       for (const id of ['fin-lancamentos', 'fin-semanas', 'fin-anuais'])
         $(id).replaceChildren();
       for (const campo of [

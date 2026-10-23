@@ -5,10 +5,10 @@ from decimal import Decimal
 from ProgramFeira.resumos import calcular_indicadores
 
 
-def fechamento_do_mes(ano, mes, dia=9):
-    inicio = date(ano, mes, dia + 1)
-    proximo = date(ano + 1, 1, dia) if mes == 12 else date(ano, mes + 1, dia)
-    return inicio.isoformat(), proximo.isoformat()
+def fechamento_do_mes(ano, mes, dia=None):
+    from ProgramFeira import fechamento
+    regras = None if dia is None else [{'vigencia': '0001-01-01', 'dia': dia}]
+    return fechamento.periodo(ano, mes, regras)
 
 
 def interpretar_data(texto):

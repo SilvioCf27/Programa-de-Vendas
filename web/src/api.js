@@ -1,5 +1,20 @@
+import { definirFechamentos, validarFechamentos, estadoFechamentos } from './fechamento.js';
 export function criarApi(cliente) {
+  async function lerFechamentos() {
+    const { data, error } = await cliente.rpc('consultar_fechamentos');
+    if (error?.code === 'PGRST202' && !estadoFechamentos().versao) return null;
+    if (error) throw error;
+    const config = validarFechamentos(data);
+    definirFechamentos(config);
+    return config;
+  }
   return {
+    fechamentos: lerFechamentos,
+    async salvarFechamento(versao, vigencia, dia) {
+      const { data, error } = await cliente.rpc('salvar_fechamento', { versao_esperada: versao, vigencia, dia });
+      if (error) throw error;
+      const config = validarFechamentos(data); definirFechamentos(config); return config;
+    },
     async autorizado() {
       const { data, error } = await cliente.rpc('usuario_autorizado');
       if (error) throw error;

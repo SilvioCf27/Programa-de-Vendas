@@ -37,9 +37,9 @@ def periodo_anterior(tipo, inicio, fim):
         return ultimo.replace(day=1).isoformat(), ultimo.isoformat()
     if tipo == 'Período de fechamento':
         ultimo = inicio - timedelta(days=1)
-        mes_anterior = inicio.replace(day=1) - timedelta(days=1)
-        primeiro = mes_anterior.replace(day=inicio.day)
-        return primeiro.isoformat(), ultimo.isoformat()
+        from ProgramFeira.fechamento import periodo
+        mes_anterior = ultimo.replace(day=1) - timedelta(days=1)
+        return periodo(mes_anterior.year, mes_anterior.month)
     return None
 
 

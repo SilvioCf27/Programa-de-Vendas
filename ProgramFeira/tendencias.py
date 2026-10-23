@@ -1,6 +1,7 @@
 """Totais brutos em até 12 meses/fechamentos consecutivos da seleção aplicada."""
 from ProgramFeira.database.banco import converter_data_salva
 from ProgramFeira.resumos import calcular_indicadores
+from ProgramFeira.fechamento import dia_no_mes
 
 
 def evolucao(vendas, tipo='Mês'):
@@ -10,7 +11,7 @@ def evolucao(vendas, tipo='Mês'):
         if dia is None:
             continue
         ano, mes = dia.year, dia.month
-        if tipo == 'Fechamento' and dia.day <= 9:
+        if tipo == 'Fechamento' and dia.day <= dia_no_mes(ano, mes):
             mes -= 1
             if not mes:
                 ano, mes = ano - 1, 12

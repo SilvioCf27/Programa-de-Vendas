@@ -69,6 +69,26 @@ def _data(texto):
         raise ValueError('Informe uma data válida.') from erro
 
 
+def primeira_fatura(compra, fechamento=None):
+    from ProgramFeira.fechamento import primeira_fatura as calcular
+    regras = None if fechamento is None else [{'vigencia': '0001-01-01', 'dia': fechamento}]
+    if fechamento is not None and (type(fechamento) is not int or not 1 <= fechamento <= 31):
+        raise ValueError('Escolha um dia de fechamento entre 1 e 31.')
+    return calcular(compra, regras)
+
+
+def datas_parcelas(inicio, quantidade):
+    dia = _data(inicio)
+    if type(quantidade) is not int or not 1 <= quantidade <= 120:
+        raise ValueError('Use de 1 a 120 parcelas.')
+    resultado = []
+    for i in range(quantidade):
+        ano, mes = divmod(dia.year * 12 + dia.month - 1 + i, 12)
+        mes += 1
+        resultado.append(date(ano, mes, min(dia.day, calendar.monthrange(ano, mes)[1])).isoformat())
+    return resultado
+
+
 def _conflito(c, inicio, fim, ignorar=None):
     return c.execute('''SELECT ano FROM financeiro_taxas_anuais
         WHERE inicio <= ? AND fim >= ? AND ano != ?''', (fim, inicio, ignorar or -1)).fetchone()
@@ -92,12 +112,8 @@ def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Out
         raise ValueError('Taxas não podem ser parceladas.')
     linhas = []
     grupo = uuid4().hex if parcelas > 1 else None
-    for i in range(parcelas):
-        mes = dia.year * 12 + dia.month - 1 + i
-        ano, mes = divmod(mes, 12)
-        mes += 1
-        vencimento = date(ano, mes, min(dia.day, calendar.monthrange(ano, mes)[1]))
-        linhas.append((tipo, vencimento.isoformat(), descricao, quantia, meio, categoria, grupo, i + 1, parcelas))
+    for i, vencimento in enumerate(datas_parcelas(data, parcelas)):
+        linhas.append((tipo, vencimento, descricao, quantia, meio, categoria, grupo, i + 1, parcelas))
     banco.criar_backup()
     with closing(banco.conectar()) as c, c:
         c.execute('BEGIN IMMEDIATE')
@@ -120,6 +136,46 @@ def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Out
             if tipo == 'taxa' and 'UNIQUE constraint failed' in str(erro):
                 raise ValueError('Já existe uma taxa para essa data. Edite o lançamento existente.') from erro
             raise
+
+
+def salvar_taxas_semana(inicio, valores):
+    primeira = _data(inicio)
+    if primeira.weekday() != 0:
+        raise ValueError('Escolha uma semana de segunda a domingo.')
+    permitidas = {(primeira + timedelta(days=i)).isoformat() for i in range(7)}
+    if set(valores) - permitidas:
+        raise ValueError('Há uma data fora da semana.')
+    linhas = []
+    for data, valor in valores.items():
+        texto = str(valor).strip()
+        if texto:
+            quantia = 0 if re.fullmatch(r'0+(?:[.,]0{1,2})?', texto) else centavos(texto)
+            linhas.append((data, quantia))
+    if not linhas:
+        raise ValueError('Preencha os dias em que houve desconto nas vendas.')
+    banco.criar_backup()
+    alterados = 0
+    with closing(banco.conectar()) as c, c:
+        c.execute('BEGIN IMMEDIATE')
+        for data, quantia in linhas:
+            anterior = c.execute("SELECT id,valor_centavos FROM financeiro_lancamentos WHERE tipo='taxa' AND data=?", (data,)).fetchone()
+            if not quantia:
+                if anterior:
+                    raise ValueError('Para remover uma taxa existente, use Excluir no lançamento.')
+                continue
+            if _conflito(c, data, data):
+                raise ValueError('Esta data já está incluída em um total histórico de taxas. Não registre o mesmo desconto novamente.')
+            if anterior:
+                if anterior[1] == quantia:
+                    continue
+                c.execute('UPDATE financeiro_lancamentos SET valor_centavos=? WHERE id=?', (quantia, anterior[0]))
+            else:
+                c.execute("""INSERT INTO financeiro_lancamentos(tipo,data,descricao,valor_centavos,meio,categoria,parcela,parcelas)
+                    VALUES('taxa',?,'Taxa das vendas no cartão',?,'Outro','Feira',1,1)""", (data, quantia))
+            alterados += 1
+        if not alterados:
+            raise ValueError('Nenhuma taxa nova ou alterada para salvar.')
+    return alterados
 
 
 def salvar_taxa_anual(ano, inicio, fim, valor, natureza='Confirmada', observacao=''):

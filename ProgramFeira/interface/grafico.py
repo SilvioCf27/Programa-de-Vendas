@@ -15,7 +15,7 @@ class GraficoEvolucao(ttk.Frame):
         seletor.pack(fill='x', pady=10)
         ttk.Label(seletor, text='Agrupar por', style='Surface.TLabel').pack(side='left', padx=(0, 10))
         ttk.Combobox(seletor, textvariable=self.tipo, values=('Mês', 'Fechamento'), state='readonly', width=16).pack(side='left')
-        ttk.Label(self, text='Usa os filtros aplicados em Vendas. Selecione Ano ou Todas as vendas para ver a evolução.\nAté 12 períodos consecutivos; sem registros é diferente de feira com valor zero. Fechamento: dia 10 ao dia 09 seguinte.', style='Muted.TLabel', wraplength=780).pack(anchor='w', pady=(0, 10))
+        ttk.Label(self, text='Usa os filtros aplicados em Vendas. Selecione Ano ou Todas as vendas para ver a evolução.\nAté 12 períodos consecutivos; sem registros é diferente de feira com valor zero. Fechamento segue a regra vigente de cada mês (inicialmente, 10 a 09).', style='Muted.TLabel', wraplength=780).pack(anchor='w', pady=(0, 10))
         self.linhas = ttk.Frame(self, style='Surface.TFrame')
         self.linhas.pack(fill='x')
         self.linhas.columnconfigure(1, weight=1)

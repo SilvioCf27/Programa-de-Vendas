@@ -247,6 +247,13 @@ a.janela.update()
 f = a.painel_financeiro
 f.tipo.set('Fechamento'); f.referencia.set('01/10/2026'); f.consultar()
 assert (f.inicio, f.fim) == ('2026-10-10', '2026-11-09')
+f.tipo.set('Semana'); f.referencia.set('02/01/2026'); f.consultar()
+assert (f.inicio, f.fim) == ('2025-12-29', '2026-01-04')
+a.janela.update()
+assert f.seletor_periodo.campos['semana'][1].winfo_viewable()
+f.tipo.set('Ano'); a.janela.update()
+assert not f.seletor_periodo.campos['mes'][1].winfo_viewable()
+f.tipo.set('Fechamento'); f.referencia.set('01/10/2026'); f.consultar()
 snapshot = a.relatorio_atual
 popup = f.formulario('despesa')
 corpo = popup.winfo_children()[0]
@@ -335,6 +342,7 @@ with patch('ProgramFeira.nuvem.ClienteNuvem.migrar', side_effect=resposta_migrac
     assert a.conexao_nuvem.preparacao is None
 assert len(a.listar_vendas()) == 9
 # Vínculo e recebimento passam pelo botão real; o servidor é fictício.
+patch('ProgramFeira.nuvem.ClienteNuvem.fechamentos', return_value={'versao': 0, 'historico': []}).start()
 from test_sincronizacao import Servidor
 servidor = Servidor(a.CAMINHO_BANCO)
 with patch('ProgramFeira.nuvem.ClienteNuvem.sincronizar', side_effect=servidor.sincronizar):

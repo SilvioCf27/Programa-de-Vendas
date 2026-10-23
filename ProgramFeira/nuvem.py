@@ -14,6 +14,10 @@ class ErroNuvem(ValueError):
     """Mensagem segura para exibição, sem respostas ou credenciais do serviço."""
 
 
+class FechamentoIndisponivel(ErroNuvem):
+    """A migração opcional de preferências ainda não foi instalada."""
+
+
 class ErroTemporario(ErroNuvem):
     """Rede ou serviço indisponível: permite uma nova tentativa com intervalo."""
 
@@ -135,6 +139,10 @@ class ClienteNuvem:
                 raise ErroNuvem('Há dados divergentes ou extras na nuvem.' + referencia + ' Nada foi substituído; migração interrompida.') from None
             if codigo == 'PFM02':
                 raise ErroNuvem('A nuvem recusou o formato dos dados. Migração interrompida.') from None
+            if codigo == 'PGRST202' and caminho.endswith(('/consultar_fechamentos', '/salvar_fechamento')):
+                raise FechamentoIndisponivel('Instale o SQL 005_fechamentos.sql no Supabase para configurar o fechamento.') from None
+            if codigo == '40001' and caminho.endswith('/salvar_fechamento'):
+                raise ErroNuvem('O fechamento mudou em outro dispositivo. Consulte novamente antes de salvar.') from None
             if codigo == 'PGRST202':
                 script = '004_sincronizacao.sql' if caminho.endswith('/sincronizar_desktop') else '003_migracao_desktop.sql'
                 raise ErroNuvem(f'Instale o SQL {script} no Supabase antes de continuar.') from None
@@ -179,6 +187,20 @@ class ClienteNuvem:
             'alteracoes': [] if alteracoes is None else alteracoes,
             'operacao_id': operacao_id,
         }, sessao.token)
+
+    def fechamentos(self, sessao):
+        from ProgramFeira.fechamento import validar
+        try:
+            return validar(self._post('/rest/v1/rpc/consultar_fechamentos', {}, sessao.token))
+        except (TypeError, KeyError, ValueError) as erro:
+            if isinstance(erro, ErroNuvem):
+                raise
+            raise ErroNuvem('A configuração de fechamento recebida é inválida. A regra local foi preservada.') from None
+
+    def salvar_fechamento(self, sessao, versao, vigencia, dia):
+        from ProgramFeira.fechamento import validar
+        return validar(self._post('/rest/v1/rpc/salvar_fechamento',
+            {'versao_esperada': versao, 'vigencia': vigencia, 'dia': dia}, sessao.token))
 
     @staticmethod
     def _sessao(dados, usuario_id, email, token):

@@ -320,11 +320,11 @@ class ConexaoNuvem:
         self.status.set(
             f"Sincronização concluída. Alterações enviadas: {resultado['enviadas']}; recebidas: {resultado['recebidas']}.\n"
             f"Vendas: {resultado['registros']['vendas']}. "
-            + (f"Backup: {resultado['backup']}\n" if resultado['backup'] else 'Nenhuma alteração; não foi necessário outro backup.\n')
+            + (f"Backup: {resultado['backup']}\n" if resultado['backup'] else 'Regra de fechamento recebida; cópia local anterior preservada.\n' if resultado.get('fechamento_alterado') else 'Nenhuma alteração; não foi necessário outro backup.\n')
             + self.aviso_sessao + ('A consulta automática continuará a cada minuto enquanto o programa estiver aberto e autenticado.' if self.automatico.get() else 'Modo manual: use Sincronizar agora depois de editar em qualquer dispositivo.')
         )
         try:
-            if self.ao_sincronizar and (not automatico or resultado['recebidas']):
+            if self.ao_sincronizar and (not automatico or resultado['recebidas'] or resultado.get('fechamento_alterado')):
                 self.ao_sincronizar()
         finally:
             # Uma falha de renderização não pode cancelar as próximas consultas.
@@ -393,6 +393,41 @@ class ConexaoNuvem:
         self._rodar(operacao, lambda r: self._concluiu_sincronizacao(*r),
             'Comparando versões, enviando e recebendo alterações… Aguarde sem fechar o programa.',
             ao_erro=self._falha_sincronizacao, travar=True)
+
+    def configurar_fechamento(self):
+        if self.ocupado:
+            return
+        if not self.sessao or not self.cliente:
+            messagebox.showinfo('Conectar a conta', 'Entre em Conexão com a nuvem para compartilhar a regra de fechamento com o PWA.', parent=self.janela)
+            return
+        cliente, sessao = self.cliente, self.sessao
+        from ProgramFeira import fechamento
+        def ler():
+            nova = cliente.garantir_sessao(sessao)
+            config = cliente.fechamentos(nova)
+            fechamento.guardar(self.pasta / 'vendas.db', config, cliente.url, nova.usuario_id)
+            return nova, config
+        def concluir(resultado):
+            nova, config = resultado
+            self.sessao = nova
+            from ProgramFeira.interface.configuracao_fechamento import ConfiguracaoFechamento
+            self.fechamento_popup = ConfiguracaoFechamento(self.janela, config, salvar)
+        def salvar(popup, versao, vigencia, dia):
+            def gravar():
+                nova = cliente.garantir_sessao(self.sessao)
+                config = cliente.salvar_fechamento(nova, versao, vigencia, dia)
+                fechamento.guardar(self.pasta / 'vendas.db', config, cliente.url, nova.usuario_id)
+                return nova
+            def pronto(nova):
+                self.sessao = nova
+                popup.destroy()
+                self.status.set('Regra de fechamento salva. O outro dispositivo a receberá na próxima consulta.')
+                if self.ao_sincronizar:
+                    self.ao_sincronizar()
+            self._rodar(gravar, pronto, 'Salvando a regra futura de fechamento…',
+                ao_erro=lambda erro: popup.ocupar(False, str(erro)), travar=True)
+        self._rodar(ler, concluir, 'Consultando o histórico de fechamentos…',
+            ao_erro=lambda erro: messagebox.showerror('Fechamento não configurado', str(erro), parent=self.janela))
 
     def alterar_automatico(self):
         try:

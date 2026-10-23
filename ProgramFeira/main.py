@@ -46,6 +46,8 @@ from ProgramFeira.database.banco import (
     )
 
 criar_tabela()
+from ProgramFeira import fechamento
+fechamento.carregar(CAMINHO_BANCO)
 inicializar_financeiro()
 
 relatorio_atual = None
@@ -55,8 +57,7 @@ ordenacao_decrescente = True
 
 venda_em_edicao = None
 
-# Dia final do período de fechamento. Altere somente este número se necessário.
-# Use um valor de 1 a 27. Com 9, o período vai do dia 10 ao dia 9 do mês seguinte.
+# Dia padrão para bancos sem histórico de regras. Novas vigências são configuradas pela interface.
 DIA_FECHAMENTO = 9
 
 MESES = {
@@ -179,7 +180,7 @@ def obter_filtros():
                 data_inicial = date(ano, mes, 1)
                 data_final = date(ano, mes, calendar.monthrange(ano, mes)[1])
             elif tipo == "Período de fechamento":
-                inicio, fim = fechamento_do_mes(ano, mes, DIA_FECHAMENTO)
+                inicio, fim = fechamento_do_mes(ano, mes)
                 data_inicial, data_final = date.fromisoformat(inicio), date.fromisoformat(fim)
 
     dias_semana = [
@@ -1010,6 +1011,7 @@ painel_analises = PainelAnalises(aba_analises)
 painel_analises.grid(row=0, column=0, sticky='nsew')
 painel_financeiro = PainelFinanceiro(abas, ao_alterar=conexao_nuvem.notificar_alteracao)
 abas.add(painel_financeiro, text='Finanças')
+painel_financeiro.ao_configurar_fechamento = conexao_nuvem.configurar_fechamento
 def alternar_pagina(evento):
     if evento.widget is not abas:
         return
@@ -1076,7 +1078,7 @@ filtro_mes.trace_add('write', lambda *args: selecionar_mes_filtro())
 filtro_fechamento.trace_add('write', lambda *args: sincronizar_filtros('fechamento'))
 linha_fechamento = ttk.Frame(frame_filtros, style='Surface.TFrame')
 linha_fechamento.grid(row=5, column=0, sticky='w', pady=(0, 10))
-ttk.Checkbutton(linha_fechamento, text='Fechamento 10 → 9', variable=filtro_fechamento).pack(side='left')
+ttk.Checkbutton(linha_fechamento, text='Período de fechamento', variable=filtro_fechamento).pack(side='left')
 botao_ajuda(linha_fechamento, 'fechamento').pack(side='left', padx=(5, 0))
 rotulo_com_ajuda(frame_filtros, 'Dias da semana', 'dias').grid(row=6, column=0, sticky='w')
 linha_dias = ttk.Frame(frame_filtros, style='Surface.TFrame')
@@ -1139,7 +1141,7 @@ tabela.bind('<Return>', editar_venda_selecionada)
 rodape = ttk.Frame(janela, padding=(24, 9))
 rodape.grid(row=4, column=0, sticky='ew')
 ttk.Label(rodape, text='Clique nos títulos para ordenar · Duplo clique para editar', style='Muted.TLabel').pack(side='left')
-ttk.Label(rodape, text='Dias zerados incluídos · Fechamento: 10 → 9', style='Muted.TLabel').pack(side='right')
+ttk.Label(rodape, text='Dias zerados incluídos · Fechamento conforme histórico', style='Muted.TLabel').pack(side='right')
 
 # Formulário separado: usa as mesmas ações de cadastro e edição.
 formulario = tk.Toplevel(janela)

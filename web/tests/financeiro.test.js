@@ -154,3 +154,24 @@ test('ajustes anuais validam cobertura e preservam natureza e versão', () => {
     assert.throws(() => anualFormulario({ ...f, ...alteracao }));
   assert.match(erroFinanceiro({ code: '23505' }), /ajuste anual/);
 });
+
+test('compra no dia do fechamento vai para a fatura seguinte', async () => {
+  const { primeiraFatura } = await import('../src/financeiro.js');
+  assert.equal(primeiraFatura('2026-09-08'), '2026-09-09');
+  assert.equal(primeiraFatura('2026-09-09'), '2026-10-09');
+  assert.equal(primeiraFatura('2026-12-09'), '2027-01-09');
+  assert.equal(primeiraFatura('2026-02-28', 31), '2026-03-31');
+  const r = lancamentoFormulario({ ...form(), data: primeiraFatura('2026-09-09'), parcelas: '3' });
+  assert.deepEqual(r.map(op => op.dados.data), ['2026-10-09', '2026-11-09', '2026-12-09']);
+});
+
+test('taxas semanais mantêm datas, editam as existentes e recusam histórico sobreposto', async () => {
+  const { taxasSemanaFormulario } = await import('../src/financeiro.js');
+  const existentes = [{ id: 'sexta', versao: 2, tipo: 'taxa', data: '2026-10-09', descricao: 'Taxa', valor_centavos: 100, meio: 'Outro', categoria: 'Feira', grupo: null, parcela: 1, parcelas: 1 }];
+  const ops = taxasSemanaFormulario('2026-10-05', { '2026-10-09': '2,00', '2026-10-11': '3,00' }, existentes, [], () => 'domingo');
+  assert.deepEqual(ops.map(op => [op.acao, op.dados.data, op.dados.valor_centavos]), [['editar', '2026-10-09', 200], ['inserir', '2026-10-11', 300]]);
+  assert.equal(ops[0].id, 'sexta');
+  assert.equal(ops[0].versao, 2);
+  assert.throws(() => taxasSemanaFormulario('2026-10-05', { '2026-10-11': '3,00' }, [], [{ inicio: '2026-01-01', fim: '2026-12-31' }]), /histórico/);
+  assert.throws(() => taxasSemanaFormulario('2026-10-05', { '2026-10-09': '0,00' }, existentes, []), /Excluir/);
+});

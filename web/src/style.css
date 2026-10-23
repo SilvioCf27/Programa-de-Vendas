@@ -373,7 +373,7 @@ fieldset {
   margin: 12px 0 18px;
 }
 .fin-filtros {
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 .financeiros {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -575,3 +575,10 @@ fieldset {
   background: var(--azul);
   border-radius: 8px;
 }
+
+.campo-data { margin: 0; padding: 12px; border: 1px solid var(--borda, #486b97); border-radius: 10px; min-width: 0; }
+.campos-data { display: grid; grid-template-columns: 65px minmax(90px, 1fr) 85px; gap: 8px; }
+.campos-data select, .campos-data input { min-width: 0; width: 100%; }
+.campo-data .nota { margin: 8px 0 0; }
+
+.campos-periodo { grid-template-columns: minmax(0, 1fr) minmax(90px, 1fr); }

@@ -9,6 +9,8 @@ function token() {
 async function preparar(page, { falharListagem = false } = {}) {
   const vendas = [];
   const financeiro = { lancamentos: [], anuais: [] };
+  const fechamentos = { versao: 0, historico: [] };
+  vendas.fechamentos = fechamentos;
   vendas.financeiro = financeiro;
   const recibos = new Set();
   await page.route('https://projeto-teste.supabase.co/**', async (route) => {
@@ -42,6 +44,14 @@ async function preparar(page, { falharListagem = false } = {}) {
       });
     if (url.pathname === '/auth/v1/logout')
       return route.fulfill({ status: 204, headers });
+    if (url.pathname === '/rest/v1/rpc/consultar_fechamentos') return responder(fechamentos);
+    if (url.pathname === '/rest/v1/rpc/salvar_fechamento') {
+      const body = request.postDataJSON();
+      if (body.versao_esperada !== fechamentos.versao) return responder({ code: '40001' }, 409);
+      fechamentos.historico = [...fechamentos.historico.filter(r => r.vigencia !== body.vigencia), { vigencia: body.vigencia, dia: body.dia }];
+      fechamentos.versao++;
+      return responder(fechamentos);
+    }
     if (url.pathname === '/rest/v1/rpc/usuario_autorizado')
       return responder(true);
     if (url.pathname === '/rest/v1/rpc/sincronizar_desktop') {
@@ -267,14 +277,27 @@ test('ao voltar ao celular atualiza os dados, preservando formulário em ediçã
   await expect(page.locator('#total')).toHaveText('R$ 4,00');
 });
 
+async function dataFinanceira(page, data) {
+  const [ano, mes, dia] = data.split('-');
+  await page.locator('#fin-data-ano').fill(ano);
+  await page.locator('#fin-data-ano').dispatchEvent('change');
+  await page.locator('#fin-data-mes').selectOption(String(Number(mes)));
+  await page.locator('#fin-data-dia').selectOption(String(Number(dia)));
+}
 async function consultarFinancas(
   page,
   tipo = 'Mês',
   referencia = '2030-10-01'
 ) {
   await page.locator('#fin-tipo').selectOption(tipo);
-  await page.locator('#fin-referencia').fill(referencia);
-  await page.locator('#fin-filtros button').click();
+  await page.locator('#fin-ano').fill(referencia.slice(0, 4));
+  await page.locator('#fin-ano').dispatchEvent('change');
+  if (tipo !== 'Ano') await page.locator('#fin-mes').selectOption(String(Number(referencia.slice(5, 7))));
+  if (tipo === 'Semana') {
+    const { limitesFinanceiros } = await import('../../src/financeiro.js');
+    await page.locator('#fin-semana').selectOption(limitesFinanceiros('Semana', referencia).inicio);
+  }
+  await page.locator('#fin-consultar').click();
   await expect(page.locator('#fin-status')).toContainText('Dados consultados');
 }
 test('finanças mostra saldo, semanas e ajustes estimados sem ratear taxa anual parcial', async ({
@@ -355,7 +378,7 @@ test('despesas parceladas: cria lote, edita e exclui somente a parcela escolhida
   await consultarFinancas(page, 'Ano');
   await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
   const f = page.locator('#fin-form');
-  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-31');
+  await dataFinanceira(page, '2030-10-31');
   await f.getByLabel('Descrição', { exact: true }).fill('Compra fictícia');
   await f.getByLabel('Valor de cada parcela ou lançamento').fill('123,45');
   await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
@@ -408,7 +431,7 @@ test('taxa diária sobreposta é recusada; ajuste anual pode ser editado e exclu
   await expect(page.locator('#fin-dados')).toBeVisible();
   await consultarFinancas(page, 'Ano');
   await page
-    .getByRole('button', { name: '+ Ajuste anual', exact: true })
+    .getByRole('button', { name: '+ Total histórico de taxas', exact: true })
     .click();
   const a = page.locator('#anual-form');
   await a.getByLabel('Ano do ajuste').fill('2030');
@@ -419,17 +442,15 @@ test('taxa diária sobreposta é recusada; ajuste anual pode ser editado e exclu
   await a.getByRole('button', { name: 'Salvar ajuste', exact: true }).click();
   await expect(page.locator('#fin-taxas')).toHaveText('R$ 50,01');
   await page
-    .getByRole('button', { name: '+ Taxa diária', exact: true })
+    .getByRole('button', { name: '+ Taxas da maquininha', exact: true })
     .click();
-  const f = page.locator('#fin-form');
-  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-01-15');
-  await f.getByLabel('Descrição', { exact: true }).fill('Taxa fictícia');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('1,00');
-  await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
-    .click();
-  await expect(page.locator('#fin-erro-form')).toContainText('ajuste anual');
-  await f.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await page.locator('#taxas-ano').fill('2030');
+  await page.locator('#taxas-ano').dispatchEvent('change');
+  await page.locator('#taxas-mes').selectOption('1');
+  await page.locator('#taxas-semana').selectOption('2030-01-14');
+  await expect(page.locator('#taxas-dias input[name="2030-01-15"]')).toBeDisabled();
+  await expect(page.locator('#taxas-dias')).toContainText('Incluída no histórico de 2030');
+  await page.locator('#taxas-cancelar').click();
   await page
     .locator('#fin-anuais')
     .getByRole('button', { name: 'Editar', exact: true })
@@ -452,7 +473,7 @@ test('resposta perdida retoma a operação após recarregar sem duplicar despesa
   await expect(page.locator('#fin-dados')).toBeVisible();
   await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
   const f = page.locator('#fin-form');
-  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-16');
+  await dataFinanceira(page, '2030-10-16');
   await f.getByLabel('Descrição', { exact: true }).fill('Teste de retomada');
   await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
   vendas.financeiro.perderResposta = true;
@@ -490,7 +511,7 @@ test('falha no armazenamento da confirmação impede enviar a despesa', async ({
   await expect(page.locator('#fin-dados')).toBeVisible();
   await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
   const f = page.locator('#fin-form');
-  await f.getByLabel('Data de pagamento ou vencimento').fill('2030-10-16');
+  await dataFinanceira(page, '2030-10-16');
   await f.getByLabel('Descrição', { exact: true }).fill('Teste sem envio');
   await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
   await page.evaluate(() => {
@@ -728,17 +749,19 @@ test('consulta lenta não aplica filtros digitados enquanto a resposta está che
     await expect(page.locator('#' + prefixo + '-status')).toContainText(
       'Consultando'
     );
-    await page.locator('#' + prefixo + '-referencia').fill('2001-01-10');
+    if (prefixo === 'fin') {
+      await page.locator('#fin-ano').fill('2001');
+      await page.locator('#fin-ano').dispatchEvent('change');
+    } else await page.locator('#ana-referencia').fill('2001-01-10');
     await expect(
-      page.locator('#' + prefixo + '-filtros button')
+      page.locator(prefixo === 'fin' ? '#fin-consultar' : '#ana-filtros button')
     ).toBeDisabled();
     liberar();
     await expect(page.locator('#' + prefixo + '-status')).not.toContainText(
       'Consultando'
     );
-    await expect(page.locator('#' + prefixo + '-referencia')).toHaveValue(
-      '2001-01-10'
-    );
+    if (prefixo === 'fin') await expect(page.locator('#fin-ano')).toHaveValue('2001');
+    else await expect(page.locator('#ana-referencia')).toHaveValue('2001-01-10');
     await expect(page.locator('#' + prefixo + '-periodo')).not.toContainText(
       '2001'
     );
@@ -819,4 +842,109 @@ test('falha na primeira consulta não gera exportação vazia como se tivesse si
   await expect(page.locator('#mensagem')).toHaveText(
     'Atualize a lista com sucesso antes de exportar os dados.'
   );
+});
+
+test('filtro financeiro adapta ano, mês e semanas completas sem escolher dia avulso', async ({ page }) => {
+  await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Semana', '2026-01-02');
+  await expect(page.locator('#fin-periodo')).toHaveText('29/12/2025 a 04/01/2026');
+  await expect(page.locator('#fin-semana')).toBeVisible();
+  await consultarFinancas(page, 'Mês', '2026-02-01');
+  await expect(page.locator('#fin-periodo')).toHaveText('01/02/2026 a 28/02/2026');
+  await expect(page.locator('#fin-semana')).toBeHidden();
+  await consultarFinancas(page, 'Ano', '2025-01-01');
+  await expect(page.locator('#fin-mes')).toBeHidden();
+  await expect(page.locator('#fin-periodo')).toHaveText('01/01/2025 a 31/12/2025');
+});
+
+test('data da despesa permanece ao preencher os outros campos e retornar ao PWA', async ({ page }) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Ano', '2030-01-01');
+  await page.getByRole('button', { name: '+ Despesa', exact: true }).click();
+  const f = page.locator('#fin-form');
+  await dataFinanceira(page, '2030-09-09');
+  await f.getByLabel('Descrição', { exact: true }).fill('Teste de preservação da data');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('18,50');
+  await f.getByLabel('Meio de pagamento').selectOption('Pix');
+  await page.evaluate(() => {
+    window.dispatchEvent(new Event('focus'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(page.locator('#fin-data-confirmada')).toContainText('09/09/2030');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-dialogo')).not.toBeVisible();
+  expect(vendas.financeiro.lancamentos.at(-1).data).toBe('2030-09-09');
+});
+
+test('taxas de sexta e domingo são salvas juntas e mantêm as datas ao cruzar fechamento', async ({ page }) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Ano', '2026-01-01');
+  await page.locator('#fin-taxa').click();
+  await page.locator('#taxas-ano').fill('2026');
+  await page.locator('#taxas-ano').dispatchEvent('change');
+  await page.locator('#taxas-mes').selectOption('10');
+  await page.locator('#taxas-semana').selectOption('2026-10-05');
+  await page.locator('#taxas-dias input[name="2026-10-09"]').fill('2,00');
+  await page.locator('#taxas-dias input[name="2026-10-11"]').fill('3,00');
+  await page.locator('#taxas-salvar').click();
+  await expect(page.locator('#taxas-dialogo')).not.toBeVisible();
+  expect(vendas.financeiro.lancamentos.map(r => [r.data, r.valor_centavos])).toEqual([['2026-10-09', 200], ['2026-10-11', 300]]);
+  await consultarFinancas(page, 'Fechamento', '2026-09-01');
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 2,00');
+  await consultarFinancas(page, 'Fechamento', '2026-10-01');
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 3,00');
+});
+
+test('desktop web: comprar no dia 09 calcula próxima fatura somente ao pedir', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Ano', '2026-01-01');
+  await page.locator('#fin-despesa').click();
+  const f = page.locator('#fin-form');
+  await dataFinanceira(page, '2026-09-09');
+  await f.getByLabel('Descrição', { exact: true }).fill('Compra de exemplo em 3 vezes');
+  await f.getByLabel('Valor de cada parcela ou lançamento').fill('30,00');
+  await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
+  await f.getByLabel('Quantidade de parcelas').fill('3');
+  await expect(page.locator('#fin-data-confirmada')).toContainText('09/09/2026');
+  await page.locator('#fin-calcular-fatura').click();
+  await expect(page.locator('#fin-previa')).toContainText('09/10/2026 · 09/11/2026 · 09/12/2026');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-dialogo')).not.toBeVisible();
+  expect(vendas.financeiro.lancamentos.map(r => r.data)).toEqual(['2026-10-09', '2026-11-09', '2026-12-09']);
+});
+
+test('fechamento futuro é compartilhado e os períodos antigos continuam iguais', async ({ page }) => {
+  const dados = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Fechamento', '2090-10-01');
+  await expect(page.locator('#fin-periodo')).toHaveText('10/10/2090 a 09/11/2090');
+  await page.locator('#fin-configurar-fechamento').click();
+  await expect(page.locator('#fechamento-erro')).not.toContainText('Consultando');
+  await page.locator('#fechamento-ano').fill('2090');
+  await page.locator('#fechamento-mes').selectOption('11');
+  await page.locator('#fechamento-dia').selectOption('14');
+  await expect(page.locator('#fechamento-previa')).toContainText('10/10/2090 a 14/11/2090');
+  await page.locator('#fechamento-salvar').click();
+  await expect(page.locator('#fechamento-dialogo')).not.toBeVisible();
+  await expect(page.locator('#fin-periodo')).toHaveText('10/10/2090 a 14/11/2090');
+  expect(dados.fechamentos.versao).toBe(1);
+  await consultarFinancas(page, 'Fechamento', '2090-09-01');
+  await expect(page.locator('#fin-periodo')).toHaveText('10/09/2090 a 09/10/2090');
+  await consultarFinancas(page, 'Fechamento', '2090-11-01');
+  await expect(page.locator('#fin-periodo')).toHaveText('15/11/2090 a 14/12/2090');
+  await page.getByRole('button', { name: 'Vendas', exact: true }).click();
+  await page.locator('#tipo').selectOption('Fechamento');
+  await page.locator('#ano').fill('2090'); await page.locator('#mes').selectOption('10');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#periodo')).toHaveText('10/10/2090 a 14/11/2090');
 });

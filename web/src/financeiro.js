@@ -1,7 +1,22 @@
+import { diaNoMes } from './fechamento.js';
 import { centavos, dataValida, periodo, resumo } from './regras.js';
 export const MEIOS = ['Dinheiro', 'Pix', 'Cartão de crédito', 'Outro'];
 export const CATEGORIAS = ['Casa', 'Feira', 'Outros', 'Compromisso inicial'];
 const iso = (d) => d.toISOString().slice(0, 10);
+export function primeiraFatura(compra, fechamento = null) {
+  if (!dataValida(compra) || (fechamento !== null && (!Number.isInteger(fechamento) || fechamento < 1 || fechamento > 31)))
+    throw Error('Confira a data da compra e o dia de fechamento.');
+  const d = new Date(compra + 'T12:00:00Z');
+  const ultimo = new Date(d); ultimo.setUTCMonth(ultimo.getUTCMonth() + 1, 0);
+  const atual = new Date(d); atual.setUTCDate(Math.min(fechamento ?? diaNoMes(d.getUTCFullYear(), d.getUTCMonth() + 1), ultimo.getUTCDate()));
+  if (d < atual) return iso(atual);
+  d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() + 1);
+  ultimo.setTime(+d); ultimo.setUTCMonth(ultimo.getUTCMonth() + 1, 0);
+  d.setUTCDate(Math.min(fechamento ?? diaNoMes(d.getUTCFullYear(), d.getUTCMonth() + 1), ultimo.getUTCDate()));
+  const resultado = iso(d);
+  if (!dataValida(resultado)) throw Error('A fatura ultrapassa o limite de datas.');
+  return resultado;
+}
 export function limitesFinanceiros(tipo, referencia) {
   if (!dataValida(referencia))
     throw Error('Informe uma data de referência válida.');
@@ -183,3 +198,31 @@ export const recusaConfirmada = (erro) =>
     'PFS02',
     '42501',
   ].includes(erro?.code);
+
+export function taxasSemanaFormulario(inicio, valores, existentes, anuais, uuid = () => crypto.randomUUID()) {
+  if (!dataValida(inicio) || limitesFinanceiros('Semana', inicio).inicio !== inicio)
+    throw Error('Escolha uma semana de segunda a domingo.');
+  const datas = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(inicio + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + i); return iso(d);
+  });
+  if (Object.keys(valores).some(data => !datas.includes(data))) throw Error('Há uma data fora da semana.');
+  const ops = [];
+  for (const data of datas) {
+    const texto = String(valores[data] ?? '').trim();
+    if (!texto) continue;
+    const valor = centavos(texto);
+    const anterior = existentes.find(r => r.tipo === 'taxa' && r.data === data);
+    if (!valor) {
+      if (anterior) throw Error('Para remover uma taxa existente, use Excluir no lançamento.');
+      continue;
+    }
+    if (anuais.some(a => a.inicio <= data && a.fim >= data))
+      throw Error('Esta data já está incluída em um total histórico de taxas. Não registre o mesmo desconto novamente.');
+    if (anterior && Number(anterior.valor_centavos) === valor) continue;
+    ops.push(...lancamentoFormulario({ tipo: 'taxa', data, valor: texto,
+      descricao: anterior?.descricao || 'Taxa das vendas no cartão',
+      meio: anterior?.meio || 'Outro', categoria: anterior?.categoria || 'Feira', parcelas: '1' }, anterior, uuid));
+  }
+  if (!ops.length) throw Error('Nenhuma taxa nova ou alterada para salvar. Preencha os dias em que houve desconto.');
+  return ops;
+}

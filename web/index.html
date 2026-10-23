@@ -210,8 +210,7 @@
             <p class="nota">
               Usa a seleção aplicada acima. Escolha Ano ou Todas as vendas para
               ver a evolução. Mostra até 12 períodos consecutivos; “sem
-              registros” é diferente de um dia de feira zerado. Fechamento: dia
-              10 ao dia 09 seguinte.
+              registros” é diferente de um dia de feira zerado. Fechamento segue a regra vigente de cada mês; inicialmente, dia 10 ao dia 09 seguinte.
             </p>
             <ul
               id="ana-evolucao"
@@ -262,8 +261,7 @@
             <h3>Comparar A e B</h3>
             <p class="nota">
               Compare duas datas, meses, fechamentos ou intervalos. No
-              fechamento, o mês escolhido começa no dia 10 e termina no dia 09
-              do mês seguinte. Escolha mês e ano como no computador.
+              fechamento, o mês escolhido segue a regra histórica (inicialmente, dia 10 ao dia 09 seguinte). Confira as datas exibidas. Escolha mês e ano como no computador.
             </p>
             <form id="cmp-form">
               <div class="comparadores">
@@ -378,13 +376,12 @@
                 <option>Ano</option>
               </select></label
             >
-            <label
-              >Data de referência<input
-                id="fin-referencia"
-                type="date"
-                required
-            /></label>
-            <button type="submit">Consultar finanças</button>
+            <label>Ano<input id="fin-ano" type="number" min="1900" max="9998" required /></label>
+            <label id="fin-mes-rotulo">Mês<select id="fin-mes"></select></label>
+            <label id="fin-semana-rotulo" hidden>Semana (segunda a domingo)<select id="fin-semana"></select></label>
+            <input id="fin-referencia" type="hidden" />
+            <button id="fin-consultar" type="submit">Consultar finanças</button>
+            <button id="fin-configurar-fechamento" type="button">Configurar fechamento</button>
             <p id="fin-periodo" class="nota"></p>
           </form>
           <p id="fin-status" role="status" class="nota"></p>
@@ -473,8 +470,7 @@
             <p id="fin-aviso" class="aviso"></p>
             <div class="acoes acoes-financeiras">
               <button id="fin-despesa" class="primario">+ Despesa</button
-              ><button id="fin-taxa">+ Taxa diária</button
-              ><button id="fin-anual">+ Ajuste anual</button>
+              ><button id="fin-taxa">+ Taxas da maquininha</button>
             </div>
             <section class="historico">
               <h2>Lançamentos do período</h2>
@@ -499,10 +495,10 @@
               <ul id="fin-semanas" aria-label="Despesas semanais"></ul>
             </section>
             <section class="historico">
-              <h2>Ajustes anuais de taxas</h2>
+              <h2>Histórico de taxas já consolidadas (opcional)</h2>
+              <button id="fin-anual">+ Total histórico de taxas</button>
               <p class="nota introducao">
-                Todos os anos cadastrados, independentemente do filtro. Valores
-                estimados continuam identificados.
+                Use esta área apenas para totais antigos já consolidados. Para as vendas novas, prefira Taxas da maquininha e preencha os dias da semana. Os totais históricos existentes são preservados; não registre novamente taxas já incluídas neles.
               </p>
               <ul id="fin-anuais" aria-label="Ajustes anuais"></ul>
             </section>
@@ -562,12 +558,16 @@
       <form id="fin-form" method="post">
         <h2 id="fin-titulo-form">Nova despesa</h2>
         <input name="tipo" type="hidden" />
-        <label
-          >Data de pagamento ou vencimento<input
-            name="data"
-            type="date"
-            required
-        /></label>
+        <fieldset class="campo-data">
+          <legend id="fin-data-titulo">Data de pagamento ou vencimento</legend>
+          <input name="data" type="hidden" />
+          <div class="campos-data">
+            <label>Dia<select id="fin-data-dia" required></select></label>
+            <label>Mês<select id="fin-data-mes" required></select></label>
+            <label>Ano<input id="fin-data-ano" type="number" min="1900" max="9998" required /></label>
+          </div>
+          <p id="fin-data-confirmada" class="nota" aria-live="polite"></p>
+        </fieldset>
         <label
           >Descrição<input name="descricao" maxlength="200" required
         /></label>
@@ -603,6 +603,8 @@
             value="1"
             required
         /></label>
+        <button id="fin-calcular-fatura" type="button" hidden>Esta é a data da compra? Calcular primeira fatura</button>
+        <p id="fin-previa" class="nota" aria-live="polite"></p>
         <p id="fin-ajuda-form" class="nota">
           Para parcelar, escolha Cartão de crédito. O valor é de cada parcela. A
           data é o primeiro vencimento; os próximos serão mensais. Um
@@ -616,9 +618,42 @@
         </div>
       </form>
     </dialog>
+    <dialog id="fechamento-dialogo">
+      <form id="fechamento-form" method="post">
+        <h2>Configurar fechamento</h2>
+        <p class="nota">Fechamento é diferente do prazo para pagar a fatura. A nova regra só pode começar em um mês futuro; os períodos já encerrados serão preservados. Use a versão atualizada no PC e no PWA.</p>
+        <label>Dia de fechamento<select id="fechamento-dia"></select></label>
+        <div class="campos-data campos-periodo">
+          <label>Primeira fatura com a nova regra<select id="fechamento-mes"></select></label>
+          <label>Ano<input id="fechamento-ano" type="number" min="1900" max="9998" required /></label>
+        </div>
+        <p id="fechamento-previa" class="nota" aria-live="polite"></p>
+        <p class="nota">Um dia inexistente no mês usa o último dia. A mudança pode alongar ou encurtar o período ainda aberto. Valores e parcelas já cadastrados não são movidos: confira os vencimentos futuros.</p>
+        <h3>Histórico preservado</h3><ul id="fechamento-historico"></ul>
+        <p id="fechamento-erro" role="alert"></p>
+        <div class="acoes"><button id="fechamento-cancelar" type="button">Cancelar</button><button id="fechamento-salvar" class="primario">Salvar nova regra</button></div>
+      </form>
+    </dialog>
+    <dialog id="taxas-dialogo">
+      <form id="taxas-form" method="post">
+        <h2>Taxas da maquininha por semana</h2>
+        <p class="nota">Informe os descontos nas vendas no cartão de cada dia. Preencha sexta e domingo juntos, ou outros dias em que vendeu. Não são juros ou gastos do cartão de compras.</p>
+        <select id="taxas-tipo" hidden><option>Semana</option></select>
+        <div class="campos-data campos-periodo">
+          <label>Ano<input id="taxas-ano" type="number" min="1900" max="9998" required /></label>
+          <label id="taxas-mes-rotulo">Mês<select id="taxas-mes"></select></label>
+        </div>
+        <label id="taxas-semana-rotulo">Semana<select id="taxas-semana"></select></label>
+        <input id="taxas-referencia" type="hidden" />
+        <div id="taxas-dias"></div>
+        <p class="nota">Cada taxa fica na data da venda, mesmo quando a semana cruza um mês ou fechamento. Campos vazios mantêm o que já estava cadastrado. Use Excluir para remover uma taxa.</p>
+        <p id="taxas-erro-form" role="alert"></p>
+        <div class="acoes"><button id="taxas-cancelar" type="button">Cancelar</button><button id="taxas-salvar" class="primario">Salvar taxas da semana</button></div>
+      </form>
+    </dialog>
     <dialog id="anual-dialogo">
       <form id="anual-form" method="post">
-        <h2 id="anual-titulo-form">Ajuste anual de taxas</h2>
+        <h2 id="anual-titulo-form">Total histórico das taxas de cartão</h2>
         <label
           >Ano do ajuste<input
             name="ano"
@@ -646,7 +681,7 @@
         >
         <label>Observação<input name="observacao" /></label>
         <p class="nota">
-          Use o valor total das taxas do intervalo, sem somar taxas diárias já
+          Use o valor total das taxas do intervalo, sem somar novamente taxas da maquininha já
           cadastradas na mesma cobertura. O ajuste só é descontado quando o
           filtro inclui todo o intervalo.
         </p>

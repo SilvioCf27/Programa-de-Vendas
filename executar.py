@@ -45,6 +45,17 @@ def verificar_pacote(relatorio):
                 banco.cadastrar_venda('2035-01-01', 10, 20, 30)
                 assert banco.buscar_venda_por_data('2035-01-01')[2:] == (10, 20, 30)
                 financeiro.salvar_lancamento('despesa', '2035-01-01', 'Teste do pacote', '12,34')
+                assert financeiro.primeira_fatura('2035-01-09') == '2035-02-09'
+                popup_taxas = app.painel_financeiro.formulario_taxas()
+                app.janela.update()
+                assert len(popup_taxas.campos_taxas) == 7
+                popup_taxas.destroy()
+                from ProgramFeira.interface.configuracao_fechamento import ConfiguracaoFechamento
+                popup_fechamento = ConfiguracaoFechamento(app.janela, {'versao': 0, 'historico': []}, lambda *args: None)
+                app.janela.update()
+                assert popup_fechamento.previa.get()
+                popup_fechamento.destroy()
+
                 destino = Path(pasta) / 'Drive-teste'
                 destino.mkdir()
                 copia = backup_drive.executar(banco.CAMINHO_BANCO, backup_drive.configurar(banco.CAMINHO_BANCO, destino))
@@ -78,7 +89,7 @@ def verificar_pacote(relatorio):
                 from ProgramFeira.interface.conflitos import descrever
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
-                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True,
+                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True, taxas_semanais=True, fechamento_configuravel=True,
                                  banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()

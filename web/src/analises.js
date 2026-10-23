@@ -1,3 +1,4 @@
+import { diaNoMes } from './fechamento.js';
 import { dataValida, periodo, resumo } from './regras.js';
 
 export const formas = ['Dinheiro', 'Pix', 'Cartão'];
@@ -25,7 +26,9 @@ export function limitesAnalise(tipo, referencia, fim = '') {
 export function anterior(tipo, selecao) {
   if (!selecao.inicio || !['Mês', 'Ano', 'Fechamento'].includes(tipo))
     return null;
-  const [ano, mes] = selecao.inicio.split('-').map(Number);
+  const inicio = new Date(selecao.inicio + 'T12:00:00Z');
+  if (tipo === 'Fechamento') inicio.setUTCDate(inicio.getUTCDate() - 1);
+  const [ano, mes] = inicio.toISOString().slice(0, 10).split('-').map(Number);
   return tipo === 'Ano'
     ? periodo('Ano', ano - 1, 1)
     : periodo(tipo, mes === 1 ? ano - 1 : ano, mes === 1 ? 12 : mes - 1);
@@ -67,7 +70,7 @@ export function evolucao(vendas, tipo = 'Mês') {
   const grupos = new Map();
   for (const r of vendas) {
     let [ano, mes, dia] = r.data.split('-').map(Number);
-    if (tipo === 'Fechamento' && dia <= 9) {
+    if (tipo === 'Fechamento' && dia <= diaNoMes(ano, mes)) {
       mes--;
       if (!mes) {
         mes = 12;

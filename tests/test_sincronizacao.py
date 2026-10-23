@@ -389,3 +389,16 @@ class SincronizacaoTests(unittest.TestCase):
         self.assertEqual(self.sql('select valor_centavos from financeiro_lancamentos'),[(2222,)])
         self.assertEqual(self.sql('select valor_centavos from financeiro_taxas_anuais'),[(900,)])
         self.assertEqual(self.servidor.dados['financeiro_lancamentos'][despesa['id']]['valor_centavos'],2222)
+
+    def test_regra_compartilhada_e_recebida_sem_alterar_valores_das_vendas(self):
+        from ProgramFeira import fechamento
+        self.executar()
+        antes = self.sql('select * from vendas order by id')
+        self.servidor.fechamentos = lambda sessao: {'versao': 1, 'historico': [{'vigencia': '2090-11-01', 'dia': 14}]}
+        try:
+            r = self.executar()
+            self.assertTrue(r['fechamento_alterado'])
+            self.assertEqual(self.sql('select * from vendas order by id'), antes)
+            self.assertEqual(fechamento.periodo(2090, 11), ('2090-11-15', '2090-12-14'))
+        finally:
+            fechamento.definir({'versao': 0, 'historico': []})

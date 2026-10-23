@@ -21,8 +21,13 @@ A aba **Vendas** mostra valores brutos. A aba **Finanças** desconta as taxas e 
 O código atual oferece cinco temas: **Noite, Claro, Grafite, Areia escura e Aurora**.
 Escolha no botão **Tema**; a preferência fica salva neste computador. Os cartões
 mostram a participação de cada pagamento, e as barras de rolagem do histórico e
-dos filtros aparecem apenas quando necessárias. Essas mudanças ainda não estão
-no executável v1.2.2 disponível em Releases.
+dos filtros aparecem apenas quando necessárias. Essas mudanças estão incluídas no executável **v1.3.0**.
+
+## Conheça a interface
+
+As capturas abaixo usam somente exemplos fictícios. Veja [a galeria completa](docs/INTERFACE.md) para conhecer as análises, a comparação de períodos, as finanças e os temas.
+
+![Vendas no tema Grafite](docs/imagens/vendas-grafite.png)
 
 ## Onde estão os dados
 
@@ -52,7 +57,7 @@ Para atualizar o código, feche o programa e execute `git pull --ff-only`. Um ex
 
 ## Versão para celular — em desenvolvimento
 
-A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões automaticamente a cada minuto enquanto estiver aberto e autenticado, ou pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. A aba Análises mostra pagamentos e dias da semana, além de comparar datas, meses, fechamentos e intervalos. A tela web consulta a nuvem automaticamente a cada minuto enquanto estiver visível, preservando formulários e filtros em preparação. O executável Windows v1.2.2 inclui a integração com a nuvem e a recuperação da sessão protegida.
+A PWA está em `web/`, com login pessoal, vendas e finanças online. O código atualizado do desktop permite migrar os dados e sincronizar inclusões, edições e exclusões automaticamente a cada minuto enquanto estiver aberto e autenticado, ou pelo botão **Sincronizar agora**, com backup e proteção contra conflitos. Configure seu próprio projeto Supabase e a hospedagem no Cloudflare Pages. A aba Finanças permite consultar saldo, despesas, parcelas e taxas. A aba Análises mostra pagamentos e dias da semana, além de comparar datas, meses, fechamentos e intervalos. A tela web consulta a nuvem automaticamente a cada minuto enquanto estiver visível, preservando formulários e filtros em preparação. O executável Windows v1.3.0 inclui a integração com a nuvem e a recuperação da sessão protegida.
 
 O guia de configuração e os limites desta etapa estão em [CELULAR.md](docs/CELULAR.md).
 

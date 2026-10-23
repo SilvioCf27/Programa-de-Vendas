@@ -29,11 +29,11 @@ PALETAS = {
 NOMES_TEMAS = {'escuro': 'Noite', 'claro': 'Claro', 'grafite': 'Grafite', 'areia': 'Areia'}
 PALETAS['grafite'] = {
     'fundo': '#171A20', 'superficie': '#232830', 'texto': '#F0F2F5',
-    'muted': '#B5BDC9', 'borda': '#414953', 'azul': '#9CCFC7',
-    'azul_hover': '#32776C', 'verde': '#90D9B5', 'vermelho': '#FFA5AD',
+    'muted': '#B5BDC9', 'borda': '#414953', 'azul': '#42D5AD',
+    'azul_hover': '#159B7B', 'verde': '#42D5AD', 'vermelho': '#FFA5AD',
     'hover': '#333D46', 'disabled': '#89939F', 'cabecalho': '#2D343D',
-    'selecionado': '#34544F', 'texto_selecionado': '#FFFFFF', 'alternada': '#292F38',
-    'aviso': '#F2CA87', 'botao': '#286E63', 'botao_hover': '#348276', 'scroll': '#59636E',
+    'selecionado': '#174C40', 'texto_selecionado': '#FFFFFF', 'alternada': '#292F38',
+    'aviso': '#F2CA87', 'botao': '#148568', 'botao_hover': '#159B7B', 'scroll': '#59636E',
 }
 PALETAS['areia'] = {
     'fundo': '#201B17', 'superficie': '#2D2620', 'texto': '#F5EBDD',
@@ -44,12 +44,12 @@ PALETAS['areia'] = {
     'aviso': '#EBC681', 'botao': '#986131', 'botao_hover': '#AD7340', 'scroll': '#79624E',
 }
 PALETAS['aurora'] = {
-    'fundo': '#191625', 'superficie': '#262137', 'texto': '#F3EFFB',
+    'fundo': '#191322', 'superficie': '#261C32', 'texto': '#F3EFFB',
     'muted': '#BCB2D2', 'borda': '#4B405F', 'azul': '#C5ACFA',
-    'azul_hover': '#8654C2', 'verde': '#91D4BD', 'vermelho': '#FFABB9',
+    'azul_hover': '#6B1698', 'verde': '#91D4BD', 'vermelho': '#FFABB9',
     'hover': '#39304D', 'disabled': '#9D8EB4', 'cabecalho': '#302940',
-    'selecionado': '#53406F', 'texto_selecionado': '#FFFFFF', 'alternada': '#2C263C',
-    'aviso': '#EFCC92', 'botao': '#7548AC', 'botao_hover': '#895DC1', 'scroll': '#716085',
+    'selecionado': '#52057B', 'texto_selecionado': '#FFFFFF', 'alternada': '#2C263C',
+    'aviso': '#EFCC92', 'botao': '#52057B', 'botao_hover': '#6B1698', 'scroll': '#716085',
 }
 NOMES_TEMAS['aurora'] = 'Aurora'
 CORES = dict(PALETAS['claro'])

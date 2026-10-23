@@ -10,12 +10,17 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.2.2
+## Versão 1.3.0
 
-As funções antes reunidas em Dados ficam em **Configurações**, pela engrenagem
-na tela principal. Cada opção tem uma dica breve em **?**, exibida ao passar o mouse.
-A verificação se chama **Verificar integridade do backup** e deixa claro que não
-altera os dados em uso. Tema, exportação e Nova venda mantêm suas posições.
+A interface ganhou cinco temas, cartões com participação dos pagamentos, abas
+mais espaçadas e barras de rolagem discretas, exibidas somente quando necessárias
+no histórico e nos filtros. O tema Grafite usa verde esmeralda; Aurora tem roxo
+`#52057B` nas ações principais. As cores dos indicadores distinguem as formas de
+pagamento em todos os temas.
+
+O programa reutiliza os desenhos dos ícones e contornos para abrir mais rápido.
+Vendas, análises, finanças, sincronização e backups mantêm suas funções. Veja
+[as capturas da interface](INTERFACE.md).
 
 ## Recursos da versão 1.2.0
 
@@ -73,3 +78,7 @@ py -3.11 tools/gerar_executavel.py
 A automação **Executavel Windows**, na aba Actions, gera o pacote em um Windows x64, executa os testes e verifica cadastro, despesas, backup, fontes e exportação CSV/Excel dentro do executável, com um banco temporário. Um pacote reprovado não é publicado.
 
 Em atualizações da branch `main`, o ZIP aprovado aparece em **Artifacts → GestaoDaFeira-Windows-x64** da execução correspondente; pode ser necessário estar conectado ao GitHub para baixar. Esse download contém o ZIP do programa e os relatórios. Em tags de versão `v*`, a automação também publica o ZIP em Releases, após a aprovação dos testes. A execução manual está disponível em **Actions → Executavel Windows → Run workflow**.
+
+Após publicar uma versão, a automação baixa novamente o ZIP e os relatórios,
+confere o SHA-256 e a versão testada e registra o resultado na tag anotada
+`validacao/vX.Y.Z`. Esse registro só aparece depois da conferência do download.

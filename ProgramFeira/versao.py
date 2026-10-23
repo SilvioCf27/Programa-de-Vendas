@@ -1,2 +1,2 @@
 """Versão exibida no aplicativo e nos registros de diagnóstico."""
-VERSAO = '1.2.2'
+VERSAO = '1.3.0'

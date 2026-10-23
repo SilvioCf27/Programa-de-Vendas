@@ -9,7 +9,8 @@ import traceback
 
 def verificar_pacote(relatorio):
     # O teste do binário nunca usa o banco pessoal, nem o caminho do ambiente.
-    resultado = {'sucesso': False, 'plataforma': sys.platform, 'empacotado': bool(getattr(sys, 'frozen', False))}
+    from ProgramFeira.versao import VERSAO
+    resultado = {'versao': VERSAO, 'sucesso': False, 'plataforma': sys.platform, 'empacotado': bool(getattr(sys, 'frozen', False))}
     try:
         with tempfile.TemporaryDirectory(prefix='gestao-feira-pacote-') as pasta:
             os.environ['PROGRAMFEIRA_DATA_DIR'] = pasta
@@ -22,6 +23,10 @@ def verificar_pacote(relatorio):
                 tk.Tk.mainloop = original
             try:
                 app.janela.update()
+                for tema in ('claro', 'escuro', 'grafite', 'areia', 'aurora'):
+                    app.alternar_tema(tema)
+                    app.janela.update()
+                    assert app.tema_atual.get() == tema
                 configuracoes = app.abrir_configuracoes()
                 app.janela.update()
                 assert len(configuracoes.acoes) == 7
@@ -73,7 +78,7 @@ def verificar_pacote(relatorio):
                 from ProgramFeira.interface.conflitos import descrever
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
-                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True,
+                                 cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True,
                                  banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()

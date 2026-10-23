@@ -8,6 +8,18 @@ export function criarApi(cliente) {
     definirFechamentos(config);
     return config;
   }
+  async function sincronizar(lote) {
+    const corpo = { ...lote, alteracoes: lote.alteracoes.map(op => op.tabela === 'financeiro_lancamentos' && op.dados && op.dados.data_compra == null
+      ? { ...op, dados: Object.fromEntries(Object.entries(op.dados).filter(([k]) => k !== 'data_compra')) } : op) };
+    let resposta = await cliente.rpc('sincronizar_desktop_v2', corpo);
+    if (resposta.error?.code === 'PGRST202') {
+      if (corpo.alteracoes.some(op => op.dados?.data_compra))
+        throw { code: 'PGRST202' };
+      resposta = await cliente.rpc('sincronizar_desktop', corpo);
+    }
+    if (resposta.error) throw resposta.error;
+    return resposta.data;
+  }
   return {
     fechamentos: lerFechamentos,
     async salvarFechamento(versao, vigencia, dia) {
@@ -36,13 +48,12 @@ export function criarApi(cliente) {
       }
     },
     async financeiro() {
-      const { data, error } = await cliente.rpc('sincronizar_desktop', {
+      const data = await sincronizar({
         alteracoes: [],
         operacao_id: null,
       });
-      if (error) throw error;
       if (
-        data?.protocolo !== 1 ||
+        ![1,2].includes(data?.protocolo) ||
         !['vendas', 'financeiro_lancamentos', 'financeiro_taxas_anuais'].every(
           (t) => Array.isArray(data?.dados?.[t])
         )
@@ -51,9 +62,8 @@ export function criarApi(cliente) {
       return data.dados;
     },
     async aplicarFinanceiro(lote) {
-      const { data, error } = await cliente.rpc('sincronizar_desktop', lote);
-      if (error) throw error;
-      if (data?.protocolo !== 1 || data.operacao_id !== lote.operacao_id)
+      const data = await sincronizar(lote);
+      if (![1,2].includes(data?.protocolo) || data.operacao_id !== lote.operacao_id)
         throw Error('Envio não confirmado.');
       return data;
     },

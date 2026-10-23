@@ -19,6 +19,7 @@ def gerar():
     for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md'):
         shutil.copy2(ROOT / 'docs' / guia, pasta / guia)
     shutil.copy2(ROOT / 'supabase/migrations/005_fechamentos.sql', pasta / 'SQL_005_FECHAMENTOS.sql')
+    shutil.copy2(ROOT / 'supabase/migrations/006_datas_compras.sql', pasta / 'SQL_006_DATAS_COMPRAS.sql')
     shutil.copytree(ROOT / 'docs/imagens', pasta / 'imagens', dirs_exist_ok=True)
     relatorio = ROOT / 'dist/VALIDACAO_WINDOWS.json'
     # Popen é necessário: Python pode não aguardar processos GUI no Windows

@@ -117,7 +117,7 @@ test('consulta financeira usa snapshot único e recusa respostas incompletas', a
   });
   assert.deepEqual(await api.financeiro(), dados);
   assert.deepEqual(chamadas, [
-    ['sincronizar_desktop', { alteracoes: [], operacao_id: null }],
+    ['sincronizar_desktop_v2', { alteracoes: [], operacao_id: null }],
   ]);
   const incompleta = criarApi({
     rpc: async () => ({ data: { protocolo: 1, dados: { vendas: [] } } }),
@@ -140,4 +140,16 @@ test('lote financeiro mantém identificador de retomada e verifica confirmação
     rpc: async () => ({ data: { protocolo: 1, operacao_id: 'outro' } }),
   });
   await assert.rejects(incorreta.aplicarFinanceiro(lote), /não confirmado/);
+});
+
+test('sem SQL 006 consulta legada continua e compra nova é recusada sem perder sua data', async () => {
+  const chamadas=[];
+  const api = criarApi({rpc:async(nome,corpo)=> {
+    chamadas.push([nome,corpo]);
+    return nome.endsWith('_v2') ? {error:{code:'PGRST202'}} : {data:{protocolo:1,dados:{vendas:[],financeiro_lancamentos:[],financeiro_taxas_anuais:[]}}};
+  }});
+  assert.deepEqual((await api.financeiro()).vendas,[]);
+  assert.equal(chamadas.length,2);
+  await assert.rejects(api.aplicarFinanceiro({operacao_id:'nova',alteracoes:[{tabela:'financeiro_lancamentos',dados:{data_compra:'2026-10-09'}}]}),e=>e.code==='PGRST202');
+  assert.equal(chamadas.length,3);
 });

@@ -276,7 +276,7 @@ sua cobertura inteira cabe no filtro. Um recorte parcial recebe aviso de saldo
 provisório, sem ratear ou inventar taxas. Ajustes estimados continuam identificados.
 A lista de ajustes mostra todos os anos, mesmo quando o resumo usa outro período.
 
-Para despesas parceladas, informe o primeiro vencimento, o **valor total da compra**
+Para despesas parceladas, informe a data da compra, o **valor total da compra**
 e a quantidade, usando Cartão de crédito. Os vencimentos seguintes são mensais;
 quando o dia não existe no mês, usa o último dia disponível e retorna ao dia
 original nos meses seguintes. O lote é gravado numa única transação. Editar uma linha abre a compra completa e recalcula todas as parcelas. Excluir continua removendo somente a parcela selecionada.
@@ -397,6 +397,6 @@ A barra é proporcional ao total bruto, e os valores e quantidades também estã
 escritos. Um período sem registros não é tratado como um dia de feira zerado.
 A revisão de conflitos está disponível no desktop em Conexão com a nuvem.
 
-## Atualização financeira 1.5.0
+## Atualização financeira 1.6.0
 
 Datas explícitas, filtros adaptativos e taxas semanais usam as tabelas existentes. Para configurar novas vigências do fechamento, execute apenas [005_fechamentos.sql](../supabase/migrations/005_fechamentos.sql) no mesmo projeto e atualize o desktop. O protocolo financeiro das versões anteriores continua compatível. Veja [FINANCAS.md](FINANCAS.md).

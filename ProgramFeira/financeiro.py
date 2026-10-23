@@ -33,7 +33,9 @@ def inicializar():
         tabelas = {r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     with closing(banco.conectar()) as c:
         colunas = {r[1] for r in c.execute('PRAGMA table_info(financeiro_taxas_anuais)')}
-    if {'financeiro_lancamentos', 'financeiro_taxas_anuais'} <= tabelas and {'natureza', 'observacao'} <= colunas:
+    with closing(banco.conectar()) as c:
+        colunas_compras = {r[1] for r in c.execute('PRAGMA table_info(financeiro_lancamentos)')}
+    if 'data_compra' in colunas_compras and {'financeiro_lancamentos', 'financeiro_taxas_anuais'} <= tabelas and {'natureza', 'observacao'} <= colunas:
         return
     # Snapshot íntegro, anterior a qualquer alteração de estrutura.
     banco.criar_backup()
@@ -46,6 +48,8 @@ def inicializar():
             meio TEXT NOT NULL, categoria TEXT NOT NULL,
             grupo TEXT, parcela INTEGER NOT NULL DEFAULT 1,
             parcelas INTEGER NOT NULL DEFAULT 1)''')
+        if 'data_compra' not in colunas_compras:
+            c.execute('ALTER TABLE financeiro_lancamentos ADD COLUMN data_compra TEXT')
         c.execute('''CREATE UNIQUE INDEX IF NOT EXISTS idx_taxa_diaria
             ON financeiro_lancamentos(data) WHERE tipo='taxa' ''')
         c.execute('''CREATE TABLE IF NOT EXISTS financeiro_taxas_anuais (
@@ -89,6 +93,13 @@ def datas_parcelas(inicio, quantidade):
     return resultado
 
 
+def datas_faturas(inicio, quantidade):
+    from ProgramFeira import fechamento
+    historico = fechamento.estado()['historico']
+    return [date(d.year, d.month, fechamento.dia_no_mes(d.year, d.month, historico)).isoformat()
+            for d in map(date.fromisoformat, datas_parcelas(inicio, quantidade))]
+
+
 def _conflito(c, inicio, fim, ignorar=None):
     return c.execute('''SELECT ano FROM financeiro_taxas_anuais
         WHERE inicio <= ? AND fim >= ? AND ano != ?''', (fim, inicio, ignorar or -1)).fetchone()
@@ -103,6 +114,19 @@ def dividir_total(total, quantidade):
     return [base + (1 if resto and i >= quantidade - resto else 0) for i in range(quantidade)]
 
 
+def preparar_parcelas(data, total, quantidade, meio, data_compra=None, anterior=None):
+    inicio = primeira_fatura(data_compra) if data_compra else data
+    datas = datas_faturas(inicio, quantidade) if data_compra else datas_parcelas(inicio, quantidade)
+    valores = dividir_total(total, quantidade)
+    if anterior and anterior.get('data_compra') == data_compra and anterior['meio'] == meio and (data_compra is not None or anterior['data'] == data):
+        registros = anterior['registros']
+        datas = datas_faturas(anterior['data'], quantidade) if data_compra else datas_parcelas(anterior['data'], quantidade)
+        datas[:min(quantidade, len(registros))] = [r['data'] for r in registros[:quantidade]]
+        if anterior['valor_centavos'] == total and len(registros) == quantidade:
+            valores = [r['valor_centavos'] for r in registros]
+    return datas, valores
+
+
 def _compra(c, identificador):
     c.row_factory = sqlite3.Row
     linha = c.execute('SELECT * FROM financeiro_lancamentos WHERE id=?', (identificador,)).fetchone()
@@ -113,7 +137,8 @@ def _compra(c, identificador):
     n = r['parcelas']
     if len(registros) != n or [v['parcela'] for v in registros] != list(range(1, n + 1)) or any(v['parcelas'] != n or v['tipo'] != r['tipo'] for v in registros):
         raise ValueError('O histórico desta compra está incompleto ou inconsistente. Confira as parcelas ou restaure uma cópia antes de editar a compra; nada foi alterado.')
-    return {**registros[0], 'valor_centavos': sum(v['valor_centavos'] for v in registros), 'registros': registros}
+    origens = {v.get('data_compra') for v in registros}
+    return {**registros[0], 'data_compra': next(iter(origens)) if len(origens) == 1 else None, 'valor_centavos': sum(v['valor_centavos'] for v in registros), 'registros': registros}
 
 
 def compra_do_lancamento(identificador):
@@ -121,8 +146,12 @@ def compra_do_lancamento(identificador):
         return _compra(c, identificador)
 
 
-def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Outros', parcelas=1, identificador=None, esperados=None):
+def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Outros', parcelas=1, identificador=None, esperados=None, data_compra=None):
     _data(data)
+    if data_compra is not None:
+        _data(data_compra)
+        if tipo != 'despesa' or meio != 'Cartão de crédito':
+            raise ValueError('Data da compra é usada somente em despesas no cartão de crédito.')
     total = centavos(valor)
     descricao = descricao.strip()
     if tipo not in ('despesa', 'taxa') or not descricao or len(descricao) > 200:
@@ -136,7 +165,8 @@ def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Out
     if not 1 <= parcelas <= 120 or (parcelas > 1 and (tipo != 'despesa' or meio != 'Cartão de crédito')):
         raise ValueError('Use de 1 a 120 parcelas, apenas para despesas no cartão.')
     valores = dividir_total(total, parcelas)
-    datas = datas_parcelas(data, parcelas)
+    inicio = primeira_fatura(data_compra) if data_compra else data
+    datas = datas_faturas(inicio, parcelas) if data_compra else datas_parcelas(inicio, parcelas)
     banco.criar_backup()
     with closing(banco.conectar()) as c, c:
         c.execute('BEGIN IMMEDIATE')
@@ -150,16 +180,17 @@ def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Out
             if esperados is not None and anteriores != esperados:
                 raise ValueError('A compra mudou desde que o formulário foi aberto. Feche e abra novamente antes de salvar.')
             grupo = compra['grupo']
-        grupo = grupo or (uuid4().hex if parcelas > 1 else None)
+            datas, valores = preparar_parcelas(data, total, parcelas, meio, data_compra, compra)
+        grupo = (grupo or uuid4().hex) if parcelas > 1 else None
         if tipo == 'taxa' and _conflito(c, data, data):
             raise ValueError('Essa data já está coberta por uma taxa anual. Não desconte a mesma taxa duas vezes.')
         try:
             for i, (vencimento, quantia) in enumerate(zip(datas, valores)):
-                linha = (tipo, vencimento, descricao, quantia, meio, categoria, grupo, i + 1, parcelas)
+                linha = (tipo, vencimento, descricao, quantia, meio, categoria, grupo, i + 1, parcelas, data_compra)
                 if i < len(anteriores):
-                    c.execute('UPDATE financeiro_lancamentos SET tipo=?,data=?,descricao=?,valor_centavos=?,meio=?,categoria=?,grupo=?,parcela=?,parcelas=? WHERE id=?', (*linha, anteriores[i]['id']))
+                    c.execute('UPDATE financeiro_lancamentos SET tipo=?,data=?,descricao=?,valor_centavos=?,meio=?,categoria=?,grupo=?,parcela=?,parcelas=?,data_compra=? WHERE id=?', (*linha, anteriores[i]['id']))
                 else:
-                    c.execute('INSERT INTO financeiro_lancamentos (tipo,data,descricao,valor_centavos,meio,categoria,grupo,parcela,parcelas) VALUES (?,?,?,?,?,?,?,?,?)', linha)
+                    c.execute('INSERT INTO financeiro_lancamentos (tipo,data,descricao,valor_centavos,meio,categoria,grupo,parcela,parcelas,data_compra) VALUES (?,?,?,?,?,?,?,?,?,?)', linha)
             for r in anteriores[parcelas:]:
                 c.execute('DELETE FROM financeiro_lancamentos WHERE id=?', (r['id'],))
         except sqlite3.IntegrityError as erro:

@@ -235,43 +235,46 @@ class PainelFinanceiro(ttk.Frame):
             return
         titulo = ('Editar compra' if r else 'Nova despesa') if tipo == 'despesa' else ('Editar taxa da maquininha' if r else 'Taxa da maquininha')
         popup, corpo = self._janela(titulo)
-        data = self._campo(corpo, 0, 'Pagamento / competência', data_br(r.get('data', date.today().isoformat())), data=True)
+        data = self._campo(corpo, 0, 'Pagamento / competência', data_br(r.get('data_compra') or r.get('data', date.today().isoformat())), data=True)
         descricao = self._campo(corpo, 1, 'Descrição', r.get('descricao', '' if tipo == 'despesa' else 'Taxa do cartão'))
         valor = self._campo(corpo, 2, 'Valor total da compra em R$' if tipo == 'despesa' else 'Valor da taxa em R$', valor_br(r['valor_centavos']) if r else '')
         meio = self._campo(corpo, 3, 'Pagamento', r.get('meio', 'Cartão de crédito' if tipo == 'taxa' else 'Dinheiro'), f.MEIOS)
         categoria = self._campo(corpo, 4, 'Categoria', r.get('categoria', 'Outros'), f.CATEGORIAS)
         parcelas = self._campo(corpo, 5, 'Quantidade de parcelas', str(r.get('parcelas', 1))) if tipo == 'despesa' else None
-        explicacao = ('Informe o TOTAL da compra. O programa divide esse valor pelo número de parcelas, sem juros adicionais. Os centavos são ajustados para que a soma seja exata.\nA data é o início do histórico (primeira fatura no cartão), mesmo para compras antigas. Editar qualquer parcela altera a compra inteira, incluindo meses anteriores. Não registre novamente o pagamento da fatura.' if tipo == 'despesa' else 'Informe o desconto total em reais cobrado pela maquininha nas vendas desta data. Não é uma despesa do cartão de compras. O mesmo desconto não pode constar também no histórico anual.')
+        explicacao = ('Informe o TOTAL da compra. O programa divide esse valor pelo número de parcelas, sem juros adicionais. Os centavos são ajustados para que a soma seja exata.\nNo cartão, informe a DATA DA COMPRA: a primeira fatura é calculada automaticamente. Registros antigos mantêm as faturas até você informar a compra original. Editar qualquer parcela altera a compra inteira, incluindo meses anteriores. Não registre novamente o pagamento da fatura.' if tipo == 'despesa' else 'Informe o desconto total em reais cobrado pela maquininha nas vendas desta data. Não é uma despesa do cartão de compras. O mesmo desconto não pode constar também no histórico anual.')
         previa = tk.StringVar(value=explicacao)
         ttk.Label(corpo, textvariable=previa, wraplength=490, style='Muted.TLabel', justify='left').grid(row=6, column=0, columnspan=2, sticky='w', pady=12)
         campo_data = corpo.grid_slaves(row=0, column=1)[0]
-        def calcular_fatura():
-            try:
-                compra = interpretar_data(data.get()).isoformat()
-                data.set(data_br(f.primeira_fatura(compra)))
-                campo_data.resumo.configure(text=f'Compra em {data_br(compra)} → primeira fatura em {data.get()}')
-            except ValueError as erro:
-                messagebox.showerror('Data não calculada', str(erro), parent=popup)
-        calcular = ttk.Button(campo_data, text='Calcular fatura pela data da compra', command=calcular_fatura)
+        origem = tk.StringVar(value='Primeira fatura (registro antigo)' if r and not r.get('data_compra') and r.get('meio') == 'Cartão de crédito' else 'Data da compra')
+        seletor_origem = ttk.Combobox(campo_data, textvariable=origem, values=('Primeira fatura (registro antigo)', 'Data da compra'), state='readonly', width=30)
+        def trocar_origem(evento):
+            if origem.get() == 'Data da compra' and r and not r.get('data_compra'):
+                data.set('')
+                for var in (campo_data.dia, campo_data.mes, campo_data.ano): var.set('')
+                campo_data.resumo.configure(text='Informe a data original da compra.')
+            elif origem.get() != 'Data da compra':
+                data.set(data_br(r['data']))
+        seletor_origem.bind('<<ComboboxSelected>>', trocar_origem)
         def atualizar_previa(*args):
             cartao = tipo == 'despesa' and meio.get() == 'Cartão de crédito'
-            corpo.grid_slaves(row=0, column=0)[0].configure(text='Primeira fatura / início' if cartao else 'Data da venda' if tipo == 'taxa' else 'Data de pagamento')
-            if cartao and not r:
-                calcular.grid(row=2, column=0, columnspan=3, sticky='w', pady=(6, 0))
+            corpo.grid_slaves(row=0, column=0)[0].configure(text=('Data da compra' if origem.get() == 'Data da compra' else 'Primeira fatura antiga') if cartao else 'Data da venda' if tipo == 'taxa' else 'Data de pagamento')
+            if cartao and r and not r.get('data_compra'):
+                seletor_origem.grid(row=2, column=0, columnspan=3, sticky='w', pady=(6, 0))
             else:
-                calcular.grid_remove()
+                seletor_origem.grid_remove()
             try:
-                datas = f.datas_parcelas(interpretar_data(data.get()).isoformat(), int(parcelas.get()) if parcelas else 1)
+                entrada = interpretar_data(data.get()).isoformat()
+                compra = entrada if cartao and origem.get() == 'Data da compra' else None
+                datas, quantias = f.preparar_parcelas(entrada, f.centavos(valor.get()), int(parcelas.get()) if parcelas else 1, meio.get(), compra, r or None)
                 mostra = datas if len(datas) <= 4 else [*datas[:3], '...', datas[-1]]
                 texto = ' · '.join(data_br(d) if d != '...' else d for d in mostra)
-                quantias = f.dividir_total(f.centavos(valor.get()), len(datas))
                 por_parcela = ' / '.join('R$ ' + valor_br(v) for v in sorted(set(quantias)))
                 detalhe = f'{len(datas)} parcelas: {por_parcela}' if len(datas) > 1 else 'taxa informada' if tipo == 'taxa' else 'pagamento único'
                 nota = f'Total: R$ {valor_br(sum(quantias))} · {detalhe}.\n' + ('Faturas previstas: ' if cartao else 'Lançamento em: ') + texto + '.\n'
             except ValueError:
                 nota = ''
             previa.set(nota + ('Compras no dia do fechamento entram na fatura seguinte.\n' if cartao and not r else '') + explicacao)
-        traces = [(var, var.trace_add('write', atualizar_previa)) for var in (data, meio, parcelas, valor) if var is not None]
+        traces = [(var, var.trace_add('write', atualizar_previa)) for var in (data, meio, parcelas, valor, origem) if var is not None]
         def limpar(evento):
             if evento.widget is popup:
                 for var, ident in traces:
@@ -288,7 +291,7 @@ class PainelFinanceiro(ttk.Frame):
                 aviso_remocao = f'\nSerão removidas as últimas {removidas} parcelas; o total será redistribuído nas restantes.' if removidas else ''
                 if (quantidade > 1 or r.get('parcelas', 1) > 1) and not messagebox.askyesno('Confirmar compra', f'Total da compra: R$ {valor_br(sum(quantias))}, dividido em {quantidade} parcela(s).\nAo salvar, todas as parcelas da compra serão atualizadas, inclusive as de meses anteriores. A soma será exatamente o total informado.{aviso_remocao}', parent=popup):
                     return
-                f.salvar_lancamento(tipo, interpretar_data(data.get()).isoformat(), descricao.get(), valor.get(), meio.get(), categoria.get(), quantidade, r.get('id'), r.get('registros'))
+                f.salvar_lancamento(tipo, interpretar_data(data.get()).isoformat(), descricao.get(), valor.get(), meio.get(), categoria.get(), quantidade, r.get('id'), r.get('registros'), data_compra=interpretar_data(data.get()).isoformat() if tipo == 'despesa' and meio.get() == 'Cartão de crédito' and origem.get() == 'Data da compra' else None)
             except (ValueError, OSError, sqlite3.Error) as erro:
                 messagebox.showerror('Lançamento não salvo', str(erro), parent=popup)
                 return

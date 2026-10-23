@@ -23,6 +23,7 @@ export function criarCampoData({ valor, dia, mes, ano, resumo, mudou = () => {} 
   for (const campo of [dia, mes, ano]) campo.addEventListener('change', atualizar);
   ano.addEventListener('input', atualizar);
   return {
+    limpar() { valor.value = ''; dia.value = ''; mes.value = ''; ano.value = ''; resumo.textContent = 'Informe a data original da compra.'; mudou(); },
     definir(data) {
       if (!dataValida(data)) throw Error('Informe uma data válida.');
       const [a, m, d] = data.split('-').map(Number);

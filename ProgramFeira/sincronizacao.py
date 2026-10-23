@@ -12,7 +12,7 @@ from ProgramFeira.nuvem import ErroNuvem, LoteRecusado
 TABELAS = migracao.TABELAS
 COLUNAS = {
     'vendas': ('data', 'dinheiro_centavos', 'pix_centavos', 'cartao_centavos'),
-    'financeiro_lancamentos': ('tipo', 'data', 'descricao', 'valor_centavos', 'meio', 'categoria', 'grupo', 'parcela', 'parcelas'),
+    'financeiro_lancamentos': ('tipo', 'data', 'descricao', 'valor_centavos', 'meio', 'categoria', 'grupo', 'parcela', 'parcelas', 'data_compra'),
     'financeiro_taxas_anuais': ('ano', 'inicio', 'fim', 'valor_centavos', 'natureza', 'observacao'),
 }
 
@@ -27,7 +27,7 @@ def _corpo(registro):
 
 def validar_snapshot(resposta, usuario_id, operacao_id=None):
     try:
-        if resposta['protocolo'] != 1 or resposta['usuario_id'] != usuario_id or resposta['operacao_id'] != operacao_id or set(resposta['dados']) != set(TABELAS):
+        if resposta['protocolo'] not in (1, 2) or resposta['usuario_id'] != usuario_id or resposta['operacao_id'] != operacao_id or set(resposta['dados']) != set(TABELAS):
             raise ValueError()
         resultado = {}
         for tabela in TABELAS:
@@ -37,6 +37,12 @@ def validar_snapshot(resposta, usuario_id, operacao_id=None):
                 raise ValueError()
             naturais = set()
             for r in linhas:
+                r = dict(r)
+                if tabela == 'financeiro_lancamentos' and resposta['protocolo'] == 1:
+                    r.setdefault('data_compra', None)
+                if tabela == 'financeiro_lancamentos' and r.get('data_compra') is not None:
+                    if migracao._data(r['data_compra']) != r['data_compra']:
+                        raise ValueError()
                 if set(r) != set(COLUNAS[tabela]) | {'id', 'versao'} or str(UUID(r['id'])) != r['id']:
                     raise ValueError()
                 if type(r['versao']) is not int or r['versao'] < 1 or r['id'] in resultado[tabela]:
@@ -55,6 +61,8 @@ def validar_snapshot(resposta, usuario_id, operacao_id=None):
 
 
 def _estrutura(c):
+    if 'data_compra' not in {r[1] for r in c.execute('pragma table_info(financeiro_lancamentos)')}:
+        c.execute('alter table financeiro_lancamentos add column data_compra text')
     c.execute('''create table if not exists nuvem_sync_estado (
         singleton integer primary key check(singleton=1),
         projeto text not null, usuario_id text not null, pendente text)''')
@@ -65,7 +73,7 @@ def _estrutura(c):
 
 
 def _locais(c, usuario_id):
-    dados = migracao.extrair(c, usuario_id)
+    dados = migracao.extrair(c, usuario_id, incluir_compra=True)
     resultado = {}
     for tabela in TABELAS:
         chave = 'ano' if tabela == 'financeiro_taxas_anuais' else 'id'
@@ -75,7 +83,13 @@ def _locais(c, usuario_id):
 
 
 def _referencias(c):
-    return [dict(tabela=r[0], remoto_id=r[1], local_id=r[2], local=json.loads(r[3]), remoto=json.loads(r[4])) for r in c.execute('select tabela,remoto_id,local_id,base_local,base_remota from nuvem_sync_registros')]
+    referencias = [dict(tabela=r[0], remoto_id=r[1], local_id=r[2], local=json.loads(r[3]), remoto=json.loads(r[4])) for r in c.execute('select tabela,remoto_id,local_id,base_local,base_remota from nuvem_sync_registros')]
+    for r in referencias:
+        if r['tabela'] == 'financeiro_lancamentos':
+            for campo in ('local', 'remoto'):
+                if r[campo] is not None:
+                    r[campo].setdefault('data_compra', None)
+    return referencias
 
 
 def _salvar_referencias(c, referencias):

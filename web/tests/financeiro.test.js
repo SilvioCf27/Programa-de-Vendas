@@ -84,6 +84,7 @@ test('sem vendas, falta corresponde a taxas mais despesas e intervalos incluem o
 });
 const form = () => ({
   tipo: 'despesa',
+  origem_data: 'fatura',
   data: '2030-01-31',
   descricao: 'Compra fictícia',
   valor: '123,45',
@@ -178,4 +179,25 @@ test('taxas semanais mantêm datas, editam as existentes e recusam histórico so
   assert.equal(ops[0].versao, 2);
   assert.throws(() => taxasSemanaFormulario('2026-10-05', { '2026-10-11': '3,00' }, [], [{ inicio: '2026-01-01', fim: '2026-12-31' }]), /histórico/);
   assert.throws(() => taxasSemanaFormulario('2026-10-05', { '2026-10-09': '0,00' }, existentes, []), /Excluir/);
+});
+
+
+test('compra no dia 09 entra automaticamente na próxima fatura e edição preserva o calendário', () => {
+  const ops = lancamentoFormulario({...form(),data:'2026-10-09', origem_data:'compra',valor:'13',parcelas:1});
+  assert.equal(ops[0].dados.data,'2026-11-09');
+  assert.equal(ops[0].dados.data_compra,'2026-10-09');
+  const r = {...ops[0].dados,id:ops[0].id,versao:1};
+  const compra = compraDoLancamento(r,[r]);
+  const edicao = lancamentoFormulario({...form(),data:'2026-10-09',origem_data:'compra',valor:'13',parcelas:1,descricao:'Nome corrigido'},compra);
+  assert.equal(edicao[0].dados.data,'2026-11-09');
+});
+test('edição de compra antiga não redistribui centavos nem move faturas sem mudança de origem', () => {
+  const ops = lancamentoFormulario({...form(),valor:'30,00'});
+  const rs = ops.map((op,i)=>({...op.dados,id:op.id,versao:1,valor_centavos:[999,1000,1001][i]}));
+  const compra = compraDoLancamento(rs[2],rs);
+  const novos = lancamentoFormulario({...form(),valor:'30,00',descricao:'Correção'},compra);
+  assert.deepEqual(novos.map(op=>op.dados.valor_centavos),[999,1000,1001]);
+  assert.deepEqual(novos.map(op=>op.dados.data),rs.map(r=>r.data));
+  const uma = lancamentoFormulario({...form(),valor:'30,00',parcelas:1},compra);
+  assert.equal(uma[0].dados.grupo,null);
 });

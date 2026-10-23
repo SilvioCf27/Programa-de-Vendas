@@ -46,6 +46,9 @@ def verificar_pacote(relatorio):
                 assert banco.buscar_venda_por_data('2035-01-01')[2:] == (10, 20, 30)
                 financeiro.salvar_lancamento('despesa', '2035-01-01', 'Teste do pacote', '12,34')
                 assert financeiro.primeira_fatura('2035-01-09') == '2035-02-09'
+                financeiro.salvar_lancamento('despesa', '2035-10-09', 'Compra no fechamento', '13', 'Cartão de crédito', data_compra='2035-10-09')
+                automatica = next(r for r in financeiro.listar_lancamentos('2035-01-01','2035-12-31') if r['descricao'] == 'Compra no fechamento')
+                assert (automatica['data_compra'], automatica['data']) == ('2035-10-09','2035-11-09')
                 financeiro.salvar_lancamento('despesa', '2035-05-09', 'Compra parcelada fictícia', '100,00', 'Cartão de crédito', parcelas=5)
                 parcelas = sorted((r for r in financeiro.listar_lancamentos('2035-05-01', '2035-09-30') if r['grupo']), key=lambda r: r['parcela'])
                 assert [r['valor_centavos'] for r in parcelas] == [2000] * 5
@@ -102,7 +105,7 @@ def verificar_pacote(relatorio):
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True, taxas_semanais=True, fechamento_configuravel=True,
-                                 compra_total=True, edicao_compra=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
+                                 compra_total=True, edicao_compra=True, fatura_automatica=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()
     except Exception:

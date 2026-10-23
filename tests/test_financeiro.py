@@ -116,6 +116,31 @@ class FinanceiroTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'incompleto'):
             f.compra_do_lancamento(linhas[0]['id'])
 
+    def test_compra_no_fechamento_e_edicao_nao_adiam_fatura(self):
+        self.despesa('13', data='2026-10-09', meio='Cartão de crédito', data_compra='2026-10-09')
+        r = self.linhas()[0]
+        self.assertEqual((r['data_compra'], r['data']), ('2026-10-09', '2026-11-09'))
+        self.assertEqual(f.resumo_periodo(*f.limites('Fechamento','2026-09-01'))['despesas'], 0)
+        self.assertEqual(f.resumo_periodo(*f.limites('Fechamento','2026-10-01'))['despesas'], 13)
+        compra = f.compra_do_lancamento(r['id'])
+        self.despesa('13', data='2026-10-09', descricao='Nome corrigido', meio='Cartão de crédito', identificador=r['id'], data_compra='2026-10-09', esperados=compra['registros'])
+        self.assertEqual(self.linhas()[0]['data'], '2026-11-09')
+
+    def test_faturas_historicas_meses_curtos_e_edicao_preserva_datas_e_centavos(self):
+        from ProgramFeira import fechamento
+        fechamento.definir({'versao': 1, 'historico': [{'vigencia':'2090-11-01','dia':14}]})
+        self.addCleanup(fechamento.definir, {'versao':0,'historico':[]})
+        self.despesa('100', data='2090-09-09', meio='Cartão de crédito', parcelas=3, data_compra='2090-09-09')
+        rs = sorted(self.linhas(), key=lambda r:r['parcela'])
+        self.assertEqual([r['data'] for r in rs], ['2090-10-09','2090-11-14','2090-12-14'])
+        alvo = f.compra_do_lancamento(rs[-1]['id'])
+        self.despesa('100', data='2090-09-09', descricao='Descrição corrigida', meio='Cartão de crédito', parcelas=3, data_compra='2090-09-09', identificador=rs[-1]['id'])
+        self.assertEqual([(r['data'],r['valor_centavos']) for r in sorted(self.linhas(),key=lambda r:r['parcela'])],[(r['data'],r['valor_centavos']) for r in rs])
+        self.despesa('100', data='2090-09-09', meio='Cartão de crédito', parcelas=1, data_compra='2090-09-09', identificador=rs[-1]['id'])
+        self.assertIsNone(self.linhas()[0]['grupo'])
+        fechamento.definir({'versao':1,'historico':[{'vigencia':'2026-01-01','dia':31}]})
+        self.assertEqual(f.datas_faturas(f.primeira_fatura('2028-01-31'),3), ['2028-02-29','2028-03-31','2028-04-30'])
+
     def test_abrir_compra_legada_nao_redivide_valores(self):
         self.despesa('300', meio='Cartão de crédito', parcelas=3)
         # Representa dados antigos: o aplicativo anterior repetia R$ 100 por parcela.

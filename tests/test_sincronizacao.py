@@ -402,3 +402,18 @@ class SincronizacaoTests(unittest.TestCase):
             self.assertEqual(fechamento.periodo(2090, 11), ('2090-11-15', '2090-12-14'))
         finally:
             fechamento.definir({'versao': 0, 'historico': []})
+
+    def test_data_original_da_compra_vai_e_volta_sem_deslocar_fatura(self):
+        from unittest.mock import patch
+        from ProgramFeira import financeiro as f
+        from ProgramFeira.database import banco
+        self.executar()
+        with patch.object(banco, 'CAMINHO_BANCO', self.banco):
+            f.inicializar()
+            f.salvar_lancamento('despesa','2026-10-09','Mercado de teste','13','Cartão de crédito',data_compra='2026-10-09')
+        self.executar()
+        remoto=next(r for r in self.servidor.dados['financeiro_lancamentos'].values() if r['descricao']=='Mercado de teste')
+        self.assertEqual((remoto['data_compra'],remoto['data']),('2026-10-09','2026-11-09'))
+        self.servidor.editar('financeiro_lancamentos',remoto['id'],descricao='Nome atualizado no celular')
+        self.executar()
+        self.assertEqual(self.sql("select data_compra,data from financeiro_lancamentos where descricao='Nome atualizado no celular'"),[('2026-10-09','2026-11-09')])

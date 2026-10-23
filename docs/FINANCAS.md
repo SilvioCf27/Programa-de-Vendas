@@ -2,62 +2,81 @@
 
 ## Atualizar a conta já configurada
 
-1. Atualize o desktop e o PWA. No navegador, atualize a página; se a PWA instalada
-   ainda mostrar a tela antiga, feche as janelas do aplicativo e abra novamente.
-2. Para habilitar **Configurar fechamento**, abra o SQL Editor do mesmo projeto
-   Supabase e execute apenas [005_fechamentos.sql](../supabase/migrations/005_fechamentos.sql).
-   O arquivo também acompanha o executável como `SQL_005_FECHAMENTOS.sql`.
-3. Não é necessário executar novamente as migrações 001 a 004, migrar as vendas
-   outra vez ou refazer a conexão. A migração 005 é reaplicável e não modifica
-   vendas, despesas, parcelas ou taxas existentes.
-4. O dia 09 continua sendo a regra inicial. Só use **Configurar fechamento** se
-   quiser cadastrar uma mudança futura. Faça essa mudança com as duas versões
-   atualizadas, para que mostrem os mesmos períodos.
+1. Atualize o desktop e o PWA. Se a PWA instalada ainda mostrar a tela antiga,
+   feche todas as janelas do aplicativo e abra novamente.
+2. No SQL Editor do projeto Supabase já configurado, execute
+   [006_datas_compras.sql](../supabase/migrations/006_datas_compras.sql).
+   O arquivo acompanha o executável como `SQL_006_DATAS_COMPRAS.sql`.
+   Ele acrescenta a data original da compra e as operações atualizadas, sem mudar
+   valores, datas de faturas ou parcelas existentes. É reaplicável.
+3. Não refaça a migração das vendas. Não execute novamente 001 a 004.
+   Se ainda não instalou o SQL 005 para configurar fechamentos, instale-o também;
+   quem já o instalou não precisa repeti-lo.
+4. Use as versões atualizadas no PC e no celular. Versões antigas ainda consultam
+   o formato anterior, mas não conhecem a data original. Uma escrita antiga nessa
+   compra pode remover essa informação, sem alterar a data de fatura por isso.
 
-Sem a migração nova, o registro de despesas e taxas, os filtros adaptativos e a
-sincronização financeira existente continuam disponíveis com a regra inicial.
+Sem o SQL 006, consultas antigas continuam disponíveis. Uma compra nova com data
+original não é enviada com perda de informação: o aplicativo pede a atualização.
+Se já houver um envio pendente, instale o SQL e use Atualizar / Confirmar envio
+no PWA, ou Sincronizar agora no desktop, para retomar o mesmo lote.
 
 ## Qual data informar
 
 - **Dinheiro, Pix e outros pagamentos:** a data em que a despesa deve entrar nas contas.
-- **Cartão de crédito:** a primeira fatura em que a compra será cobrada, identificada
-  pelo fechamento. Ela é diferente da data da compra e do prazo limite para pagar.
+- **Cartão de crédito:** a **data da compra**. O programa calcula a primeira fatura
+  pelo fechamento vigente e guarda as duas datas separadamente.
 
-Os campos Dia, Mês e Ano mostram a data selecionada antes de salvar. Mudar o meio
-de pagamento, a categoria ou a quantidade de parcelas não desloca a data.
-Se você informou a data da compra, use **Calcular primeira fatura**. Essa ação é
-explícita: não modifica silenciosamente uma data já preenchida.
+A data escolhida permanece visível no formulário. Selecionar crédito calcula a
+prévia das faturas, sem substituir a data digitada. Não há botão de conversão.
+Compra em 08/10, com fechamento no dia 09, entra na fatura de 09/10. Compra em
+09/10 entra na fatura de 09/11: aparece no filtro **Fechamento → Outubro**,
+que cobre 10/10 a 09/11. O prazo limite para pagar, como dia 14, é outra informação
+e não determina o período do programa.
 
-Com fechamento no dia 09, uma compra de 08/09 entra na fatura de 09/09; uma compra
-de 09/09 entra na fatura de 09/10. Em três parcelas a partir de 09/10, os
-lançamentos serão 09/10, 09/11 e 09/12. O valor informado é sempre o **total da compra**. Por exemplo, R$ 100,00 em três parcelas gera R$ 33,33, R$ 33,33 e R$ 33,34: a diferença de centavos mantém o total exato, sem juros adicionais.
-O prazo limite de pagamento, como dia 14, não muda a identificação dessa fatura.
+Em uma compra de 09/09, três parcelas ficam nas faturas de 09/10, 09/11 e 09/12.
+Os próximos fechamentos seguem a regra histórica de cada mês, inclusive em
+fevereiro, anos bissextos e mudanças futuras de dia. Uma compra antiga começa
+na fatura calculada pela data da compra, e não na data em que foi cadastrada.
 
-Datas antigas não são corrigidas automaticamente: a data da compra original
-não estava armazenada para permitir essa dedução com segurança. Confira os
-lançamentos que suspeitar estarem incorretos e edite somente os necessários.
-Editar qualquer parcela abre a **compra inteira**, mesmo que você tenha selecionado
-uma parcela intermediária ou que a consulta mostre apenas um mês. O formulário
-carrega o total pela soma de todas as parcelas, a primeira data e a quantidade.
-Salvar recalcula valores e datas de todo o histórico da compra, incluindo meses
-anteriores. Alterar a quantidade redistribui o mesmo total; não simula juros de
-renegociação. As parcelas mantidas conservam suas identificações.
+## Editar sem deslocar o histórico
 
-Uma compra antiga pode ser cadastrada hoje com a primeira fatura em maio: o
-histórico começa nessa data, e não na data de cadastro. Para crédito, continue
-usando a primeira fatura ou calcule-a pela data da compra com o botão indicado.
+Editar qualquer parcela abre a **compra inteira**, inclusive parcelas fora do
+filtro atual. O total vem da soma das parcelas. Se a compra original estiver
+armazenada, ela aparece no formulário. Mudar somente descrição ou categoria
+preserva as faturas e os centavos já cadastrados. Mesmo que a regra de fechamento
+tenha mudado depois, editar o nome não move uma compra para outro mês.
 
-**Os registros existentes não são divididos novamente ao atualizar o programa.**
-O total exibido ao editar é a soma dos valores já armazenados. Confira esse total
-antes de salvar, sobretudo se antes você informou o total em um campo que era por
-parcela. Não há correção automática de valores históricos.
+Registros antigos não tinham a data da compra. Nesses casos o formulário mostra
+**Primeira fatura já cadastrada** (no desktop, **Primeira fatura antiga**).
+Ela é mantida ao editar. Para informar a data original, escolha **Data da compra**:
+o campo é limpo para você preenchê-lo conscientemente. Só então o calendário é
+calculado pela compra. Não deduzimos a compra a partir da fatura, pois isso
+poderia adiantar ou adiar despesas incorretamente.
 
-Excluir continua afetando somente a parcela selecionada. Se faltarem parcelas ou
-o grupo estiver inconsistente, a edição da compra será bloqueada para evitar
-recriar cobranças que tenham sido excluídas. Confira o histórico ou restaure uma
-cópia adequada antes de editar esse grupo.
+## Total e parcelas
+
+Informe sempre o **valor total da compra**. R$ 100,00 em três vezes gera
+R$ 33,33, R$ 33,33 e R$ 33,34; a soma fica exata e não são acrescentados juros.
+Não altere o total real só para forçar um centavo em uma parcela: o banco pode
+distribuir o arredondamento em outra ordem.
+
+Alterar o total redistribui as parcelas. Alterar a quantidade redistribui o mesmo
+total; não simula juros de renegociação. A confirmação avisa antes de remover
+parcelas quando a quantidade diminui. As parcelas mantidas conservam suas
+identificações; uma compra reduzida a uma parcela deixa de ter grupo de parcelamento.
+
+Os valores antigos não são divididos novamente ao atualizar o programa.
+Confira o total antes de editar uma compra que foi cadastrada com a regra anterior.
+Excluir continua removendo só a parcela selecionada. Se faltarem parcelas ou o
+grupo estiver inconsistente, a edição é bloqueada para evitar recriar cobranças
+removidas. Confira o histórico ou restaure uma cópia adequada antes de editar.
 
 ## Escolher o período
+
+As consultas usam a data da fatura para crédito e a data de pagamento para os
+outros meios. Isso também vale para Despesas por semana. A data original da
+compra aparece separadamente no lançamento, para conferência.
 
 - **Semana:** escolha mês, ano e uma semana identificada pelo intervalo completo,
   de segunda a domingo. Uma semana pode começar no mês anterior ou terminar no seguinte.

@@ -49,6 +49,7 @@ def periodo(ano, mes, historico=None):
 
 
 def primeira_fatura(compra, historico=None):
+    historico = _estado['historico'] if historico is None else historico
     dia = date.fromisoformat(compra)
     atual = dia.replace(day=dia_no_mes(dia.year, dia.month, historico))
     if dia < atual:

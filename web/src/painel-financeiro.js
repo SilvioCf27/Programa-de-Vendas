@@ -5,7 +5,6 @@ import { hoje, mesFechamento, moeda } from './regras.js';
 import {
   compraDoLancamento,
   limitesFinanceiros,
-  primeiraFatura,
   taxasSemanaFormulario,
   resumoFinanceiro,
   lancamentoFormulario,
@@ -153,6 +152,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       item.append(
         topo,
         texto('p', l.descricao),
+        ...(l.data_compra ? [texto('p', `Compra em ${br(l.data_compra)} · Fatura em ${br(l.data)}`, 'nota')] : []),
         texto(
           'p',
           `${l.tipo === 'taxa' ? 'Taxa das vendas no cartão' : 'Despesa'} · ${l.meio} · ${l.categoria}${l.parcelas > 1 ? ` · Parcela ${l.parcela}/${l.parcelas}` : ''}`,
@@ -266,9 +266,9 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
   function atualizarPrevia() {
     const form = $('fin-form');
     const cartao = form.elements.tipo.value === 'despesa' && form.elements.meio.value === 'Cartão de crédito';
-    $('fin-calcular-fatura').hidden = !cartao || !!editando;
+    $('fin-origem-campo').hidden = !cartao || !editando || !!editando.data_compra;
     $('fin-valor-titulo').textContent = form.elements.tipo.value === 'taxa' ? 'Valor total da taxa (R$)' : 'Valor total da compra (R$)';
-    $('fin-data-titulo').textContent = cartao ? 'Primeira fatura (competência)' :
+    $('fin-data-titulo').textContent = cartao ? form.elements.origem_data.value === 'fatura' ? 'Primeira fatura já cadastrada' : 'Data da compra' :
       form.elements.tipo.value === 'taxa' ? 'Data da venda no cartão' : 'Data de pagamento ou vencimento';
     try {
       const campos = Object.fromEntries(new FormData(form));
@@ -281,13 +281,10 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
   }
   $('fin-form').addEventListener('change', atualizarPrevia);
   $('fin-form').addEventListener('input', atualizarPrevia);
-  $('fin-calcular-fatura').addEventListener('click', () => {
-    try {
-      const compra = $('fin-form').elements.data.value;
-      campoData.definir(primeiraFatura(compra));
-      $('fin-data-confirmada').textContent = `Compra em ${br(compra)} → primeira fatura em ${br($('fin-form').elements.data.value)}. Compras no dia de fechamento entram na fatura seguinte.`;
-      atualizarPrevia();
-    } catch (erro) { $('fin-erro-form').textContent = erro.message; }
+  $('fin-form').elements.origem_data.addEventListener('change', () => {
+    if (!editando) return;
+    if ($('fin-form').elements.origem_data.value === 'compra') campoData.limpar();
+    else campoData.definir(editando.data);
   });
   function abrir(tipo, anterior = null) {
     if (ocupado) return;
@@ -299,7 +296,8 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     form.reset();
     const valores = {
       tipo,
-      data: anterior?.data || hoje(),
+      data: anterior?.data_compra || anterior?.data || hoje(),
+      origem_data: anterior && !anterior.data_compra && anterior.meio === 'Cartão de crédito' ? 'fatura' : 'compra',
       descricao: anterior?.descricao || '',
       valor: anterior
         ? (anterior.valor_centavos / 100).toFixed(2).replace('.', ',')
@@ -316,10 +314,10 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
         ? 'Taxa da maquininha'
         : 'Nova despesa';
     $('fin-ajuda-form').textContent = anterior
-      ? tipo === 'despesa' ? 'Você está editando a COMPRA INTEIRA, mesmo tendo aberto outra parcela. O valor é o total da compra e a data é a primeira fatura ou pagamento. Salvar recalcula todas as parcelas, inclusive as de meses anteriores; mudar a quantidade não acrescenta juros.' : 'Informe o desconto total em reais das vendas desta data.'
+      ? tipo === 'despesa' ? 'Você está editando a COMPRA INTEIRA, mesmo tendo aberto outra parcela. O valor é o total da compra. No cartão, a data da compra calcula as faturas automaticamente. Registros antigos mantêm a primeira fatura até você informar a compra original. Alterar a data original, o total ou a quantidade pode recalcular o histórico inteiro. Alterar só a descrição ou a categoria preserva datas e centavos; mudar a quantidade não acrescenta juros.' : 'Informe o desconto total em reais das vendas desta data.'
       : tipo === 'taxa'
         ? 'Informe em reais o desconto cobrado pela maquininha nas vendas desta data. Não é uma despesa nem uma taxa do cartão usado para fazer compras.'
-        : 'Informe o TOTAL da compra. O programa divide esse valor pela quantidade de parcelas, sem acrescentar juros, e ajusta os centavos para manter a soma exata. No cartão, a data é a primeira fatura, mesmo em compras antigas; o botão calcula a fatura pela data da compra. Compras no dia do fechamento entram na fatura seguinte. Não registre novamente o pagamento da fatura.';
+        : 'Informe o TOTAL da compra. O programa divide esse valor pela quantidade de parcelas, sem acrescentar juros, e ajusta os centavos para manter a soma exata. No cartão, informe a DATA DA COMPRA. O programa calcula a primeira fatura e mostra a prévia antes de salvar. Compras no dia do fechamento entram na fatura seguinte. Não registre novamente o pagamento da fatura.';
     $('fin-erro-form').textContent = '';
     controles();
     atualizarPrevia();

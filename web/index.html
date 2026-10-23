@@ -567,6 +567,10 @@
             <label>Ano<input id="fin-data-ano" type="number" min="1900" max="9998" required /></label>
           </div>
           <p id="fin-data-confirmada" class="nota" aria-live="polite"></p>
+          <label id="fin-origem-campo" hidden>Data de registro antigo<select name="origem_data">
+            <option value="compra">Data da compra</option>
+            <option value="fatura">Primeira fatura já cadastrada</option>
+          </select></label>
         </fieldset>
         <label
           >Descrição<input name="descricao" maxlength="200" required
@@ -603,12 +607,11 @@
             value="1"
             required
         /></label>
-        <button id="fin-calcular-fatura" type="button" hidden>Esta é a data da compra? Calcular primeira fatura</button>
         <p id="fin-previa" class="nota" aria-live="polite"></p>
         <p id="fin-ajuda-form" class="nota">
           Para parcelar, escolha Cartão de crédito e informe o valor TOTAL da compra.
           O programa calcula cada parcela; a soma mantém o total informado. A
-          data é o primeiro vencimento, mesmo para compras antigas; os próximos serão mensais. Um
+          data é a da compra: a primeira fatura e as próximas são calculadas automaticamente. Um
           compromisso já lançado não deve ser cadastrado de novo como parte da
           fatura.
         </p>

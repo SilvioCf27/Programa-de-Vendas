@@ -112,7 +112,7 @@ class NuvemTests(unittest.TestCase):
         sessao = nuvem.Sessao('usuario', 'teste@example.invalid', 'token-ficticio')
         cliente.migrar(sessao, {'vendas': []}, False)
         req = cliente._abrir.call_args.args[0]
-        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/migrar_desktop')
+        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/migrar_desktop_v2')
         self.assertEqual(json.loads(req.data), {'dados': {'vendas': []}, 'aplicar': False})
         self.assertEqual(req.get_header('Authorization'), 'Bearer token-ficticio')
 
@@ -120,7 +120,7 @@ class NuvemTests(unittest.TestCase):
         for codigo, trecho in [('PFM01', 'divergentes'), ('PFM02', 'formato'), ('PGRST202', '003_migracao'), ('23505', 'cancelada')]:
             cliente = nuvem.ClienteNuvem(URL, CHAVE)
             corpo = {'code': codigo, 'message': 'senha-nao-exibir', 'details': json.dumps({'tabela': 'vendas', 'chave': '2030-01-01'})}
-            cliente._abrir = Mock(side_effect=HTTPError(URL, 400, 'erro', {}, resposta(corpo)))
+            cliente._abrir = Mock(side_effect=lambda *args, **kwargs: (_ for _ in ()).throw(HTTPError(URL, 400, 'erro', {}, resposta(corpo))))
             with self.assertRaisesRegex(nuvem.ErroNuvem, trecho) as contexto:
                 cliente.migrar(nuvem.Sessao('usuario', 'email', 'token'), {}, False)
             self.assertNotIn('senha-nao-exibir', str(contexto.exception))
@@ -133,7 +133,7 @@ class NuvemTests(unittest.TestCase):
         sessao = nuvem.Sessao('usuario', 'email', 'token-ficticio')
         cliente.sincronizar(sessao, [], 'identificador-ficticio')
         req = cliente._abrir.call_args.args[0]
-        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/sincronizar_desktop')
+        self.assertEqual(req.full_url, URL + '/rest/v1/rpc/sincronizar_desktop_v2')
         self.assertEqual(json.loads(req.data), {'alteracoes': [], 'operacao_id': 'identificador-ficticio'})
         self.assertEqual(req.get_header('Authorization'), 'Bearer token-ficticio')
 
@@ -142,7 +142,7 @@ class NuvemTests(unittest.TestCase):
         cliente._abrir = Mock(side_effect=HTTPError(URL, 400, 'erro', {}, resposta({'code': 'PFS01'})))
         with self.assertRaises(nuvem.ConflitoSincronizacao):
             cliente.sincronizar(nuvem.Sessao('usuario', 'email', 'token'))
-        cliente._abrir = Mock(side_effect=HTTPError(URL, 404, 'erro', {}, resposta({'code': 'PGRST202'})))
+        cliente._abrir = Mock(side_effect=lambda *args, **kwargs: (_ for _ in ()).throw(HTTPError(URL, 404, 'erro', {}, resposta({'code': 'PGRST202'}))))
         with self.assertRaisesRegex(nuvem.ErroNuvem, '004_sincronizacao.sql'):
             cliente.sincronizar(nuvem.Sessao('usuario', 'email', 'token'))
 
@@ -191,3 +191,11 @@ class NuvemTests(unittest.TestCase):
         with patch.object(cliente, '_post', return_value=config) as rpc:
             self.assertEqual(cliente.salvar_fechamento(sessao, 0, '2090-11-01', 14), config)
             rpc.assert_called_once_with('/rest/v1/rpc/salvar_fechamento', {'versao_esperada': 0, 'vigencia': '2090-11-01', 'dia': 14}, sessao.token)
+
+    def test_sql_006_ausente_nao_descarta_data_da_compra(self):
+        cliente = nuvem.ClienteNuvem(URL, CHAVE)
+        cliente._abrir = Mock(side_effect=lambda *a, **kw: (_ for _ in ()).throw(HTTPError(URL,404,'erro',{},resposta({'code':'PGRST202'}))))
+        op = dict(tabela='financeiro_lancamentos',acao='inserir',id='ficticio',versao=None,dados={'data_compra':'2026-10-09'})
+        with self.assertRaisesRegex(nuvem.EstruturaComprasIndisponivel, '006_datas_compras'):
+            cliente.sincronizar(nuvem.Sessao('u','e','t'), [op], 'op')
+        self.assertEqual(cliente._abrir.call_count,1)

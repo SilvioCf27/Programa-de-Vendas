@@ -95,6 +95,10 @@ class Sessao:
     expira_em: float = field(default=0, repr=False)
 
 
+class EstruturaComprasIndisponivel(ErroNuvem):
+    pass
+
+
 class ClienteNuvem:
     def __init__(self, url, chave):
         config = validar_config(url, chave)
@@ -143,11 +147,13 @@ class ClienteNuvem:
                 raise FechamentoIndisponivel('Instale o SQL 005_fechamentos.sql no Supabase para configurar o fechamento.') from None
             if codigo == '40001' and caminho.endswith('/salvar_fechamento'):
                 raise ErroNuvem('O fechamento mudou em outro dispositivo. Consulte novamente antes de salvar.') from None
+            if codigo == 'PGRST202' and caminho.endswith(('_desktop_v2',)):
+                raise EstruturaComprasIndisponivel('Execute 006_datas_compras.sql no Supabase para sincronizar a data original da compra. Nenhum lançamento foi enviado.') from None
             if codigo == 'PGRST202':
                 script = '004_sincronizacao.sql' if caminho.endswith('/sincronizar_desktop') else '003_migracao_desktop.sql'
                 raise ErroNuvem(f'Instale o SQL {script} no Supabase antes de continuar.') from None
             if codigo in ('23505', '23514', '23502', '22P02', '22007', '22008'):
-                tipo = LoteRecusado if caminho.endswith('/sincronizar_desktop') else ErroNuvem
+                tipo = LoteRecusado if caminho.endswith(('/sincronizar_desktop', '/sincronizar_desktop_v2')) else ErroNuvem
                 raise tipo('A nuvem recusou um valor, uma data, uma duplicidade ou uma sobreposição de taxas. A transferência inteira foi cancelada.') from None
             if erro.code == 401 or (caminho.endswith('grant_type=refresh_token') and erro.code in (400, 403)):
                 raise SessaoExpirada('Entre novamente em Conexão com a nuvem para retomar a sincronização.') from None
@@ -180,13 +186,33 @@ class ClienteNuvem:
         return self._ultima_sessao
 
     def migrar(self, sessao, dados, aplicar=False):
-        return self._post('/rest/v1/rpc/migrar_desktop', {'dados': dados, 'aplicar': aplicar}, sessao.token)
+        try:
+            return self._post('/rest/v1/rpc/migrar_desktop_v2', {'dados': dados, 'aplicar': aplicar}, sessao.token)
+        except EstruturaComprasIndisponivel:
+            if any(r.get('data_compra') for r in dados.get('financeiro_lancamentos', [])):
+                raise
+            legado = {**dados, 'financeiro_lancamentos': [{k: v for k, v in r.items() if k != 'data_compra'} for r in dados.get('financeiro_lancamentos', [])]}
+            resposta = self._post('/rest/v1/rpc/migrar_desktop', {'dados': legado, 'aplicar': aplicar}, sessao.token)
+            if any('data_compra' in r for r in dados.get('financeiro_lancamentos', [])):
+                for r in resposta['dados']['financeiro_lancamentos']:
+                    r.setdefault('data_compra', None)
+            return resposta
 
     def sincronizar(self, sessao, alteracoes=None, operacao_id=None):
-        return self._post('/rest/v1/rpc/sincronizar_desktop', {
-            'alteracoes': [] if alteracoes is None else alteracoes,
-            'operacao_id': operacao_id,
-        }, sessao.token)
+        # Mantém idêntico o recibo de lotes sem data de compra, antes/depois do SQL 006.
+        operacoes = []
+        for op in alteracoes or []:
+            op = dict(op)
+            if op['tabela'] == 'financeiro_lancamentos' and op['dados'] is not None and op['dados'].get('data_compra') is None:
+                op['dados'] = {k: v for k, v in op['dados'].items() if k != 'data_compra'}
+            operacoes.append(op)
+        corpo = {'alteracoes': operacoes, 'operacao_id': operacao_id}
+        try:
+            return self._post('/rest/v1/rpc/sincronizar_desktop_v2', corpo, sessao.token)
+        except EstruturaComprasIndisponivel:
+            if any(op['dados'] and op['dados'].get('data_compra') for op in operacoes):
+                raise
+            return self._post('/rest/v1/rpc/sincronizar_desktop', corpo, sessao.token)
 
     def fechamentos(self, sessao):
         from ProgramFeira.fechamento import validar

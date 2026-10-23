@@ -54,7 +54,7 @@ async function preparar(page, { falharListagem = false } = {}) {
     }
     if (url.pathname === '/rest/v1/rpc/usuario_autorizado')
       return responder(true);
-    if (url.pathname === '/rest/v1/rpc/sincronizar_desktop') {
+    if (['/rest/v1/rpc/sincronizar_desktop', '/rest/v1/rpc/sincronizar_desktop_v2'].includes(url.pathname)) {
       const lote = request.postDataJSON();
       if (lote.operacao_id && !recibos.has(lote.operacao_id)) {
         const copia = structuredClone({
@@ -93,7 +93,7 @@ async function preparar(page, { falharListagem = false } = {}) {
         }
       }
       return responder({
-        protocolo: 1,
+        protocolo: url.pathname.endsWith('_v2') ? 2 : 1,
         usuario_id: USER,
         operacao_id: lote.operacao_id,
         repetida: false,
@@ -748,7 +748,7 @@ test('consulta lenta não aplica filtros digitados enquanto a resposta está che
       await espera;
       await route.fallback();
     };
-    await page.route('**/rest/v1/rpc/sincronizar_desktop', atrasar);
+    await page.route('**/rest/v1/rpc/sincronizar_desktop*', atrasar);
     await page.locator('#aba-' + area).click();
     await expect(page.locator('#' + prefixo + '-status')).toContainText(
       'Consultando'
@@ -769,7 +769,7 @@ test('consulta lenta não aplica filtros digitados enquanto a resposta está che
     await expect(page.locator('#' + prefixo + '-periodo')).not.toContainText(
       '2001'
     );
-    await page.unroute('**/rest/v1/rpc/sincronizar_desktop', atrasar);
+    await page.unroute('**/rest/v1/rpc/sincronizar_desktop*', atrasar);
   }
 });
 
@@ -905,7 +905,7 @@ test('taxas de sexta e domingo são salvas juntas e mantêm as datas ao cruzar f
   await expect(page.locator('#fin-taxas')).toHaveText('R$ 3,00');
 });
 
-test('desktop web: comprar no dia 09 calcula próxima fatura somente ao pedir', async ({ page }) => {
+test('desktop web: comprar no dia 09 calcula próxima fatura automaticamente', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   const vendas = await preparar(page);
   await page.getByRole('button', { name: 'Finanças', exact: true }).click();
@@ -919,7 +919,7 @@ test('desktop web: comprar no dia 09 calcula próxima fatura somente ao pedir', 
   await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
   await f.getByLabel('Quantidade de parcelas').fill('3');
   await expect(page.locator('#fin-data-confirmada')).toContainText('09/09/2026');
-  await page.locator('#fin-calcular-fatura').click();
+  await expect(page.locator('#fin-calcular-fatura')).toHaveCount(0);
   await expect(page.locator('#fin-previa')).toContainText('09/10/2026 · 09/11/2026 · 09/12/2026');
   await page.locator('#fin-salvar').click();
   await expect(page.locator('#fin-dialogo')).not.toBeVisible();
@@ -960,7 +960,7 @@ test('compra de maio pode ser editada pela quinta parcela com filtro só de sete
   await consultarFinancas(page, 'Mês', '2030-09-01');
   await page.locator('#fin-despesa').click();
   const f = page.locator('#fin-form');
-  await dataFinanceira(page, '2030-05-09');
+  await dataFinanceira(page, '2030-05-08');
   await f.getByLabel('Descrição', { exact: true }).fill('Compra antiga de exemplo');
   await f.getByLabel(/Valor total/).fill('100,01');
   await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
@@ -971,7 +971,7 @@ test('compra de maio pode ser editada pela quinta parcela com filtro só de sete
   const ids = vendas.financeiro.lancamentos.map(r => r.id);
   await page.locator('#fin-lancamentos').getByRole('button', {name:'Editar', exact:true}).click();
   await expect(f.getByLabel(/Valor total/)).toHaveValue('100,01');
-  await expect(page.locator('#fin-data-confirmada')).toContainText('09/05/2030');
+  await expect(page.locator('#fin-data-confirmada')).toContainText('08/05/2030');
   await f.getByLabel(/Valor total/).fill('150,00');
   await f.getByLabel('Descrição', { exact:true }).fill('Compra antiga corrigida');
   page.once('dialog', d => d.accept());
@@ -987,4 +987,53 @@ test('compra de maio pode ser editada pela quinta parcela com filtro só de sete
   await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
   expect(vendas.financeiro.lancamentos.map(r=>r.id)).toEqual(ids.slice(0,3));
   expect(vendas.financeiro.lancamentos.map(r=>r.valor_centavos)).toEqual([5000,5000,5000]);
+});
+
+test('Regressão do fechamento: compra em 09/10 fica no fechamento de outubro e edição não a adia novamente', async ({page})=>{
+  const dados=await preparar(page);
+  await page.locator('#aba-financas').click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page,'Fechamento','2026-10-01');
+  await page.locator('#fin-despesa').click();
+  const f=page.locator('#fin-form');
+  await dataFinanceira(page,'2026-10-09');
+  await f.getByLabel('Descrição',{exact:true}).fill('Compra no fechamento (exemplo)');
+  await f.getByLabel(/Valor total/).fill('13');
+  await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
+  await expect(page.locator('#fin-previa')).toContainText('09/11/2026');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 13,00');
+  await page.locator('#fin-lancamentos').getByRole('button',{name:'Editar',exact:true}).click();
+  await expect(page.locator('#fin-data-confirmada')).toContainText('09/10/2026');
+  await f.getByLabel('Descrição',{exact:true}).fill('Compra conferida');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-lancamentos')).toContainText('Compra conferida');
+  expect(dados.financeiro.lancamentos[0].data).toBe('2026-11-09');
+  expect(dados.financeiro.lancamentos[0].data_compra).toBe('2026-10-09');
+  await consultarFinancas(page,'Fechamento','2026-09-01');
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
+});
+
+test('registro antigo preserva a fatura e só converte quando a compra original é informada', async ({page})=>{
+  const dados=await preparar(page);
+  dados.financeiro.lancamentos.push({id:crypto.randomUUID(),versao:1,tipo:'despesa',data:'2026-11-09',data_compra:null,descricao:'Registro antigo',valor_centavos:1300,meio:'Cartão de crédito',categoria:'Casa',grupo:null,parcela:1,parcelas:1});
+  await page.locator('#aba-financas').click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page,'Fechamento','2026-10-01');
+  const editar=()=>page.locator('#fin-lancamentos').getByRole('button',{name:'Editar',exact:true}).click();
+  await editar();
+  const f=page.locator('#fin-form');
+  await expect(f.locator('[name=origem_data]')).toHaveValue('fatura');
+  await f.getByLabel('Descrição',{exact:true}).fill('Antigo conferido');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-dialogo')).not.toBeVisible();
+  expect(dados.financeiro.lancamentos[0].data).toBe('2026-11-09');
+  await editar();
+  await f.locator('[name=origem_data]').selectOption('compra');
+  await expect(page.locator('#fin-data-ano')).toHaveValue('');
+  await dataFinanceira(page,'2026-10-09');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-dialogo')).not.toBeVisible();
+  expect(dados.financeiro.lancamentos[0].data_compra).toBe('2026-10-09');
+  expect(dados.financeiro.lancamentos[0].data).toBe('2026-11-09');
 });

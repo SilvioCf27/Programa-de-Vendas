@@ -1,6 +1,6 @@
 # Conheça o Gestão da Feira
 
-As capturas mostram o aplicativo desktop v1.5.0 com **dados fictícios**.
+As capturas mostram o aplicativo desktop v1.6.0 com **dados fictícios**.
 Os exemplos não fazem parte do banco distribuído. Fontes e detalhes de renderização
 podem variar conforme o sistema e a escala da tela.
 
@@ -66,7 +66,7 @@ fora da pasta do programa; atualizar o aplicativo preserva os dados. Os botões
 ## Compra parcelada
 
 Mesmo abrindo uma parcela intermediária, a edição mostra o total da compra,
-a primeira fatura e a quantidade de parcelas. A prévia mostra os valores
+a data da compra (ou a fatura de um registro antigo) e a quantidade de parcelas. A prévia mostra os valores
 calculados, e salvar atualiza o histórico inteiro da compra.
 
 ![Edição da compra completa, com dados fictícios](imagens/compra-parcelada.png)

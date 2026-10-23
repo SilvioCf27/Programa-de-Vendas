@@ -47,7 +47,7 @@ def _texto(valor, limite=None):
     return valor
 
 
-def extrair(conexao, usuario_id):
+def extrair(conexao, usuario_id, incluir_compra=False):
     """Valida todos os dados; nunca ignora linhas inválidas ou arredonda valores."""
     try:
         namespace = UUID(usuario_id)
@@ -65,6 +65,11 @@ def extrair(conexao, usuario_id):
             linha = {k: r[k] for k in ('tipo', 'descricao', 'meio', 'categoria', 'grupo')}
             linha['id'] = str(uuid5(namespace, 'desktop:financeiro_lancamentos:' + str(_inteiro(r['id'], 1, 9223372036854775807))))
             linha['data'] = _data(r['data'])
+            origem = r['data_compra'] if 'data_compra' in r.keys() else None
+            if incluir_compra:
+                linha['data_compra'] = _data(origem) if origem is not None else None
+            elif origem is not None:
+                raise ErroNuvem('Esta compra exige a migração atualizada com data original; atualize a conexão antes de transferir.')
             linha['valor_centavos'] = _inteiro(r['valor_centavos'], 1)
             linha['parcela'] = _inteiro(r['parcela'], 1, 120)
             linha['parcelas'] = _inteiro(r['parcelas'], 1, 120)
@@ -169,7 +174,7 @@ def preparar(banco, cliente, sessao):
     banco = Path(banco)
     backup = criar_backup(banco, 'antes-migracao-nuvem')
     with closing(sqlite3.connect(backup.resolve().as_uri() + '?mode=ro', uri=True)) as conexao:
-        dados = extrair(conexao, sessao.usuario_id)
+        dados = extrair(conexao, sessao.usuario_id, incluir_compra=True)
     pasta = banco.parent / 'migracoes-nuvem'
     pasta.mkdir(exist_ok=True)
     caminho = pasta / ('conferencia-' + uuid4().hex + '.json')
@@ -206,7 +211,7 @@ def transferir(preparacao):
     with closing(sqlite3.connect(p['banco'].resolve().as_uri() + '?mode=rw', uri=True, timeout=5)) as conexao:
         conexao.execute('BEGIN IMMEDIATE')
         try:
-            atuais = extrair(conexao, p['sessao'].usuario_id)
+            atuais = extrair(conexao, p['sessao'].usuario_id, incluir_compra=True)
             if assinatura(atuais) != relatorio['dados_sha256'] or assinatura(p['dados']) != relatorio['dados_sha256']:
                 raise ErroNuvem('O banco local mudou após a conferência. Confira novamente antes de transferir.')
             relatorio['estado'] = 'envio_iniciado_resultado_a_confirmar'

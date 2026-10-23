@@ -19,6 +19,8 @@ before(async () => {
     "002_financeiro.sql",
     "003_migracao_desktop.sql",
     "004_sincronizacao.sql",
+    "005_fechamentos.sql",
+    "006_datas_compras.sql",
   ]) {
     await db.exec(
       await readFile(
@@ -309,6 +311,7 @@ test("tabelas arbitrárias e campos técnicos não entram na operação", async 
 });
 
 test('editar compra inteira usa um lote atômico e conflito em uma parcela impede todas', async () => {
+  const sincronizar = async (alteracoes = [], id = null) => (await db.query('select public.sincronizar_desktop_v2($1::jsonb,$2::uuid) as resultado',[JSON.stringify(alteracoes),id])).rows[0].resultado;
   const { lancamentoFormulario, compraDoLancamento } = await import('../src/financeiro.js');
   const form = {tipo:'despesa', data:'2030-05-09', descricao:'Compra de teste', valor:'100,00', meio:'Cartão de crédito', categoria:'Casa', parcelas:3};
   const inicial = await sincronizar(lancamentoFormulario(form), OP1);
@@ -326,4 +329,25 @@ test('editar compra inteira usa um lote atômico e conflito em uma parcela imped
   atuais = salvo.dados.financeiro_lancamentos.sort((a,b)=>a.parcela-b.parcela);
   assert.deepEqual(atuais.map(r=>r.valor_centavos),[3000,3000,3000,3000,3001]);
   assert.ok(registros.every(r=>atuais.some(n=>n.id===r.id)));
+});
+
+test('SQL 006 preserva dados antigos, transmite a compra e mantém recibos de ambas as versões', async () => {
+  await migrar(dados(),true);
+  const antigo = await sincronizar();
+  assert.ok(antigo.dados.financeiro_lancamentos.every(r=>!('data_compra' in r)));
+  const sql = await readFile(new URL('../../supabase/migrations/006_datas_compras.sql', import.meta.url),'utf8');
+  await db.exec('reset role'); await db.exec(sql); await usuario();
+  assert.deepEqual((await sincronizar()).dados, antigo.dados);
+  const nova = { tabela:'financeiro_lancamentos',acao:'inserir',id:'99999999-9999-4999-8999-999999999999',versao:null,
+    dados:{tipo:'despesa',data:'2026-11-09',data_compra:'2026-10-09',descricao:'Mercado de teste',valor_centavos:1300,meio:'Cartão de crédito',categoria:'Feira',grupo:null,parcela:1,parcelas:1}};
+  const v2 = async(ops,id=null)=>(await db.query('select public.sincronizar_desktop_v2($1::jsonb,$2::uuid) r',[JSON.stringify(ops),id])).rows[0].r;
+  const salvo = await v2([nova],OP1);
+  assert.equal(salvo.protocolo,2);
+  assert.equal(salvo.dados.financeiro_lancamentos.find(r=>r.id===nova.id).data_compra,'2026-10-09');
+  assert.equal((await v2([nova],OP1)).repetida,true);
+  await assert.rejects(v2([{...nova,dados:{...nova.dados,data_compra:'2026-10-08'}}],OP1),{code:'PFS02'});
+  const velho=(await sincronizar()).dados.financeiro_lancamentos.find(r=>r.id===nova.id);
+  await sincronizar([operacao('financeiro_lancamentos','editar',velho,{...corpo(velho),descricao:'Edição por aplicativo antigo'})],OP2);
+  assert.equal((await v2([])).dados.financeiro_lancamentos.find(r=>r.id===nova.id).data_compra,null);
+  await usuario(OUTRO); await assert.rejects(v2([]),{code:'42501'});
 });

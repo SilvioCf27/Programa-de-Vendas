@@ -10,23 +10,17 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.5.0
+## Versão 1.6.0
 
-A versão passa a usar o valor total da compra, com divisão exata em parcelas,
-e permite editar a compra inteira a partir de qualquer parcela. Os registros
-existentes são preservados sem recalcular valores na atualização.
+No cartão de crédito, informe a **data da compra**. A primeira fatura é calculada
+automaticamente; compras no dia do fechamento entram na fatura seguinte.
+As duas datas são guardadas separadamente e sincronizadas entre PC e PWA.
 
-Continuam disponíveis as datas explícitas e prévia das parcelas, filtros financeiros
-adaptativos e taxas da maquininha por semana. As cinco paletas e as configurações
-existentes são preservadas. O fechamento pode ser alterado por vigência futura,
-com histórico compartilhado entre PC e PWA.
-
-Esta atualização não exige SQL novo. Caso ainda não tenha habilitado a configuração
-compartilhada do fechamento, execute apenas
-`SQL_005_FECHAMENTOS.sql`, incluído no pacote, no SQL Editor do projeto já
-configurado. Não é necessário refazer a migração de dados. O dia 09 continua sendo
-a regra inicial, e as outras melhorias funcionam com a estrutura atual.
-Leia [FINANCAS.md](FINANCAS.md) antes de revisar datas antigas ou mudar a regra.
+Execute `SQL_006_DATAS_COMPRAS.sql`, incluído no pacote, no SQL Editor do mesmo
+projeto Supabase. Não refaça a migração dos dados. Registros antigos continuam
+com as faturas existentes até você informar a data original conscientemente.
+Os valores já conferidos e os centavos são preservados em edições de descrição.
+Leia [FINANCAS.md](FINANCAS.md) para os exemplos e cuidados na atualização.
 
 ## Recursos da versão 1.2.0
 

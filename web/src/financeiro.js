@@ -80,7 +80,8 @@ export function compraDoLancamento(registro, todos) {
     .map(r => ({ ...r })).sort((a, b) => a.parcela - b.parcela);
   if (registros.length !== registro.parcelas || registros.some((r, i) => r.parcela !== i + 1 || r.parcelas !== registro.parcelas || r.tipo !== registro.tipo))
     throw Error('O histórico desta compra está incompleto ou inconsistente. Confira as parcelas antes de editar a compra; nada foi alterado.');
-  return { ...registros[0], valor_centavos: registros.reduce((s, r) => s + Number(r.valor_centavos), 0), registros };
+  const origens = new Set(registros.map(r => r.data_compra ?? null));
+  return { ...registros[0], data_compra: origens.size === 1 ? [...origens][0] : null, valor_centavos: registros.reduce((s, r) => s + Number(r.valor_centavos), 0), registros };
 }
 export function lancamentoFormulario(form, anterior = null, uuid = () => crypto.randomUUID()) {
   const descricao = String(form.descricao || '').trim();
@@ -99,19 +100,23 @@ export function lancamentoFormulario(form, anterior = null, uuid = () => crypto.
     const compra = compraDoLancamento(anterior, anterior.registros || [anterior]);
     registros = compra.registros;
   }
-  const grupo = anterior?.grupo || (parcelas > 1 ? uuid() : null);
-  const [, mes, dia] = form.data.split('-').map(Number);
+  const data_compra = form.tipo === 'despesa' && form.meio === 'Cartão de crédito' && form.origem_data !== 'fatura' ? form.data : null;
+  const mesmaOrigem = anterior && (anterior.data_compra ?? null) === data_compra && anterior.meio === form.meio && (data_compra || anterior.data === form.data);
+  const inicio = mesmaOrigem ? anterior.data : data_compra ? primeiraFatura(data_compra) : form.data;
+  const grupo = parcelas > 1 ? anterior?.grupo || uuid() : null;
+  const [, mes, dia] = inicio.split('-').map(Number);
   const ops = quantias.map((valor_centavos, i) => {
-    const primeiro = new Date(`${form.data}T12:00:00Z`);
+    const primeiro = new Date(`${inicio}T12:00:00Z`);
     primeiro.setUTCDate(1); primeiro.setUTCMonth(mes - 1 + i);
     const ultimo = new Date(primeiro); ultimo.setUTCMonth(ultimo.getUTCMonth() + 1); ultimo.setUTCDate(0);
-    primeiro.setUTCDate(Math.min(dia, ultimo.getUTCDate()));
-    const data = iso(primeiro);
+    primeiro.setUTCDate(data_compra ? diaNoMes(primeiro.getUTCFullYear(), primeiro.getUTCMonth() + 1) : Math.min(dia, ultimo.getUTCDate()));
+    const data = mesmaOrigem && registros[i] ? registros[i].data : iso(primeiro);
     if (!dataValida(data)) throw Error('O parcelamento ultrapassa o limite de datas.');
     const r = registros[i];
+    if (mesmaOrigem && parcelas === registros.length && Number(anterior.valor_centavos) === total) valor_centavos = Number(r.valor_centavos);
     return { tabela: 'financeiro_lancamentos', acao: r ? 'editar' : 'inserir',
       id: r?.id ?? uuid(), versao: r?.versao ?? null,
-      dados: { tipo: form.tipo, data, descricao, valor_centavos, meio: form.meio, categoria: form.categoria, grupo, parcela: i + 1, parcelas } };
+      dados: { tipo: form.tipo, data, descricao, valor_centavos, meio: form.meio, categoria: form.categoria, grupo, parcela: i + 1, parcelas, data_compra } };
   });
   for (const r of registros.slice(parcelas))
     ops.push({ tabela: 'financeiro_lancamentos', acao: 'excluir', id: r.id, versao: r.versao, dados: null });
@@ -158,6 +163,7 @@ export function anualFormulario(
   ];
 }
 export function erroFinanceiro(erro) {
+  if (erro?.code === 'PGRST202') return 'Execute 006_datas_compras.sql no Supabase para guardar a data da compra e a fatura. Nenhum lançamento foi enviado.';
   if (erro?.armazenamento)
     return 'Não foi possível preparar o envio neste navegador. Permita armazenamento local para salvar com segurança.';
   if (erro?.code === '23505')

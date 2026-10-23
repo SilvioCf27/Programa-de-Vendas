@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  compraDoLancamento,
   limitesFinanceiros,
   resumoFinanceiro,
   lancamentoFormulario,
@@ -90,7 +91,7 @@ const form = () => ({
   categoria: 'Casa',
   parcelas: '3',
 });
-test('parcelamento mantém valor por parcela, grupo e dia original após fevereiro', () => {
+test('parcelamento divide o total exato, mantém grupo e dia original após fevereiro', () => {
   let i = 0;
   const linhas = lancamentoFormulario(form(), null, () => `id-${++i}`);
   assert.deepEqual(
@@ -99,7 +100,7 @@ test('parcelamento mantém valor por parcela, grupo e dia original após feverei
   );
   assert.deepEqual(
     linhas.map((r) => r.dados.valor_centavos),
-    [12345, 12345, 12345]
+    [4115, 4115, 4115]
   );
   assert.equal(new Set(linhas.map((r) => r.dados.grupo)).size, 1);
   assert.deepEqual(
@@ -107,18 +108,21 @@ test('parcelamento mantém valor por parcela, grupo e dia original após feverei
     [1, 2, 3]
   );
   assert.equal(new Set(linhas.map((r) => r.id)).size, 3);
-  const anterior = {
-    id: 'original',
-    versao: 7,
-    grupo: 'grupo',
-    parcela: 2,
-    parcelas: 3,
-  };
-  const editado = lancamentoFormulario({ ...form(), parcelas: 1 }, anterior)[0];
-  assert.equal(editado.id, 'original');
-  assert.equal(editado.versao, 7);
-  assert.equal(editado.dados.parcela, 2);
-  assert.equal(editado.dados.parcelas, 3);
+  const registros = linhas.map((op, i) => ({ ...op.dados, id: op.id, versao: i + 1 }));
+  const compra = compraDoLancamento(registros[2], registros);
+  assert.equal(compra.valor_centavos, 12345);
+  assert.equal(compra.data, '2030-01-31');
+  const editados = lancamentoFormulario({ ...form(), valor: '100,00' }, compra);
+  assert.deepEqual(editados.map(op => op.dados.valor_centavos), [3333, 3333, 3334]);
+  assert.deepEqual(editados.map(op => [op.id, op.versao]), registros.map(r => [r.id, r.versao]));
+  const ampliados = lancamentoFormulario({ ...form(), parcelas: 5 }, compra, () => 'novo');
+  assert.deepEqual(ampliados.map(op => op.acao), ['editar','editar','editar','inserir','inserir']);
+  const reduzidos = lancamentoFormulario({ ...form(), parcelas: 1 }, compra);
+  assert.deepEqual(reduzidos.map(op => op.acao), ['editar','excluir','excluir']);
+  assert.equal(reduzidos[0].dados.valor_centavos, 12345);
+  assert.throws(() => compraDoLancamento(registros[1], registros.slice(1)), /incompleto/);
+  assert.throws(() => lancamentoFormulario({ ...form(), valor: '0,01', parcelas: 2 }));
+
 });
 test('lançamentos inválidos são recusados antes de escrever', () => {
   for (const alteracao of [

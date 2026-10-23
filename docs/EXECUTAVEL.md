@@ -10,14 +10,19 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.4.1
+## Versão 1.5.0
 
-A versão acrescenta datas explícitas e prévia das parcelas, filtros financeiros
+A versão passa a usar o valor total da compra, com divisão exata em parcelas,
+e permite editar a compra inteira a partir de qualquer parcela. Os registros
+existentes são preservados sem recalcular valores na atualização.
+
+Continuam disponíveis as datas explícitas e prévia das parcelas, filtros financeiros
 adaptativos e taxas da maquininha por semana. As cinco paletas e as configurações
 existentes são preservadas. O fechamento pode ser alterado por vigência futura,
 com histórico compartilhado entre PC e PWA.
 
-Para habilitar a configuração compartilhada, execute apenas
+Esta atualização não exige SQL novo. Caso ainda não tenha habilitado a configuração
+compartilhada do fechamento, execute apenas
 `SQL_005_FECHAMENTOS.sql`, incluído no pacote, no SQL Editor do projeto já
 configurado. Não é necessário refazer a migração de dados. O dia 09 continua sendo
 a regra inicial, e as outras melhorias funcionam com a estrutura atual.

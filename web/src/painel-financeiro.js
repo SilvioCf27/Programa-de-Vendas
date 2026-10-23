@@ -3,6 +3,7 @@ import { criarCampoData } from './campo-data.js';
 import { criarSeletorFinanceiro } from './seletor-financeiro.js';
 import { hoje, mesFechamento, moeda } from './regras.js';
 import {
+  compraDoLancamento,
   limitesFinanceiros,
   primeiraFatura,
   taxasSemanaFormulario,
@@ -65,12 +66,12 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
         e.disabled = ocupado || pendencia || e.dataset.somenteLeitura === '1';
       if (prefixo === 'fin' && !ocupado && !pendencia)
         form.elements.parcelas.disabled =
-          !!editando || form.elements.tipo.value === 'taxa';
+          form.elements.tipo.value === 'taxa';
       $(prefixo + '-salvar').disabled = ocupado || offline;
       $(prefixo + '-salvar').textContent = pendencia
         ? 'Confirmar envio'
         : prefixo === 'fin'
-          ? 'Salvar lançamento'
+          ? $('fin-form').elements.tipo.value === 'taxa' ? 'Salvar taxa' : 'Salvar compra'
           : prefixo === 'taxas' ? 'Salvar taxas da semana' : 'Salvar ajuste';
       $(prefixo + '-cancelar').disabled = ocupado;
     }
@@ -266,14 +267,16 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     const form = $('fin-form');
     const cartao = form.elements.tipo.value === 'despesa' && form.elements.meio.value === 'Cartão de crédito';
     $('fin-calcular-fatura').hidden = !cartao || !!editando;
+    $('fin-valor-titulo').textContent = form.elements.tipo.value === 'taxa' ? 'Valor total da taxa (R$)' : 'Valor total da compra (R$)';
     $('fin-data-titulo').textContent = cartao ? 'Primeira fatura (competência)' :
       form.elements.tipo.value === 'taxa' ? 'Data da venda no cartão' : 'Data de pagamento ou vencimento';
     try {
       const campos = Object.fromEntries(new FormData(form));
       const ops = lancamentoFormulario(campos, editando, () => 'previa');
-      const datas = ops.map((op) => br(op.dados.data));
-      const mostra = datas.length > 4 ? [...datas.slice(0, 3), '…', datas.at(-1)] : datas;
-      $('fin-previa').textContent = `${cartao ? 'Faturas previstas' : 'Lançamento em'}: ${mostra.join(' · ')}.`;
+      const linhas = ops.filter(op => op.dados);
+      const datas = linhas.map((op) => br(op.dados.data));
+      const mostra = datas.length > 4 ? [...datas.slice(0, 3), '...', datas.at(-1)] : datas;
+      $('fin-previa').textContent = `Total: ${moeda(linhas.reduce((s, op) => s + op.dados.valor_centavos, 0))} · ${linhas.length > 1 ? `${linhas.length} parcelas: ${[...new Set(linhas.map(op => moeda(op.dados.valor_centavos)))].join(' / ')}` : form.elements.tipo.value === 'taxa' ? 'taxa informada' : 'pagamento único'}. ${cartao ? 'Faturas previstas' : 'Lançamento em'}: ${mostra.join(' · ')}.`;
     } catch { $('fin-previa').textContent = ''; }
   }
   $('fin-form').addEventListener('change', atualizarPrevia);
@@ -288,7 +291,10 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
   });
   function abrir(tipo, anterior = null) {
     if (ocupado) return;
-    editando = anterior;
+    try {
+      editando = anterior ? compraDoLancamento(anterior, dados.financeiro_lancamentos) : null;
+    } catch (erro) { $('fin-status').textContent = erro.message; return; }
+    anterior = editando;
     const form = $('fin-form');
     form.reset();
     const valores = {
@@ -305,15 +311,15 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     for (const [k, v] of Object.entries(valores)) form.elements[k].value = v;
     campoData.definir(valores.data);
     $('fin-titulo-form').textContent = anterior
-      ? 'Editar lançamento'
+      ? tipo === 'despesa' ? 'Editar compra completa' : 'Editar taxa'
       : tipo === 'taxa'
         ? 'Taxa da maquininha'
         : 'Nova despesa';
     $('fin-ajuda-form').textContent = anterior
-      ? 'Edição altera somente este lançamento. Número e grupo das parcelas são preservados.'
+      ? tipo === 'despesa' ? 'Você está editando a COMPRA INTEIRA, mesmo tendo aberto outra parcela. O valor é o total da compra e a data é a primeira fatura ou pagamento. Salvar recalcula todas as parcelas, inclusive as de meses anteriores; mudar a quantidade não acrescenta juros.' : 'Informe o desconto total em reais das vendas desta data.'
       : tipo === 'taxa'
         ? 'Informe em reais o desconto cobrado pela maquininha nas vendas desta data. Não é uma despesa nem uma taxa do cartão usado para fazer compras.'
-        : 'No cartão, a data é a primeira fatura, não a compra. Você pode calcular a fatura pelo botão acima; compras no próprio dia de fechamento entram na fatura seguinte. Para parcelar, escolha Cartão de crédito. Informe o valor de cada parcela e o primeiro vencimento. Os próximos serão mensais. Não cadastre novamente um gasto que já entrou no compromisso inicial da fatura.';
+        : 'Informe o TOTAL da compra. O programa divide esse valor pela quantidade de parcelas, sem acrescentar juros, e ajusta os centavos para manter a soma exata. No cartão, a data é a primeira fatura, mesmo em compras antigas; o botão calcula a fatura pela data da compra. Compras no dia do fechamento entram na fatura seguinte. Não registre novamente o pagamento da fatura.';
     $('fin-erro-form').textContent = '';
     controles();
     atualizarPrevia();
@@ -387,6 +393,8 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
             : prefixo === 'taxas'
               ? taxasSemanaFormulario($('taxas-referencia').value, dadosForm, dados.financeiro_lancamentos, dados.financeiro_taxas_anuais)
               : anualFormulario(dadosForm, anual);
+        const removidas = operacoes.filter(op => op.acao === 'excluir').length;
+        if (!existente && prefixo === 'fin' && editando?.tipo === 'despesa' && (Number(dadosForm.parcelas) > 1 || editando.parcelas > 1) && !confirm(`Atualizar a compra inteira? Todas as parcelas serão recalculadas com o total informado, incluindo meses anteriores.${removidas ? ` Serão removidas as últimas ${removidas} parcelas; o total será redistribuído nas restantes.` : ''}`)) return;
         gravar(operacoes, prefixo);
       } catch (erro) {
         $(prefixo + '-erro-form').textContent = erro.message;

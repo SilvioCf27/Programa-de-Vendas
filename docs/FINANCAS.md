@@ -30,13 +30,32 @@ explícita: não modifica silenciosamente uma data já preenchida.
 
 Com fechamento no dia 09, uma compra de 08/09 entra na fatura de 09/09; uma compra
 de 09/09 entra na fatura de 09/10. Em três parcelas a partir de 09/10, os
-lançamentos serão 09/10, 09/11 e 09/12. O valor informado é **de cada parcela**.
+lançamentos serão 09/10, 09/11 e 09/12. O valor informado é sempre o **total da compra**. Por exemplo, R$ 100,00 em três parcelas gera R$ 33,33, R$ 33,33 e R$ 33,34: a diferença de centavos mantém o total exato, sem juros adicionais.
 O prazo limite de pagamento, como dia 14, não muda a identificação dessa fatura.
 
 Datas antigas não são corrigidas automaticamente: a data da compra original
 não estava armazenada para permitir essa dedução com segurança. Confira os
 lançamentos que suspeitar estarem incorretos e edite somente os necessários.
-Editar ou excluir uma parcela continua afetando apenas aquela parcela.
+Editar qualquer parcela abre a **compra inteira**, mesmo que você tenha selecionado
+uma parcela intermediária ou que a consulta mostre apenas um mês. O formulário
+carrega o total pela soma de todas as parcelas, a primeira data e a quantidade.
+Salvar recalcula valores e datas de todo o histórico da compra, incluindo meses
+anteriores. Alterar a quantidade redistribui o mesmo total; não simula juros de
+renegociação. As parcelas mantidas conservam suas identificações.
+
+Uma compra antiga pode ser cadastrada hoje com a primeira fatura em maio: o
+histórico começa nessa data, e não na data de cadastro. Para crédito, continue
+usando a primeira fatura ou calcule-a pela data da compra com o botão indicado.
+
+**Os registros existentes não são divididos novamente ao atualizar o programa.**
+O total exibido ao editar é a soma dos valores já armazenados. Confira esse total
+antes de salvar, sobretudo se antes você informou o total em um campo que era por
+parcela. Não há correção automática de valores históricos.
+
+Excluir continua afetando somente a parcela selecionada. Se faltarem parcelas ou
+o grupo estiver inconsistente, a edição da compra será bloqueada para evitar
+recriar cobranças que tenham sido excluídas. Confira o histórico ou restaure uma
+cópia adequada antes de editar esse grupo.
 
 ## Escolher o período
 

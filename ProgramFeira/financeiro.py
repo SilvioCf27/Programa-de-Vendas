@@ -94,9 +94,36 @@ def _conflito(c, inicio, fim, ignorar=None):
         WHERE inicio <= ? AND fim >= ? AND ano != ?''', (fim, inicio, ignorar or -1)).fetchone()
 
 
-def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Outros', parcelas=1, identificador=None):
-    dia = _data(data)
-    quantia = centavos(valor)
+def dividir_total(total, quantidade):
+    if type(quantidade) is not int or not 1 <= quantidade <= 120:
+        raise ValueError('Use de 1 a 120 parcelas.')
+    base, resto = divmod(total, quantidade)
+    if base < 1:
+        raise ValueError('O total precisa permitir pelo menos R$ 0,01 por parcela.')
+    return [base + (1 if resto and i >= quantidade - resto else 0) for i in range(quantidade)]
+
+
+def _compra(c, identificador):
+    c.row_factory = sqlite3.Row
+    linha = c.execute('SELECT * FROM financeiro_lancamentos WHERE id=?', (identificador,)).fetchone()
+    if not linha:
+        raise ValueError('O lançamento selecionado não existe mais.')
+    r = dict(linha)
+    registros = [dict(v) for v in c.execute('SELECT * FROM financeiro_lancamentos WHERE grupo=? ORDER BY parcela', (r['grupo'],))] if r['grupo'] else [r]
+    n = r['parcelas']
+    if len(registros) != n or [v['parcela'] for v in registros] != list(range(1, n + 1)) or any(v['parcelas'] != n or v['tipo'] != r['tipo'] for v in registros):
+        raise ValueError('O histórico desta compra está incompleto ou inconsistente. Confira as parcelas ou restaure uma cópia antes de editar a compra; nada foi alterado.')
+    return {**registros[0], 'valor_centavos': sum(v['valor_centavos'] for v in registros), 'registros': registros}
+
+
+def compra_do_lancamento(identificador):
+    with closing(banco.conectar()) as c:
+        return _compra(c, identificador)
+
+
+def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Outros', parcelas=1, identificador=None, esperados=None):
+    _data(data)
+    total = centavos(valor)
     descricao = descricao.strip()
     if tipo not in ('despesa', 'taxa') or not descricao or len(descricao) > 200:
         raise ValueError('Preencha uma descrição de até 200 caracteres.')
@@ -106,32 +133,35 @@ def salvar_lancamento(tipo, data, descricao, valor, meio='Outro', categoria='Out
         parcelas = int(parcelas)
     except (TypeError, ValueError) as erro:
         raise ValueError('Informe a quantidade de parcelas.') from erro
-    if not 1 <= parcelas <= 120 or (parcelas > 1 and (tipo != 'despesa' or meio != 'Cartão de crédito' or identificador is not None)):
-        raise ValueError('Use de 1 a 120 parcelas, apenas para nova despesa no cartão.')
-    if tipo == 'taxa' and parcelas != 1:
-        raise ValueError('Taxas não podem ser parceladas.')
-    linhas = []
-    grupo = uuid4().hex if parcelas > 1 else None
-    for i, vencimento in enumerate(datas_parcelas(data, parcelas)):
-        linhas.append((tipo, vencimento, descricao, quantia, meio, categoria, grupo, i + 1, parcelas))
+    if not 1 <= parcelas <= 120 or (parcelas > 1 and (tipo != 'despesa' or meio != 'Cartão de crédito')):
+        raise ValueError('Use de 1 a 120 parcelas, apenas para despesas no cartão.')
+    valores = dividir_total(total, parcelas)
+    datas = datas_parcelas(data, parcelas)
     banco.criar_backup()
     with closing(banco.conectar()) as c, c:
         c.execute('BEGIN IMMEDIATE')
+        anteriores = []
+        grupo = None
         if identificador is not None:
-            anterior = c.execute('SELECT tipo FROM financeiro_lancamentos WHERE id=?', (identificador,)).fetchone()
-            if not anterior or anterior[0] != tipo:
-                raise ValueError('O lançamento selecionado não existe mais.')
+            compra = _compra(c, identificador)
+            anteriores = compra['registros']
+            if compra['tipo'] != tipo:
+                raise ValueError('O tipo do lançamento não pode ser alterado.')
+            if esperados is not None and anteriores != esperados:
+                raise ValueError('A compra mudou desde que o formulário foi aberto. Feche e abra novamente antes de salvar.')
+            grupo = compra['grupo']
+        grupo = grupo or (uuid4().hex if parcelas > 1 else None)
         if tipo == 'taxa' and _conflito(c, data, data):
             raise ValueError('Essa data já está coberta por uma taxa anual. Não desconte a mesma taxa duas vezes.')
         try:
-            if identificador is None:
-                c.executemany('''INSERT INTO financeiro_lancamentos
-                    (tipo,data,descricao,valor_centavos,meio,categoria,grupo,parcela,parcelas)
-                    VALUES (?,?,?,?,?,?,?,?,?)''', linhas)
-            else:
-                # Edição altera somente a parcela selecionada, preservando sua identificação.
-                c.execute('''UPDATE financeiro_lancamentos SET data=?,descricao=?,valor_centavos=?,meio=?,categoria=?
-                    WHERE id=?''', (data, descricao, quantia, meio, categoria, identificador))
+            for i, (vencimento, quantia) in enumerate(zip(datas, valores)):
+                linha = (tipo, vencimento, descricao, quantia, meio, categoria, grupo, i + 1, parcelas)
+                if i < len(anteriores):
+                    c.execute('UPDATE financeiro_lancamentos SET tipo=?,data=?,descricao=?,valor_centavos=?,meio=?,categoria=?,grupo=?,parcela=?,parcelas=? WHERE id=?', (*linha, anteriores[i]['id']))
+                else:
+                    c.execute('INSERT INTO financeiro_lancamentos (tipo,data,descricao,valor_centavos,meio,categoria,grupo,parcela,parcelas) VALUES (?,?,?,?,?,?,?,?,?)', linha)
+            for r in anteriores[parcelas:]:
+                c.execute('DELETE FROM financeiro_lancamentos WHERE id=?', (r['id'],))
         except sqlite3.IntegrityError as erro:
             if tipo == 'taxa' and 'UNIQUE constraint failed' in str(erro):
                 raise ValueError('Já existe uma taxa para essa data. Edite o lançamento existente.') from erro

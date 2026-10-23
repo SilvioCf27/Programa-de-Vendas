@@ -88,26 +88,63 @@ class FinanceiroTests(unittest.TestCase):
         f.salvar_lancamento('taxa', taxa['data'], 'Corrigida', '2,10', identificador=taxa['id'])
         self.assertEqual(f.resumo_periodo('2026-10-01', '2026-10-31')['taxas'], Decimal('2.10'))
 
-    def test_parcelas_virada_ano_meses_curtos_valor_por_parcela(self):
-        self.despesa('33,33', data='2027-01-31', meio='Cartão de crédito', parcelas=3)
+    def test_parcelas_virada_ano_meses_curtos_total_exato(self):
+        self.despesa('100,00', data='2027-01-31', meio='Cartão de crédito', parcelas=3)
         linhas = sorted(self.linhas(), key=lambda r: r['parcela'])
         self.assertEqual([r['data'] for r in linhas], ['2027-01-31', '2027-02-28', '2027-03-31'])
-        self.assertEqual(sum(r['valor_centavos'] for r in linhas), 9999)
+        self.assertEqual([r['valor_centavos'] for r in linhas], [3333, 3333, 3334])
         self.assertEqual(len({r['grupo'] for r in linhas}), 1)
         self.assertEqual([r['parcela'] for r in linhas], [1, 2, 3])
         self.despesa('1', data='2027-12-09', meio='Cartão de crédito', parcelas=2)
         self.assertTrue(any(r['data'] == '2028-01-09' for r in self.linhas()))
 
-    def test_editar_excluir_somente_parcela_selecionada(self):
-        self.despesa(meio='Cartão de crédito', parcelas=3)
+    def test_editar_por_qualquer_parcela_atualiza_compra_e_preserva_ids(self):
+        self.despesa('100', data='2026-05-09', meio='Cartão de crédito', parcelas=5)
         linhas = sorted(self.linhas(), key=lambda r: r['parcela'])
-        alvo = linhas[1]
-        self.despesa('90', identificador=alvo['id'], data='2026-11-15', meio='Cartão de crédito')
+        alvo = linhas[3]
+        compra = f.compra_do_lancamento(alvo['id'])
+        self.assertEqual((compra['data'], compra['valor_centavos'], compra['parcelas']), ('2026-05-09', 10000, 5))
+        self.despesa('150,03', identificador=alvo['id'], data='2026-05-09', meio='Cartão de crédito', parcelas=5, esperados=compra['registros'])
         novas = sorted(self.linhas(), key=lambda r: r['parcela'])
-        self.assertEqual([r['valor_centavos'] for r in novas], [10000, 9000, 10000])
-        self.assertEqual(novas[1]['parcela'], 2)
+        self.assertEqual([r['id'] for r in novas], [r['id'] for r in linhas])
+        self.assertEqual([r['valor_centavos'] for r in novas], [3000, 3000, 3001, 3001, 3001])
+        self.assertEqual(sum(r['valor_centavos'] for r in novas), 15003)
+        with self.assertRaisesRegex(ValueError, 'mudou'):
+            self.despesa('200', identificador=alvo['id'], meio='Cartão de crédito', parcelas=5, esperados=compra['registros'])
+        self.assertEqual(self.linhas(), list(reversed(novas)))
         f.excluir_lancamento(alvo['id'])
-        self.assertEqual(len(self.linhas()), 2)
+        with self.assertRaisesRegex(ValueError, 'incompleto'):
+            f.compra_do_lancamento(linhas[0]['id'])
+
+    def test_abrir_compra_legada_nao_redivide_valores(self):
+        self.despesa('300', meio='Cartão de crédito', parcelas=3)
+        # Representa dados antigos: o aplicativo anterior repetia R$ 100 por parcela.
+        antes = self.linhas()
+        f.inicializar()
+        compra = f.compra_do_lancamento(antes[0]['id'])
+        self.assertEqual(compra['valor_centavos'], 30000)
+        self.assertEqual(self.linhas(), antes)
+
+    def test_alterar_quantidade_e_falha_atomica_da_edicao(self):
+        self.despesa('100', meio='Cartão de crédito', parcelas=3)
+        linhas = sorted(self.linhas(), key=lambda r: r['parcela'])
+        with closing(sqlite3.connect(self.caminho)) as c, c:
+            c.execute("CREATE TRIGGER recusar_segunda BEFORE UPDATE ON financeiro_lancamentos WHEN NEW.parcela=2 BEGIN SELECT RAISE(ABORT, 'falha simulada'); END")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.despesa('200', identificador=linhas[2]['id'], meio='Cartão de crédito', parcelas=3)
+        self.assertEqual(sorted(self.linhas(), key=lambda r: r['parcela']), linhas)
+        with closing(sqlite3.connect(self.caminho)) as c, c:
+            c.execute('DROP TRIGGER recusar_segunda')
+        self.despesa('100', identificador=linhas[2]['id'], meio='Cartão de crédito', parcelas=5)
+        cinco = sorted(self.linhas(), key=lambda r: r['parcela'])
+        self.assertEqual([r['id'] for r in cinco[:3]], [r['id'] for r in linhas])
+        self.assertEqual(sum(r['valor_centavos'] for r in cinco), 10000)
+        self.despesa('100', identificador=cinco[-1]['id'], meio='Cartão de crédito', parcelas=2)
+        duas = sorted(self.linhas(), key=lambda r: r['parcela'])
+        self.assertEqual([r['id'] for r in duas], [r['id'] for r in linhas[:2]])
+        self.assertEqual([r['valor_centavos'] for r in duas], [5000, 5000])
+        with self.assertRaises(ValueError):
+            self.despesa('0,01', meio='Cartão de crédito', parcelas=2)
 
     def test_falha_backup_impede_migracao_gravacao_edicao_e_exclusao(self):
         self.despesa()

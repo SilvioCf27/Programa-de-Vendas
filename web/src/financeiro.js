@@ -68,68 +68,54 @@ export function resumoFinanceiro(dados, { inicio, fim }) {
     semanas: [...semanas].sort(([a], [b]) => a.localeCompare(b)),
   };
 }
-export function lancamentoFormulario(
-  form,
-  anterior = null,
-  uuid = () => crypto.randomUUID()
-) {
+export function dividirTotal(total, quantidade) {
+  if (!Number.isSafeInteger(total) || !Number.isInteger(quantidade) || quantidade < 1 || quantidade > 120)
+    throw Error('Use de 1 a 120 parcelas.');
+  const base = Math.floor(total / quantidade), resto = total % quantidade;
+  if (base < 1) throw Error('O total precisa permitir pelo menos R$ 0,01 por parcela.');
+  return Array.from({ length: quantidade }, (_, i) => base + (resto && i >= quantidade - resto ? 1 : 0));
+}
+export function compraDoLancamento(registro, todos) {
+  const registros = (registro.grupo ? todos.filter(r => r.grupo === registro.grupo) : [registro])
+    .map(r => ({ ...r })).sort((a, b) => a.parcela - b.parcela);
+  if (registros.length !== registro.parcelas || registros.some((r, i) => r.parcela !== i + 1 || r.parcelas !== registro.parcelas || r.tipo !== registro.tipo))
+    throw Error('O histórico desta compra está incompleto ou inconsistente. Confira as parcelas antes de editar a compra; nada foi alterado.');
+  return { ...registros[0], valor_centavos: registros.reduce((s, r) => s + Number(r.valor_centavos), 0), registros };
+}
+export function lancamentoFormulario(form, anterior = null, uuid = () => crypto.randomUUID()) {
   const descricao = String(form.descricao || '').trim();
-  const valor_centavos = centavos(form.valor);
-  const parcelas = Number(form.parcelas || 1);
+  const total = centavos(form.valor), parcelas = Number(form.parcelas || 1);
   if (!dataValida(form.data)) throw Error('Informe uma data válida.');
-  if (!descricao || descricao.length > 200)
-    throw Error('Preencha uma descrição de até 200 caracteres.');
-  if (valor_centavos <= 0) throw Error('O valor deve ser maior que zero.');
-  if (
-    !['despesa', 'taxa'].includes(form.tipo) ||
-    !MEIOS.includes(form.meio) ||
-    !CATEGORIAS.includes(form.categoria)
-  )
+  if (!descricao || descricao.length > 200) throw Error('Preencha uma descrição de até 200 caracteres.');
+  if (!['despesa', 'taxa'].includes(form.tipo) || !MEIOS.includes(form.meio) || !CATEGORIAS.includes(form.categoria))
     throw Error('Confira o tipo, o meio de pagamento e a categoria.');
-  if (
-    !Number.isInteger(parcelas) ||
-    parcelas < 1 ||
-    parcelas > 120 ||
-    (parcelas > 1 &&
-      (anterior ||
-        form.tipo !== 'despesa' ||
-        form.meio !== 'Cartão de crédito'))
-  )
-    throw Error('Use de 1 a 120 parcelas apenas para nova despesa no cartão.');
-  const grupo = parcelas > 1 ? uuid() : null;
+  if (!Number.isInteger(parcelas) || parcelas < 1 || parcelas > 120 ||
+      (parcelas > 1 && (form.tipo !== 'despesa' || form.meio !== 'Cartão de crédito')))
+    throw Error('Use de 1 a 120 parcelas apenas para despesas no cartão.');
+  if (anterior && anterior.tipo !== form.tipo) throw Error('O tipo do lançamento não pode ser alterado.');
+  const quantias = dividirTotal(total, parcelas);
+  let registros = [];
+  if (anterior) {
+    const compra = compraDoLancamento(anterior, anterior.registros || [anterior]);
+    registros = compra.registros;
+  }
+  const grupo = anterior?.grupo || (parcelas > 1 ? uuid() : null);
   const [, mes, dia] = form.data.split('-').map(Number);
-  return Array.from({ length: parcelas }, (_, i) => {
+  const ops = quantias.map((valor_centavos, i) => {
     const primeiro = new Date(`${form.data}T12:00:00Z`);
-    primeiro.setUTCDate(1);
-    primeiro.setUTCMonth(mes - 1 + i);
-    const ultimo = new Date(primeiro);
-    ultimo.setUTCMonth(ultimo.getUTCMonth() + 1);
-    ultimo.setUTCDate(0);
+    primeiro.setUTCDate(1); primeiro.setUTCMonth(mes - 1 + i);
+    const ultimo = new Date(primeiro); ultimo.setUTCMonth(ultimo.getUTCMonth() + 1); ultimo.setUTCDate(0);
     primeiro.setUTCDate(Math.min(dia, ultimo.getUTCDate()));
     const data = iso(primeiro);
-    if (!dataValida(data) || Number(data.slice(0, 4)) > 9999)
-      throw Error('O parcelamento ultrapassa o limite de datas.');
-    const dados = {
-      tipo: form.tipo,
-      data,
-      descricao,
-      valor_centavos,
-      meio: form.meio,
-      categoria: form.categoria,
-      grupo: anterior?.grupo ?? grupo,
-      parcela: anterior?.parcela ?? i + 1,
-      parcelas: anterior?.parcelas ?? parcelas,
-    };
-    if (dados.parcelas > 1 && dados.meio !== 'Cartão de crédito')
-      throw Error('Uma parcela deve manter o pagamento no cartão de crédito.');
-    return {
-      tabela: 'financeiro_lancamentos',
-      acao: anterior ? 'editar' : 'inserir',
-      id: anterior?.id ?? uuid(),
-      versao: anterior?.versao ?? null,
-      dados,
-    };
+    if (!dataValida(data)) throw Error('O parcelamento ultrapassa o limite de datas.');
+    const r = registros[i];
+    return { tabela: 'financeiro_lancamentos', acao: r ? 'editar' : 'inserir',
+      id: r?.id ?? uuid(), versao: r?.versao ?? null,
+      dados: { tipo: form.tipo, data, descricao, valor_centavos, meio: form.meio, categoria: form.categoria, grupo, parcela: i + 1, parcelas } };
   });
+  for (const r of registros.slice(parcelas))
+    ops.push({ tabela: 'financeiro_lancamentos', acao: 'excluir', id: r.id, versao: r.versao, dados: null });
+  return ops;
 }
 export function anualFormulario(
   form,

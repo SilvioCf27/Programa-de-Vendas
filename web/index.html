@@ -475,8 +475,8 @@
             <section class="historico">
               <h2>Lançamentos do período</h2>
               <p class="nota introducao">
-                Parcelamentos mostram uma linha por vencimento. Editar ou
-                excluir afeta somente a parcela selecionada.
+                Parcelamentos mostram uma linha por vencimento, com o valor daquela parcela.
+                Editar abre a compra inteira; excluir remove somente a parcela selecionada.
               </p>
               <p id="fin-vazio" class="painel" hidden>
                 Nenhum lançamento neste período.
@@ -572,7 +572,7 @@
           >Descrição<input name="descricao" maxlength="200" required
         /></label>
         <label
-          >Valor de cada parcela ou lançamento<input
+          ><span id="fin-valor-titulo">Valor total da compra (R$)</span><input
             name="valor"
             inputmode="decimal"
             required
@@ -606,15 +606,16 @@
         <button id="fin-calcular-fatura" type="button" hidden>Esta é a data da compra? Calcular primeira fatura</button>
         <p id="fin-previa" class="nota" aria-live="polite"></p>
         <p id="fin-ajuda-form" class="nota">
-          Para parcelar, escolha Cartão de crédito. O valor é de cada parcela. A
-          data é o primeiro vencimento; os próximos serão mensais. Um
+          Para parcelar, escolha Cartão de crédito e informe o valor TOTAL da compra.
+          O programa calcula cada parcela; a soma mantém o total informado. A
+          data é o primeiro vencimento, mesmo para compras antigas; os próximos serão mensais. Um
           compromisso já lançado não deve ser cadastrado de novo como parte da
           fatura.
         </p>
         <p id="fin-erro-form" role="alert"></p>
         <div class="acoes">
           <button id="fin-cancelar" type="button">Cancelar</button
-          ><button id="fin-salvar" class="primario">Salvar lançamento</button>
+          ><button id="fin-salvar" class="primario">Salvar compra</button>
         </div>
       </form>
     </dialog>

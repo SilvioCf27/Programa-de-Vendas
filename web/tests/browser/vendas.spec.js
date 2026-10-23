@@ -369,7 +369,7 @@ test('finanças mostra saldo, semanas e ajustes estimados sem ratear taxa anual 
   await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
   await expect(page.locator('#fin-saldo')).toHaveText('—');
 });
-test('despesas parceladas: cria lote, edita e exclui somente a parcela escolhida', async ({
+test('despesas parceladas: total exato, edição da compra pela última parcela e conflito atômico', async ({
   page,
 }) => {
   const vendas = await preparar(page);
@@ -380,34 +380,38 @@ test('despesas parceladas: cria lote, edita e exclui somente a parcela escolhida
   const f = page.locator('#fin-form');
   await dataFinanceira(page, '2030-10-31');
   await f.getByLabel('Descrição', { exact: true }).fill('Compra fictícia');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('123,45');
+  await f.getByLabel(/Valor total/).fill('123,45');
   await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
   await f.getByLabel('Quantidade de parcelas').fill('2');
   await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .getByRole('button', { name: 'Salvar compra', exact: true })
     .click();
   await expect(page.locator('#fin-lancamentos li')).toHaveCount(2);
-  await expect(page.locator('#fin-despesas')).toHaveText('R$ 246,90');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 123,45');
   const primeira = page
     .locator('#fin-lancamentos li')
-    .filter({ hasText: 'Parcela 1/2' });
+    .filter({ hasText: 'Parcela 2/2' });
   await primeira.getByRole('button', { name: 'Editar', exact: true }).click();
-  await expect(f.getByLabel('Quantidade de parcelas')).toBeDisabled();
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('120,00');
+  await expect(f.getByLabel('Quantidade de parcelas')).toBeEnabled();
+  await expect(f.getByLabel(/Valor total/)).toHaveValue('123,45');
+  await expect(page.locator('#fin-data-confirmada')).toContainText('31/10/2030');
+  page.once('dialog', d => d.accept());
+  await f.getByLabel(/Valor total/).fill('120,00');
   await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .getByRole('button', { name: 'Salvar compra', exact: true })
     .click();
-  await expect(page.locator('#fin-despesas')).toHaveText('R$ 243,45');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 120,00');
   expect(
     vendas.financeiro.lancamentos.find((r) => r.parcela === 2).valor_centavos
-  ).toBe(12345);
+  ).toBe(6000);
   await primeira.getByRole('button', { name: 'Editar', exact: true }).click();
   const alterada = vendas.financeiro.lancamentos.find((r) => r.parcela === 1);
   alterada.versao++;
   alterada.valor_centavos = 22000;
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('999,00');
+  await f.getByLabel(/Valor total/).fill('999,00');
+  page.once('dialog', d => d.accept());
   await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .getByRole('button', { name: 'Salvar compra', exact: true })
     .click();
   await expect(page.locator('#fin-erro-form')).toContainText(
     'mudou em outro acesso'
@@ -417,11 +421,11 @@ test('despesas parceladas: cria lote, edita e exclui somente a parcela escolhida
   await page
     .getByRole('button', { name: 'Atualizar finanças', exact: true })
     .click();
-  await expect(page.locator('#fin-despesas')).toHaveText('R$ 343,45');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 280,00');
   page.once('dialog', (d) => d.accept());
   await primeira.getByRole('button', { name: 'Excluir', exact: true }).click();
   await expect(page.locator('#fin-lancamentos li')).toHaveCount(1);
-  await expect(page.locator('#fin-despesas')).toHaveText('R$ 123,45');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 220,00');
 });
 test('taxa diária sobreposta é recusada; ajuste anual pode ser editado e excluído', async ({
   page,
@@ -475,10 +479,10 @@ test('resposta perdida retoma a operação após recarregar sem duplicar despesa
   const f = page.locator('#fin-form');
   await dataFinanceira(page, '2030-10-16');
   await f.getByLabel('Descrição', { exact: true }).fill('Teste de retomada');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
+  await f.getByLabel(/Valor total/).fill('10,00');
   vendas.financeiro.perderResposta = true;
   await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .getByRole('button', { name: 'Salvar compra', exact: true })
     .click();
   await expect(page.locator('#fin-erro-form')).toContainText(
     'Não foi possível confirmar'
@@ -513,7 +517,7 @@ test('falha no armazenamento da confirmação impede enviar a despesa', async ({
   const f = page.locator('#fin-form');
   await dataFinanceira(page, '2030-10-16');
   await f.getByLabel('Descrição', { exact: true }).fill('Teste sem envio');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('10,00');
+  await f.getByLabel(/Valor total/).fill('10,00');
   await page.evaluate(() => {
     const original = Storage.prototype.setItem;
     Storage.prototype.setItem = function (chave, valor) {
@@ -523,7 +527,7 @@ test('falha no armazenamento da confirmação impede enviar a despesa', async ({
     };
   });
   await f
-    .getByRole('button', { name: 'Salvar lançamento', exact: true })
+    .getByRole('button', { name: 'Salvar compra', exact: true })
     .click();
   await expect(page.locator('#fin-erro-form')).toContainText(
     'Permita armazenamento local'
@@ -868,7 +872,7 @@ test('data da despesa permanece ao preencher os outros campos e retornar ao PWA'
   const f = page.locator('#fin-form');
   await dataFinanceira(page, '2030-09-09');
   await f.getByLabel('Descrição', { exact: true }).fill('Teste de preservação da data');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('18,50');
+  await f.getByLabel(/Valor total/).fill('18,50');
   await f.getByLabel('Meio de pagamento').selectOption('Pix');
   await page.evaluate(() => {
     window.dispatchEvent(new Event('focus'));
@@ -911,7 +915,7 @@ test('desktop web: comprar no dia 09 calcula próxima fatura somente ao pedir', 
   const f = page.locator('#fin-form');
   await dataFinanceira(page, '2026-09-09');
   await f.getByLabel('Descrição', { exact: true }).fill('Compra de exemplo em 3 vezes');
-  await f.getByLabel('Valor de cada parcela ou lançamento').fill('30,00');
+  await f.getByLabel(/Valor total/).fill('30,00');
   await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
   await f.getByLabel('Quantidade de parcelas').fill('3');
   await expect(page.locator('#fin-data-confirmada')).toContainText('09/09/2026');
@@ -947,4 +951,40 @@ test('fechamento futuro é compartilhado e os períodos antigos continuam iguais
   await page.locator('#ano').fill('2090'); await page.locator('#mes').selectOption('10');
   await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
   await expect(page.locator('#periodo')).toHaveText('10/10/2090 a 14/11/2090');
+});
+
+test('compra de maio pode ser editada pela quinta parcela com filtro só de setembro', async ({ page }) => {
+  const vendas = await preparar(page);
+  await page.getByRole('button', { name: 'Finanças', exact: true }).click();
+  await expect(page.locator('#fin-dados')).toBeVisible();
+  await consultarFinancas(page, 'Mês', '2030-09-01');
+  await page.locator('#fin-despesa').click();
+  const f = page.locator('#fin-form');
+  await dataFinanceira(page, '2030-05-09');
+  await f.getByLabel('Descrição', { exact: true }).fill('Compra antiga de exemplo');
+  await f.getByLabel(/Valor total/).fill('100,01');
+  await f.getByLabel('Meio de pagamento').selectOption('Cartão de crédito');
+  await f.getByLabel('Quantidade de parcelas').fill('5');
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(1);
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 20,01');
+  const ids = vendas.financeiro.lancamentos.map(r => r.id);
+  await page.locator('#fin-lancamentos').getByRole('button', {name:'Editar', exact:true}).click();
+  await expect(f.getByLabel(/Valor total/)).toHaveValue('100,01');
+  await expect(page.locator('#fin-data-confirmada')).toContainText('09/05/2030');
+  await f.getByLabel(/Valor total/).fill('150,00');
+  await f.getByLabel('Descrição', { exact:true }).fill('Compra antiga corrigida');
+  page.once('dialog', d => d.accept());
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 30,00');
+  expect(vendas.financeiro.lancamentos.map(r => r.id)).toEqual(ids);
+  expect(vendas.financeiro.lancamentos.map(r => r.valor_centavos)).toEqual([3000,3000,3000,3000,3000]);
+  expect(vendas.financeiro.lancamentos.every(r => r.descricao === 'Compra antiga corrigida')).toBeTruthy();
+  await page.locator('#fin-lancamentos').getByRole('button', {name:'Editar', exact:true}).click();
+  await f.getByLabel('Quantidade de parcelas').fill('3');
+  page.once('dialog', async d => { expect(d.message()).toContain('últimas 2 parcelas'); await d.accept(); });
+  await page.locator('#fin-salvar').click();
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
+  expect(vendas.financeiro.lancamentos.map(r=>r.id)).toEqual(ids.slice(0,3));
+  expect(vendas.financeiro.lancamentos.map(r=>r.valor_centavos)).toEqual([5000,5000,5000]);
 });

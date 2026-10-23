@@ -307,3 +307,23 @@ test("tabelas arbitrárias e campos técnicos não entram na operação", async 
   await assert.rejects(sincronizar([op, op], OP1), { code: "PFS02" });
   assert.equal((await sincronizar()).dados.vendas.length, 2);
 });
+
+test('editar compra inteira usa um lote atômico e conflito em uma parcela impede todas', async () => {
+  const { lancamentoFormulario, compraDoLancamento } = await import('../src/financeiro.js');
+  const form = {tipo:'despesa', data:'2030-05-09', descricao:'Compra de teste', valor:'100,00', meio:'Cartão de crédito', categoria:'Casa', parcelas:3};
+  const inicial = await sincronizar(lancamentoFormulario(form), OP1);
+  const registros = inicial.dados.financeiro_lancamentos;
+  const ultima = registros.find(r => r.parcela === 3);
+  const compra = compraDoLancamento(ultima, registros);
+  const ops = lancamentoFormulario({...form, valor:'150,01', parcelas:5}, compra);
+  await sincronizar([{...ops[0], dados:{...corpo(registros.find(r=>r.id===ops[0].id)), descricao:'Mudança concorrente'}}], OP2);
+  await assert.rejects(sincronizar(ops, 'cccccccc-cccc-4ccc-8ccc-cccccccccccc'), {code:'PFS01'});
+  let atuais = (await sincronizar()).dados.financeiro_lancamentos;
+  assert.equal(atuais.length, 3);
+  assert.equal(atuais.reduce((s,r)=>s+r.valor_centavos,0), 10000);
+  const atualizada = compraDoLancamento(atuais.find(r=>r.parcela===3), atuais);
+  const salvo = await sincronizar(lancamentoFormulario({...form,valor:'150,01',parcelas:5},atualizada), 'dddddddd-dddd-4ddd-8ddd-dddddddddddd');
+  atuais = salvo.dados.financeiro_lancamentos.sort((a,b)=>a.parcela-b.parcela);
+  assert.deepEqual(atuais.map(r=>r.valor_centavos),[3000,3000,3000,3000,3001]);
+  assert.ok(registros.every(r=>atuais.some(n=>n.id===r.id)));
+});

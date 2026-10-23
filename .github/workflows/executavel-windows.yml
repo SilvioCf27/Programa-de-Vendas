@@ -106,6 +106,7 @@ jobs:
           assert validacao['sucesso'] and validacao['empacotado']
           assert validacao['plataforma'] == 'win32' and validacao['temas']
           assert validacao['taxas_semanais'] and validacao['fechamento_configuravel']
+          assert validacao['compra_total'] and validacao['edicao_compra']
           assert 'v' + validacao['versao'] == os.environ['VERSAO']
           recibo = dict(tag=os.environ['VERSAO'], commit=os.environ['GITHUB_SHA'],
                         sha256=sha, bytes=pacote.stat().st_size, validacao=validacao)

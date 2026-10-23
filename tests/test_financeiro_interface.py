@@ -33,6 +33,19 @@ assert cd.variavel.get() == '09/10/2026'
 with patch.object(a.messagebox, 'askyesno', return_value=True):
     corpo.grid_slaves(row=7, column=1)[0].invoke()
 assert sorted(r['data'] for r in f.listar_lancamentos('2000-01-01','2199-12-31')) == ['2026-10-09','2026-11-09','2026-12-09']
+linhas = sorted(f.listar_lancamentos('2000-01-01','2199-12-31'), key=lambda r:r['parcela'])
+assert [r['valor_centavos'] for r in linhas] == [1000,1000,1000]
+popup = p.formulario('despesa', linhas[2])
+corpo = popup.winfo_children()[0]
+assert corpo.grid_slaves(row=0,column=1)[0].variavel.get() == '09/10/2026'
+assert corpo.grid_slaves(row=2,column=1)[0].get() == '30,00'
+assert corpo.grid_slaves(row=5,column=1)[0].get() == '3'
+campo(2,'100,00')
+with patch.object(a.messagebox, 'askyesno', return_value=True):
+    corpo.grid_slaves(row=7, column=1)[0].invoke()
+novas = sorted(f.listar_lancamentos('2000-01-01','2199-12-31'), key=lambda r:r['parcela'])
+assert [r['id'] for r in novas] == [r['id'] for r in linhas]
+assert [r['valor_centavos'] for r in novas] == [3333,3333,3334]
 popup = p.formulario_taxas()
 popup.seletor_semana.referencia.set('09/10/2026')
 a.janela.update()

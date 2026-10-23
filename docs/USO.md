@@ -16,7 +16,7 @@ Vendas continuam com os valores brutos. Cadastre as taxas separadamente em **Fin
 
 Uma taxa anual não é dividida entre os meses. Ela só é descontada quando a consulta inclui todo o intervalo informado. Em recortes menores, o programa avisa que o saldo é provisório. Também não permite descontar a mesma taxa como ajuste anual e lançamento diário.
 
-As despesas podem ser pessoais ou da feira. Para dinheiro e Pix, use a data do pagamento. Para cartão de crédito, use a data em que a compra será paga na fatura. Ao cadastrar parcelas, informe o valor de **cada parcela**, a quantidade e o primeiro pagamento. Editar ou excluir altera somente a parcela selecionada.
+As despesas podem ser pessoais ou da feira. Para dinheiro e Pix, use a data do pagamento. Para cartão de crédito, use a data em que a compra será paga na fatura. Ao cadastrar uma compra parcelada, informe o **valor total da compra**, a quantidade de parcelas e a primeira fatura. O programa divide o total em centavos e mantém a soma exata. Editar qualquer parcela abre a compra inteira e recalcula todas as parcelas, inclusive as antigas. Excluir continua removendo somente a parcela selecionada.
 
 Não lance o pagamento da fatura novamente se suas compras já estão cadastradas. A categoria **Compromisso inicial** serve para a parte da fatura que ainda não foi registrada.
 

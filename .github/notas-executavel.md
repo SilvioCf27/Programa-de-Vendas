@@ -1,18 +1,20 @@
-A versão **1.4.1** melhora o registro financeiro no desktop e no PWA.
+A versão **1.5.0** ajusta o parcelamento de compras no desktop e no PWA.
 
-- Datas de despesas com campos explícitos de dia, mês e ano e confirmação visual.
-- Cálculo opcional da primeira fatura pela compra, com prévia das parcelas. Compras no próprio dia de fechamento entram na próxima fatura.
-- Filtros adaptativos: semana completa, mês e ano, somente ano ou fechamento.
-- Taxas da maquininha por semana, preservando a data de cada venda e sem duplicar registros.
-- Histórico anual de taxas preservado como opção para totais antigos.
-- Fechamento configurável por vigência futura e compartilhado com o PWA, preservando períodos já encerrados.
+- Informe sempre o **valor total da compra**. O programa divide esse total pela quantidade de parcelas, sem acrescentar juros.
+- Os centavos são distribuídos para manter a soma exata. R$ 100,00 em 3 vezes gera R$ 33,33, R$ 33,33 e R$ 33,34.
+- Editar qualquer parcela abre a **compra inteira**, com total, primeira data e quantidade. Salvar atualiza todo o histórico da compra, inclusive meses anteriores.
+- As parcelas mantidas conservam suas identificações. Alterar a quantidade redistribui o total informado.
+- Textos, prévias e ajuda foram revisados para diferenciar o total da compra do valor calculado de cada lançamento.
+- Valores existentes são preservados na atualização. O total mostrado ao editar é a soma das parcelas já cadastradas; confira-o antes de salvar.
 
-**Para habilitar a configuração compartilhada do fechamento**, execute apenas `005_fechamentos.sql` no SQL Editor do projeto Supabase já configurado. O script acompanha o ZIP como `SQL_005_FECHAMENTOS.sql` e não altera vendas, despesas ou taxas. O dia 09 continua sendo a regra inicial; as demais melhorias funcionam com a estrutura atual.
+Excluir continua removendo somente a parcela selecionada. Um grupo incompleto é bloqueado para edição, evitando recriar cobranças removidas. Uma edição da compra é gravada por inteiro ou recusada por inteiro.
 
-[Guia de atualização e finanças](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.4.1/docs/FINANCAS.md) · [SQL 005](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.4.1/supabase/migrations/005_fechamentos.sql)
+**Não é necessário executar SQL novo nem migrar os dados novamente.** O SQL 005 acompanha o pacote apenas para quem ainda não habilitou a configuração compartilhada do fechamento da versão anterior.
+
+[Guia de finanças](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.5.0/docs/FINANCAS.md)
 
 Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**. Mantenha `_internal` junto dele. Não requer instalar Python ou VS Code.
 
-Para atualizar, feche o programa e extraia o pacote em uma pasta separada. Dados, conexão e configurações existentes são preservados. Não substitua seu banco pelo banco inicial do pacote e não refaça a migração das vendas.
+Feche o programa antes de atualizar. Dados e configurações continuam na pasta de dados existente; não substitua seu banco pelo banco inicial do pacote. O pacote público começa vazio e não contém dados pessoais.
 
-`VALIDACAO_WINDOWS.json` registra a verificação do executável no Windows. `SHA256.txt` permite conferir o download. O pacote começa vazio para novos usuários e não inclui os dados usados nos testes. O executável não tem assinatura digital.
+`VALIDACAO_WINDOWS.json` registra os testes do executável no Windows e `SHA256.txt` permite conferir o download. O executável não possui assinatura digital.

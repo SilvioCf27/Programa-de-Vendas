@@ -81,7 +81,7 @@ class PainelFinanceiro(ttk.Frame):
         self.tabela_semanas = self._tabela(semanas, ('semana', 'valor'), ('Segunda-feira', 'Despesas'), 0)
         acoes = ttk.Frame(pagina, style='Surface.TFrame')
         acoes.grid(row=2, column=0, columnspan=2, sticky='ew', pady=(8, 0))
-        for texto, comando in (('Nova despesa', lambda: self.formulario('despesa')), ('Taxas da maquininha', self.formulario_taxas), ('Editar lançamento', self.editar), ('Excluir lançamento', self.excluir)):
+        for texto, comando in (('Nova despesa', lambda: self.formulario('despesa')), ('Taxas da maquininha', self.formulario_taxas), ('Editar', self.editar), ('Excluir lançamento', self.excluir)):
             ttk.Button(acoes, text=texto, command=comando).pack(side='left', padx=(0, 8))
         self.tabela.bind('<Double-1>', lambda e: self.editar())
         anual = ttk.Frame(self.abas, style='Panel.TFrame', padding=10)
@@ -228,15 +228,20 @@ class PainelFinanceiro(ttk.Frame):
         return variavel
 
     def formulario(self, tipo, registro=None):
-        r = registro or {}
-        popup, corpo = self._janela(('Editar ' if r else 'Nova ') + ('despesa' if tipo == 'despesa' else 'taxa do cartão'))
+        try:
+            r = f.compra_do_lancamento(registro['id']) if registro else {}
+        except ValueError as erro:
+            messagebox.showerror('Compra não carregada', str(erro), parent=self)
+            return
+        titulo = ('Editar compra' if r else 'Nova despesa') if tipo == 'despesa' else ('Editar taxa da maquininha' if r else 'Taxa da maquininha')
+        popup, corpo = self._janela(titulo)
         data = self._campo(corpo, 0, 'Pagamento / competência', data_br(r.get('data', date.today().isoformat())), data=True)
         descricao = self._campo(corpo, 1, 'Descrição', r.get('descricao', '' if tipo == 'despesa' else 'Taxa do cartão'))
-        valor = self._campo(corpo, 2, 'Valor em R$ (por parcela)', valor_br(r['valor_centavos']) if r else '')
+        valor = self._campo(corpo, 2, 'Valor total da compra em R$' if tipo == 'despesa' else 'Valor da taxa em R$', valor_br(r['valor_centavos']) if r else '')
         meio = self._campo(corpo, 3, 'Pagamento', r.get('meio', 'Cartão de crédito' if tipo == 'taxa' else 'Dinheiro'), f.MEIOS)
         categoria = self._campo(corpo, 4, 'Categoria', r.get('categoria', 'Outros'), f.CATEGORIAS)
-        parcelas = self._campo(corpo, 5, 'Quantidade de parcelas', '1') if not r and tipo == 'despesa' else None
-        explicacao = ('Cartão: use a data em que a compra será paga na fatura. Para parcelas, informe o primeiro pagamento e o valor de CADA parcela.\nNão registre o pagamento da fatura outra vez. “Compromisso inicial” serve só para valores ainda não cadastrados.\nEditar ou excluir altera apenas a parcela selecionada.' if tipo == 'despesa' else 'São os descontos cobrados pela maquininha nas suas vendas no cartão, não gastos com o cartão de compras. Use a data da venda e informe a taxa em reais.\nUm ajuste anual e taxas diárias não podem cobrir a mesma data.')
+        parcelas = self._campo(corpo, 5, 'Quantidade de parcelas', str(r.get('parcelas', 1))) if tipo == 'despesa' else None
+        explicacao = ('Informe o TOTAL da compra. O programa divide esse valor pelo número de parcelas, sem juros adicionais. Os centavos são ajustados para que a soma seja exata.\nA data é o início do histórico (primeira fatura no cartão), mesmo para compras antigas. Editar qualquer parcela altera a compra inteira, incluindo meses anteriores. Não registre novamente o pagamento da fatura.' if tipo == 'despesa' else 'Informe o desconto total em reais cobrado pela maquininha nas vendas desta data. Não é uma despesa do cartão de compras. O mesmo desconto não pode constar também no histórico anual.')
         previa = tk.StringVar(value=explicacao)
         ttk.Label(corpo, textvariable=previa, wraplength=490, style='Muted.TLabel', justify='left').grid(row=6, column=0, columnspan=2, sticky='w', pady=12)
         campo_data = corpo.grid_slaves(row=0, column=1)[0]
@@ -250,20 +255,23 @@ class PainelFinanceiro(ttk.Frame):
         calcular = ttk.Button(campo_data, text='Calcular fatura pela data da compra', command=calcular_fatura)
         def atualizar_previa(*args):
             cartao = tipo == 'despesa' and meio.get() == 'Cartão de crédito'
-            corpo.grid_slaves(row=0, column=0)[0].configure(text='Primeira fatura' if cartao else 'Data da venda' if tipo == 'taxa' else 'Data de pagamento')
+            corpo.grid_slaves(row=0, column=0)[0].configure(text='Primeira fatura / início' if cartao else 'Data da venda' if tipo == 'taxa' else 'Data de pagamento')
             if cartao and not r:
                 calcular.grid(row=2, column=0, columnspan=3, sticky='w', pady=(6, 0))
             else:
                 calcular.grid_remove()
             try:
                 datas = f.datas_parcelas(interpretar_data(data.get()).isoformat(), int(parcelas.get()) if parcelas else 1)
-                mostra = datas if len(datas) <= 4 else [*datas[:3], '…', datas[-1]]
-                texto = ' · '.join(data_br(d) if d != '…' else d for d in mostra)
-                nota = ('Faturas previstas: ' if cartao else 'Lançamento em: ') + texto + '.\n'
+                mostra = datas if len(datas) <= 4 else [*datas[:3], '...', datas[-1]]
+                texto = ' · '.join(data_br(d) if d != '...' else d for d in mostra)
+                quantias = f.dividir_total(f.centavos(valor.get()), len(datas))
+                por_parcela = ' / '.join('R$ ' + valor_br(v) for v in sorted(set(quantias)))
+                detalhe = f'{len(datas)} parcelas: {por_parcela}' if len(datas) > 1 else 'taxa informada' if tipo == 'taxa' else 'pagamento único'
+                nota = f'Total: R$ {valor_br(sum(quantias))} · {detalhe}.\n' + ('Faturas previstas: ' if cartao else 'Lançamento em: ') + texto + '.\n'
             except ValueError:
                 nota = ''
-            previa.set(nota + ('No cartão, use a primeira fatura. Compras no dia de fechamento entram na fatura seguinte. O botão calcula essa data sem alterar uma data já informada automaticamente.\n' if cartao else '') + explicacao)
-        traces = [(var, var.trace_add('write', atualizar_previa)) for var in (data, meio, parcelas) if var is not None]
+            previa.set(nota + ('Compras no dia do fechamento entram na fatura seguinte.\n' if cartao and not r else '') + explicacao)
+        traces = [(var, var.trace_add('write', atualizar_previa)) for var in (data, meio, parcelas, valor) if var is not None]
         def limpar(evento):
             if evento.widget is popup:
                 for var, ident in traces:
@@ -275,9 +283,12 @@ class PainelFinanceiro(ttk.Frame):
         def salvar():
             try:
                 quantidade = int(parcelas.get()) if parcelas else 1
-                if quantidade > 1 and not messagebox.askyesno('Confirmar parcelas', f'Criar {quantidade} despesas mensais de R$ {valor.get()} cada? O campo é o valor da parcela, não o total da compra.', parent=popup):
+                quantias = f.dividir_total(f.centavos(valor.get()), quantidade)
+                removidas = max(0, r.get('parcelas', 1) - quantidade)
+                aviso_remocao = f'\nSerão removidas as últimas {removidas} parcelas; o total será redistribuído nas restantes.' if removidas else ''
+                if (quantidade > 1 or r.get('parcelas', 1) > 1) and not messagebox.askyesno('Confirmar compra', f'Total da compra: R$ {valor_br(sum(quantias))}, dividido em {quantidade} parcela(s).\nAo salvar, todas as parcelas da compra serão atualizadas, inclusive as de meses anteriores. A soma será exatamente o total informado.{aviso_remocao}', parent=popup):
                     return
-                f.salvar_lancamento(tipo, interpretar_data(data.get()).isoformat(), descricao.get(), valor.get(), meio.get(), categoria.get(), quantidade, r.get('id'))
+                f.salvar_lancamento(tipo, interpretar_data(data.get()).isoformat(), descricao.get(), valor.get(), meio.get(), categoria.get(), quantidade, r.get('id'), r.get('registros'))
             except (ValueError, OSError, sqlite3.Error) as erro:
                 messagebox.showerror('Lançamento não salvo', str(erro), parent=popup)
                 return
@@ -285,7 +296,7 @@ class PainelFinanceiro(ttk.Frame):
             self.consultar()
             if self.ao_alterar:
                 self.ao_alterar()
-        ttk.Button(corpo, text='Salvar', command=salvar, style='Primary.TButton').grid(row=7, column=1, sticky='e')
+        ttk.Button(corpo, text='Salvar compra' if tipo == 'despesa' else 'Salvar taxa', command=salvar, style='Primary.TButton').grid(row=7, column=1, sticky='e')
         ttk.Button(corpo, text='Cancelar', command=popup.destroy).grid(row=7, column=0, sticky='w')
         return popup
 

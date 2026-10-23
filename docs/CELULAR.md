@@ -95,8 +95,8 @@ Não repita a migração depois de uma execução bem-sucedida.
 O script cria lançamentos de despesas e taxas diárias, além de ajustes anuais
 confirmados ou estimados. Valores são inteiros em centavos. Parcelas preservam
 grupo, número, quantidade e data de vencimento: cada parcela corresponde a um
-lançamento, como no desktop. O valor gravado é o de cada parcela, não o total da
-compra. Não há geração automática de parcelas pela API nesta etapa.
+lançamento, como no desktop. O valor de cada linha é calculado pelo programa a partir do total da
+compra informado no formulário. Não há geração automática de parcelas pela API nesta etapa.
 
 As tabelas têm RLS e permitem acesso apenas ao proprietário já configurado.
 Alterações incrementam a versão; a futura integração deverá informar a versão
@@ -276,11 +276,10 @@ sua cobertura inteira cabe no filtro. Um recorte parcial recebe aviso de saldo
 provisório, sem ratear ou inventar taxas. Ajustes estimados continuam identificados.
 A lista de ajustes mostra todos os anos, mesmo quando o resumo usa outro período.
 
-Para despesas parceladas, informe o primeiro vencimento, o valor **de cada parcela**
+Para despesas parceladas, informe o primeiro vencimento, o **valor total da compra**
 e a quantidade, usando Cartão de crédito. Os vencimentos seguintes são mensais;
 quando o dia não existe no mês, usa o último dia disponível e retorna ao dia
-original nos meses seguintes. O lote é gravado numa única transação. Editar ou
-excluir uma linha altera somente aquela parcela. Número e grupo são preservados.
+original nos meses seguintes. O lote é gravado numa única transação. Editar uma linha abre a compra completa e recalcula todas as parcelas. Excluir continua removendo somente a parcela selecionada.
 Não cadastre novamente uma despesa já incluída no compromisso inicial da fatura.
 
 Taxas diárias e ajustes anuais não podem cobrir o mesmo dia. Duplicidades,
@@ -398,6 +397,6 @@ A barra é proporcional ao total bruto, e os valores e quantidades também estã
 escritos. Um período sem registros não é tratado como um dia de feira zerado.
 A revisão de conflitos está disponível no desktop em Conexão com a nuvem.
 
-## Atualização financeira 1.4.1
+## Atualização financeira 1.5.0
 
 Datas explícitas, filtros adaptativos e taxas semanais usam as tabelas existentes. Para configurar novas vigências do fechamento, execute apenas [005_fechamentos.sql](../supabase/migrations/005_fechamentos.sql) no mesmo projeto e atualize o desktop. O protocolo financeiro das versões anteriores continua compatível. Veja [FINANCAS.md](FINANCAS.md).

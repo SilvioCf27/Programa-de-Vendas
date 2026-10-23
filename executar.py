@@ -46,6 +46,18 @@ def verificar_pacote(relatorio):
                 assert banco.buscar_venda_por_data('2035-01-01')[2:] == (10, 20, 30)
                 financeiro.salvar_lancamento('despesa', '2035-01-01', 'Teste do pacote', '12,34')
                 assert financeiro.primeira_fatura('2035-01-09') == '2035-02-09'
+                financeiro.salvar_lancamento('despesa', '2035-05-09', 'Compra parcelada fictícia', '100,00', 'Cartão de crédito', parcelas=5)
+                parcelas = sorted((r for r in financeiro.listar_lancamentos('2035-05-01', '2035-09-30') if r['grupo']), key=lambda r: r['parcela'])
+                assert [r['valor_centavos'] for r in parcelas] == [2000] * 5
+                compra = financeiro.compra_do_lancamento(parcelas[3]['id'])
+                assert compra['valor_centavos'] == 10000 and compra['data'] == '2035-05-09'
+                financeiro.salvar_lancamento('despesa', compra['data'], 'Compra corrigida fictícia', '150,01', 'Cartão de crédito', parcelas=5, identificador=parcelas[3]['id'], esperados=compra['registros'])
+                corrigida = financeiro.compra_do_lancamento(parcelas[3]['id'])
+                assert [r['valor_centavos'] for r in corrigida['registros']] == [3000, 3000, 3000, 3000, 3001]
+                popup_compra = app.painel_financeiro.formulario('despesa', corrigida['registros'][3])
+                app.janela.update()
+                assert popup_compra.winfo_children()[0].grid_slaves(row=2, column=1)[0].get() == '150,01'
+                popup_compra.destroy()
                 popup_taxas = app.painel_financeiro.formulario_taxas()
                 app.janela.update()
                 assert len(popup_taxas.campos_taxas) == 7
@@ -90,7 +102,7 @@ def verificar_pacote(relatorio):
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True, taxas_semanais=True, fechamento_configuravel=True,
-                                 banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
+                                 compra_total=True, edicao_compra=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()
     except Exception:

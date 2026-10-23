@@ -284,7 +284,7 @@ a.alternar_tema(); a.janela.update()
 assert f.winfo_viewable()
 a.janela.geometry('980x700'); a.janela.update()
 assert f.tabela.winfo_viewable()
-assert f.tabela.winfo_height() > 30
+assert f.tabela.winfo_height() > 30, f'Tabela financeira com {f.tabela.winfo_height()} px em janela reduzida'
 a.abas.select(0); a.janela.update()
 assert a.area_cartoes.winfo_viewable()
 assert a.analises.winfo_viewable()

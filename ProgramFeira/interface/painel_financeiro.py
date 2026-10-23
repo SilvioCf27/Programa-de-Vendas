@@ -32,7 +32,7 @@ class PainelFinanceiro(ttk.Frame):
         # Abre no fechamento em andamento; o seletor continua nomeando o mês inicial.
         referencia = hoje if hoje.day > fechamento.dia_no_mes(hoje.year, hoje.month) else hoje.replace(day=1) - timedelta(days=1)
         self.referencia = tk.StringVar(value=referencia.strftime('%d/%m/%Y'))
-        consulta = ttk.Frame(self, style='Panel.TFrame', padding=10)
+        consulta = self.quadro_consulta = ttk.Frame(self, style='Panel.TFrame', padding=10)
         consulta.grid(row=0, column=0, sticky='ew')
         consulta.columnconfigure(1, weight=1)
         titulo_consulta = ttk.Frame(consulta, style='Surface.TFrame')
@@ -45,7 +45,9 @@ class PainelFinanceiro(ttk.Frame):
         ttk.Button(titulo_consulta, text='Configurar', command=lambda: self.ao_configurar_fechamento() if self.ao_configurar_fechamento else None).pack(side='left', padx=(8, 0))
         self.periodo = tk.StringVar()
         ttk.Label(consulta, textvariable=self.periodo, style='Surface.TLabel').grid(row=1, column=0, columnspan=3, sticky='w', pady=(4, 0))
-        quadros = ttk.Frame(self)
+        quadros = self.quadro_indicadores = ttk.Frame(self)
+        self.cartoes_financeiros = []
+        self.compacto = None
         quadros.grid(row=1, column=0, sticky='ew', pady=8)
         self.valores = {}
         for i, (chave, titulo) in enumerate((('bruto', 'Vendas brutas'), ('taxas', 'Taxas informadas'), ('liquido', 'Vendas menos taxas'), ('despesas', 'Meta: despesas do período'), ('falta', 'Falta cobrir'), ('saldo', 'Saldo após despesas'))):
@@ -55,7 +57,9 @@ class PainelFinanceiro(ttk.Frame):
             card.grid(row=linha, column=coluna, sticky='ew', padx=(0, 8 if coluna < 2 else 0), pady=3)
             rotulo_com_ajuda(card, titulo, 'saldo' if chave in ('saldo', 'falta', 'despesas') else 'taxas', 'CardTitle.TLabel').pack(anchor='w')
             self.valores[chave] = tk.StringVar()
-            ttk.Label(card, textvariable=self.valores[chave], style='Section.TLabel').pack(anchor='w', pady=(3, 0))
+            valor = ttk.Label(card, textvariable=self.valores[chave], style='Section.TLabel')
+            valor.pack(anchor='w', pady=(3, 0))
+            self.cartoes_financeiros.append((card, valor))
         self.aviso = tk.StringVar()
         ttk.Label(self, textvariable=self.aviso, style='Aviso.TLabel', wraplength=1100).grid(row=2, column=0, sticky='w', pady=(0, 7))
         self.bind('<Configure>', lambda e: self._ajustar_aviso(e))
@@ -95,6 +99,17 @@ class PainelFinanceiro(ttk.Frame):
 
     def _ajustar_aviso(self, evento):
         if evento.widget is self:
+            compacto = self.winfo_toplevel().winfo_height() < 820
+            if compacto != self.compacto:
+                self.compacto = compacto
+                self.quadro_consulta.configure(padding=8 if compacto else 10)
+                self.quadro_indicadores.grid_configure(pady=5 if compacto else 8)
+                for card, valor in self.cartoes_financeiros:
+                    card.configure(padding=(8, 4) if compacto else 8)
+                    card.grid_configure(pady=1 if compacto else 3)
+                    valor.pack_configure(pady=(1, 0) if compacto else (3, 0))
+                for pagina in self.abas.winfo_children():
+                    pagina.configure(padding=6 if compacto else 10)
             for widget in self.grid_slaves(row=2):
                 widget.configure(wraplength=max(200, evento.width - 20))
 
@@ -140,9 +155,9 @@ class PainelFinanceiro(ttk.Frame):
         self.periodo.set(f'{data_br(inicio)} a {data_br(fim)}')
         for chave, variavel in self.valores.items():
             variavel.set(moeda(resumo[chave]))
-        aviso = 'Saldo considera somente taxas e despesas cadastradas, inclusive futuras. Exportar vendas continua exportando apenas Vendas.'
+        aviso = 'Saldo considera taxas e despesas cadastradas, inclusive futuras. A exportação é de vendas.'
         if resumo['parciais']:
-            aviso += ' ATENÇÃO: taxa anual de ' + ', '.join(map(str, resumo['parciais'])) + ' não descontada neste recorte; saldo provisório, sem rateio.'
+            aviso += ' Taxa histórica de ' + ', '.join(map(str, resumo['parciais'])) + ' não descontada neste recorte: saldo provisório, sem rateio.'
         else:
             aviso += ' Taxa não cadastrada não significa isenção.'
         if resumo['estimados']:

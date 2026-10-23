@@ -1,6 +1,6 @@
 # Conheça o Gestão da Feira
 
-As capturas mostram o aplicativo desktop v1.4.0 com **dados fictícios**.
+As capturas mostram o aplicativo desktop v1.4.1 com **dados fictícios**.
 Os exemplos não fazem parte do banco distribuído. Fontes e detalhes de renderização
 podem variar conforme o sistema e a escala da tela.
 

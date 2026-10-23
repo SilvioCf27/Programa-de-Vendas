@@ -10,7 +10,7 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.4.0
+## Versão 1.4.1
 
 A versão acrescenta datas explícitas e prévia das parcelas, filtros financeiros
 adaptativos e taxas da maquininha por semana. As cinco paletas e as configurações

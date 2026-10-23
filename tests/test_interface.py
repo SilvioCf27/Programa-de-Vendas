@@ -176,7 +176,7 @@ with patch.object(a.filedialog, 'asksaveasfilename', return_value=''), patch.obj
 a.janela.geometry('980x700')
 a.janela.update()
 assert a.layout_colunas == 3
-assert a.tabela.winfo_height() > 70
+assert a.tabela.winfo_height() > 70, f'Tabela com {a.tabela.winfo_height()} px em janela reduzida'
 assert a.filtro_ano_combobox.winfo_viewable()
 assert a.painel_filtros.winfo_rooty() == a.area_tabela.winfo_rooty()
 assert a.painel_filtros.winfo_rootx() > a.area_tabela.winfo_rootx()

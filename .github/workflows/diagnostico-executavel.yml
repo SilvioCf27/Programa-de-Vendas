@@ -6,7 +6,10 @@ on:
       versao:
         description: Tag da versao a conferir
         required: true
-        default: v1.3.0
+        default: v1.3.1
+  workflow_run:
+    workflows: ['Executavel Windows']
+    types: [completed]
   push:
     branches: [main]
     paths: ['.github/workflows/diagnostico-executavel.yml']
@@ -27,7 +30,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          VERSAO: ${{ inputs.versao || 'v1.3.0' }}
+          VERSAO: ${{ inputs.versao || 'v1.3.1' }}
         run: |
           python - <<'PY'
           import json, os, subprocess

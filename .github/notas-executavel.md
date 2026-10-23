@@ -1,14 +1,15 @@
-A versão **1.3.0** renova o visual do Gestão da Feira e mantém seus dados e configurações.
+A versão **1.3.1** renova o visual do Gestão da Feira e mantém seus dados e configurações.
 
 - Cinco temas: Noite, Claro, Grafite, Areia escura e Aurora.
 - Grafite com verde esmeralda e Aurora com roxo `#52057B` nas ações principais.
 - Cartões com informações complementares e participação de dinheiro, Pix e cartão.
 - Histórico com melhor aproveitamento da largura, abas espaçadas e rolagem discreta quando necessária.
+- Modo compacto ajustado para manter a tabela acessível em janelas menores no Windows.
 - Textos revisados e abertura mais rápida, reutilizando os desenhos dos ícones e contornos.
 
-[Veja as capturas e funcionalidades](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.3.0/docs/INTERFACE.md). Todas as imagens usam dados fictícios.
+[Veja as capturas e funcionalidades](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.3.1/docs/INTERFACE.md). Todas as imagens usam dados fictícios.
 
-![Gestão da Feira no tema Grafite](https://raw.githubusercontent.com/SilvioCf27/Programa-de-Vendas/v1.3.0/docs/imagens/vendas-grafite.png)
+![Gestão da Feira no tema Grafite](https://raw.githubusercontent.com/SilvioCf27/Programa-de-Vendas/v1.3.1/docs/imagens/vendas-grafite.png)
 
 Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**. Não precisa instalar Python ou VS Code. Mantenha a pasta `_internal` junto do executável.
 

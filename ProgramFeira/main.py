@@ -16,7 +16,7 @@ from ProgramFeira.interface.painel_nuvem import ConexaoNuvem
 from ProgramFeira.nuvem import ErroNuvem
 from ProgramFeira.versao import VERSAO
 from ProgramFeira.diagnostico import registrar as registrar_erro
-from ProgramFeira.interface.icones import rotulo_icone
+from ProgramFeira.interface.icones import rotulo_icone, aplicar_icones
 from ProgramFeira.interface.indicadores import BarraParticipacao
 from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES, NOMES_TEMAS
 from ProgramFeira.preferencias import carregar_tema, salvar_tema
@@ -875,10 +875,11 @@ cabecalho.grid(row=0, column=0, sticky='ew')
 cabecalho.columnconfigure(0, weight=1)
 marca = ttk.Frame(cabecalho)
 marca.grid(row=0, column=0, rowspan=2, sticky='w')
-rotulo_icone(marca, 'marca', CORES, tamanho=64, estilo='TLabel').pack(side='left', padx=(0, 12))
+icone_marca = rotulo_icone(marca, 'marca', CORES, tamanho=64, estilo='TLabel')
+icone_marca.pack(side='left', padx=(0, 12))
 texto_marca = ttk.Frame(marca)
 texto_marca.pack(side='left')
-ttk.Label(texto_marca, text='Gestão da Feira', style='Title.TLabel').pack(anchor='w')
+ttk.Label(texto_marca, text='Gestão da Feira', style='Marca.Title.TLabel').pack(anchor='w')
 ttk.Label(texto_marca, text='Suas feiras, seus resultados.', style='Muted.TLabel').pack(anchor='w')
 acoes = ttk.Frame(cabecalho)
 acoes.grid(row=0, column=1, rowspan=2, sticky='e')
@@ -935,17 +936,21 @@ layout_compacto = None
 
 def organizar_cartoes(event=None):
     global layout_colunas, layout_compacto
-    compacto = janela.winfo_height() < 760
+    compacto = janela.winfo_height() < 820
     if compacto != layout_compacto:
         layout_compacto = compacto
         familia = font.nametofont('TkDefaultFont').actual('family')
+        cabecalho.configure(padding=(24, 8, 24, 6) if compacto else (24, 18, 24, 12))
+        icone_marca.icone_tamanho = 42 if compacto else 64
+        aplicar_icones(icone_marca, CORES)
+        ttk.Style(janela).configure('Marca.Title.TLabel', font=(familia, 20 if compacto else 26, 'bold'))
         ttk.Style(janela).configure('CardValue.TLabel', font=(familia, 14 if compacto else 18, 'bold'))
         for chave, card in zip(indicadores_visuais, cartoes):
-            card.configure(padding=(12, 7) if compacto else (16, 16))
+            card.configure(padding=(12, 5) if compacto else (16, 16))
             card.winfo_children()[1].pack_configure(pady=(4, 0) if compacto else (12, 10))
             for widget, opcoes in zip(card.detalhes, card.packs_detalhes):
                 widget.pack_forget() if compacto else widget.pack(**opcoes)
-            ttk.Style(janela).configure(f'{chave}.Valor.TLabel', font=(familia, 16 if compacto else 24, 'bold'))
+            ttk.Style(janela).configure(f'{chave}.Valor.TLabel', font=(familia, 14 if compacto else 24, 'bold'))
     colunas = 6 if area_cartoes.winfo_width() >= 1120 else 3
     if colunas == layout_colunas:
         return

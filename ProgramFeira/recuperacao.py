@@ -3,10 +3,10 @@ from contextlib import closing
 import hashlib
 import json
 from pathlib import Path
-import shutil
 import sqlite3
 import tempfile
-from ProgramFeira.database.armazenamento import copiar_verificado, restaurar_backup, validar
+from ProgramFeira.database.armazenamento import copiar_verificado, restaurar_backup
+from ProgramFeira.database.entrada_backup import abrir_backup_externo, leitura_sqlite, validar_estrutura
 
 
 def _hash_arquivo(caminho):
@@ -18,8 +18,8 @@ def _hash_arquivo(caminho):
 
 
 def _conteudo(caminho):
-    with closing(sqlite3.connect(Path(caminho).resolve().as_uri() + '?mode=ro', uri=True)) as c:
-        validar(c)
+    with leitura_sqlite(caminho) as c:
+        validar_estrutura(c)
         estrutura = c.execute("SELECT type,name,tbl_name,sql FROM sqlite_master ORDER BY type,name").fetchall()
         tabelas = {}
         resumo = hashlib.sha256(repr(estrutura).encode('utf-8'))
@@ -33,16 +33,8 @@ def _conteudo(caminho):
 
 def testar_recuperacao(origem):
     origem = Path(origem)
-    if any(Path(str(origem) + sufixo).exists() for sufixo in ('-wal', '-shm', '-journal')):
-        raise ValueError('Selecione uma cópia de backup concluída, não um banco aberto em outro programa.')
-    assinatura = _hash_arquivo(origem)
-    with tempfile.TemporaryDirectory(prefix='feira-recuperacao-') as pasta:
-        # Drive virtual recebe apenas leitura de arquivo comum. SQLite só acessa a cópia local.
-        local = Path(pasta) / 'backup.db'
-        shutil.copyfile(origem, local)
-        em_uso = any(Path(str(origem) + sufixo).exists() for sufixo in ('-wal', '-shm', '-journal'))
-        if em_uso or _hash_arquivo(local) != assinatura or _hash_arquivo(origem) != assinatura:
-            raise ValueError('O arquivo mudou durante a leitura. Aguarde a cópia/sincronização terminar e tente novamente.')
+    with abrir_backup_externo(origem) as local, tempfile.TemporaryDirectory(prefix='feira-recuperacao-') as pasta:
+        assinatura = _hash_arquivo(local)
         esperado = _conteudo(local)
         destino = Path(pasta) / 'vendas.db'
         copiar_verificado(local, destino)

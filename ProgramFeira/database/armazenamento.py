@@ -81,13 +81,14 @@ def criar_backup_para_migracao(origem, pasta):
 
 
 def restaurar_backup(caminho, origem):
-    caminho, origem = Path(caminho), Path(origem)
+    from ProgramFeira.database.entrada_backup import abrir_backup_externo
+    caminho = Path(caminho)
     temporario = caminho.with_name(f'.restauracao-{uuid4().hex}.db')
     try:
-        # Verifica o arquivo selecionado antes de tocar nos dados atuais.
-        copiar_verificado(origem, temporario)
+        # Faz uma cópia local e valida a estrutura antes de tocar no banco atual.
+        with abrir_backup_externo(origem) as local:
+            copiar_verificado(local, temporario)
         backup_anterior = criar_backup(caminho, 'antes-restauracao')
-        # Na aplicação as conexões são curtas e ficam fechadas entre ações.
         if any(Path(str(caminho) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
             raise RuntimeError('Feche outras instâncias do programa antes de restaurar.')
         os.replace(temporario, caminho)

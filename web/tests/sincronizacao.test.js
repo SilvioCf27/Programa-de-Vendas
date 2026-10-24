@@ -351,3 +351,14 @@ test('SQL 006 preserva dados antigos, transmite a compra e mantém recibos de am
   assert.equal((await v2([])).dados.financeiro_lancamentos.find(r=>r.id===nova.id).data_compra,null);
   await usuario(OUTRO); await assert.rejects(v2([]),{code:'42501'});
 });
+
+
+test('roteiro de auditoria consulta permissões sem expor ou alterar dados', async () => {
+  await db.exec('reset role');
+  const antes=(await db.query('select count(*) n from public.financeiro_lancamentos')).rows[0].n;
+  const resultados=await db.exec(await readFile(new URL('../../supabase/auditoria_somente_leitura.sql',import.meta.url),'utf8'));
+  const tabelas=resultados.find(r=>r.rows.some(l=>'anon_pode_consultar' in l)).rows;
+  assert.equal(tabelas.length,4);
+  assert.ok(tabelas.every(r=>r.rls && r.force_rls && !r.anon_pode_consultar && !r.anon_pode_inserir && !r.anon_pode_editar && !r.anon_pode_excluir));
+  assert.equal((await db.query('select count(*) n from public.financeiro_lancamentos')).rows[0].n,antes);
+});

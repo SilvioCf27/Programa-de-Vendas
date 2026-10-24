@@ -25,7 +25,7 @@ class BackupDrive:
         corpo.pack(fill='both', expand=True)
         corpo.columnconfigure(0, weight=1)
         ttk.Label(corpo, text='Proteja seus dados no Google Drive', style='Title.TLabel').grid(row=0, column=0, columnspan=2, sticky='w')
-        texto = ('Instale e conecte o Google Drive para computador. Escolha uma pasta dentro do seu Drive, preferencialmente disponível off-line.\n\nO programa grava uma cópia verificada ao fechar e mantém as 7 versões mais recentes, além do arquivo "último". O banco em uso continua local.\n\nA mensagem de sucesso confirma o arquivo na pasta. Confira no Google Drive se o envio à nuvem terminou; sem conexão, a sincronização poderá ficar pendente.')
+        texto = ('Instale e conecte o Google Drive para computador. Escolha uma pasta dentro do seu Drive, preferencialmente disponível off-line.\n\nO programa grava uma cópia verificada ao fechar e mantém as 7 versões mais recentes, além do arquivo "último". O banco em uso continua local.\n\nUse uma pasta privada e selecione o caminho real, sem atalhos ou pastas redirecionadas. O programa não verifica as permissões da sua conta Google.\n\nA mensagem de sucesso confirma o arquivo na pasta. Confira no Google Drive se o envio à nuvem terminou; sem conexão, a sincronização poderá ficar pendente.')
         ttk.Label(corpo, text=texto, wraplength=550, justify='left').grid(row=1, column=0, columnspan=2, sticky='w', pady=14)
         try:
             dados = drive.carregar_config(self.banco.parent)

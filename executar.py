@@ -99,13 +99,28 @@ def verificar_pacote(relatorio):
                 assert app.conexao_nuvem.agendador.INTERVALO == 60000
                 from ProgramFeira.recuperacao import testar_recuperacao
                 assert testar_recuperacao(copia['arquivo'])['sucesso']
+                import sqlite3
+                from contextlib import closing
+                from ProgramFeira.database.armazenamento import restaurar_backup
+                adulterado = Path(pasta) / 'backup-adulterado.db'
+                adulterado.write_bytes(banco.CAMINHO_BANCO.read_bytes())
+                with closing(sqlite3.connect(adulterado)) as conexao, conexao:
+                    conexao.execute('CREATE TRIGGER adulterado AFTER INSERT ON vendas BEGIN DELETE FROM vendas; END')
+                antes_restauracao = banco.CAMINHO_BANCO.read_bytes()
+                recusado = False
+                try:
+                    restaurar_backup(banco.CAMINHO_BANCO, adulterado)
+                except ValueError:
+                    recusado = True
+                assert recusado and banco.CAMINHO_BANCO.read_bytes() == antes_restauracao
+                resultado['sqlite'] = sqlite3.sqlite_version
                 from ProgramFeira.tendencias import evolucao
                 assert evolucao(banco.listar_vendas())[0]['quantidade'] == 1
                 from ProgramFeira.interface.conflitos import descrever
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True, taxas_semanais=True, fechamento_configuravel=True,
-                                 compra_total=True, edicao_compra=True, fatura_automatica=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
+                                 compra_total=True, edicao_compra=True, fatura_automatica=True, backup_seguranca=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
             finally:
                 app.janela.destroy()
     except Exception:

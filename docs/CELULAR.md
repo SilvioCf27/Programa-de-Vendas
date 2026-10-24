@@ -397,6 +397,6 @@ A barra é proporcional ao total bruto, e os valores e quantidades também estã
 escritos. Um período sem registros não é tratado como um dia de feira zerado.
 A revisão de conflitos está disponível no desktop em Conexão com a nuvem.
 
-## Atualização financeira 1.6.0
+## Atualização financeira 1.6.1
 
 Datas explícitas, filtros adaptativos e taxas semanais usam as tabelas existentes. Para configurar novas vigências do fechamento, execute apenas [005_fechamentos.sql](../supabase/migrations/005_fechamentos.sql) no mesmo projeto e atualize o desktop. O protocolo financeiro das versões anteriores continua compatível. Veja [FINANCAS.md](FINANCAS.md).

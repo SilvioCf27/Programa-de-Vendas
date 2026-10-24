@@ -13,6 +13,8 @@ from pathlib import Path
 from datetime import datetime, timezone
 from uuid import uuid4
 from ProgramFeira.database.armazenamento import criar_backup
+from ProgramFeira.database.seguranca_arquivos import sem_redirecionamentos
+from ProgramFeira.database.entrada_backup import conferir_backup_local
 
 SUBPASTA = 'Gestao-da-Feira-Backups'
 ULTIMO = 'gestao-da-feira-ultimo.db'
@@ -50,10 +52,11 @@ def salvar_config(pasta, dados):
 def validar_pasta(pasta, banco):
     if not str(pasta).strip():
         raise ValueError('Escolha uma pasta do Google Drive disponível neste computador.')
-    raiz = Path(pasta).expanduser().resolve()
+    raiz = sem_redirecionamentos(pasta)
     if not raiz.is_dir():
         raise ValueError('A pasta selecionada não está disponível. Verifique o Google Drive para computador.')
     destino = raiz if raiz.name == SUBPASTA else raiz / SUBPASTA
+    sem_redirecionamentos(destino)
     if destino.resolve() == Path(banco).resolve().parent:
         raise ValueError('A pasta de backup não pode ser a pasta do banco em uso.')
     return destino
@@ -107,7 +110,8 @@ def executar(banco, dados):
     # rejeitar suas escritas aleatórias/travas mesmo com espaço disponível.
     try:
         local = criar_backup(banco, 'antes-drive')
-    except (OSError, sqlite3.Error, ValueError) as erro:
+        conferir_backup_local(local)
+    except (OSError, sqlite3.Error, ValueError, RuntimeError) as erro:
         raise OSError(f'Etapa: criar e verificar o backup local.\nPasta: {banco.parent}\n{_espaco(banco.parent)}\nErro original: {erro}') from erro
     destino = validar_pasta(dados['pasta'], banco)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
@@ -117,29 +121,41 @@ def executar(banco, dados):
     etapa = 'criar a pasta de destino'
     try:
         destino.mkdir(exist_ok=True)
+        def conferir_destino():
+            if validar_pasta(dados['pasta'], banco) != destino:
+                raise ValueError('A pasta de backup mudou durante a cópia.')
+            for arquivo in (temporario, versao, destino / ULTIMO):
+                sem_redirecionamentos(arquivo)
+        conferir_destino()
         etapa = 'copiar e conferir a versão datada na pasta do Drive'
         copiar_arquivo_verificado(local, temporario)
+        conferir_destino()
         os.replace(temporario, versao)
         etapa = 'copiar e conferir o arquivo mais recente na pasta do Drive'
         copiar_arquivo_verificado(local, temporario)
         etapa = 'substituir o arquivo mais recente na pasta do Drive'
+        conferir_destino()
         os.replace(temporario, destino / ULTIMO)
     except (OSError, ValueError) as erro:
         raise OSError(f'Etapa: {etapa}.\nDestino: {destino}\nBackup local preservado: {local}\nDisco local: {_espaco(banco.parent)}\nUnidade de destino: {_espaco(destino.parent)}\nErro original: {erro}') from erro
     finally:
         try:
+            sem_redirecionamentos(temporario)
             temporario.unlink(missing_ok=True)
-        except OSError as erro:
+        except (OSError, ValueError) as erro:
             avisos.append(f'Não foi possível remover o arquivo temporário: {erro}')
     # Limpa somente versões reconhecidas deste recurso, depois da publicação.
     try:
+        conferir_destino()
         versoes = sorted((p for p in destino.iterdir() if VERSAO.fullmatch(p.name) and p.is_file()), key=lambda p: p.name, reverse=True)
         for antigo in versoes[RETENCAO:]:
             try:
+                conferir_destino()
+                sem_redirecionamentos(antigo)
                 antigo.unlink()
-            except OSError as erro:
+            except (OSError, ValueError) as erro:
                 avisos.append(f'Não foi possível remover a versão antiga {antigo.name}: {erro}')
-    except OSError as erro:
+    except (OSError, ValueError) as erro:
         avisos.append(f'Cópia criada, mas não foi possível listar as versões antigas: {erro}')
     atualizado = dict(dados, ultimo_backup=datetime.now(timezone.utc).isoformat(), ultimo_arquivo=str(destino / ULTIMO))
     try:

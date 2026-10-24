@@ -1,4 +1,4 @@
-"""Gera e testa a distribuição portátil em Python 3.11 x64 no Windows."""
+"""Gera e testa a distribuição portátil em Python 3.13 x64 no Windows."""
 import hashlib
 import json
 from pathlib import Path
@@ -12,11 +12,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def gerar():
     if sys.platform != 'win32' or platform.architecture()[0] != '64bit':
-        raise SystemExit('Gere a distribuição Windows em Windows 64 bits, com Python 3.11 x64.')
+        raise SystemExit('Gere a distribuição Windows em Windows 64 bits, com Python 3.13 x64.')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', str(ROOT / 'GestaoDaFeira.spec')], cwd=ROOT, check=True)
     pasta = ROOT / 'dist/GestaoDaFeira'
     shutil.copy2(ROOT / 'docs/EXECUTAVEL.md', pasta / 'LEIA-ME.md')
-    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md'):
+    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md', 'SEGURANCA.md'):
         shutil.copy2(ROOT / 'docs' / guia, pasta / guia)
     shutil.copy2(ROOT / 'supabase/migrations/005_fechamentos.sql', pasta / 'SQL_005_FECHAMENTOS.sql')
     shutil.copy2(ROOT / 'supabase/migrations/006_datas_compras.sql', pasta / 'SQL_006_DATAS_COMPRAS.sql')

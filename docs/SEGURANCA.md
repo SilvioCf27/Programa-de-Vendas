@@ -21,7 +21,7 @@ alteração autorizada e sincronizada pode acabar também nos backups. Isso não
 uma autorização para enviar executáveis ao Drive pelo programa. Proteja também
 a conta do aplicativo com uma senha exclusiva.
 
-## Correções da versão 1.6.1
+## Correções da versão 1.6.2
 
 Foram reproduzidos dois problemas com bancos fictícios, sem acessar contas reais:
 
@@ -48,6 +48,12 @@ bancos e funções de extensão/arquivo. Existem limites de tamanho (256 MiB),
 conteúdo por campo e tempo das consultas de análise. Eles reduzem a exposição a
 arquivos inesperados, mas não substituem atualizações do SQLite ou um antivírus.
 Um arquivo inválido é recusado antes de substituir o banco em uso.
+
+A atualização do runtime revelou também coleta de variáveis Tk em uma thread de
+sincronização. O descarte de ciclos da interface passou a ocorrer na thread
+gráfica ao terminar as tarefas; operações de backup e nuvem sobrepostas são
+coordenadas para evitar esse travamento. Os testes cobrem a retomada da coleta
+e a preservação dos controles após a conclusão.
 
 ## O que os testes comprovam
 

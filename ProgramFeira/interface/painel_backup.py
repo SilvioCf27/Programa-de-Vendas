@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from ProgramFeira import backup_drive as drive
 from ProgramFeira.interface.visual import CORES
+from ProgramFeira.interface.coleta import suspender_coleta
 
 
 class BackupDrive:
@@ -102,13 +103,26 @@ class BackupDrive:
                 resultados.put((True, drive.executar(self.banco, dados)))
             except Exception as erro:
                 resultados.put((False, erro))
-        threading.Thread(target=trabalhar, daemon=True).start()
+        concluir_coleta = suspender_coleta()
+        trabalhador = threading.Thread(target=trabalhar, daemon=True)
+        try:
+            trabalhador.start()
+        except BaseException:
+            concluir_coleta()
+            self.ocupado = False
+            progresso.destroy()
+            raise
         def acompanhar():
+            if trabalhador.is_alive():
+                self.janela.after(100, acompanhar)
+                return
             try:
                 sucesso, resultado = resultados.get_nowait()
             except queue.Empty:
                 self.janela.after(100, acompanhar)
                 return
+            trabalhador.join()
+            concluir_coleta()
             progresso.grab_release()
             progresso.destroy()
             self.ocupado = False

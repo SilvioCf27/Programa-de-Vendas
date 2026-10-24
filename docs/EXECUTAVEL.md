@@ -10,7 +10,7 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.6.1
+## Versão 1.6.2
 
 Esta atualização de segurança recusa backups com objetos SQL inesperados e
 pastas redirecionadas por links/junctions. A restauração usa uma cópia temporária

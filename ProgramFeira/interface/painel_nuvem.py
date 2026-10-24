@@ -9,6 +9,7 @@ from ProgramFeira import nuvem, migracao_nuvem, sincronizacao, automacao_nuvem, 
 from ProgramFeira.interface.visual import CORES
 from ProgramFeira.resumos import moeda
 from ProgramFeira.diagnostico import registrar
+from ProgramFeira.interface.coleta import suspender_coleta
 
 
 class ConexaoNuvem:
@@ -184,11 +185,16 @@ class ConexaoNuvem:
                 resultados.put((False, nuvem.ErroNuvem('Operação não confirmada. Confira a conexão e o espaço em disco antes de continuar.')))
 
         def acompanhar():
+            if trabalhador.is_alive():
+                self.janela.after(100, acompanhar)
+                return
             try:
                 sucesso, resultado = resultados.get_nowait()
             except queue.Empty:
                 self.janela.after(100, acompanhar)
                 return
+            trabalhador.join()
+            concluir_coleta()
             self.ocupado = self.em_segundo_plano = False
             self.bloqueando_edicao = False
             if travar and self.bloquear_edicao:
@@ -207,7 +213,14 @@ class ConexaoNuvem:
             self.vinculado = sincronizacao.vinculado(self.pasta / 'vendas.db')
             self._controles()
 
-        threading.Thread(target=trabalhar, daemon=True).start()
+        concluir_coleta = suspender_coleta()
+        trabalhador = threading.Thread(target=trabalhar, daemon=True)
+        try:
+            trabalhador.start()
+        except BaseException:
+            concluir_coleta()
+            self.ocupado = self.em_segundo_plano = False
+            raise
         self.janela.after(100, acompanhar)
 
     def entrar(self):

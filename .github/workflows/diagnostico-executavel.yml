@@ -6,7 +6,7 @@ on:
       versao:
         description: Tag da versao a conferir
         required: true
-        default: v1.6.1
+        default: v1.6.2
   workflow_run:
     workflows: ['Executavel Windows']
     types: [completed]

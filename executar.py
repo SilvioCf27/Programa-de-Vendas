@@ -35,7 +35,8 @@ def verificar_pacote(relatorio):
                 configuracoes.destroy()
                 painel_atualizacao = app.atualizacoes.abrir()
                 app.janela.update()
-                assert 'versão' in app.atualizacoes.status.get().lower() or not app.atualizacoes.disponivel
+                assert painel_atualizacao.winfo_exists()
+                assert app.atualizacoes.verificar.instate(['disabled']) == (not app.atualizacoes.disponivel)
                 app.atualizacoes.fechar()
                 from ProgramFeira.interface.fontes import PASTA_FONTES
                 from ProgramFeira.database import banco

@@ -183,8 +183,9 @@ def instalar(preparacao, banco):
     from ProgramFeira import backup_drive
     alvo = validar_destino(preparacao['alvo'] / 'GestaoDaFeira.exe', banco)
     stage = sem_redirecionamentos(preparacao['stage']).resolve()
+    nova = sem_redirecionamentos(preparacao['nova']).resolve()
     if (stage.parent != alvo.parent or not stage.name.startswith('.feira-atualizacao-') or
-        preparacao['nova'] != stage / 'nova/GestaoDaFeira'):
+        nova != stage / 'nova/GestaoDaFeira'):
         raise ValueError('Pasta de atualização inválida.')
     backup = criar_backup(banco, motivo='antes-atualizacao')
     config = backup_drive.carregar_config(Path(banco).parent)
@@ -192,7 +193,7 @@ def instalar(preparacao, banco):
         copia = backup_drive.executar(banco, config)
         if copia['avisos']:
             raise ValueError('A cópia no Drive exige atenção: ' + '; '.join(copia['avisos']))
-    parametros = {'pid': os.getpid(), 'alvo': str(alvo), 'nova': str(preparacao['nova']),
+    parametros = {'pid': os.getpid(), 'alvo': str(alvo), 'nova': str(nova),
                   'versao': preparacao['versao'].removeprefix('v'), 'backup': str(backup)}
     (stage / 'parametros.json').write_text(json.dumps(parametros), encoding='utf-8')
     # Caminho absoluto do PowerShell do Windows: não executa um homônimo no PATH.

@@ -123,7 +123,9 @@ def extrair(pacote, destino):
 
 
 def validar_destino(executavel, banco):
-    executavel = sem_redirecionamentos(executavel)
+    # Windows pode fornecer TEMP/LOCALAPPDATA no formato 8.3 (RUNNER~1).
+    # Inspeciona links antes de resolver e só depois compara formas canônicas.
+    executavel = sem_redirecionamentos(executavel).resolve()
     alvo = executavel.parent
     if executavel.name != 'GestaoDaFeira.exe' or not executavel.is_file() or not (alvo / '_internal').is_dir():
         raise ValueError('A atualização requer a pasta completa do executável portátil.')
@@ -179,7 +181,7 @@ def instalar(preparacao, banco):
     from ProgramFeira.database.armazenamento import criar_backup
     from ProgramFeira import backup_drive
     alvo = validar_destino(preparacao['alvo'] / 'GestaoDaFeira.exe', banco)
-    stage = sem_redirecionamentos(preparacao['stage'])
+    stage = sem_redirecionamentos(preparacao['stage']).resolve()
     if (stage.parent != alvo.parent or not stage.name.startswith('.feira-atualizacao-') or
         preparacao['nova'] != stage / 'nova/GestaoDaFeira'):
         raise ValueError('Pasta de atualização inválida.')
@@ -213,7 +215,7 @@ def confirmar_inicio():
     """Chamado no loop gráfico; recibo restrito à área de atualização."""
     if len(sys.argv) != 3 or sys.argv[1] != '--confirmar-atualizacao':
         return
-    recibo = sem_redirecionamentos(sys.argv[2])
+    recibo = sem_redirecionamentos(sys.argv[2]).resolve()
     alvo = Path(sys.executable).resolve().parent
     if (recibo.name != 'abriu.json' or not recibo.parent.name.startswith('.feira-atualizacao-') or
         recibo.parent.parent != alvo.parent or recibo.exists()):

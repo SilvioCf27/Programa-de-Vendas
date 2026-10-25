@@ -39,6 +39,7 @@ def testar(pacote):
             from ProgramFeira.database import banco as db
             from ProgramFeira import financeiro
             db.criar_tabela()
+            financeiro.inicializar()
             db.cadastrar_venda('2035-01-01', 10, 20, 30)
             financeiro.salvar_lancamento('despesa', '2035-01-10', 'Despesa fictícia', '100,01', 'Cartão de crédito', parcelas=3)
             financeiro.salvar_taxa_anual(2035, '2035-01-01', '2035-12-31', '12,34')

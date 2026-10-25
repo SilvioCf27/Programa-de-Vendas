@@ -3,6 +3,15 @@
 Revisão do código em 24/10/2026. Este documento descreve o programa; não publica
 configurações particulares das contas de quem o utiliza.
 
+Desde a versão **1.7.0**, o desktop pode consultar e instalar releases oficiais.
+Isso acrescenta uma dependência de confiança na publicação GitHub: o pacote
+é código executável. O download usa HTTPS, lista restrita de domínios, limites,
+SHA-256 e teste isolado antes da troca. Hash e teste não substituem assinatura
+digital nem protegem contra uma conta GitHub comprometida. O auxiliar local
+PowerShell só troca arquivos do aplicativo após o fechamento; não instala
+serviço e não envia dados. Veja [ATUALIZACOES.md](ATUALIZACOES.md) para o fluxo,
+o backup anterior, a recuperação e seus limites.
+
 ## Onde ficam as permissões
 
 O Cloudflare hospeda a interface da PWA. O Supabase autentica a conta e aplica

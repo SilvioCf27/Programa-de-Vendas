@@ -8,6 +8,12 @@ Baixe o arquivo **GestaoDaFeira-Windows-x64.zip** em [Releases](https://github.c
 
 O programa começa vazio para quem está usando pela primeira vez. Se você já usa o Gestão da Feira, ele abre o banco local existente. Atualizar o programa não apaga suas vendas.
 
+A partir da **v1.7.0**, abra **Configurações → Atualizações** para baixar e instalar
+as próximas versões sem extrair o ZIP. O programa avisa ao abrir quando há uma
+versão estável nova; a instalação só começa quando você confirma. Quem usa uma
+versão anterior precisa baixar e extrair esta primeira atualização uma vez.
+Veja os cuidados e a recuperação em [ATUALIZACOES.md](docs/ATUALIZACOES.md).
+
 ## O que dá para fazer
 
 - Cadastrar, editar e excluir vendas por data, separando dinheiro, Pix e cartão.

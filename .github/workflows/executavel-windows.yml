@@ -11,6 +11,7 @@ on:
       - 'tools/gerar_executavel.py'
       - 'tools/versao_windows.txt'
       - 'tools/testar_windows.py'
+      - 'tools/testar_atualizacao_windows.py'
       - 'executar.py'
       - 'GestaoDaFeira.spec'
       - 'requirements*.txt'
@@ -40,6 +41,8 @@ jobs:
         run: python tools/testar_windows.py
       - name: Gerar e verificar o executavel
         run: python tools/gerar_executavel.py
+      - name: Ensaiar atualizacao com binarios reais
+        run: python tools/testar_atualizacao_windows.py
       - name: Disponibilizar pacote aprovado
         uses: actions/upload-artifact@v4
         with:
@@ -48,6 +51,7 @@ jobs:
             dist/GestaoDaFeira-Windows-x64.zip
             dist/SHA256.txt
             dist/VALIDACAO_WINDOWS.json
+            dist/VALIDACAO_ATUALIZADOR.json
           if-no-files-found: error
           retention-days: 30
       - name: Guardar diagnostico da compilacao
@@ -83,6 +87,7 @@ jobs:
           pacote/GestaoDaFeira-Windows-x64.zip
           pacote/SHA256.txt
           pacote/VALIDACAO_WINDOWS.json
+          pacote/VALIDACAO_ATUALIZADOR.json
           --verify-tag
           --title "Gestão da Feira $VERSAO — Windows"
           --notes-file .github/notas-executavel.md
@@ -93,7 +98,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           VERSAO: ${{ github.ref_name }}
         run: |
-          gh release download "$VERSAO" --dir conferencia --pattern 'GestaoDaFeira-Windows-x64.zip' --pattern 'SHA256.txt' --pattern 'VALIDACAO_WINDOWS.json'
+          gh release download "$VERSAO" --dir conferencia --pattern 'GestaoDaFeira-Windows-x64.zip' --pattern 'SHA256.txt' --pattern 'VALIDACAO_WINDOWS.json' --pattern 'VALIDACAO_ATUALIZADOR.json'
           python - <<'PY'
           import hashlib, json, os
           from pathlib import Path
@@ -111,8 +116,12 @@ jobs:
           assert validacao['backup_seguranca'] and validacao['sqlite']
           assert tuple(map(int, validacao['sqlite'].split('.'))) >= (3, 50, 2)
           assert 'v' + validacao['versao'] == os.environ['VERSAO']
+          atualizador = json.loads((pasta / 'VALIDACAO_ATUALIZADOR.json').read_text(encoding='utf-8'))
+          assert atualizador['sucesso'] and atualizador['binarios_reais'] and atualizador['reinicio_confirmado']
+          assert atualizador['dados_preservados'] and atualizador['preferencias_preservadas']
+          assert 'v' + atualizador['versao'] == os.environ['VERSAO']
           recibo = dict(tag=os.environ['VERSAO'], commit=os.environ['GITHUB_SHA'],
-                        sha256=sha, bytes=pacote.stat().st_size, validacao=validacao)
+                        sha256=sha, bytes=pacote.stat().st_size, validacao=validacao, atualizador=atualizador)
           Path('conferencia.json').write_text(json.dumps(recibo, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
           git config user.name 'github-actions[bot]'

@@ -1,20 +1,18 @@
-A versão **1.6.2** reforça a segurança do backup e da restauração.
+A versão **1.7.0** acrescenta atualizações pelo próprio aplicativo Windows.
 
-- Recusa backups com triggers, views ou tabelas virtuais não usados pelo aplicativo. Um teste reproduzia perda de histórico após restaurar um banco adulterado; esse arquivo agora é recusado antes da substituição.
-- Recusa pastas redirecionadas por links/junctions e verifica novamente o destino antes de publicar ou remover versões.
-- Copia backups externos para uma pasta temporária local antes de abrir SQLite, preservando a compatibilidade com unidades virtuais do Drive.
-- Usa leitura defensiva, limites de tamanho e tempo e bloqueio de anexação e extensões na análise de backups.
-- Ajusta a finalização de objetos da interface no runtime atualizado, evitando bloqueio durante tarefas de backup e sincronização.
-- O relatório do executável registra a versão SQLite e a aprovação da recusa de backup adulterado.
+- **Configurações → Atualizações** consulta releases estáveis do repositório oficial.
+- O programa pode avisar ao abrir; o download e a instalação exigem sua confirmação.
+- Confere o SHA-256, recusa caminhos perigosos e testa o executável novo com dados temporários antes da troca.
+- Cria backup local e, se configurado, na pasta do Drive antes de reiniciar. As cópias remotas dependem do cliente Drive.
+- Preserva dados e preferências, mantém o caminho dos atalhos e guarda a pasta anterior. Se a nova versão não confirmar a abertura, tenta recuperar a anterior.
+- A publicação exige um ensaio no Windows com dois binários reais e dados fictícios, além do teste de recuperação após falha.
 
-**Não exige SQL novo.** As funções de fatura automática da versão anterior continuam disponíveis; o SQL 006 só precisa ser instalado por quem ainda não o instalou para essas funções.
+**Esta primeira atualização ainda precisa ser baixada e extraída manualmente**, pois as versões anteriores não contêm o atualizador. Depois, use a nova opção nas configurações.
 
-[Relatório técnico e limites](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.6.2/docs/SEGURANCA.md) · [Verificação Supabase somente leitura](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.6.2/supabase/auditoria_somente_leitura.sql)
+Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**, mantendo `_internal` junto dele. Use uma pasta local própria com permissão de escrita, fora da pasta de dados, de unidades virtuais e do repositório. Não é necessário executar como administrador. Seus registros existentes continuam na pasta local de dados.
 
-Estas proteções reduzem riscos conhecidos de arquivo e caminho. Não são um antivírus, não garantem que o PC esteja limpo e não impedem um vírus com as mesmas permissões de acessar o Drive diretamente. Os backups continuam sem criptografia ou assinatura autenticada. Proteja as contas e mantenha também uma cópia desconectada.
+**Não exige SQL novo.** As funções financeiras, de sincronização e de proteção dos backups continuam disponíveis.
 
-Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**, mantendo `_internal` junto dele. Feche a versão anterior antes de atualizar. Não substitua seu banco pelo banco inicial do pacote.
+[Como atualizar e recuperar](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.0/docs/ATUALIZACOES.md) · [Segurança e limites](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.0/docs/SEGURANCA.md)
 
-Depois de atualizar, use Fazer cópia agora e confira o arquivo no Drive pelo navegador. O programa confirma a cópia local, e o envio remoto depende do cliente Google Drive.
-
-`VALIDACAO_WINDOWS.json` e `SHA256.txt` acompanham o download. O pacote público começa vazio, não contém dados pessoais e não possui assinatura digital.
+O download inclui `SHA256.txt`, `VALIDACAO_WINDOWS.json` e `VALIDACAO_ATUALIZADOR.json`. O pacote público começa vazio e não contém seus dados. Ainda não possui assinatura digital: o hash verifica integridade, e a confiança na conta/publicação GitHub continua necessária. O atualizador não é antivírus nem restaura seu banco automaticamente ao recuperar arquivos do programa.

@@ -34,7 +34,7 @@ a.botao_configuracoes.invoke()
 a.janela.update()
 cfg = a.configuracoes
 assert a.abrir_configuracoes() is cfg
-assert len(cfg.acoes) == 7
+assert len(cfg.acoes) == 8
 titulo_verificar = 'Verificar integridade do backup…'
 dica = cfg.ajudas[titulo_verificar]
 dica.widget.event_generate('<Enter>')

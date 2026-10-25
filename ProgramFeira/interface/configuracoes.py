@@ -12,6 +12,7 @@ EXPLICACOES = {
     'Conexão com a nuvem…': 'Conecta à conta e sincroniza vendas e finanças com o celular. Também permite revisar conflitos.',
     'Local dos dados': 'Mostra onde ficam o banco e os arquivos locais deste computador.',
     'Sobre esta versão…': 'Mostra a versão instalada e o local dos diagnósticos para relatar um problema.',
+    'Atualizações…': 'Consulta versões estáveis no GitHub, verifica o download e atualiza o executável preservando os dados.',
 }
 
 

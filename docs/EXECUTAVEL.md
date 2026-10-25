@@ -10,7 +10,14 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.6.2
+## Versão 1.7.0
+
+Inclui **Configurações → Atualizações**. Após receber esta versão, as próximas
+releases estáveis podem ser baixadas, conferidas e instaladas pelo programa,
+sem extrair o ZIP manualmente. O reinício preserva a pasta de dados e guarda
+a versão anterior. Veja [ATUALIZACOES.md](ATUALIZACOES.md).
+
+## Segurança de backups (desde 1.6.2)
 
 Esta atualização de segurança recusa backups com objetos SQL inesperados e
 pastas redirecionadas por links/junctions. A restauração usa uma cópia temporária
@@ -53,9 +60,9 @@ O programa continua usando `%LOCALAPPDATA%\ProgramFeira\vendas.db`, o mesmo banc
 
 Em um computador sem banco local, o programa cria um banco vazio e prepara a estrutura financeira. Os dados de uso posteriores ficam sempre fora da pasta do executável. Taxas e despesas já cadastradas no banco local são preservadas.
 
-Para atualizar, feche todas as instâncias do programa e extraia o novo pacote em outra pasta. Abra o novo `.exe` e confira os registros. Não misture arquivos de duas versões e não substitua o banco da pasta de dados pelo arquivo que acompanha o pacote. Depois da conferência, é possível remover a pasta antiga do programa; preserve a pasta local de dados e os backups. Não use o VS Code e o executável ao mesmo tempo para editar o mesmo banco.
+Desde a versão 1.7.0, prefira **Configurações → Atualizações**. Para atualizar manualmente uma versão anterior, feche todas as instâncias do programa e extraia o novo pacote em outra pasta. Abra o novo `.exe` e confira os registros. Não misture arquivos de duas versões e não substitua o banco da pasta de dados pelo arquivo que acompanha o pacote. Depois da conferência, é possível remover a pasta antiga do programa; preserve a pasta local de dados e os backups. Não use o VS Code e o executável ao mesmo tempo para editar o mesmo banco.
 
-`git pull` atualiza o código do repositório, mas não transforma um executável já gerado em uma nova versão. Para usar uma alteração no executável, baixe o novo pacote ou gere-o novamente. O backup no Drive continua funcionando conforme a configuração já salva. Trocar de computador exige restaurar o banco e configurar novamente o Drive.
+`git pull` atualiza o código do repositório, mas não transforma um executável já gerado em uma nova versão. O atualizador instala as releases publicadas, não cada alteração no Git. O backup no Drive continua funcionando conforme a configuração já salva. Trocar de computador exige restaurar o banco e configurar novamente o Drive.
 
 A cópia portátil não inclui o Google Drive para computador: ele deve continuar instalado e conectado para sincronizar a pasta de backup. A exportação Excel já está incluída; não requer instalar openpyxl ou ter Excel instalado para gerar os arquivos.
 
@@ -67,7 +74,7 @@ Erros na abertura geram uma mensagem e, quando a pasta de dados permite escrita,
 
 Esta seção é apenas para quem gera o pacote. Para executar um pacote pronto, Python não é necessário.
 
-No Windows, instale **Python 3.11 x64 com Tcl/Tk e o Python Launcher**. Atualize o repositório, feche o programa e dê dois cliques em `gerar_executavel.cmd`. A primeira geração precisa de internet para baixar as dependências. O script cria um ambiente separado `.venv-build`, executa os testes, gera o programa e testa o próprio binário com dados temporários. Não usa seu banco pessoal.
+No Windows, instale **Python 3.13 x64 com Tcl/Tk e o Python Launcher**. Atualize o repositório, feche o programa e dê dois cliques em `gerar_executavel.cmd`. A primeira geração precisa de internet para baixar as dependências. O script cria um ambiente separado `.venv-build`, executa os testes, gera o programa e testa o próprio binário com dados temporários. Não usa seu banco pessoal.
 
 O resultado fica em `dist/GestaoDaFeira-Windows-x64.zip`. A distribuição inclui apenas um banco inicial vazio. Os testes do pacote usam dados temporários e não levam suas vendas para o executável.
 

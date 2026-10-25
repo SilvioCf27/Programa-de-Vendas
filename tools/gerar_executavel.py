@@ -16,7 +16,7 @@ def gerar():
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', str(ROOT / 'GestaoDaFeira.spec')], cwd=ROOT, check=True)
     pasta = ROOT / 'dist/GestaoDaFeira'
     shutil.copy2(ROOT / 'docs/EXECUTAVEL.md', pasta / 'LEIA-ME.md')
-    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md', 'SEGURANCA.md'):
+    for guia in ('RECUPERACAO.md', 'USO.md', 'CELULAR.md', 'INTERFACE.md', 'FINANCAS.md', 'SEGURANCA.md', 'ATUALIZACOES.md'):
         shutil.copy2(ROOT / 'docs' / guia, pasta / guia)
     shutil.copy2(ROOT / 'supabase/migrations/005_fechamentos.sql', pasta / 'SQL_005_FECHAMENTOS.sql')
     shutil.copy2(ROOT / 'supabase/migrations/006_datas_compras.sql', pasta / 'SQL_006_DATAS_COMPRAS.sql')

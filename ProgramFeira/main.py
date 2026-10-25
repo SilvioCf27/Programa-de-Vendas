@@ -746,18 +746,18 @@ backup_drive = BackupDrive(janela, CAMINHO_BANCO)
 menu_dados.add_command(label='Backup no Google Drive…', command=backup_drive.configurar)
 
 
-def verificar_formulario_sincronizacao():
+def verificar_formulario_sincronizacao(permitida=None):
     if formulario.state() == 'normal':
         raise ErroNuvem('Conclua ou cancele o formulário de venda antes de sincronizar.')
     def janelas_visiveis(widget):
         for filho in widget.winfo_children():
             if isinstance(filho, tk.Toplevel):
-                if filho is not conexao_nuvem.popup and not getattr(filho, '_dica_informativa', False) and filho.winfo_viewable():
+                if filho not in (conexao_nuvem.popup, permitida) and not getattr(filho, '_dica_informativa', False) and filho.winfo_viewable():
                     return True
             elif janelas_visiveis(filho):
                 return True
         return False
-    if janelas_visiveis(janela) or janela.grab_current() not in (None, conexao_nuvem.popup):
+    if janelas_visiveis(janela) or janela.grab_current() not in (None, conexao_nuvem.popup, permitida):
         raise ErroNuvem('Conclua ou feche a janela aberta antes de sincronizar.')
 
 
@@ -828,6 +828,19 @@ conexao_nuvem = ConexaoNuvem(janela, CAMINHO_BANCO.parent,
     antes_automatico=verificar_automatico,
     bloquear_edicao=bloquear_edicao_sincronizacao)
 menu_dados.add_command(label='Conexão com a nuvem…', command=conexao_nuvem.configurar)
+
+
+def verificar_disponibilidade_atualizacao(permitida=None):
+    if conexao_nuvem.ocupado or backup_drive.ocupado:
+        raise ValueError('Aguarde o backup ou a sincronização terminar antes de atualizar.')
+    if conexao_nuvem.popup and conexao_nuvem.popup.winfo_exists() and conexao_nuvem.popup.winfo_viewable():
+        raise ValueError('Feche a janela de conexão com a nuvem antes de atualizar.')
+    verificar_formulario_sincronizacao(permitida)
+
+
+from ProgramFeira.interface.painel_atualizacao import Atualizacoes
+atualizacoes = Atualizacoes(janela, CAMINHO_BANCO, verificar_disponibilidade_atualizacao)
+menu_dados.add_command(label='Atualizações…', command=atualizacoes.abrir)
 menu_dados.add_separator()
 menu_dados.add_command(label='Local dos dados', command=mostrar_pasta_dados)
 # Os comandos são apresentados na janela Configurações; este menu guarda suas ações.
@@ -1196,4 +1209,6 @@ aplicar_tema(janela, tema_atual.get())
 layout_compacto = None
 organizar_cartoes()
 atualizar_tabela()
+from ProgramFeira.atualizador import confirmar_inicio
+janela.after_idle(confirmar_inicio)
 janela.mainloop()

@@ -29,9 +29,14 @@ def verificar_pacote(relatorio):
                     assert app.tema_atual.get() == tema
                 configuracoes = app.abrir_configuracoes()
                 app.janela.update()
-                assert len(configuracoes.acoes) == 7
+                assert len(configuracoes.acoes) == 8
                 assert 'Verificar integridade do backup…' in configuracoes.acoes
+                assert 'Atualizações…' in configuracoes.acoes
                 configuracoes.destroy()
+                painel_atualizacao = app.atualizacoes.abrir()
+                app.janela.update()
+                assert 'versão' in app.atualizacoes.status.get().lower() or not app.atualizacoes.disponivel
+                app.atualizacoes.fechar()
                 from ProgramFeira.interface.fontes import PASTA_FONTES
                 from ProgramFeira.database import banco
                 from ProgramFeira import financeiro, backup_drive

@@ -159,7 +159,8 @@ def preparar(release, executavel, banco):
         nova = extrair(stage / PACOTE, stage / 'nova')
         relatorio = stage / 'teste-local.json'
         subprocess.run([str(nova / 'GestaoDaFeira.exe'), '--verificar-pacote', str(relatorio)],
-                       cwd=stage, check=True, timeout=120)
+                       cwd=stage, check=True, timeout=120,
+                       env={**os.environ, 'PYINSTALLER_RESET_ENVIRONMENT': '1'})
         validar_relatorio(relatorio, release['versao'])
         # Script estático da versão atual, nunca texto vindo do servidor.
         script = Path(__file__).parent / 'assets/aplicar_atualizacao.ps1'
@@ -198,7 +199,8 @@ def instalar(preparacao, banco):
     powershell = Path(os.environ['SystemRoot']) / 'System32/WindowsPowerShell/v1.0/powershell.exe'
     processo = subprocess.Popen([str(powershell), '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
                                 '-File', str(stage / 'aplicar.ps1'), '-Parametros', str(stage / 'parametros.json')],
-                               cwd=stage, creationflags=0x08000000)
+                               cwd=stage, creationflags=0x08000000,
+                               env={**os.environ, 'PYINSTALLER_RESET_ENVIRONMENT': '1'})
     limite = time.monotonic() + 15
     while time.monotonic() < limite:
         if processo.poll() is not None:

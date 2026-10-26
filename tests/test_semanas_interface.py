@@ -70,7 +70,11 @@ with patch.object(a,'date',Dia):
     a.janela.geometry('980x700'); a.janela.update()
     assert str(a.label_semana.cget('textvariable')) == str(a.resumo_semana_curto)
     assert 'Dinheiro R$ 70,00' in a.dica_semana.texto
+    # O Windows do CI limita por padrão a janela à resolução do monitor.
+    # Permite simular também o modo amplo, mesmo numa máquina com tela menor.
+    a.janela.maxsize(2000,1200)
     a.janela.geometry('1500x940'); a.janela.update()
+    assert a.janela.winfo_height() >= 820, a.janela.winfo_geometry()
     assert str(a.label_semana.cget('textvariable')) == str(a.resumo_semana)
 a.janela.destroy()
 '''

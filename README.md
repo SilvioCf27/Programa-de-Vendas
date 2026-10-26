@@ -14,6 +14,12 @@ versão estável nova; a instalação só começa quando você confirma. Quem us
 versão anterior precisa baixar e extrair esta primeira atualização uma vez.
 Veja os cuidados e a recuperação em [ATUALIZACOES.md](docs/ATUALIZACOES.md).
 
+## Reforma visual em planejamento
+
+O [plano da reforma do desktop](docs/PLANO_REFORMA_DESKTOP.txt) registra o escopo,
+as funções a preservar e as etapas de comparação entre Tkinter e PySide6.
+É um rascunho para aprovação; a ferramenta ainda não foi escolhida.
+
 ## Resumos semanais no desktop e celular
 
 A tela inicial mostra a **Semana atual**, de segunda-feira até hoje, sem depender

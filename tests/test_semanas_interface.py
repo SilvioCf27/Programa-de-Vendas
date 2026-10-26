@@ -67,6 +67,11 @@ with patch.object(a,'date',Dia):
     a.aplicar_periodo_inicial(); a.atualizar_tabela()
     assert a.obter_filtros()[:2] == ('2026-01-01','2026-12-31')
     assert 'R$ 70,00' in a.resumo_semana.get()
+    a.janela.geometry('980x700'); a.janela.update()
+    assert str(a.label_semana.cget('textvariable')) == str(a.resumo_semana_curto)
+    assert 'Dinheiro R$ 70,00' in a.dica_semana.texto
+    a.janela.geometry('1500x940'); a.janela.update()
+    assert str(a.label_semana.cget('textvariable')) == str(a.resumo_semana)
 a.janela.destroy()
 '''
         with tempfile.TemporaryDirectory() as pasta:

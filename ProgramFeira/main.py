@@ -250,8 +250,10 @@ def atualizar_semana_atual(hoje=None):
     hoje = hoje or date.today()
     dados = semana_atual(listar_vendas(), hoje)
     dias = 'dia de feira' if dados['quantidade'] == 1 else 'dias de feira'
+    resumo_semana_curto.set(f'Semana atual · {dados["inicio"]:%d/%m} a {dados["fim"]:%d/%m/%Y} · {moeda(dados["total"])} até hoje · {dados["quantidade"]} {dias} · Independente dos filtros')
     resumo_semana.set(f'Semana atual · {dados["inicio"]:%d/%m} a {dados["fim"]:%d/%m/%Y} · Até hoje: {moeda(dados["total"])} · {dados["quantidade"]} {dias}\n'
                      f'Dinheiro {moeda(dados["totais"][0])}  ·  Pix {moeda(dados["totais"][1])}  ·  Cartão {moeda(dados["totais"][2])}  ·  Independente dos filtros · Valores brutos')
+    dica_semana.texto = resumo_semana.get() + '\n\nValores brutos. Em janela reduzida, passe o mouse aqui para ver os pagamentos.'
     return dados
 
 
@@ -278,6 +280,7 @@ def conferir_virada_do_dia():
     except (sqlite3.Error, OSError) as erro:
         registrar_erro(erro, CAMINHO_BANCO.parent)
         resumo_semana.set('Semana atual: consulta temporariamente indisponível. Tentaremos novamente em 30 segundos.')
+        resumo_semana_curto.set(resumo_semana.get())
     janela.after(30000, conferir_virada_do_dia)
 
 
@@ -903,6 +906,7 @@ resumo_cartao = tk.StringVar()
 resumo_total = tk.StringVar()
 resumo_quantidade = tk.StringVar()
 resumo_semana = tk.StringVar()
+resumo_semana_curto = tk.StringVar()
 resumo_media = tk.StringVar()
 resumo_participacao = tk.StringVar()
 resumo_comparacao = tk.StringVar()
@@ -993,6 +997,8 @@ def organizar_cartoes(event=None):
     compacto = janela.winfo_height() < 820
     if compacto != layout_compacto:
         layout_compacto = compacto
+        if 'label_semana' in globals():
+            label_semana.configure(textvariable=resumo_semana_curto if compacto else resumo_semana)
         familia = font.nametofont('TkDefaultFont').actual('family')
         cabecalho.configure(padding=(24, 8, 24, 6) if compacto else (24, 18, 24, 12))
         icone_marca.icone_tamanho = 42 if compacto else 64
@@ -1034,8 +1040,9 @@ faixa_semana = ttk.Frame(analises, style='Surface.TFrame')
 faixa_semana.grid(row=2, column=0, columnspan=4, sticky='ew', pady=(7, 0))
 faixa_semana.columnconfigure(1, weight=1)
 botao_ajuda(faixa_semana, 'semana_atual').grid(row=0, column=0, sticky='nw', padx=(0, 7))
-label_semana = ttk.Label(faixa_semana, textvariable=resumo_semana, style='Surface.TLabel', justify='left')
+label_semana = ttk.Label(faixa_semana, textvariable=resumo_semana_curto if layout_compacto else resumo_semana, style='Surface.TLabel', justify='left')
 label_semana.grid(row=0, column=1, sticky='ew')
+dica_semana = Dica(label_semana, '')
 faixa_semana.bind('<Configure>', lambda e: label_semana.configure(wraplength=max(100, e.width - 40)))
 resumo_lado_a_lado = None
 

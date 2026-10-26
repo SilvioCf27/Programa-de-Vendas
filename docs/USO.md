@@ -125,6 +125,8 @@ separadas em dinheiro, Pix e cartão. O intervalo do título vai até domingo,
 mas datas futuras não entram no total nem na quantidade de dias. Essa faixa
 não segue os filtros principais. Dias cadastrados com zero contam como feiras;
 ausência de registro não conta. Taxas e despesas continuam na aba Finanças.
+Em janelas menores, a faixa fica em uma linha; passe o mouse sobre ela para
+ver a divisão por forma de pagamento.
 
 Ao virar o dia, a faixa se atualiza em até 30 segundos, inclusive se o programa
 ficar aberto de domingo para segunda. Salvar, excluir, editar e sincronizar

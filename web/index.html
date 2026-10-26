@@ -61,6 +61,14 @@
         <p class="nota">Acesso restrito. Não há cadastro público.</p>
       </section>
       <section id="conteudo" hidden>
+        <details class="painel preferencias-web">
+          <summary>⚙ Configurações de visualização</summary>
+          <label>Período ao abrir<select id="periodo-inicial">
+            <option>Fechamento atual</option><option>Mês atual</option>
+            <option>Ano atual</option><option>Todas as vendas</option>
+          </select></label>
+          <p id="preferencia-status" class="nota" role="status">Vale na próxima abertura, somente neste navegador. Não muda a consulta em uso.</p>
+        </details>
         <nav class="abas" aria-label="Áreas do aplicativo">
           <button
             id="aba-vendas"
@@ -106,6 +114,21 @@
               <span>Média por dia</span><strong id="media">—</strong>
             </article>
           </div>
+          <section class="painel semana-atual" aria-labelledby="semana-titulo">
+            <div class="titulo"><h3 id="semana-titulo">Semana atual</h3><span class="etiqueta">INDEPENDENTE DOS FILTROS</span></div>
+            <p id="semana-intervalo" class="nota"></p>
+            <strong id="semana-total" class="valor">—</strong>
+            <p id="semana-dias" class="nota"></p>
+            <dl class="semana-pagamentos">
+              <div><dt>Dinheiro</dt><dd id="semana-dinheiro">—</dd></div>
+              <div><dt>Pix</dt><dd id="semana-pix">—</dd></div>
+              <div><dt>Cartão</dt><dd id="semana-cartao">—</dd></div>
+            </dl>
+            <details class="explicacao"><summary>Como esta semana é calculada?</summary>
+              <p>Vendas brutas de segunda-feira até hoje, sem datas futuras e sem descontar taxas ou despesas. Dias registrados com zero contam como feiras. Não depende dos filtros abaixo. Na virada do dia, a consulta aguarda uma conexão e a conclusão de formulários abertos.</p>
+            </details>
+            <p id="semana-status" class="nota" role="status"></p>
+          </section>
           <form id="filtros" class="painel filtros">
             <label
               >Consultar<select id="tipo">
@@ -199,6 +222,16 @@
             </p>
           </details>
           <p id="ana-vazio" class="nota" hidden>Nenhuma venda neste período.</p>
+          <section class="painel bloco-analise">
+            <h3>Resultados por semana</h3>
+            <p class="nota">Usa a seleção aplicada em Análises, de segunda a domingo. As semanas nas bordas podem estar parciais. Inclui registros futuros selecionados; dias zerados contam como feiras. Semanas sem registros não aparecem. A média divide pelos dias de feira registrados, não por sete.</p>
+            <p id="ana-semanas-vazio" class="nota" hidden>Nenhuma semana com registros nesta seleção.</p>
+            <div class="tabela-rolavel"><table>
+              <caption class="nota">Totais brutos da consulta de Análises</caption>
+              <thead><tr><th>Semana</th><th>Dias de feira</th><th>Total bruto</th><th>Média por dia</th></tr></thead>
+              <tbody id="ana-semanas"></tbody>
+            </table></div>
+          </section>
           <section class="painel bloco-analise">
             <h3>Evolução das vendas</h3>
             <label
@@ -696,7 +729,7 @@
         </div>
       </form>
     </dialog>
-    <footer>Gestão da Feira · 1.2.0 · Acesso pessoal</footer>
+    <footer>Gestão da Feira · 1.7.1 · Acesso pessoal</footer>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

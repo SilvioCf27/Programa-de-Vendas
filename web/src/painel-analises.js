@@ -1,4 +1,5 @@
 import { hoje, mesFechamento, moeda } from './regras.js';
+import { agruparSemanas } from './semanas.js';
 import {
   limitesAnalise,
   anterior,
@@ -140,6 +141,10 @@ export function criarPainelAnalises({ api, sessao }) {
   $('ana-grafico-tipo').addEventListener('change', desenharGrafico);
   function desenhar(vendas) {
     const atual = selecionar(vendas, selecao.periodo);
+    const semanas = agruparSemanas(atual);
+    $('ana-semanas').replaceChildren();
+    for (const s of semanas) linha($('ana-semanas'), [`${br(s.inicio)} a ${br(s.fim)}`, s.quantidade, moeda(s.total), moeda(s.media)]);
+    $('ana-semanas-vazio').hidden = semanas.length > 0;
     vendasGrafico = atual;
     desenharGrafico();
     const r = indicadores(atual);
@@ -267,6 +272,12 @@ export function criarPainelAnalises({ api, sessao }) {
   $('ana-atualizar').addEventListener('click', () => atualizar());
   return {
     atualizar,
+    definirPadrao(inicial) {
+      $('ana-tipo').value = inicial.tipo;
+      $('ana-referencia').value = `${inicial.ano}-${String(inicial.mes).padStart(2, '0')}-01`;
+      $('ana-fim').value = hoje();
+      ajustarAnalise();
+    },
     ocupado: () => ocupado,
     limpar() {
       geracao++;
@@ -274,7 +285,7 @@ export function criarPainelAnalises({ api, sessao }) {
       $('ana-evolucao').replaceChildren();
       ocupado = false;
       selecao = comparacao = null;
-      for (const id of ['ana-pagamentos', 'ana-semana', 'cmp-valores'])
+      for (const id of ['ana-pagamentos', 'ana-semana', 'ana-semanas', 'cmp-valores'])
         $(id).replaceChildren();
       for (const campo of ['total', 'quantidade', 'media'])
         $('ana-' + campo).textContent = '—';

@@ -361,6 +361,7 @@ fieldset {
 }
 .abas button {
   flex: 1;
+  min-width: 0;
   background: transparent;
   border-color: transparent;
 }
@@ -582,3 +583,20 @@ fieldset {
 .campo-data .nota { margin: 8px 0 0; }
 
 .campos-periodo { grid-template-columns: minmax(0, 1fr) minmax(90px, 1fr); }
+
+.preferencias-web { margin-bottom: 14px; }
+.preferencias-web summary { cursor: pointer; }
+.preferencias-web label { margin-top: 14px; }
+.semana-atual { margin: 16px 0; border-color: #438d9b; }
+.semana-atual .titulo { flex-wrap: wrap; gap: 8px; }
+.semana-atual > .valor { display: block; font-size: 1.6rem; margin-top: 12px; }
+.semana-pagamentos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 14px 0; }
+.semana-pagamentos dt { color: var(--texto-suave, #b5c6dc); font-size: .8rem; }
+.semana-pagamentos dd { margin: 5px 0 0; overflow-wrap: anywhere; font-weight: 600; }
+#ana-semanas th { white-space: nowrap; }
+@media (max-width: 360px) {
+  .abas button { padding: 10px 8px; font-size: .9rem; }
+  .filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filtros input, .filtros select { min-width: 0; }
+  .indicadores strong { overflow-wrap: anywhere; }
+}

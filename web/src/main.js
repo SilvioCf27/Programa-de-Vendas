@@ -21,6 +21,7 @@ import {
 import { criarAtualizacao } from './atualizacao.js';
 import { criarPainelAnalises } from './painel-analises.js';
 import { criarPainelFinanceiro } from './painel-financeiro.js';
+import { limitesSemana, resumoSemana, selecaoInicial, carregarPeriodoInicial, salvarPeriodoInicial } from './semanas.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('venda');
@@ -35,7 +36,21 @@ let cliente,
 let selecao;
 let exportando = false;
 let consultaConfirmada = false;
+let semanaConsultada = null;
 let geracao = 0;
+const preferencias = {
+  getItem: (chave) => window.localStorage.getItem(chave),
+  setItem: (chave, valor) => window.localStorage.setItem(chave, valor),
+};
+$('periodo-inicial').value = carregarPeriodoInicial(preferencias);
+$('periodo-inicial').addEventListener('change', () => {
+  try {
+    salvarPeriodoInicial(preferencias, $('periodo-inicial').value);
+    $('preferencia-status').textContent = 'Salvo para a próxima abertura neste navegador. A consulta atual foi mantida.';
+  } catch {
+    $('preferencia-status').textContent = 'O navegador não permitiu salvar a preferência. A consulta atual foi mantida.';
+  }
+});
 const financeiro = criarPainelFinanceiro({
   api: () => api,
   sessao: () => sessao,
@@ -74,6 +89,21 @@ const meses = [
 meses.forEach((mes, i) => $('mes').add(new Option(mes, i + 1)));
 $('mes').value = referencia.mes;
 const dataBr = (data) => data.split('-').reverse().join('/');
+function limparSemana(texto = '') {
+  for (const id of ['total', 'dinheiro', 'pix', 'cartao']) $('semana-' + id).textContent = '—';
+  $('semana-dias').textContent = '';
+  $('semana-intervalo').textContent = '';
+  $('semana-status').textContent = texto;
+}
+function desenharSemana(linhas, data) {
+  const r = resumoSemana(linhas, data);
+  $('semana-intervalo').textContent = `${dataBr(r.inicio)} a ${dataBr(r.fim)} · Vendas até ${dataBr(r.ate)}`;
+  $('semana-total').textContent = moeda(r.total);
+  $('semana-dias').textContent = `${r.quantidade} ${r.quantidade === 1 ? 'dia de feira registrado' : 'dias de feira registrados'} · Valores brutos`;
+  ['dinheiro', 'pix', 'cartao'].forEach((forma, i) => $('semana-' + forma).textContent = moeda(r.pagamentos[i]));
+  $('semana-status').textContent = '';
+  semanaConsultada = data;
+}
 function mensagem(texto) {
   $('mensagem').textContent = texto;
 }
@@ -162,7 +192,11 @@ async function carregar(novaSelecao = selecao, consultarConfiguracao = true) {
   try {
     if (consultarConfiguracao) await api.fechamentos();
     const consulta = novaSelecao?.tipo ? { ...novaSelecao, ...periodo(novaSelecao.tipo, novaSelecao.ano, novaSelecao.mes) } : novaSelecao;
-    const linhas = await api.listar(consulta);
+    const dataSemana = hoje();
+    const limites = limitesSemana(dataSemana);
+    const [linhas, linhasSemana] = await Promise.all([
+      api.listar(consulta), api.listar({ inicio: limites.inicio, fim: limites.ate }),
+    ]);
     if (atual !== geracao || !sessao) return;
     registros = linhas;
     consultaConfirmada = true;
@@ -171,8 +205,13 @@ async function carregar(novaSelecao = selecao, consultarConfiguracao = true) {
       ? `${dataBr(selecao.inicio)} a ${dataBr(selecao.fim)}`
       : 'Todas as vendas';
     desenhar();
+    // Uma resposta iniciada antes da meia-noite não confirma a semana nova.
+    if (dataSemana === hoje()) desenharSemana(linhasSemana, dataSemana);
+    else limparSemana('O dia mudou. Aguardando uma nova consulta da semana.');
     return true;
   } catch (erro) {
+    if (atual !== geracao || !sessao) return false;
+    $('semana-status').textContent = 'Não foi possível conferir a semana. Os valores podem estar desatualizados; tente Atualizar.';
     mensagem(`${erroAmigavel(erro)} A lista não foi atualizada.`);
     return false;
   } finally {
@@ -210,6 +249,14 @@ const atualizacao = criarAtualizacao({
 window.addEventListener('focus', () => atualizacao.verificar());
 window.addEventListener('online', () => atualizacao.verificar());
 document.addEventListener('visibilitychange', () => atualizacao.verificar());
+function conferirVirada() {
+  if (!sessao || $('conteudo').hidden || $('area-vendas').hidden || document.visibilityState !== 'visible') return;
+  if (semanaConsultada === hoje()) return;
+  limparSemana('Conferindo a semana atual. Aguarde a conexão e conclua formulários abertos.');
+  if (navigator.onLine && !carregando && !gravando && !exportando && !modal.open && !financeiro.ocupado() && !analises.ocupado()) carregar(selecao, false);
+}
+setInterval(conferirVirada, 30000);
+document.addEventListener('visibilitychange', conferirVirada);
 $('filtros').addEventListener('submit', (event) => {
   event.preventDefault();
   mensagem('');
@@ -313,6 +360,9 @@ async function receberSessao(nova) {
   geracao++;
   if (mudouConta) {
     consultaConfirmada = false;
+    selecao = null;
+    semanaConsultada = null;
+    limparSemana();
     definirFechamentos({ versao: 0, historico: [] });
     financeiro.limpar();
     analises.limpar();
@@ -325,6 +375,8 @@ async function receberSessao(nova) {
   }
   $('sair').hidden = !nova;
   if (!nova) {
+    semanaConsultada = null;
+    limparSemana();
     $('atualizacao-web').textContent = '';
     registros = [];
     desenhar();
@@ -344,7 +396,10 @@ async function receberSessao(nova) {
     await api.fechamentos();
     if (sessao !== nova) return;
     if (!consultaConfirmada) {
-      const ref = mesFechamento(); $('ano').value = ref.ano; $('mes').value = ref.mes; financeiro.definirPadrao();
+      const inicial = selecaoInicial(carregarPeriodoInicial(preferencias));
+      $('tipo').value = inicial.tipo;
+      $('ano').value = inicial.ano; $('mes').value = inicial.mes;
+      controles(); financeiro.definirPadrao(); analises.definirPadrao(inicial);
     }
     $('acesso').hidden = true;
     $('conteudo').hidden = false;

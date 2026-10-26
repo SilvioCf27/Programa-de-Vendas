@@ -1,4 +1,4 @@
-# Primeira versão para celular
+# Gestão da Feira no celular
 
 A versão web fica em `web/`. Ela pode ser instalada na tela inicial do celular como PWA. O programa de Windows continua funcionando com seu banco local.
 
@@ -400,3 +400,35 @@ A revisão de conflitos está disponível no desktop em Conexão com a nuvem.
 ## Atualização financeira 1.6.2
 
 Datas explícitas, filtros adaptativos e taxas semanais usam as tabelas existentes. Para configurar novas vigências do fechamento, execute apenas [005_fechamentos.sql](../supabase/migrations/005_fechamentos.sql) no mesmo projeto e atualize o desktop. O protocolo financeiro das versões anteriores continua compatível. Veja [FINANCAS.md](FINANCAS.md).
+
+
+## Semana atual e histórico semanal
+
+Em Vendas, o cartão **Semana atual** mostra o total bruto de segunda-feira até
+hoje, os dias de feira e os valores de dinheiro, Pix e cartão. Datas futuras
+não entram nesse cartão. Os dias zerados contam como feiras; a falta de
+registro não conta. Alterar os filtros principais não muda o cartão semanal.
+
+Em **Análises → Resultados por semana**, os registros da consulta de Análises
+são agrupados de segunda a domingo, da semana mais recente para a mais antiga.
+Essa consulta é independente de Vendas. Semanas nas bordas podem estar parciais;
+registros futuros selecionados entram no histórico. Semanas sem registros não
+aparecem. A média é por dia de feira registrado, não por sete dias corridos.
+
+Abra **Configurações de visualização**, acima das abas, para escolher o período
+da próxima abertura: fechamento atual, mês atual, ano atual ou todas as vendas.
+O padrão é fechamento atual, seguindo o histórico configurado. A escolha não
+muda a consulta em uso e fica só neste navegador; não altera as preferências
+do computador. Se o navegador bloquear o armazenamento, a tela avisa.
+
+O programa consulta novamente enquanto está visível e conectado. Na virada do
+dia, a conferência semanal ocorre em até 30 segundos e aguarda formulários
+abertos serem concluídos. Ao voltar ao PWA, a consulta automática também pode
+atualizar os valores. Sem conexão, os números podem estar desatualizados; não
+há cópia financeira offline. Os formulários e filtros em preparação são
+preservados. Ao sair da conta, os resultados semanais são removidos da tela.
+
+Para receber esta interface depois da publicação no Cloudflare, feche e abra
+o PWA ou atualize a página. Se a versão antiga persistir, feche também outras
+abas do mesmo endereço e abra novamente. Não é necessário instalar SQL novo,
+refazer migrações nem alterar as configurações do Supabase.

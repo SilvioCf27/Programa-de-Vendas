@@ -1037,3 +1037,84 @@ test('registro antigo preserva a fatura e só converte quando a compra original 
   expect(dados.financeiro.lancamentos[0].data_compra).toBe('2026-10-09');
   expect(dados.financeiro.lancamentos[0].data).toBe('2026-11-09');
 });
+
+test.describe('resumos semanais e preferência de abertura', () => {
+  test.use({ timezoneId: 'America/Sao_Paulo' });
+  const linhaSemana = (data, dinheiro = 0, pix = 0, cartao = 0) => ({
+    id: crypto.randomUUID(), user_id: USER, data, versao: 1,
+    dinheiro_centavos: dinheiro, pix_centavos: pix, cartao_centavos: cartao,
+  });
+  test('semana independe dos filtros, inclui zero, exclui futuro e histórico respeita Análises', async ({page}) => {
+    await page.clock.install({time: new Date('2026-10-25T15:00:00-03:00')});
+    const vendas = await preparar(page);
+    vendas.push(linhaSemana('2025-10-10',10000), linhaSemana('2026-10-19'), linhaSemana('2026-10-23',1010,2020,3030), linhaSemana('2026-10-25',500), linhaSemana('2026-10-26',700));
+    await page.locator('#atualizar').click();
+    await expect(page.locator('#total')).toHaveText('R$ 72,60');
+    await expect(page.locator('#semana-total')).toHaveText('R$ 65,60');
+    await expect(page.locator('#semana-dias')).toContainText('3 dias de feira');
+    await expect(page.locator('#semana-dinheiro')).toHaveText('R$ 15,10');
+    if (process.env.CAPTURAR_WEB_DIR) await page.screenshot({path:`${process.env.CAPTURAR_WEB_DIR}/feira-semana-atual.png`, fullPage:true});
+    await page.locator('#tipo').selectOption('Ano'); await page.locator('#ano').fill('2025');
+    await page.locator('#filtros button').click();
+    await expect(page.locator('#total')).toHaveText('R$ 100,00');
+    await expect(page.locator('#semana-total')).toHaveText('R$ 65,60');
+    await page.setViewportSize({width:320,height:844});
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.locator('#aba-analises').click();
+    await page.locator('#ana-tipo').selectOption('Todas'); await page.locator('#ana-filtros button').click();
+    await expect(page.locator('#ana-semanas tr')).toHaveCount(3);
+    await expect(page.locator('#ana-semanas')).toContainText('19/10/2026 a 25/10/2026');
+    await expect(page.locator('#ana-semanas')).toContainText('R$ 65,60');
+    if (process.env.CAPTURAR_WEB_DIR) await page.screenshot({path:`${process.env.CAPTURAR_WEB_DIR}/feira-historico-semanal.png`, fullPage:true});
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.locator('#ana-tipo').selectOption('Ano'); await page.locator('#ana-referencia').fill('2025-01-01');
+    await page.locator('#ana-filtros button').click();
+    await expect(page.locator('#ana-semanas tr')).toHaveCount(1);
+    await expect(page.locator('#ana-semanas')).toContainText('R$ 100,00');
+    await page.locator('#sair').click();
+    await expect(page.locator('#semana-total')).toHaveText('—');
+    await expect(page.locator('#ana-semanas tr')).toHaveCount(0);
+  });
+  test('preferência vale na próxima abertura, não muda consulta atual e trata bloqueio do armazenamento', async ({page}) => {
+    await page.clock.install({time:new Date('2026-10-25T15:00:00-03:00')});
+    await preparar(page);
+    await page.locator('.preferencias-web summary').click();
+    await page.locator('#periodo-inicial').selectOption('Ano atual');
+    await expect(page.locator('#preferencia-status')).toContainText('Salvo');
+    await expect(page.locator('#tipo')).toHaveValue('Fechamento');
+    await page.reload(); await expect(page.locator('#conteudo')).toBeVisible();
+    await expect(page.locator('#tipo')).toHaveValue('Ano');
+    await expect(page.locator('#periodo')).toHaveText('01/01/2026 a 31/12/2026');
+    await expect(page.locator('#ana-tipo')).toHaveValue('Ano');
+    await page.locator('.preferencias-web summary').click();
+    await page.evaluate(() => {
+      const salvar = Storage.prototype.setItem;
+      Storage.prototype.setItem = function(k,v) { if(k === 'feira-periodo-inicial') throw Error('bloqueado'); return salvar.call(this,k,v); };
+    });
+    await page.locator('#periodo-inicial').selectOption('Mês atual');
+    await expect(page.locator('#preferencia-status')).toContainText('não permitiu salvar');
+    await expect(page.locator('#tipo')).toHaveValue('Ano');
+    expect(await page.evaluate(() => localStorage.getItem('feira-periodo-inicial'))).toBe('Ano atual');
+  });
+  test('domingo vira segunda sem perder formulário ou filtro em preparação', async ({page}) => {
+    await page.clock.install({time:new Date('2026-10-25T23:59:40-03:00')});
+    const vendas = await preparar(page);
+    vendas.push(linhaSemana('2026-10-25',500),linhaSemana('2026-10-26',700),linhaSemana('2026-10-30',900));
+    await page.locator('#atualizar').click();
+    await expect(page.locator('#semana-total')).toHaveText('R$ 5,00');
+    await page.locator('#ano').fill('2025');
+    await page.locator('#nova').click();
+    await page.getByLabel('Dinheiro', {exact:true}).fill('123,45');
+    await page.clock.fastForward(31000);
+    await expect(page.locator('#semana-total')).toHaveText('—');
+    await expect(page.getByLabel('Dinheiro', {exact:true})).toHaveValue('123,45');
+    await page.getByRole('button',{name:'Cancelar',exact:true}).click();
+    await page.clock.fastForward(30100);
+    await expect(page.locator('#semana-total')).toHaveText('R$ 7,00');
+    await expect(page.locator('#semana-dias')).toContainText('1 dia de feira');
+    await expect(page.locator('#semana-intervalo')).toContainText('26/10/2026 a 01/11/2026');
+    await expect(page.locator('#ano')).toHaveValue('2025');
+    await expect(page.locator('#periodo')).toHaveText('10/10/2026 a 09/11/2026');
+    await expect(page.locator('#total')).toHaveText('R$ 21,00');
+  });
+});

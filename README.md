@@ -14,14 +14,16 @@ versão estável nova; a instalação só começa quando você confirma. Quem us
 versão anterior precisa baixar e extrair esta primeira atualização uma vez.
 Veja os cuidados e a recuperação em [ATUALIZACOES.md](docs/ATUALIZACOES.md).
 
-## Novidades do desktop 1.7.1
+## Resumos semanais no desktop e celular
 
 A tela inicial mostra a **Semana atual**, de segunda-feira até hoje, sem depender
 dos filtros. Em **Análises → Resultados por semana**, consulte o histórico da
 seleção aplicada. Dias zerados continuam contando como dias de feira.
 
 Em **Configurações**, escolha o período da próxima abertura: fechamento atual
-(padrão), mês atual, ano atual ou todas as vendas. A PWA permanece como está.
+(padrão), mês atual, ano atual ou todas as vendas. Essas opções também estão disponíveis
+na PWA, em **Configurações de visualização**. No celular, o histórico semanal
+segue a consulta própria de Análises; a preferência fica neste navegador.
 Quem já usa a versão 1.7.0 pode receber esta versão pelo próprio atualizador.
 
 ## O que dá para fazer

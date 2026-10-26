@@ -46,7 +46,7 @@ class FiltrosTests(unittest.TestCase):
         names = {'obter_filtros', 'selecionar_ano_filtro', 'selecionar_mes_filtro',
                  'atualizar_tabela', 'atualizar_resumo', 'descrever_filtro_atual', 'limpar_filtros', 'sincronizar_filtros', 'assinatura_filtros', 'atualizar_aviso_filtros'}
         self.tcl = tk.Tcl()
-        n = self.n = dict(fechamento_do_mes=fechamento_do_mes, painel_analises=Mock(), ordenar_vendas=ordenar_vendas, ordenacao_coluna="data", ordenacao_decrescente=True,
+        n = self.n = dict(atualizar_semana_atual=Mock(), fechamento_do_mes=fechamento_do_mes, painel_analises=Mock(), ordenar_vendas=ordenar_vendas, ordenacao_coluna="data", ordenacao_decrescente=True,
                          sincronizando_filtros=False, filtros_aplicados=None, ajustar_larguras_colunas=lambda: None, Decimal=Decimal, atualizar_botoes_selecao=lambda: None, atualizar_cabecalhos=lambda: None, montar_relatorio=montar_relatorio, calcular_indicadores=calcular_indicadores, periodo_anterior=periodo_anterior,
                          descrever_comparacao=descrever_comparacao, moeda=moeda, date=date, timedelta=timedelta, calendar=calendar, tk=tk,
                          DIA_FECHAMENTO=9, ANOS=[2025, 2026, 2027],

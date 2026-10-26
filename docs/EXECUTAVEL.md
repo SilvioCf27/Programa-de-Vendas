@@ -10,7 +10,18 @@ Mantenha a pasta inteira. A pasta `_internal` contém Python, Tcl/Tk, biblioteca
 
 O pacote é para **Windows 10/11 x64**. Não há assinatura digital: o Windows pode mostrar um aviso de editor desconhecido. Confira que o arquivo veio do repositório acima. O arquivo `SHA256.txt`, disponível junto do ZIP, permite conferir a integridade do download.
 
-## Versão 1.7.0
+## Versão 1.7.1
+
+Acrescenta a faixa **Semana atual**, independente dos filtros e limitada às vendas
+até hoje, e a aba **Análises → Resultados por semana**. O histórico semanal usa
+a seleção aplicada e identifica que as semanas nas bordas podem estar parciais.
+
+Nas configurações, escolha o período inicial. O padrão é **Fechamento atual**;
+também há mês atual, ano atual e todas as vendas. A preferência é local e vale
+na próxima abertura. O resumo semanal acompanha a virada do dia em até 30
+segundos, sem alterar filtros ou formulários em preparação. Não exige SQL novo.
+
+## Atualizador (desde 1.7.0)
 
 Inclui **Configurações → Atualizações**. Após receber esta versão, as próximas
 releases estáveis podem ser baixadas, conferidas e instaladas pelo programa,

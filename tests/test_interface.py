@@ -27,6 +27,7 @@ with patch.object(tk.Tk, 'mainloop'):
 errors = []
 a.janela.report_callback_exception = lambda *args: errors.append(args)
 a.janela.update()
+a.limpar_filtros()  # Este roteiro verifica todo o histórico fictício, não o período inicial.
 assert len(a.tabela.get_children()) == 9
 assert a.formulario.state() == 'withdrawn'
 # Configurações substitui Dados e as dicas abrem por hover, sem clique.

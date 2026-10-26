@@ -1,18 +1,16 @@
-A versão **1.7.0** acrescenta atualizações pelo próprio aplicativo Windows.
+A versão **1.7.1** melhora o acompanhamento semanal no aplicativo desktop.
 
-- **Configurações → Atualizações** consulta releases estáveis do repositório oficial.
-- O programa pode avisar ao abrir; o download e a instalação exigem sua confirmação.
-- Confere o SHA-256, recusa caminhos perigosos e testa o executável novo com dados temporários antes da troca.
-- Cria backup local e, se configurado, na pasta do Drive antes de reiniciar. As cópias remotas dependem do cliente Drive.
-- Preserva dados e preferências, mantém o caminho dos atalhos e guarda a pasta anterior. Se a nova versão não confirmar a abertura, tenta recuperar a anterior.
-- A publicação exige um ensaio no Windows com dois binários reais e dados fictícios, além do teste de recuperação após falha.
+- **Semana atual** na tela inicial: total bruto, dias de feira e valores de dinheiro, Pix e cartão, de segunda-feira até hoje. Independe dos filtros e não inclui datas futuras.
+- **Análises → Resultados por semana**: histórico semanal da seleção aplicada, com indicação de semanas parciais. Dias zerados continuam contando como feiras.
+- **Configurações → Período ao abrir o programa**: fechamento atual (padrão), mês atual, ano atual ou todas as vendas. A preferência vale na próxima abertura e respeita o histórico dos fechamentos.
+- Atualiza a faixa semanal após salvar ou sincronizar e, em até 30 segundos, após a virada do dia, preservando filtros e formulários em preparação.
 
-**Esta primeira atualização ainda precisa ser baixada e extraída manualmente**, pois as versões anteriores não contêm o atualizador. Depois, use a nova opção nas configurações.
+**Se você usa a v1.7.0:** abra **Configurações → Atualizações → Verificar atualizações → Baixar e instalar**. O programa verifica o pacote, cria backup e reinicia, guardando a pasta anterior. Feche outras instâncias antes de atualizar.
 
-Baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**, mantendo `_internal` junto dele. Use uma pasta local própria com permissão de escrita, fora da pasta de dados, de unidades virtuais e do repositório. Não é necessário executar como administrador. Seus registros existentes continuam na pasta local de dados.
+Para versões anteriores à v1.7.0, baixe **GestaoDaFeira-Windows-x64.zip**, extraia a pasta inteira e abra **GestaoDaFeira.exe**, mantendo `_internal` junto dele. Seus dados locais existentes são reaproveitados. Use uma pasta local própria, separada da pasta de dados e com permissão de escrita; não requer administrador.
 
-**Não exige SQL novo.** As funções financeiras, de sincronização e de proteção dos backups continuam disponíveis.
+**Somente desktop. A PWA não foi alterada. Não exige SQL novo.**
 
-[Como atualizar e recuperar](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.0/docs/ATUALIZACOES.md) · [Segurança e limites](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.0/docs/SEGURANCA.md)
+[Guia de uso](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.1/docs/USO.md) · [Atualização e recuperação](https://github.com/SilvioCf27/Programa-de-Vendas/blob/v1.7.1/docs/ATUALIZACOES.md)
 
-O download inclui `SHA256.txt`, `VALIDACAO_WINDOWS.json` e `VALIDACAO_ATUALIZADOR.json`. O pacote público começa vazio e não contém seus dados. Ainda não possui assinatura digital: o hash verifica integridade, e a confiança na conta/publicação GitHub continua necessária. O atualizador não é antivírus nem restaura seu banco automaticamente ao recuperar arquivos do programa.
+`SHA256.txt`, `VALIDACAO_WINDOWS.json` e `VALIDACAO_ATUALIZADOR.json` acompanham a publicação. O pacote começa vazio, não inclui dados de uso e ainda não possui assinatura digital. O envio de backups ao Drive depende do cliente Google Drive; a recuperação automática troca arquivos do programa, não restaura seu banco automaticamente.

@@ -8,6 +8,8 @@ from ProgramFeira.interface.visual import CORES
 from ProgramFeira.interface.ajuda import rotulo_com_ajuda
 from ProgramFeira.interface.painel_comparacao import PainelComparacao
 from ProgramFeira.interface.grafico import GraficoEvolucao
+from ProgramFeira.semanas import agrupar_semanas
+from ProgramFeira.interface.rolagem import BarraDiscreta
 
 DIAS = ('Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo')
 
@@ -34,6 +36,22 @@ class PainelAnalises(ttk.Frame):
         self.abas.add(pagina_resumo, text='Resumo do período')
         self.comparador = PainelComparacao(self.abas)
         self.abas.add(self.comparador, text='Comparar A e B')
+        pagina_semanas = ttk.Frame(self.abas, padding=(12, 14))
+        pagina_semanas.columnconfigure(0, weight=1)
+        pagina_semanas.rowconfigure(2, weight=1)
+        self.abas.add(pagina_semanas, text='Resultados por semana')
+        rotulo_com_ajuda(pagina_semanas, 'Histórico semanal de vendas', 'historico_semanal', 'Section.TLabel').grid(row=0, column=0, sticky='w')
+        self.filtro_semanal = tk.StringVar()
+        ttk.Label(pagina_semanas, textvariable=self.filtro_semanal, wraplength=850, style='Muted.TLabel').grid(row=1, column=0, sticky='w', pady=(8, 12))
+        self.historico_semanal = ttk.Treeview(pagina_semanas, columns=('semana', 'dias', 'total', 'media'), show='headings', selectmode='none')
+        for chave, titulo, largura in (('semana', 'Semana (segunda a domingo)', 280), ('dias', 'Dias de feira', 120), ('total', 'Vendas brutas', 160), ('media', 'Média por dia de feira', 180)):
+            self.historico_semanal.heading(chave, text=titulo, anchor='center')
+            self.historico_semanal.column(chave, width=largura, minwidth=100, anchor='center')
+        self.historico_semanal.grid(row=2, column=0, sticky='nsew')
+        barra_semanas = BarraDiscreta(pagina_semanas, orient='vertical', command=self.historico_semanal.yview)
+        barra_semanas.grid(row=2, column=1, sticky='ns')
+        self.historico_semanal.configure(yscrollcommand=barra_semanas.set)
+        ttk.Label(pagina_semanas, text='Usa os filtros aplicados em Vendas: semanas nas bordas podem estar parciais.\nDias registrados com zero contam; semanas sem registros não aparecem.', style='Muted.TLabel').grid(row=3, column=0, sticky='w', pady=(12, 0))
         self.canvas = tk.Canvas(pagina_resumo, highlightthickness=0, background=CORES['fundo'], height=1)
         self.canvas.grid(row=0, column=0, sticky='nsew')
         scroll = ttk.Scrollbar(pagina_resumo, orient='vertical', command=self.canvas.yview)
@@ -103,6 +121,11 @@ class PainelAnalises(ttk.Frame):
         return tabela
 
     def atualizar(self, vendas, filtro, comparacao):
+        self.filtro_semanal.set(filtro)
+        self.historico_semanal.delete(*self.historico_semanal.get_children())
+        for grupo in agrupar_semanas(vendas):
+            intervalo = f'{grupo["inicio"]:%d/%m/%Y} a {grupo["fim"]:%d/%m/%Y}'
+            self.historico_semanal.insert('', 'end', values=(intervalo, grupo['quantidade'], moeda(grupo['total']), moeda(grupo['media'])))
         self.grafico.atualizar(vendas)
         self.filtro.set(filtro)
         self.comparacao.set(comparacao)

@@ -122,11 +122,16 @@ def verificar_pacote(relatorio):
                 resultado['sqlite'] = sqlite3.sqlite_version
                 from ProgramFeira.tendencias import evolucao
                 assert evolucao(banco.listar_vendas())[0]['quantidade'] == 1
+                from datetime import date
+                dados_semana = app.atualizar_semana_atual(date(2035, 1, 1))
+                assert dados_semana['quantidade'] == 1 and dados_semana['total'] == 60
+                app.limpar_filtros()
+                assert len(app.painel_analises.historico_semanal.get_children()) == 1
                 from ProgramFeira.interface.conflitos import descrever
                 assert 'excluído' in descrever(None)
                 resultado.update(sucesso=True, registros_iniciais=len(vendas), fontes=len(fontes),
                                  cadastro=True, despesas=True, backup=True, csv=True, excel=True, configuracoes=True, temas=True, taxas_semanais=True, fechamento_configuravel=True,
-                                 compra_total=True, edicao_compra=True, fatura_automatica=True, backup_seguranca=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True)
+                                 compra_total=True, edicao_compra=True, fatura_automatica=True, backup_seguranca=True, banco_isolado=True, modulos_nuvem=True, sessao_protegida=sessao_protegida, recuperacao=True, evolucao=True, conflitos=True, semanas=True)
             finally:
                 app.janela.destroy()
     except Exception:

@@ -45,6 +45,7 @@ def testar(pacote):
             financeiro.salvar_taxa_anual(2035, '2035-01-01', '2035-12-31', '12,34')
         (dados / 'preferencias.json').write_text('{"tema":"aurora"}')
         (dados / 'atualizacoes.json').write_text('{"consultar":false}')
+        (dados / 'inicio.json').write_text('{"periodo":"Todas as vendas"}')
         stage_inicial = alvo.parent / '.feira-atualizacao-inicial'
         stage_inicial.mkdir()
         recibo_inicial = stage_inicial / 'abriu.json'

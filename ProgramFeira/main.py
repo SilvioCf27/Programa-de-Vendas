@@ -19,7 +19,8 @@ from ProgramFeira.diagnostico import registrar as registrar_erro
 from ProgramFeira.interface.icones import rotulo_icone, aplicar_icones
 from ProgramFeira.interface.indicadores import BarraParticipacao
 from ProgramFeira.interface.visual import aplicar_tema, ordenar_vendas, CORES, NOMES_TEMAS
-from ProgramFeira.preferencias import carregar_tema, salvar_tema
+from ProgramFeira.preferencias import carregar_tema, salvar_tema, carregar_periodo_inicial
+from ProgramFeira.semanas import semana_atual, selecao_inicial
 from ProgramFeira.interface.ajuda import botao_ajuda, rotulo_com_ajuda
 from ProgramFeira.interface.analises import PainelAnalises
 from ProgramFeira.interface.painel_financeiro import PainelFinanceiro
@@ -88,6 +89,7 @@ DIAS_SEMANA = (
 
 def obter_anos_disponiveis():
     anos = set(listar_anos_vendas())
+    anos.add(date.today().year - 1)
     anos.add(date.today().year)
     anos.add(date.today().year + 1)
 
@@ -241,6 +243,42 @@ def atualizar_tabela():
     ajustar_larguras_colunas()
     filtros_aplicados = assinatura_filtros()
     atualizar_aviso_filtros()
+    atualizar_semana_atual()
+
+
+def atualizar_semana_atual(hoje=None):
+    hoje = hoje or date.today()
+    dados = semana_atual(listar_vendas(), hoje)
+    dias = 'dia de feira' if dados['quantidade'] == 1 else 'dias de feira'
+    resumo_semana.set(f'Semana atual · {dados["inicio"]:%d/%m} a {dados["fim"]:%d/%m/%Y} · Até hoje: {moeda(dados["total"])} · {dados["quantidade"]} {dias}\n'
+                     f'Dinheiro {moeda(dados["totais"][0])}  ·  Pix {moeda(dados["totais"][1])}  ·  Cartão {moeda(dados["totais"][2])}  ·  Independente dos filtros · Valores brutos')
+    return dados
+
+
+def aplicar_periodo_inicial(hoje=None):
+    global sincronizando_filtros
+    ano, mes, usar_fechamento = selecao_inicial(carregar_periodo_inicial(CAMINHO_BANCO.parent), hoje)
+    sincronizando_filtros = True
+    try:
+        filtro_ano.set(str(ano) if ano else 'Todos os anos')
+        filtro_mes.set(next(nome for nome, numero in MESES.items() if numero == mes) if mes else 'Todos os meses')
+        filtro_fechamento.set(usar_fechamento)
+    finally:
+        sincronizando_filtros = False
+    sincronizar_filtros()
+
+
+def conferir_virada_do_dia():
+    global dia_semana_exibida
+    hoje = date.today()
+    try:
+        if hoje != dia_semana_exibida:
+            atualizar_semana_atual(hoje)
+            dia_semana_exibida = hoje
+    except (sqlite3.Error, OSError) as erro:
+        registrar_erro(erro, CAMINHO_BANCO.parent)
+        resumo_semana.set('Semana atual: consulta temporariamente indisponível. Tentaremos novamente em 30 segundos.')
+    janela.after(30000, conferir_virada_do_dia)
 
 
 def atualizar_resumo(data_inicial, data_final, dias_semana, quantidade_vendas, vendas=None):
@@ -266,7 +304,8 @@ def atualizar_resumo(data_inicial, data_final, dias_semana, quantidade_vendas, v
         indicadores_visuais[chave].set(valor)
     resumo_media.set(f"Média por dia de feira: {moeda(indicadores['media'])} (inclui dias zerados)")
     partes = indicadores['participacoes']
-    detalhes_cartoes['total'].set(f"{indicadores['quantidade']} dias de feira")
+    dias = 'dia de feira' if indicadores['quantidade'] == 1 else 'dias de feira'
+    detalhes_cartoes['total'].set(f"{indicadores['quantidade']} {dias}")
     detalhes_cartoes['quantidade'].set('Média: ' + moeda(indicadores['media']))
     detalhes_cartoes['media'].set('Inclui dias zerados')
     for chave, percentual in zip(('dinheiro', 'pix', 'cartao'), partes):
@@ -863,6 +902,7 @@ resumo_pix = tk.StringVar()
 resumo_cartao = tk.StringVar()
 resumo_total = tk.StringVar()
 resumo_quantidade = tk.StringVar()
+resumo_semana = tk.StringVar()
 resumo_media = tk.StringVar()
 resumo_participacao = tk.StringVar()
 resumo_comparacao = tk.StringVar()
@@ -879,7 +919,7 @@ def abrir_configuracoes():
         configuracoes.lift()
         return configuracoes
     from ProgramFeira.interface.configuracoes import Configuracoes
-    configuracoes = Configuracoes(janela, menu_dados)
+    configuracoes = Configuracoes(janela, menu_dados, CAMINHO_BANCO.parent)
     return configuracoes
 
 
@@ -990,6 +1030,13 @@ label_comparacao.grid(row=1, column=1, sticky='w')
 ajuda_comparacao = botao_ajuda(analises, 'comparacao')
 ajuda_comparacao.grid(row=1, column=0, sticky='nw', padx=(0, 7))
 analises.columnconfigure(1, weight=1)
+faixa_semana = ttk.Frame(analises, style='Surface.TFrame')
+faixa_semana.grid(row=2, column=0, columnspan=4, sticky='ew', pady=(7, 0))
+faixa_semana.columnconfigure(1, weight=1)
+botao_ajuda(faixa_semana, 'semana_atual').grid(row=0, column=0, sticky='nw', padx=(0, 7))
+label_semana = ttk.Label(faixa_semana, textvariable=resumo_semana, style='Surface.TLabel', justify='left')
+label_semana.grid(row=0, column=1, sticky='ew')
+faixa_semana.bind('<Configure>', lambda e: label_semana.configure(wraplength=max(100, e.width - 40)))
 resumo_lado_a_lado = None
 
 
@@ -1208,7 +1255,10 @@ rodape_nuvem.bind('<Button-1>', lambda e: conexao_nuvem.configurar())
 aplicar_tema(janela, tema_atual.get())
 layout_compacto = None
 organizar_cartoes()
+aplicar_periodo_inicial()
 atualizar_tabela()
+dia_semana_exibida = date.today()
+janela.after(30000, conferir_virada_do_dia)
 from ProgramFeira.atualizador import confirmar_inicio
 janela.after_idle(confirmar_inicio)
 janela.mainloop()

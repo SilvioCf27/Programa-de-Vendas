@@ -116,3 +116,29 @@ do backup** confere uma cópia sem aplicar os dados; **Restaurar backup** substi
 os dados atuais pelos da cópia escolhida, preservando antes uma cópia do estado atual.
 
 As regras de datas, primeira fatura, parcelas, taxas semanais e mudança de fechamento estão no [guia de finanças](FINANCAS.md).
+
+
+## Acompanhar as semanas no desktop
+
+A faixa **Semana atual** mostra as vendas brutas de segunda-feira até hoje,
+separadas em dinheiro, Pix e cartão. O intervalo do título vai até domingo,
+mas datas futuras não entram no total nem na quantidade de dias. Essa faixa
+não segue os filtros principais. Dias cadastrados com zero contam como feiras;
+ausência de registro não conta. Taxas e despesas continuam na aba Finanças.
+
+Ao virar o dia, a faixa se atualiza em até 30 segundos, inclusive se o programa
+ficar aberto de domingo para segunda. Salvar, excluir, editar e sincronizar
+vendas também atualiza o resumo. Os filtros aplicados ou ainda em preparação
+não mudam por causa disso.
+
+Em **Análises → Resultados por semana**, cada linha corresponde a uma semana
+de segunda a domingo, da mais recente para a mais antiga. Essa consulta usa
+os filtros aplicados em Vendas: pode incluir semanas parciais e registros
+futuros. Semanas sem registros não aparecem; uma semana com registros zerados
+aparece com total zero. A média divide pelas feiras registradas, não por sete.
+
+Em **Configurações → Período ao abrir o programa**, escolha fechamento atual,
+mês atual, ano atual ou todas as vendas. A escolha vale na próxima abertura;
+não muda a consulta em uso. O fechamento segue o histórico configurado, inclusive
+no início do ano e nos dias anteriores ao fechamento. Essa preferência fica
+em `inicio.json`, na pasta de dados local; trocar o tema não a modifica.

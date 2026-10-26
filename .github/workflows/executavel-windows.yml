@@ -114,6 +114,7 @@ jobs:
           assert validacao['compra_total'] and validacao['edicao_compra']
           assert validacao['fatura_automatica']
           assert validacao['backup_seguranca'] and validacao['sqlite']
+          assert validacao['semanas']
           assert tuple(map(int, validacao['sqlite'].split('.'))) >= (3, 50, 2)
           assert 'v' + validacao['versao'] == os.environ['VERSAO']
           atualizador = json.loads((pasta / 'VALIDACAO_ATUALIZADOR.json').read_text(encoding='utf-8'))

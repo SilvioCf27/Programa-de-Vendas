@@ -110,3 +110,18 @@ G02/G03/G04/G05/G06/G07: caminhos completos de configurações, backups/Drive,
      não disponibilizados como falsamente concluídos na entrada Qt.
      Persistência e backups locais antes de alterações são reaproveitados
      nesta fatia; não equivalem à migração desses painéis/mecanismos completos.
+
+CONTINUIDADE DA ETAPA 4 — ANÁLISES, 27/10/2026
+A01: semanas/contagem/médias usam semanas.agrupar_semanas, com todas as semanas
+     da consulta aplicada; recortes nas bordas/dias identificados. Integrado.
+A02: Data/Mês/Fechamento/Intervalo e indicadores A/B usam comparacao.py.
+     Independência dos filtros de Vendas; referência A, diferença B-A;
+     seleção pendente/inválida e atualização após gravações testadas.
+A03: pagamentos, sete dias da semana, comparação anterior (Vendas) e evolução
+     por Mês/Fechamento (tendencias.evolucao) acessíveis. Janelas de detalhe
+     aprovadas reutilizadas; evolução até 12 períodos com lacunas/zeros.
+A04: tela própria; snapshot completo da seleção aplicada, sem busca/paginação;
+     aviso de seletores pendentes. Atualização de tela oculta adiada até visita.
+A01–A04 têm integração funcional testada, não validação completa Windows/DPI,
+     acessibilidade, empacotamento ou release. Evidências em ANALISES.md.
+F01–F10 continuam próximos itens da Etapa 4. G01–G07 completos seguem pendentes.

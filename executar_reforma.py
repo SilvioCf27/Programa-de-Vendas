@@ -9,6 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pasta-estudo', type=Path, help='Pasta vazia/separada para conservar apenas os testes.')
     parser.add_argument('--exemplo', action='store_true', help='Inclui exemplos fictícios somente se o banco estiver vazio.')
+    parser.add_argument('--pagina', choices=['Vendas', 'Análises', 'Finanças'], default='Vendas', help='Tela inicial da revisão isolada.')
     parser.add_argument('--captura', type=Path, help='Salva uma captura e fecha; não entra no loop interativo.')
     args = parser.parse_args()
     temporaria = tempfile.TemporaryDirectory(prefix='gestao-feira-qt-') if args.pasta_estudo is None else None
@@ -24,7 +25,7 @@ def main():
                 raise
             print('Instale no mesmo Python: python -m pip install -r prototipos/reforma/requirements.txt', file=sys.stderr)
             return 1
-        return iniciar(pasta, args.exemplo, args.captura)
+        return iniciar(pasta, args.exemplo, args.captura, args.pagina)
     except (ValueError, OSError, RuntimeError) as erro:
         print(f'Não foi possível abrir o estudo: {erro}', file=sys.stderr)
         return 1

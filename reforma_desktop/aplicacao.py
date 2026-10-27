@@ -80,6 +80,7 @@ class Janela(W.QWidget):
         self.setMinimumSize(1000, 700)
         self.consulta = Consulta()
         self.resultado = None
+        self.analises = None
         self.ordem = (1, True)
         self.area = None
         self.nav = {}
@@ -145,7 +146,7 @@ class Janela(W.QWidget):
         self.scroll.setWidget(self.body)
         self.stack.addWidget(self.scroll)
         self.paginas = {'Vendas': self.scroll}
-        for nome in ('Análises', 'Finanças'):
+        for nome in ('Finanças',):
             w, layout = caixa(24)
             layout.addWidget(texto(nome, 20, bold=True))
             layout.addWidget(texto('Integração pendente na sequência da Etapa 4.', 12, C['muted']))
@@ -275,9 +276,16 @@ class Janela(W.QWidget):
         self.fechamento.toggled.connect(lambda: self.sincronizar('fechamento'))
 
     def mostrar(self, nome):
+        if nome == 'Análises' and self.analises is None:
+            from reforma_desktop.painel_analises import PainelAnalises
+            self.analises = PainelAnalises(self)
+            self.paginas[nome] = self.analises
+            self.stack.addWidget(self.analises)
         self.area = nome
         self.stack.setCurrentWidget(self.paginas[nome])
         self.titulo.setText(nome)
+        if nome == 'Análises':
+            self.analises.atualizar()
         self.nova.setVisible(nome == 'Vendas')
         self.exportar.setVisible(nome == 'Vendas')
         for n, b in self.nav.items():
@@ -307,6 +315,8 @@ class Janela(W.QWidget):
 
     def pendente(self):
         self.aviso.setText('Filtros alterados — clique em Aplicar.' if self.consulta_campos() != self.consulta else '')
+        if self.analises is not None:
+            self.analises.aviso_pendente_vendas()
 
     def aplicar(self):
         try:
@@ -350,6 +360,8 @@ class Janela(W.QWidget):
         self.comparacao.setText(r['comparacao'])
         self.aplicado.setText('Consulta aplicada\n' + self.consulta.descricao())
         self.preencher_tabela()
+        if self.analises is not None:
+            self.analises.invalidar()
 
     def preencher_tabela(self):
         if self.resultado is None:
@@ -452,7 +464,7 @@ class Janela(W.QWidget):
         W.QMessageBox.information(self, 'Temas', 'Esta primeira integração utiliza a identidade Noturno aprovada. Os cinco temas do programa estável serão preservados e verificados na reforma completa.')
 
 
-def iniciar(pasta, exemplo=False, captura=None):
+def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
     app = preparar()
     app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;}'))
     servico = ServicoVendas()
@@ -461,11 +473,13 @@ def iniciar(pasta, exemplo=False, captura=None):
         for dias, valores in [(40, ('100', '25', '30')), (9, ('80', '40', '50')), (2, ('120', '35,50', '90')), (1, ('0', '0', '0')), (0, ('75', '45', '100'))]:
             servico.salvar((hoje - timedelta(days=dias)).isoformat(), *valores)
     janela = Janela(servico, pasta)
+    janela.mostrar(pagina)
     janela.show()
     if captura:
         for _ in range(6):
             app.processEvents()
-        janela.grab().save(str(captura))
+        if not janela.grab().save(str(captura)):
+            raise OSError('Não foi possível salvar a captura no caminho informado.')
         janela.close()
         return 0
     return app.exec()

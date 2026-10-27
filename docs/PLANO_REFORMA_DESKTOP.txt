@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 7 — PySide6 aprovado; início da Etapa 4 em 27/10/2026.
+Versão do plano: 8 — Etapa 4, integração de Análises em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 4 iniciada por navegação e Vendas, em entrada e dados isolados.
+Etapa 4 em andamento: navegação, Vendas e Análises em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -10,8 +10,8 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 18 registram o histórico de complementos anteriores.
-A seção 19 registra a aprovação tecnológica e a implementação ATUAL; os
+As seções 10 a 19 registram o histórico de complementos anteriores.
+A seção 20 registra a integração de Análises e a implementação ATUAL; os
 estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,14 +342,13 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-PySide6 foi aprovado explicitamente pelo usuário após leitura do relatório.
-A Etapa 4 começa por navegação e Vendas em entrada separada. Esta primeira
-fatia conecta cadastro/edição/exclusão, filtros, resumos e exportação ao
-núcleo existente, exclusivamente em banco de estudo. Não substituir a entrada
-estável nem conectar dados pessoais antes de verificar equivalência.
-Próxima atividade após esta entrega: integrar Análises (semanas, comparação
-A/B e detalhes), na ordem original; Finanças e configurações/formulários
-continuam em seguida. Lacunas da entrega estão na seção 19 e no mapa.
+A Etapa 4 prossegue na sequência original. Navegação e Vendas foram integradas
+na entrada isolada; esta entrega conecta Análises (semanas, comparação A/B e
+detalhes) ao núcleo existente, com a consulta aplicada em Vendas.
+Próxima atividade após esta entrega: integrar Finanças, incluindo consultas,
+lançamentos/parcelas, taxas e histórico de fechamento. Configurações e demais
+formulários/mecanismos vêm depois, antes da revisão conjunta. Preservar o
+programa 1.7.1 e o banco pessoal; não substituir a entrada estável agora.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -665,3 +664,52 @@ DPI real, acessibilidade, empacotamento/atualização/recuperação e revisão f
 Etapa 7/PWA e novos recursos permanecem no fim da cronologia original.
 ProgramFeira, executar.py, banco pessoal, sincronização, PWA e release 1.7.1
 permanecem sem alteração nesta entrega.
+
+20. ETAPA 4 — INTEGRAÇÃO FUNCIONAL DE ANÁLISES — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+Após a entrega de navegação/Vendas, o usuário autorizou prosseguir. Esta rodada
+implementa Análises, próximo item da Etapa 4 original; não cria outro plano.
+A versão v7 foi arquivada antes desta atualização. A escolha PySide6 e as
+aprovações visuais permanecem válidas, sem nova revisão estética.
+
+ENTREGA
+Análises passa a ser uma tela própria funcional, criada na primeira visita.
+Resultado por semana, resumo, pagamentos e detalhes usam o snapshot completo
+da consulta aplicada em Vendas, incluindo dias zerados, sem limitar pela busca
+ou paginação. Filtros pendentes são avisados e não aplicados implicitamente.
+Gráfico semanal mostra até 12 semanas recentes; a tabela mantém TODAS.
+Semana parcial identifica corte nas bordas ou nos dias selecionados; não indica
+necessariamente falta de cadastro. Médias por dia usam o núcleo existente.
+
+Comparar A/B tem seletores reais de Data, Mês, Fechamento e Intervalo; mês/ano
+ou calendários aparecem conforme a escolha. Os períodos são independentes de
+Vendas. Os dois intervalos são validados antes de consultar; uma seleção
+inválida preserva o resultado aplicado com aviso. Diferença e percentual seguem
+o programa funcional: B menos A e variação de B em relação a A. A referência
+visual não substitui essa regra. Zero e ausência de registros são distintos.
+Indicadores lado a lado preservam contagem, média e três meios de pagamento.
+
+Detalhes preservam as janelas aprovadas para vendas completas, dias da semana
+e pagamentos. Evolução mensal/fechamento usa tendencias.evolucao, com até 12
+períodos consecutivos e regra por vigência, distinguindo ausência e feira
+zerada. O total exibido nos últimos 12 é separado do total de toda a seleção.
+As janelas são de leitura e não alteram a consulta nem o banco.
+
+FLUIDEZ E INTEGRAÇÃO
+Sem nova consulta ao navegar de volta a uma análise inalterada. Uma gravação
+invalida o snapshot; a tela oculta é atualizada ao retornar. A/B aplicado é
+recalculado após mudança dos dados sem aplicar seletores pendentes. Um único
+timer continua no controlador. Finanças segue identificada como pendente.
+Não houve extração nem alteração de regras do programa estável. As funções
+puras comparacao, resumos, semanas e tendencias são reutilizadas; a agregação
+por dia usa os mesmos indicadores sem importar o painel Tkinter.
+
+VALIDAÇÃO E LIMITES
+Relatório e evidências desta rodada: reforma_desktop/ANALISES.md.
+32 testes locais da integração aprovados (18 de Vendas e 14 de Análises).
+Validação Windows/regressão está em conferência; o relatório será atualizado
+com os resultados observados, sem presumir aprovação. Qt offscreen não valida
+DPI real, leitor de tela completo ou interação no computador do usuário.
+Banco pessoal, versão 1.7.1, entrada estável, backups/sincronização e PWA
+permanecem sem alteração. Etapas 5/6/7 permanecem pendentes na ordem original.

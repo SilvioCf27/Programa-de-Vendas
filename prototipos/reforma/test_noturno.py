@@ -90,7 +90,7 @@ class EstadoTests(unittest.TestCase):
 
     def test_sem_importacao_de_banco_rede_ou_producao(self):
         for nome in ["estado_demo.py", "noturno_demo.py"]:
-            tree = ast.parse(Path(__file__).with_name(nome).read_text())
+            tree = ast.parse(Path(__file__).with_name(nome).read_text(encoding="utf-8"))
             for node in ast.walk(tree):
                 names = (
                     [x.name for x in node.names]

@@ -24,6 +24,8 @@ jobs:
       - name: Preparar diretório isolado de resultados
         shell: pwsh
         run: New-Item -ItemType Directory -Force resultados-tecnicos
+      - name: Preparar resolução da VM de teste
+        run: python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-tecnicos/TELA_WINDOWS.json
       - name: Medir cenários equivalentes em Windows
         run: python prototipos/reforma/avaliacao/executar_comparacao.py --uia --saida resultados-tecnicos/COMPARACAO_WINDOWS.json
       - name: Conferir escalas e viabilidade das cinco paletas
@@ -34,6 +36,11 @@ jobs:
         run: python prototipos/reforma/avaliacao/verificar_suites.py --suite prototipos/reforma --saida resultados-tecnicos/TESTES_DEMO.json
       - name: Gerar e executar os dois pacotes de estudo
         run: python prototipos/reforma/avaliacao/empacotar_ensaio.py --saida resultados-tecnicos/pacotes
+      - name: Restaurar a resolução da VM
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path resultados-tecnicos/TELA_WINDOWS.json) { python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-tecnicos/TELA_WINDOWS.json --restaurar }
       - name: Guardar relatórios de estudo e erros em uma frente própria
         if: always()
         shell: pwsh

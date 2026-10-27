@@ -30,7 +30,7 @@ class ModeloTests(unittest.TestCase):
 
     def test_demos_nao_importam_programa_banco_ou_rede(self):
         for nome in ("modelo.py", "tkinter_demo.py", "pyside_demo.py"):
-            tree = ast.parse((ROOT / nome).read_text())
+            tree = ast.parse((ROOT / nome).read_text(encoding="utf-8"))
             for node in ast.walk(tree):
                 nomes = []
                 if isinstance(node, ast.Import):
@@ -71,7 +71,7 @@ class ModeloTests(unittest.TestCase):
                 timeout=30,
             )
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-            dados = json.loads(rel.read_text())
+            dados = json.loads(rel.read_text(encoding="utf-8"))
             self.assertEqual(dados["linhas"], 12)
             self.assertGreater(dados["altura_tabela"], 300)
             self.assertGreater(dados["abertura_ms"], 0)

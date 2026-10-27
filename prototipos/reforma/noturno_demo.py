@@ -356,6 +356,7 @@ class Tabela(W.QWidget):
         linha.addWidget(self.contagem)
         linha.addStretch()
         self.tamanho = combo([5, 10, 25], 10)
+        self.tamanho.setMinimumContentsLength(2)
         self.tamanho.setAccessibleName("Registros por página")
         self.tamanho.currentIndexChanged.connect(self.reiniciar)
         linha.addWidget(self.tamanho)

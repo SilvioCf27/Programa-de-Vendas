@@ -2,7 +2,7 @@
 
 **Rodada atual:** [comparação técnica e recomendação](avaliacao/DECISAO_TECNICA.md), registrada na seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
 
-A revisão estética das três telas e quatro janelas foi aprovada. Recomenda-se PySide6; a escolha tecnológica aguarda aprovação explícita. A Etapa 4 não foi iniciada. Os estudos abaixo não substituem o programa funcional 1.7.1.
+A revisão estética e a escolha PySide6 foram aprovadas explicitamente. A Etapa 4 começou: [primeira integração de navegação e Vendas](../../reforma_desktop/README.md). O andamento atual está na seção 19 do plano. Os estudos abaixo não substituem o programa funcional 1.7.1.
 
 - [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
 - [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)

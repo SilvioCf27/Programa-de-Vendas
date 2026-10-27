@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 6 — aprovação estética e avaliação técnica em 27/10/2026.
-Estado: revisão estética desta entrega aprovada; comparação técnica entregue;
-escolha tecnológica aguarda aprovação explícita. Etapa 4 não iniciada.
+Versão do plano: 7 — PySide6 aprovado; início da Etapa 4 em 27/10/2026.
+Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
+Etapa 4 iniciada por navegação e Vendas, em entrada e dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -10,8 +10,8 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 17 registram o histórico de complementos anteriores.
-A seção 18 registra a aprovação estética e a avaliação técnica ATUAL; os
+As seções 10 a 18 registram o histórico de complementos anteriores.
+A seção 19 registra a aprovação tecnológica e a implementação ATUAL; os
 estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,13 +342,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A revisão estética desta entrega foi aprovada. A comparação técnica e a
-recomendação PySide6 estão entregues na seção 18 e no relatório vinculado.
-A próxima atividade é a aprovação explícita da ferramenta pelo usuário,
-como exige a Etapa 3. Sem essa aprovação, a Etapa 4 não começa.
-Depois dela, manter a sequência original: navegação/Vendas, Análises,
-Finanças e configurações/formulários, sem substituir a versão estável antes
-das verificações de equivalência e publicação previstas no plano.
+PySide6 foi aprovado explicitamente pelo usuário após leitura do relatório.
+A Etapa 4 começa por navegação e Vendas em entrada separada. Esta primeira
+fatia conecta cadastro/edição/exclusão, filtros, resumos e exportação ao
+núcleo existente, exclusivamente em banco de estudo. Não substituir a entrada
+estável nem conectar dados pessoais antes de verificar equivalência.
+Próxima atividade após esta entrega: integrar Análises (semanas, comparação
+A/B e detalhes), na ordem original; Finanças e configurações/formulários
+continuam em seguida. Lacunas da entrega estão na seção 19 e no mapa.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -610,3 +611,50 @@ PWA e mecanismos da versão funcional 1.7.1 não foram alterados. Somente
 estudo, testes de protótipos, automação isolada e documentação foram editados.
 Não houve otimização integrada nem migração funcional nesta avaliação.
 O histórico v1 permanece byte a byte; v5 foi arquivada antes desta revisão.
+
+19. ESCOLHA TECNOLÓGICA APROVADA E INÍCIO DA ETAPA 4 — 27/10/2026
+
+APROVAÇÃO EXPLÍCITA DO USUÁRIO
+“Li o relatorio completo, pode dar continuidade com o PySide6, e dar inicio
+a próxima etapa.”
+A escolha tecnológica é PySide6; a aprovação estética permanece válida.
+Etapa 3: decisão aprovada. Limitações manuais/DPI/acessibilidade/distribuição
+continuam rastreadas; não foram apagadas nem declaradas testadas.
+Etapa 4: INICIADA por navegação e Vendas, sem mudar a sequência do plano.
+Versão v6 preservada no histórico; versão v1 original permanece intacta.
+
+PRIMEIRA FATIA FUNCIONAL
+Entrada independente: executar_reforma.py; código em reforma_desktop/.
+Dados: SQLite temporário por padrão, descartado ao fechar, ou pasta vazia
+explicitamente destinada ao estudo para conservar testes entre execuções.
+Não se permite abrir a pasta pessoal ou um banco preexistente sem marcador.
+Não há importação automática do banco pessoal, login, rede ou Drive.
+
+Integração: mesmos módulos de persistência, backup verificado, histórico de
+fechamento, indicadores, semanas e exportações usados pela versão estável.
+Vendas inclui cadastro, edição por ID, cancelamento, duplicidade sem bloquear
+a próxima gravação, consulta ano/mês/fechamento/dias, filtros pendentes,
+resumos da consulta completa, semana independente e virada de data, ordenação,
+busca somente na tabela, paginação e exclusão em lote transacional confirmada.
+Exportações usam a consulta aplicada, sem limitar pela página ou pela busca.
+Falha de backup impede gravar/excluir. A lista é atualizada após gravações
+sem aplicar seletores pendentes. A navegação conserva a tela e um único timer.
+
+LIMITES DESTA FATIA
+Análises e Finanças estão identificadas como integração pendente; não mostram
+números de demonstração como se fossem dados integrados. Configurações, cinco
+temas, sessão/sincronização, Drive, restauração e atualizador Qt permanecem
+pendentes, acessíveis na versão estável. Preferência de abertura é lida da
+pasta de estudo; seu editor Qt ainda não foi integrado. Os recursos visuais
+são compartilhados com a demo aprovada; não houve nova decisão estética.
+A lista detalhada de cobertura/pendências está no MAPA_FUNCOES.txt.
+
+VALIDAÇÃO E CONTINUIDADE
+Relatório, comandos e resultados: reforma_desktop/README.md.
+Testes cobrem regras compartilhadas e operações gráficas em bancos fictícios;
+esta integração não constitui release nem equivalência do programa completo.
+Etapas 5 e 6 ainda pendentes: desempenho integrado, ensaios de uso Windows,
+DPI real, acessibilidade, empacotamento/atualização/recuperação e revisão final.
+Etapa 7/PWA e novos recursos permanecem no fim da cronologia original.
+ProgramFeira, executar.py, banco pessoal, sincronização, PWA e release 1.7.1
+permanecem sem alteração nesta entrega.

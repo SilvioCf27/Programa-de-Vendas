@@ -1,0 +1,469 @@
+"""Primeira fatia funcional Qt: Vendas sobre o núcleo existente, em banco isolado."""
+from datetime import date, timedelta
+from decimal import Decimal
+from pathlib import Path
+import sqlite3
+
+from PySide6 import QtCore as Q, QtGui as G, QtWidgets as W
+from noturno_demo import preparar, Fundo, Cartoes, FaixaSemana, LinhaResponsiva, Tabela, Aplicativo as Referencia
+from componentes_noturno import texto, botao, caixa, ajuda, titulo_secao, icone
+from tema_noturno import C, estilo
+from estado_demo import MESES, DIAS, Venda  # Somente nomes; não se instancia Estado da demo.
+from ProgramFeira.database import banco
+from ProgramFeira.resumos import moeda
+from ProgramFeira.semanas import selecao_inicial
+from ProgramFeira.preferencias import carregar_periodo_inicial
+from ProgramFeira.exportacao import exportar
+from reforma_desktop.vendas import Consulta, ServicoVendas
+from janelas_noturno import janela_vendas
+
+
+class FormularioVenda(W.QDialog):
+    def __init__(self, servico, atualizado, esperado=None, parent=None):
+        super().__init__(parent)
+        self.servico, self.atualizado, self.esperado = servico, atualizado, esperado
+        self.setWindowTitle('Editar venda' if esperado else 'Nova venda')
+        self.setMinimumWidth(440)
+        layout = W.QVBoxLayout(self)
+        painel, conteudo = caixa(20)
+        conteudo.addWidget(texto(self.windowTitle(), 18, bold=True))
+        conteudo.addWidget(texto('Valores recebidos em cada forma de pagamento.', 10, C['muted']))
+        form = W.QFormLayout()
+        self.data = W.QDateEdit(Q.QDate.currentDate())
+        self.data.setCalendarPopup(True)
+        self.data.setDisplayFormat('dd/MM/yyyy')
+        self.data.setAccessibleName('Data da venda')
+        if esperado:
+            self.data.setDate(Q.QDate(banco.converter_data_salva(esperado[1])))
+        form.addRow('Data da venda', self.data)
+        self.campos = []
+        for i, nome in enumerate(('Dinheiro', 'Pix', 'Cartão'), 2):
+            campo = W.QLineEdit(f'{esperado[i]:.2f}'.replace('.', ',') if esperado else '')
+            campo.setPlaceholderText('0,00')
+            campo.setAccessibleName(nome)
+            campo.setMinimumHeight(36)
+            self.campos.append(campo)
+            form.addRow(nome + ' (R$)', campo)
+        conteudo.addLayout(form)
+        self.erro = texto('', 10, C['red'])
+        self.erro.setWordWrap(True)
+        self.erro.setAccessibleName('Resultado da gravação')
+        conteudo.addWidget(self.erro)
+        linha = W.QHBoxLayout()
+        linha.addStretch()
+        linha.addWidget(botao('Cancelar', self.reject))
+        self.salvar = botao('Salvar venda', self.gravar, 'check', True)
+        self.salvar.setDefault(True)
+        linha.addWidget(self.salvar)
+        conteudo.addLayout(linha)
+        layout.addWidget(painel)
+
+    def gravar(self):
+        self.salvar.setEnabled(False)
+        try:
+            self.servico.salvar(self.data.date().toPython().isoformat(),
+                               *(c.text() for c in self.campos), esperado=self.esperado)
+        except (ValueError, OSError, sqlite3.Error) as erro:
+            self.erro.setText(str(erro))
+            self.salvar.setEnabled(True)
+            return
+        self.accept()
+        self.atualizado()
+
+
+class Janela(W.QWidget):
+    def __init__(self, servico, pasta):
+        super().__init__()
+        self.servico, self.pasta = servico, Path(pasta)
+        self.setWindowTitle('Gestão da Feira — Etapa 4 · banco de estudo')
+        self.resize(1536, 1024)
+        self.setMinimumSize(1000, 700)
+        self.consulta = Consulta()
+        self.resultado = None
+        self.ordem = (1, True)
+        self.area = None
+        self.nav = {}
+        root = W.QHBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+        side = Fundo(True)
+        side.setFixedWidth(226)
+        sl = W.QVBoxLayout(side)
+        sl.setContentsMargins(14, 22, 14, 18)
+        marca = W.QHBoxLayout()
+        logo = W.QLabel()
+        logo.setPixmap(G.QIcon(str(Path(__file__).resolve().parents[1] / 'prototipos/reforma/recursos/logo.svg')).pixmap(42, 42))
+        marca.addWidget(logo)
+        marca.addWidget(texto('Gestão da Feira', 12, bold=True))
+        sl.addLayout(marca)
+        sl.addWidget(texto('Suas feiras, seus resultados.', 9, C['muted']))
+        sl.addSpacing(28)
+        for nome, image in [('Vendas', 'chart-no-axes-combined'), ('Análises', 'trending-up'), ('Finanças', 'wallet')]:
+            b = botao(nome, lambda checked=False, n=nome: self.mostrar(n), image)
+            b.setProperty('nav', True)
+            self.nav[nome] = b
+            sl.addWidget(b)
+        sl.addStretch()
+        sl.addWidget(texto('IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
+        aviso = texto('Banco separado · sem nuvem\nNão substitui a versão 1.7.1.', 9, C['muted'])
+        aviso.setWordWrap(True)
+        sl.addWidget(aviso)
+        root.addWidget(side)
+        main = Fundo()
+        ml = W.QVBoxLayout(main)
+        ml.setContentsMargins(22, 18, 22, 10)
+        ml.setSpacing(14)
+        header = LinhaResponsiva(1050)
+        self.titulo = texto('Vendas', 24, bold=True)
+        header.addWidget(self.titulo)
+        header.addStretch()
+        header.addWidget(botao('', self.configuracoes, 'settings'))
+        tema = botao('Tema: Noturno', self.temas, 'moon')
+        tema.setToolTip('Os demais temas serão integrados e verificados antes da substituição do programa.')
+        header.addWidget(tema)
+        self.exportar = botao('Exportar relatório', lambda: None, 'download')
+        menu = W.QMenu(self.exportar)
+        for formato in ('csv', 'xlsx'):
+            menu.addAction('Excel' if formato == 'xlsx' else 'CSV', lambda checked=False, f=formato: self.exportar_consulta(f))
+        self.exportar.setMenu(menu)
+        header.addWidget(self.exportar)
+        self.nova = botao('Nova venda', self.nova_venda, 'plus', True)
+        header.addWidget(self.nova)
+        ml.addLayout(header)
+        self.stack = W.QStackedWidget()
+        ml.addWidget(self.stack, 1)
+        self.scroll = W.QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setHorizontalScrollBarPolicy(Q.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.body = W.QWidget()
+        self.vendas_layout = W.QVBoxLayout(self.body)
+        self.vendas_layout.setContentsMargins(0, 0, 0, 0)
+        self.vendas_layout.setSpacing(14)
+        self.construir_vendas(self.vendas_layout)
+        self.scroll.setWidget(self.body)
+        self.stack.addWidget(self.scroll)
+        self.paginas = {'Vendas': self.scroll}
+        for nome in ('Análises', 'Finanças'):
+            w, layout = caixa(24)
+            layout.addWidget(texto(nome, 20, bold=True))
+            layout.addWidget(texto('Integração pendente na sequência da Etapa 4.', 12, C['muted']))
+            observacao = texto('Esta entrada ainda não oferece os recursos desta área. Eles continuam disponíveis no programa estável 1.7.1. A prévia visual permanece em noturno_demo.py.', 11, C['muted'])
+            observacao.setWordWrap(True)
+            layout.addWidget(observacao)
+            layout.addWidget(botao('Voltar para Vendas', lambda: self.mostrar('Vendas'), 'chevron-left'))
+            layout.addStretch()
+            self.paginas[nome] = w
+            self.stack.addWidget(w)
+        self.status = texto(f'Estudo local · dados: {pasta} · sincronização não conectada nesta entrada', 8, C['muted'])
+        self.status.setWordWrap(True)
+        ml.addWidget(self.status)
+        root.addWidget(main, 1)
+        self.mostrar('Vendas')
+        preferencia = carregar_periodo_inicial(pasta)
+        ano, mes, fechamento = selecao_inicial(preferencia, servico.hoje())
+        if ano:
+            self.ano.setCurrentText(str(ano))
+        self.mes.setCurrentIndex(mes or 0)
+        self.fechamento.setChecked(fechamento)
+        self.aplicar()
+        self.relogio = Q.QTimer(self)
+        self.relogio.setInterval(60_000)
+        self.relogio.timeout.connect(self.verificar_dia)
+        self.dia_exibido = servico.hoje()
+        self.relogio.start()
+
+    def construir_vendas(self, layout):
+        cards = Cartoes()
+        self.cards = []
+        self.notas = []
+        self.barras = []
+        for nome, image, cor in [('TOTAL DO PERÍODO', 'trending-up', C['turquoise']), ('DIAS DE FEIRA', 'calendar-days', C['blue']), ('MÉDIA POR DIA', 'banknote', C['turquoise']), ('DINHEIRO', 'banknote', C['yellow']), ('PIX', 'gem', C['purple']), ('CARTÃO', 'credit-card', C['blue'])]:
+            # Mesmo componente dos blocos já aprovados, sem instanciar a demo.
+            w, valor = Referencia.cartao(self, nome, '', image, cor, chave='Indicador')
+            cards.adicionar(w)
+            self.cards.append(valor)
+            if len(self.cards) > 1:
+                valor.setStyleSheet(f'font-size:22pt;font-weight:600;color:{C["text"]};background:transparent;border:0;')
+            nota = texto('', 9, C['muted'])
+            w.layout().addWidget(nota)
+            self.notas.append(nota)
+            barra = W.QProgressBar()
+            barra.setRange(0, 1000)
+            barra.setTextVisible(False)
+            barra.setFixedHeight(5)
+            barra.setStyleSheet(estilo(f'QProgressBar{{background:@progress_track@;border:0;border-radius:2px;}}QProgressBar::chunk{{background:{cor};border-radius:2px;}}'))
+            barra.setVisible(len(self.cards) > 3)
+            w.layout().addWidget(barra)
+            self.barras.append(barra)
+        layout.addWidget(cards)
+        semana = FaixaSemana()
+        sl = W.QHBoxLayout(semana)
+        sl.setContentsMargins(18, 12, 18, 12)
+        bloco = W.QVBoxLayout()
+        bloco.addWidget(texto('Semana atual', 15, C['turquoise'], True))
+        self.semana_periodo = texto('', 10, C['muted'])
+        bloco.addWidget(self.semana_periodo)
+        self.semana_valor = texto('', 24, bold=True)
+        bloco.addWidget(self.semana_valor)
+        sl.addLayout(bloco, 1)
+        self.semana_formas = texto('', 11, C['muted'])
+        sl.addWidget(self.semana_formas)
+        sl.addWidget(botao('Ver detalhes da semana', self.detalhes_semana, 'arrow-up-right'))
+        sl.addWidget(ajuda('Semana atual', 'De segunda-feira até hoje; independente dos filtros, sem vendas futuras. Dias registrados com zero também contam.'))
+        layout.addWidget(semana)
+        self.comparacao = texto('', 10, C['muted'])
+        self.comparacao.setWordWrap(True)
+        layout.addWidget(self.comparacao)
+        baixo = W.QHBoxLayout()
+        baixo.setSpacing(16)
+        historico, hl = caixa(16)
+        hl.addWidget(titulo_secao('Histórico de vendas', 'list'))
+        self.busca = W.QLineEdit()
+        self.busca.setMinimumHeight(36)
+        self.busca.setPlaceholderText('Buscar na tabela por data, dia ou valor…')
+        self.busca.setAccessibleName('Buscar na tabela; não altera o resumo nem a exportação')
+        self.busca.setToolTip('A busca reduz apenas a tabela. Resumo e exportação usam todos os registros dos filtros aplicados.')
+        self.busca.textChanged.connect(self.preencher_tabela)
+        hl.addWidget(self.busca)
+        self.tabela = Tabela(['ID', 'Data', 'Dia da semana', 'Dinheiro', 'Pix', 'Cartão', 'Total'], 2)
+        self.tabela.editar.connect(self.editar)
+        self.tabela.excluir.connect(self.excluir)
+        self.tabela.table.horizontalHeader().sectionClicked.connect(self.ordenar)
+        hl.addWidget(self.tabela, 1)
+        baixo.addWidget(historico, 1)
+        filtro, fl = caixa(16)
+        filtro.setFixedWidth(270)
+        fl.addWidget(titulo_secao('Filtrar vendas', 'filter'))
+        self.ano = W.QComboBox()
+        self.ano.addItem('Todos os anos')
+        self.ano.addItems([str(y) for y in sorted(set(banco.listar_anos_vendas()) | set(range(self.servico.hoje().year - 5, self.servico.hoje().year + 6)))])
+        self.mes = W.QComboBox()
+        self.mes.addItems(['Todos os meses', *MESES])
+        for nome, campo in [('Ano', self.ano), ('Mês', self.mes)]:
+            fl.addWidget(texto(nome, 10, C['muted']))
+            campo.setAccessibleName(nome)
+            fl.addWidget(campo)
+        self.fechamento = W.QCheckBox('Período de fechamento')
+        self.fechamento.setToolTip('Usa a regra por vigência do núcleo atual. Outubro: 10/10 a 09/11 na regra inicial.')
+        fl.addWidget(self.fechamento)
+        fl.addWidget(texto('Dias da semana', 10, C['muted']))
+        grid = W.QGridLayout()
+        self.dias = []
+        for i, nome in enumerate(DIAS):
+            campo = W.QCheckBox(nome.replace('-feira', ''))
+            campo.setAccessibleName(nome)
+            self.dias.append(campo)
+            grid.addWidget(campo, i // 2, i % 2)
+            campo.toggled.connect(self.pendente)
+        fl.addLayout(grid)
+        fl.addWidget(ajuda('Dias', 'Sem marcação: todos os dias. Uma ou mais marcações limitam a consulta aos dias escolhidos.'))
+        self.aviso = texto('', 9, C['yellow'])
+        self.aviso.setWordWrap(True)
+        fl.addWidget(self.aviso)
+        fl.addWidget(botao('Aplicar filtros', self.aplicar, 'filter', True))
+        fl.addWidget(botao('Limpar filtros', self.limpar, 'rotate-ccw'))
+        self.aplicado = texto('', 9, C['muted'])
+        self.aplicado.setWordWrap(True)
+        fl.addWidget(self.aplicado)
+        fl.addStretch()
+        baixo.addWidget(filtro)
+        layout.addLayout(baixo, 1)
+        self.ano.currentIndexChanged.connect(lambda: self.sincronizar('ano'))
+        self.mes.currentIndexChanged.connect(lambda: self.sincronizar('mes'))
+        self.fechamento.toggled.connect(lambda: self.sincronizar('fechamento'))
+
+    def mostrar(self, nome):
+        self.area = nome
+        self.stack.setCurrentWidget(self.paginas[nome])
+        self.titulo.setText(nome)
+        self.nova.setVisible(nome == 'Vendas')
+        self.exportar.setVisible(nome == 'Vendas')
+        for n, b in self.nav.items():
+            b.setProperty('active', n == nome)
+            b.style().unpolish(b)
+            b.style().polish(b)
+
+    def sincronizar(self, origem):
+        campos = (self.ano, self.mes, self.fechamento)
+        bloqueios = [Q.QSignalBlocker(w) for w in campos]
+        if origem == 'ano' and self.ano.currentIndex() == 0:
+            self.mes.setCurrentIndex(0)
+            self.fechamento.setChecked(False)
+        if origem == 'mes' and self.mes.currentIndex() == 0:
+            self.fechamento.setChecked(False)
+        if self.fechamento.isChecked() and self.mes.currentIndex() == 0:
+            self.mes.setCurrentIndex(self.servico.hoje().month)
+        if self.mes.currentIndex() and self.ano.currentIndex() == 0:
+            self.ano.setCurrentText(str(self.servico.hoje().year))
+        del bloqueios
+        self.pendente()
+
+    def consulta_campos(self):
+        return Consulta(int(self.ano.currentText()) if self.ano.currentIndex() else None,
+                        self.mes.currentIndex() or None, self.fechamento.isChecked(),
+                        tuple(i for i, campo in enumerate(self.dias) if campo.isChecked()))
+
+    def pendente(self):
+        self.aviso.setText('Filtros alterados — clique em Aplicar.' if self.consulta_campos() != self.consulta else '')
+
+    def aplicar(self):
+        try:
+            consulta = self.consulta_campos()
+            resultado = self.servico.consultar(consulta)
+        except (ValueError, OSError, sqlite3.Error) as erro:
+            W.QMessageBox.warning(self, 'Consulta não aplicada', str(erro))
+            return
+        self.consulta, self.resultado = consulta, resultado
+        self.exibir_resultado()
+        self.pendente()
+
+    def atualizar(self):
+        # Uma gravação não aplica sem querer os seletores ainda pendentes.
+        self.resultado = self.servico.consultar(self.consulta)
+        anos = banco.listar_anos_vendas()
+        for ano in anos:
+            if self.ano.findText(str(ano)) < 0:
+                with Q.QSignalBlocker(self.ano):
+                    self.ano.addItem(str(ano))
+        self.exibir_resultado()
+        self.pendente()
+
+    def exibir_resultado(self):
+        r = self.resultado
+        valores = [r['indicadores']['total'], r['indicadores']['quantidade'], r['indicadores']['media']]
+        valores += [sum((Decimal(str(v[i])) for v in r['linhas']), Decimal(0)) for i in (2, 3, 4)]
+        for i, (campo, valor) in enumerate(zip(self.cards, valores)):
+            campo.setText(str(valor) if i == 1 else moeda(valor))
+        total = r['indicadores']['total']
+        notas = [f"{r['indicadores']['quantidade']} dias de feira", f"Média: {moeda(r['indicadores']['media'])}", 'Inclui dias zerados']
+        notas += [f'{p:.1f}% do período'.replace('.', ',') if total else 'Sem participação' for p in r['indicadores']['participacoes']]
+        for nota, valor in zip(self.notas, notas):
+            nota.setText(valor)
+        for i, percentual in enumerate(r['indicadores']['participacoes'], 3):
+            self.barras[i].setValue(round(percentual * 10))
+        semana = r['semana']
+        self.semana_periodo.setText(f"{semana['inicio']:%d/%m} a {semana['ate']:%d/%m/%Y} · {semana['quantidade']} dias de feira")
+        self.semana_valor.setText(moeda(semana['total']))
+        self.semana_formas.setText('\n'.join(f'{nome}: {moeda(valor)}' for nome, valor in zip(('Dinheiro', 'Pix', 'Cartão'), semana['totais'])))
+        self.comparacao.setText(r['comparacao'])
+        self.aplicado.setText('Consulta aplicada\n' + self.consulta.descricao())
+        self.preencher_tabela()
+
+    def preencher_tabela(self):
+        if self.resultado is None:
+            return
+        coluna, reverso = self.ordem
+        def chave(v):
+            if coluna == 1:
+                return banco.converter_data_salva(v[1]) or date.min
+            if coluna == 2:
+                d = banco.converter_data_salva(v[1])
+                return d.weekday() if d else -1
+            if coluna == 6:
+                return sum(Decimal(str(x)) for x in v[2:])
+            return v[0] if coluna == 0 else Decimal(str(v[coluna - 1]))
+        linhas = []
+        for v in sorted(self.resultado['linhas'], key=chave, reverse=reverso):
+            dia = banco.converter_data_salva(v[1])
+            campos = [str(v[0]), dia.strftime('%d/%m/%Y') if dia else v[1], DIAS[dia.weekday()] if dia else 'Data não reconhecida',
+                      *(moeda(Decimal(str(x))) for x in v[2:]), moeda(sum(Decimal(str(x)) for x in v[2:]))]
+            if self.busca.text().casefold() in ' '.join(campos).casefold():
+                linhas.append((v[0], campos))
+        self.tabela.preencher(linhas)
+
+    def ordenar(self, secao):
+        if not 1 <= secao <= 7:
+            return
+        coluna = secao - 1
+        self.ordem = (coluna, not self.ordem[1] if coluna == self.ordem[0] else False)
+        self.tabela.table.horizontalHeader().setSortIndicator(secao, Q.Qt.SortOrder.DescendingOrder if self.ordem[1] else Q.Qt.SortOrder.AscendingOrder)
+        self.tabela.table.horizontalHeader().setSortIndicatorShown(True)
+        self.preencher_tabela()
+
+    def limpar(self):
+        self.ano.setCurrentIndex(0)
+        self.mes.setCurrentIndex(0)
+        self.fechamento.setChecked(False)
+        for campo in self.dias:
+            campo.setChecked(False)
+        self.aplicar()
+
+    def nova_venda(self):
+        self.abrir_formulario()
+
+    def editar(self, identificador):
+        esperado = next((r for r in self.resultado['linhas'] if r[0] == identificador), None)
+        if esperado:
+            self.abrir_formulario(esperado)
+
+    def abrir_formulario(self, esperado=None):
+        form = FormularioVenda(self.servico, self.atualizar, esperado, self)
+        form.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        form.open()
+        return form
+
+    def excluir(self, ids):
+        esperados = [r for r in self.resultado['linhas'] if r[0] in ids]
+        if not esperados:
+            return
+        resposta = W.QMessageBox.question(self, 'Excluir vendas do estudo', f'Excluir {len(esperados)} venda(s) selecionada(s)?\nUm backup verificado será criado antes da exclusão.', W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No)
+        if resposta != W.QMessageBox.StandardButton.Yes:
+            return
+        try:
+            self.servico.excluir(esperados)
+            self.atualizar()
+        except (ValueError, OSError, sqlite3.Error) as erro:
+            W.QMessageBox.warning(self, 'Exclusão não concluída', str(erro))
+
+    def exportar_consulta(self, formato):
+        caminho, _ = W.QFileDialog.getSaveFileName(self, 'Exportar consulta aplicada', f'vendas-estudo.{formato}', f'{formato.upper()} (*.{formato})')
+        if not caminho:
+            return
+        if not Path(caminho).suffix:
+            caminho += '.' + formato
+        try:
+            exportar(caminho, self.resultado['relatorio'], formato)
+        except (ValueError, OSError, RuntimeError) as erro:
+            W.QMessageBox.warning(self, 'Exportação não realizada', str(erro))
+            return
+        self.status.setText(f'Exportados {len(self.resultado["linhas"])} registros da consulta aplicada: {caminho}')
+
+    def detalhes_semana(self):
+        semana = self.resultado['semana']
+        rows = banco.listar_vendas(semana['inicio'].isoformat(), semana['ate'].isoformat())
+        registros = [Venda(v[0], banco.converter_data_salva(v[1]), *(int(Decimal(str(x)) * 100) for x in v[2:])) for v in rows]
+        janela = janela_vendas(self, registros, (semana['inicio'], semana['ate']), 'Semana atual — independente dos filtros', True)
+        janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        janela.open()
+        return janela
+
+    def verificar_dia(self):
+        hoje = self.servico.hoje()
+        if hoje != self.dia_exibido:
+            self.dia_exibido = hoje
+            self.atualizar()
+
+    def configuracoes(self):
+        W.QMessageBox.information(self, 'Dados desta implementação', f'Banco de estudo:\n{banco.CAMINHO_BANCO}\n\nBackups locais verificados:\n{self.pasta / "backups"}\n\nNuvem, Drive, restauração, preferências e atualizador continuam disponíveis no programa estável. A integração Qt seguirá a sequência do plano.')
+
+    def temas(self):
+        W.QMessageBox.information(self, 'Temas', 'Esta primeira integração utiliza a identidade Noturno aprovada. Os cinco temas do programa estável serão preservados e verificados na reforma completa.')
+
+
+def iniciar(pasta, exemplo=False, captura=None):
+    app = preparar()
+    app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;}'))
+    servico = ServicoVendas()
+    if exemplo and not banco.listar_vendas():
+        hoje = servico.hoje()
+        for dias, valores in [(40, ('100', '25', '30')), (9, ('80', '40', '50')), (2, ('120', '35,50', '90')), (1, ('0', '0', '0')), (0, ('75', '45', '100'))]:
+            servico.salvar((hoje - timedelta(days=dias)).isoformat(), *valores)
+    janela = Janela(servico, pasta)
+    janela.show()
+    if captura:
+        for _ in range(6):
+            app.processEvents()
+        janela.grab().save(str(captura))
+        janela.close()
+        return 0
+    return app.exec()

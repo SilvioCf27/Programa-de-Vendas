@@ -88,3 +88,25 @@ V09 / F10 — Seleção múltipla, exclusão em lote e paginação em Vendas e F
 Preservar totais e exportações da consulta completa, indicar alcance da seleção,
 confirmar exclusão e verificar transação, sincronização e parcelas selecionadas.
 Detalhamento e critérios: docs/PLANO_REFORMA_DESKTOP.txt, seção 12.
+
+ANDAMENTO DA IMPLEMENTAÇÃO QT — ETAPA 4, 27/10/2026
+Escolha PySide6 aprovada explicitamente. Entrada: executar_reforma.py.
+Somente banco fictício isolado; nenhum ID abaixo implica release concluída.
+V01/V02: cadastro/edição/cancelamento/exclusão e duplicidade integrados/testados.
+V03: tabela, ordenação, seleção, paginação e busca integradas; revisão Windows
+     manual de teclado/DPI/legibilidade ainda pendente.
+V04: ano/mês/fechamento/dias e consulta aplicada/pendente integrados/testados.
+V05: indicadores e comparação anterior usam resumos.py; sem cálculos da demo.
+V06: semana usa semanas.py e relógio atual, com revisão a cada minuto; detalhes
+     disponíveis. Teste de domingo/segunda no serviço e virada na interface.
+V07: leitura da preferência atual integrada; editor Qt de preferência pendente.
+V08: CSV/Excel completos integrados; não há menu Exportar duplicado.
+V09: seleção por página e exclusão em lote confirmada/transacional com backup
+     integradas/testadas. Seleção limpa ao mudar página/consulta/ordenação.
+A01–A04, F01–F10: integração funcional ainda pendente, na sequência original.
+G01: identidade Noturno aprovada reutilizada; demais temas ainda pendentes.
+G02/G03/G04/G05/G06/G07: caminhos completos de configurações, backups/Drive,
+     nuvem/sessão, migração, atualização e recuperação ainda na versão estável;
+     não disponibilizados como falsamente concluídos na entrada Qt.
+     Persistência e backups locais antes de alterações são reaproveitados
+     nesta fatia; não equivalem à migração desses painéis/mecanismos completos.

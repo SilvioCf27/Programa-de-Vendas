@@ -1,5 +1,7 @@
 # Recomendação técnica da reforma desktop
 
+**Decisão posterior ao relatório:** em 27/10/2026 o usuário aprovou explicitamente PySide6 e o início da Etapa 4. Veja a seção 19 do [plano](../../../docs/PLANO_REFORMA_DESKTOP.txt) e a [primeira integração](../../../reforma_desktop/README.md). Os resultados e a recomendação abaixo documentam a avaliação anterior à aprovação.
+
 **Recomendo adotar PySide6 para a futura interface, mantendo Python e as regras existentes. A escolha aguarda aprovação explícita do usuário. A Etapa 4 não começou.**
 
 A aprovação visual das três telas principais e quatro janelas secundárias está registrada na seção 18 do [plano original em andamento](../../../docs/PLANO_REFORMA_DESKTOP.txt). O desktop funcional 1.7.1, sua entrada, banco, sincronização, backups, atualizador e PWA permanecem preservados. Os executáveis desta avaliação são ensaios separados, não uma release.

@@ -32,9 +32,10 @@ Para a demo Tkinter sozinha não é necessário instalar os requisitos: ela usa 
 
 ## 3. Abrir a nova revisão Noturno
 
-Depois de preparar o ambiente ou atualizar essa cópia com `git pull --ff-only origin reforma/estudo-interface`, execute:
+Depois de atualizar essa cópia com `git pull --ff-only origin reforma/estudo-interface`, instale os requisitos **nesse ambiente virtual** e execute. O `git pull` não instala bibliotecas; a ativação do ambiente também não. Se aparecer `ModuleNotFoundError: No module named 'PySide6'`, o primeiro comando abaixo resolve a dependência ausente:
 
 ```powershell
+.\.venv-estudo\Scripts\python.exe -m pip install -r prototipos/reforma/requirements.txt
 .\.venv-estudo\Scripts\python.exe prototipos/reforma/noturno_demo.py
 ```
 

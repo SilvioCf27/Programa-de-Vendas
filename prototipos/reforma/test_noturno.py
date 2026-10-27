@@ -1,6 +1,7 @@
 """Verifica a demo Noturno em memória, sem importar o aplicativo estável."""
 
 import ast
+import subprocess
 import sys
 import os
 from pathlib import Path
@@ -14,6 +15,18 @@ from noturno_demo import Aplicativo, preparar
 
 
 class EstadoTests(unittest.TestCase):
+    def test_orientacao_quando_pyside_nao_esta_instalado(self):
+        r = subprocess.run(
+            [sys.executable, "-S", str(Path(__file__).with_name("noturno_demo.py"))],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("Falta instalar o PySide6", r.stderr)
+        self.assertIn("-m pip install -r prototipos/reforma/requirements.txt", r.stderr)
+        self.assertNotIn("Traceback", r.stderr)
+
     def test_totais_e_centavos(self):
         e = Estado()
         r = e.resumo(limites("Fechamento"))

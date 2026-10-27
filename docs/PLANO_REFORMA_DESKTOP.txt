@@ -414,3 +414,16 @@ Formulários reais, banco e integração com as regras históricas não foram
 substituídos. Não há migração nem nova versão do executável.
 A revisão visual do usuário e os ensaios no Windows continuam pendentes.
 Capturas, execução e relatório desta entrega: prototipos/reforma/NOTURNO.md.
+
+15. SEGUNDA RODADA DE FIDELIDADE E EXECUÇÃO LOCAL
+
+Após nova comparação com as referências do usuário, foram refinados cartões,
+participação, fotografia da semana, painéis separados de comparação anterior
+e participação, contraste, ícones, ações por linha, filtros e acessos de
+Finanças. Diferenças e adaptações estão em COMPARACAO_VISUAL.md, na pasta
+prototipos/reforma. Capturas atualizadas na mesma pasta de imagens da demo.
+Foi esclarecido que atualizar o Git ou ativar o ambiente virtual não instala
+PySide6. O guia inclui instalação no mesmo Python usado para abrir a demo,
+e a entrada fornece orientação quando a dependência não está instalada.
+Os 16 testes da revisão passaram no Linux. A conferência Windows continua
+pendente; não houve alteração no aplicativo estável, na PWA ou nos dados reais.

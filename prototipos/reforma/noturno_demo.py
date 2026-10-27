@@ -7,7 +7,20 @@ import sys
 
 if sys.platform != "win32":
     os.environ.setdefault("QT_FONT_DPI", "96")
-from PySide6 import QtCore as Q, QtGui as G, QtWidgets as W, QtSvg
+try:
+    from PySide6 import QtCore as Q, QtGui as G, QtWidgets as W, QtSvg
+except ModuleNotFoundError as exc:
+    if exc.name != "PySide6":
+        raise
+    prefixo = "& " if sys.platform == "win32" else ""
+    print(
+        "Falta instalar o PySide6 no Python que está abrindo a demo.\n"
+        "No terminal da cópia de estudo, execute:\n"
+        f'{prefixo}"{sys.executable}" -m pip install -r prototipos/reforma/requirements.txt\n'
+        "Depois execute novamente noturno_demo.py.",
+        file=sys.stderr,
+    )
+    raise SystemExit(1) from None
 from estado_demo import Estado, HOJE, MESES, DIAS, agrupar, limites, dividir
 from modelo import moeda, AJUDAS
 
@@ -32,23 +45,24 @@ ESTILO = """
 QWidget { color:#EAF2FF; font-family:"FONTE"; font-size:10pt; }
 QLabel, QScrollArea, QScrollArea>QWidget>QWidget { background:transparent; }
 QScrollArea { border:0; }
-QFrame[panel="true"] { background:#10243B; border:1px solid #254362; border-radius:12px; }
+QFrame[panel="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #0B1D31,stop:1 #071525); border:1px solid #254362; border-radius:12px; }
 QPushButton { background:#142C47; border:1px solid #254362; border-radius:7px; padding:8px 12px; font-weight:600; }
 QPushButton:hover { background:#1C3C59; border-color:#3B91FF; }
 QPushButton:focus, QComboBox:focus, QTableWidget:focus { border:2px solid #2ED9BA; }
-QPushButton[primary="true"] { background:#008D73; border-color:#00B889; }
+QPushButton[primary="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #00A98B,stop:1 #00846E); border-color:#00B889; }
+QPushButton[query="true"] { background:#0763D5; border-color:#237EE5; }
 QPushButton[primary="true"]:hover { background:#00A585; }
 QPushButton[danger="true"] { background:#5F2535; border-color:#A33B50; }
 QPushButton[danger="true"]:hover { background:#883347; }
-QPushButton[nav="true"] { text-align:left; padding:13px 15px; background:transparent; border-color:transparent; font-size:11pt; }
-QPushButton[active="true"] { background:#00564F; border-color:#008C79; }
+QPushButton[nav="true"] { text-align:left; padding:16px 15px; background:transparent; border-color:transparent; font-size:11pt; }
+QPushButton[active="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #00675C,stop:1 #00443F); border-color:#008C79; }
 QPushButton:disabled { color:#718DA9; background:#102035; border-color:#1D324A; }
 QComboBox { background:#142C47; border:1px solid #254362; border-radius:6px; padding:7px 8px; min-height:18px; }
 QComboBox QAbstractItemView { background:#142C47; selection-background-color:#00564F; }
 QCheckBox { spacing:6px; background:transparent; }
 QCheckBox::indicator { width:15px; height:15px; border:1px solid #718DA9; border-radius:3px; background:#142C47; }
 QCheckBox::indicator:checked { background:#00B889; border:2px solid #2ED9BA; }
-QTableWidget { background:#10243B; alternate-background-color:#172E48; border:1px solid #254362; border-radius:6px; gridline-color:#254362; selection-background-color:#00564F; }
+QTableWidget { background:#09192B; alternate-background-color:#10243B; border:1px solid #254362; border-radius:6px; gridline-color:#254362; selection-background-color:#00564F; }
 QTableWidget::item { padding:5px; border:0; }
 QHeaderView::section { background:#142C47; color:#A5BCD5; padding:8px 4px; border:0; font-weight:600; }
 QScrollBar:vertical { background:#091B30; width:8px; margin:0; }
@@ -91,6 +105,7 @@ def botao(s, acao, nome=None, primary=False, danger=False):
         b.setIcon(icone(nome))
     b.setIconSize(Q.QSize(19, 19))
     b.setProperty("primary", primary)
+    b.setProperty("query", nome == "search")
     b.setProperty("danger", danger)
     b.setCursor(Q.Qt.CursorShape.PointingHandCursor)
     if not s and nome:
@@ -133,6 +148,93 @@ def ajuda(chave, mensagem=None):
     return b
 
 
+def tile(nome, cor, size=40):
+    w = W.QLabel()
+    w.setPixmap(icone(nome, cor, 25).pixmap(25, 25))
+    w.setAlignment(Q.Qt.AlignmentFlag.AlignCenter)
+    w.setFixedSize(size, size)
+    w.setStyleSheet(
+        f"background:{cor}22;border:0;border-radius:9px;".replace(
+            cor + "22",
+            "rgba(" + ",".join(str(x) for x in G.QColor(cor).getRgb()[:3]) + ",35)",
+        )
+    )
+    return w
+
+
+def titulo_secao(nome, ico, sub=None):
+    w = W.QWidget()
+    h = W.QHBoxLayout(w)
+    h.setContentsMargins(0, 0, 0, 0)
+    h.setSpacing(12)
+    h.addWidget(tile(ico, C["blue"], 34))
+    col = W.QVBoxLayout()
+    col.setSpacing(3)
+    col.addWidget(texto(nome, 14, bold=True))
+    if sub:
+        col.addWidget(texto(sub, 9, C["muted"]))
+    h.addLayout(col, 1)
+    w.setSizePolicy(W.QSizePolicy.Policy.Expanding, W.QSizePolicy.Policy.Fixed)
+    return w
+
+
+def acesso(nome, sub, ico, cor, acao):
+    b = botao("", acao)
+    h = W.QHBoxLayout(b)
+    h.setContentsMargins(12, 12, 12, 12)
+    h.addWidget(tile(ico, cor, 42))
+    col = W.QVBoxLayout()
+    col.setSpacing(5)
+    col.addWidget(texto(nome, 10, bold=True))
+    label = texto(sub, 8, C["muted"])
+    label.setWordWrap(True)
+    col.addWidget(label)
+    h.addLayout(col, 1)
+    h.addWidget(texto("›", 22, cor))
+    # Labels must not intercept clicks intended for the whole access card.
+    for w in b.findChildren(W.QWidget):
+        w.setAttribute(Q.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+    b.setAccessibleName(nome)
+    b.setMinimumHeight(76)
+    return b
+
+
+class FaixaSemana(W.QFrame):
+    def __init__(self):
+        super().__init__()
+        self.foto = G.QPixmap(str(R / "fundo-lateral.png"))
+        self.setMinimumHeight(132)
+
+    def paintEvent(self, event):
+        p = G.QPainter(self)
+        p.setRenderHint(G.QPainter.RenderHint.Antialiasing)
+        path = G.QPainterPath()
+        path.addRoundedRect(Q.QRectF(self.rect().adjusted(1, 1, -1, -1)), 12, 12)
+        p.setClipPath(path)
+        p.fillRect(self.rect(), G.QColor("#052431"))
+        target = Q.QRectF(self.width() * 0.65, 0, self.width() * 0.35, self.height())
+        p.drawPixmap(
+            target,
+            self.foto,
+            Q.QRectF(
+                0,
+                520,
+                self.foto.width(),
+                self.foto.width() * target.height() / max(1, target.width()),
+            ),
+        )
+        fade = G.QLinearGradient(0, 0, self.width(), 0)
+        fade.setColorAt(0, G.QColor("#052431"))
+        fade.setColorAt(0.62, G.QColor("#052431"))
+        fade.setColorAt(1, G.QColor(5, 36, 49, 100))
+        p.fillRect(self.rect(), fade)
+        p.setClipping(False)
+        p.setPen(G.QPen(G.QColor("#00B889"), 1))
+        p.setBrush(Q.Qt.BrushStyle.NoBrush)
+        p.drawPath(path)
+        p.end()
+
+
 class Fundo(W.QWidget):
     def __init__(self, lateral=False):
         super().__init__()
@@ -163,11 +265,11 @@ class Fundo(W.QWidget):
                 target.height(),
             ),
         )
-        p.fillRect(target, G.QColor(7, 21, 37, 145 if self.lateral else 205))
+        p.fillRect(target, G.QColor(7, 21, 37, 45 if self.lateral else 205))
         if self.lateral:
             grad = G.QLinearGradient(0, 0, 0, self.height())
             grad.setColorAt(0, G.QColor(7, 21, 37, 230))
-            grad.setColorAt(0.36, G.QColor(7, 21, 37, 170))
+            grad.setColorAt(0.36, G.QColor(7, 21, 37, 105))
             grad.setColorAt(0.75, G.QColor(7, 21, 37, 40))
             grad.setColorAt(1, G.QColor(7, 21, 37, 230))
             p.fillRect(self.rect(), grad)
@@ -200,7 +302,7 @@ class Cartoes(W.QWidget):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        n = 6 if self.width() >= 1230 else 3
+        n = 6 if self.width() >= 1200 else 3
         if n != self.colunas:
             self.organizar(n)
 
@@ -222,6 +324,7 @@ class Seletor(W.QWidget):
             )
         )
         self.tipo = combo(tipos, "Fechamento")
+        self.tipo.setMinimumContentsLength(9)
         self.ano = combo(range(2025, 2028), 2026)
         self.mes = combo(MESES, "Outubro")
         self.semana = combo([])
@@ -238,9 +341,11 @@ class Seletor(W.QWidget):
             ]
         ):
             label = texto(nome, 9, C["muted"])
-            row, col = (i * 2, 0) if compacto else (0, i)
+            row, col = (i, 0) if compacto else (0, i)
             self.grid.addWidget(label, row, col)
-            self.grid.addWidget(campo, row + 1, col)
+            self.grid.addWidget(
+                campo, row if compacto else row + 1, 1 if compacto else col
+            )
             self.campos.append((label, campo))
         self.tipo.currentTextChanged.connect(self.atualizar)
         self.ano.currentTextChanged.connect(self.atualizar)
@@ -456,12 +561,18 @@ class Tabela(W.QWidget):
             ]:
                 b = botao("", action, nome, danger=nome == "trash-2")
                 b.setFixedSize(30, 30)
-                b.setStyleSheet("padding:3px;")
+                b.setStyleSheet(
+                    "padding:3px;border:1px solid "
+                    + ("#C54A54" if nome == "trash-2" else "#2B69A8")
+                    + ";background:"
+                    + ("#A42C3D" if nome == "trash-2" else "#174D80")
+                    + ";border-radius:5px;"
+                )
                 b.setToolTip(tip)
                 b.setAccessibleName(f"{tip} {identificador}")
                 layout.addWidget(b)
             self.table.setCellWidget(row, self.table.columnCount() - 1, acoes)
-        self.table.setColumnWidth(self.table.columnCount() - 1, 80)
+        self.table.setColumnWidth(self.table.columnCount() - 1, 86)
         self.numero.setText(f"{self.pagina+1} / {self.paginas()}")
         self.voltar.setEnabled(self.pagina > 0)
         self.avancar.setEnabled(self.pagina + 1 < self.paginas())
@@ -540,23 +651,33 @@ class Grafico(W.QWidget):
         else:
             total = sum(v for _, v in self.dados)
             box = Q.QRectF(
-                8, 15, min(135, self.width() * 0.42), min(135, self.width() * 0.42)
+                8,
+                15,
+                min(135, self.width() * 0.34, self.height() - 15),
+                min(135, self.width() * 0.34, self.height() - 15),
             )
             start = 90 * 16
             for i, (s, v) in enumerate(self.dados):
                 angle = round(360 * 16 * v / total) if total else 0
-                pen = G.QPen(G.QColor([C["yellow"], C["purple"], C["blue"]][i]), 18)
+                pen = G.QPen(
+                    G.QColor([C["yellow"], C["purple"], C["blue"]][i]),
+                    12 if self.height() < 120 else 18,
+                )
                 p.setPen(pen)
                 p.drawArc(box.adjusted(10, 10, -10, -10), start, -angle)
                 start -= angle
+                percent = f"{v/total*100:.1f}%".replace(".", ",") if total else "—"
                 p.setPen(G.QColor(C["text"]))
-                p.drawText(
-                    int(box.right() + 16),
-                    40 + i * 39,
-                    f"{s}  {v/total*100:.1f}%".replace(".", ",") if total else s + " —",
-                )
-                p.setPen(G.QColor(C["muted"]))
-                p.drawText(int(box.right() + 16), 57 + i * 39, moeda(v))
+                if self.height() < 120:
+                    p.drawText(
+                        int(box.right() + 18),
+                        24 + i * 25,
+                        f"{s}   {percent}   {moeda(v)}",
+                    )
+                else:
+                    p.drawText(int(box.right() + 16), 34 + i * 39, f"{s}   {percent}")
+                    p.setPen(G.QColor(C["muted"]))
+                    p.drawText(int(box.right() + 16), 51 + i * 39, moeda(v))
             if not total:
                 p.setPen(G.QColor(C["muted"]))
                 p.drawText(box, Q.Qt.AlignmentFlag.AlignCenter, "Sem vendas")
@@ -580,7 +701,7 @@ class Aplicativo(W.QWidget):
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
         side = Fundo(True)
-        side.setFixedWidth(210)
+        side.setFixedWidth(226)
         sl = W.QVBoxLayout(side)
         sl.setContentsMargins(14, 22, 14, 18)
         marca = W.QHBoxLayout()
@@ -614,6 +735,7 @@ class Aplicativo(W.QWidget):
         ]:
             b = botao(nome, lambda checked=False, n=nome: self.mostrar(n), ico)
             b.setProperty("nav", True)
+            b.setIconSize(Q.QSize(25, 25))
             sl.addWidget(b)
             self.nav[nome] = b
         sl.addStretch()
@@ -636,7 +758,7 @@ class Aplicativo(W.QWidget):
         header.addLayout(title)
         header.addStretch()
         header.addWidget(botao("", lambda: self.aviso("Configurações"), "settings"))
-        header.addWidget(botao("Noturno", lambda: self.aviso("Temas"), "moon"))
+        header.addWidget(botao("Tema: Noturno", lambda: self.aviso("Temas"), "moon"))
         header.addWidget(
             botao(
                 "Exportar relatório",
@@ -730,7 +852,8 @@ class Aplicativo(W.QWidget):
 
     def cartao(self, titulo, valor, ico, cor, nota=None, chave=None):
         w, l = caixa(12)
-        base = G.QColor(C["panel"])
+        l.setSpacing(6)
+        base = G.QColor("#071525")
         accent = G.QColor(cor)
         tint = G.QColor(
             *[
@@ -738,14 +861,19 @@ class Aplicativo(W.QWidget):
                 for i in range(3)
             ]
         ).name()
+        border = G.QColor(
+            *[
+                round(base.getRgb()[i] * 0.60 + accent.getRgb()[i] * 0.40)
+                for i in range(3)
+            ]
+        ).name()
         w.setStyleSheet(
-            f'QFrame[panel="true"]{{border:1px solid {cor};background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {tint},stop:1 #10243B);border-radius:12px;}}'
+            f'QFrame[panel="true"]{{border:1px solid {border};background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {tint},stop:1 #08182B);border-radius:12px;}}'
         )
         h = W.QHBoxLayout()
-        i = W.QLabel()
-        i.setPixmap(icone(ico, cor, 21).pixmap(21, 21))
-        h.addWidget(i)
-        h.addWidget(texto(titulo, 9, C["muted"]))
+        h.setSpacing(9)
+        h.addWidget(tile(ico, cor, 30 if nota is None else 32))
+        h.addWidget(texto(titulo, 9, C["text"]))
         h.addStretch()
         if chave:
             h.addWidget(ajuda(chave))
@@ -759,6 +887,8 @@ class Aplicativo(W.QWidget):
     def construir_vendas(self, l):
         cards = Cartoes()
         self.cards = []
+        self.notas_cards = []
+        self.barras_cards = []
         for title, ico, color in [
             ("TOTAL DO PERÍODO", "trending-up", C["turquoise"]),
             ("DIAS DE FEIRA", "calendar-days", C["blue"]),
@@ -775,12 +905,34 @@ class Aplicativo(W.QWidget):
                 )
             cards.adicionar(w)
             self.cards.append(value)
+            if len(self.cards) > 1:
+                value.setStyleSheet(
+                    f'font-size:22pt;font-weight:600;color:{C["text"]};background:transparent;border:0;'
+                )
+            note = texto("", 9, C["muted"])
+            w.layout().addWidget(note)
+            self.notas_cards.append(note)
+            bar = W.QProgressBar()
+            bar.setRange(0, 1000)
+            bar.setTextVisible(False)
+            bar.setFixedHeight(5)
+            bar.setStyleSheet(
+                f"QProgressBar{{background:#22384B;border:0;border-radius:2px;}}QProgressBar::chunk{{background:{color};border-radius:2px;}}"
+            )
+            bar.setVisible(len(self.cards) > 3)
+            w.layout().addWidget(bar)
+            self.barras_cards.append(bar)
         l.addWidget(cards)
-        semana, sl = caixa()
+        semana = FaixaSemana()
+        sl = W.QVBoxLayout(semana)
         sl.setContentsMargins(18, 12, 18, 12)
         linha = W.QHBoxLayout()
         esquerda = W.QVBoxLayout()
-        esquerda.addWidget(texto("Semana atual", 15, C["turquoise"], True))
+        semana_header = W.QHBoxLayout()
+        semana_header.addWidget(tile("calendar-days", C["turquoise"], 32))
+        semana_header.addWidget(texto("Semana atual", 15, C["turquoise"], True))
+        semana_header.addStretch()
+        esquerda.addLayout(semana_header)
         self.semana_texto = texto("", 10, C["muted"])
         esquerda.addWidget(self.semana_texto)
         self.semana_valor = texto("", 24, bold=True)
@@ -799,27 +951,39 @@ class Aplicativo(W.QWidget):
         )
         sl.addLayout(linha)
         l.addWidget(semana)
-        faixa, fl = caixa(12)
-        linha = W.QHBoxLayout()
+        faixa = W.QHBoxLayout()
+        faixa.setSpacing(10)
+        anterior, fl = caixa(12)
+        fl.addWidget(
+            titulo_secao("Comparação com o período anterior", "arrow-right-left")
+        )
         self.anterior = texto("", 10, C["muted"])
         self.anterior.setWordWrap(True)
-        linha.addWidget(self.anterior, 1)
-        linha.addWidget(
-            botao(
-                "Participação e comparação",
-                lambda: self.detalhes(
-                    "Indicadores da seleção", [self.anterior.text(), self.participacao]
-                ),
-                "chart-pie",
+        fl.setAlignment(Q.Qt.AlignmentFlag.AlignTop)
+        fl.addWidget(self.anterior)
+        faixa.addWidget(anterior, 6)
+        participacao, pl = caixa(10)
+        ph = W.QHBoxLayout()
+        ph.addWidget(texto("Participação no período", 11, bold=True))
+        ph.addStretch()
+        ph.addWidget(
+            ajuda(
+                "Participação",
+                "Proporção de cada forma de pagamento no total bruto da consulta aplicada.",
             )
         )
-        fl.addLayout(linha)
-        l.addWidget(faixa)
+        pl.addLayout(ph)
+        self.pizza_vendas = Grafico("pizza")
+        self.pizza_vendas.setMinimumHeight(85)
+        self.pizza_vendas.setMaximumHeight(88)
+        pl.addWidget(self.pizza_vendas)
+        faixa.addWidget(participacao, 5)
+        l.addLayout(faixa)
         baixo = W.QHBoxLayout()
         baixo.setSpacing(12)
         hist, hl = caixa()
         header = W.QHBoxLayout()
-        header.addWidget(texto("Histórico de vendas", 15, bold=True))
+        header.addWidget(titulo_secao("Histórico de vendas", "list"))
         header.addStretch()
         self.total_vendas = texto("", 10, C["muted"])
         header.addWidget(self.total_vendas)
@@ -839,7 +1003,7 @@ class Aplicativo(W.QWidget):
         filtro, ff = caixa(12)
         filtro.setFixedWidth(230)
         ff.setSpacing(6)
-        ff.addWidget(texto("Filtros do histórico", 12, bold=True))
+        ff.addWidget(titulo_secao("Filtros do histórico", "filter"))
         self.seletor_vendas = Seletor(True, True)
         ff.addWidget(self.seletor_vendas)
         ff.addWidget(texto("Dias da semana", 10, C["muted"]))
@@ -910,6 +1074,24 @@ class Aplicativo(W.QWidget):
         ):
             w.setText(v)
         self.total_vendas.setText(f"{len(rows)} registros · {moeda(total)}")
+        notas = [
+            f"{len(rows)} dias de feira",
+            f"Média: {moeda(dividir(total,len(rows)))}",
+            "Inclui dias registrados com zero",
+        ] + [
+            (
+                f"{v/total*100:.1f}% do período".replace(".", ",")
+                if total
+                else "Sem participação"
+            )
+            for v in pagamentos
+        ]
+        for i, note in enumerate(self.notas_cards):
+            note.setText(notas[i])
+        for i, v in enumerate(pagamentos, 3):
+            self.barras_cards[i].setValue(round(v / total * 1000) if total else 0)
+        self.pizza_vendas.dados = list(zip(["Dinheiro", "Pix", "Cartão"], pagamentos))
+        self.pizza_vendas.update()
         self.participacao = " · ".join(
             f"{s}: {v/total*100:.1f}%".replace(".", ",") if total else s + ": —"
             for s, v in zip(["Dinheiro", "Pix", "Cartão"], pagamentos)
@@ -934,14 +1116,10 @@ class Aplicativo(W.QWidget):
             anteriores = self.estado.consultar_vendas(anterior, self.dias)
             antes = sum(r.total for r in anteriores)
             self.anterior.setText(
-                f"Período anterior: {moeda(antes)}   ·   Diferença: {moeda(total-antes)}\n"
-                + self.participacao
+                f"{anterior[0]:%d/%m/%Y} a {anterior[1]:%d/%m/%Y}\n{moeda(antes)} em {len(anteriores)} dias de feira   ·   Diferença: {moeda(total-antes)}"
             )
         else:
-            self.anterior.setText(
-                "Selecione um período para comparar com o anterior.\n"
-                + self.participacao
-            )
+            self.anterior.setText("Selecione um período para comparar com o anterior.")
         self.tabela_vendas.preencher(
             [
                 (
@@ -991,6 +1169,8 @@ class Aplicativo(W.QWidget):
 
     def construir_financas(self, l):
         filtro, fl = caixa(12)
+        fl.setContentsMargins(12, 8, 12, 8)
+        fl.setSpacing(6)
         h = W.QHBoxLayout()
         self.seletor_financas = Seletor()
         h.addWidget(self.seletor_financas, 1)
@@ -1054,7 +1234,7 @@ class Aplicativo(W.QWidget):
         l.addWidget(secundario)
         lista, ll = caixa()
         h = W.QHBoxLayout()
-        h.addWidget(texto("Lançamentos do período", 15, bold=True))
+        h.addWidget(titulo_secao("Lançamentos do período", "receipt"))
         h.addStretch()
         h.addWidget(
             botao(
@@ -1071,14 +1251,30 @@ class Aplicativo(W.QWidget):
             ["Todos os lançamentos", "Despesas", "Taxas", "Parcelas"]
         )
         self.fin_recorte.setMinimumWidth(200)
+        self.fin_recorte.hide()
         self.fin_recorte.currentIndexChanged.connect(self.atualizar_financas)
         tipo = W.QHBoxLayout()
         tipo.addWidget(self.fin_recorte)
+        self.recortes_botoes = []
+        for i, label in enumerate(["Todas", "Despesas", "Taxas", "Parcelas"]):
+            b = botao(
+                label, lambda checked=False, n=i: self.fin_recorte.setCurrentIndex(n)
+            )
+            b.setProperty("active", i == 0)
+            tipo.addWidget(b)
+            self.recortes_botoes.append(b)
+
+        def selecionar_recorte(index):
+            for i, b in enumerate(self.recortes_botoes):
+                b.setProperty("active", i == index)
+                b.style().unpolish(b)
+                b.style().polish(b)
+
+        self.fin_recorte.currentIndexChanged.connect(selecionar_recorte)
         tipo.addWidget(
-            texto(
-                "Totais acima: período completo, independente desta lista.",
-                9,
-                C["muted"],
+            ajuda(
+                "Filtro da lista",
+                "Este recorte altera só a lista de lançamentos. Os totais acima continuam considerando a consulta financeira completa.",
             )
         )
         tipo.addStretch()
@@ -1095,6 +1291,7 @@ class Aplicativo(W.QWidget):
             ],
             2,
         )
+        self.tabela_financas.table.setMinimumHeight(245)
         self.tabela_financas.excluir.connect(
             lambda ids: self.confirmar_exclusao("Finanças", ids)
         )
@@ -1136,7 +1333,17 @@ class Aplicativo(W.QWidget):
                 ),
             ),
         ]:
-            links.addWidget(botao(nome, acao, ico), 1)
+            sub = {
+                "Despesas por semana": "Despesas agrupadas por semana.",
+                "Histórico de taxas": "Taxas e ajustes históricos.",
+                "Regra de fechamento": "Fechamento e vigência da regra.",
+            }[nome]
+            links.addWidget(
+                acesso(
+                    nome, sub, ico, C["yellow"] if ico == "percent" else C["blue"], acao
+                ),
+                1,
+            )
         l.addLayout(links)
         self.atualizar_financas()
 
@@ -1226,24 +1433,24 @@ class Aplicativo(W.QWidget):
         l.addLayout(topo)
         graficos = W.QHBoxLayout()
         barras, bl = caixa()
-        bl.addWidget(texto("Resultado por semana", 14, bold=True))
+        bl.addWidget(titulo_secao("Resultado por semana", "trending-up"))
         self.barras = Grafico()
         bl.addWidget(self.barras, 1)
         graficos.addWidget(barras, 5)
         resumo, rl = caixa()
-        rl.addWidget(texto("Resumo da seleção", 12, bold=True))
+        rl.addWidget(titulo_secao("Resumo da seleção", "receipt"))
         self.ana_resumo = texto("", 12)
         rl.addWidget(self.ana_resumo)
         rl.addStretch()
         graficos.addWidget(resumo, 2)
         pizza, pl = caixa()
-        pl.addWidget(texto("Participação por pagamento", 12, bold=True))
+        pl.addWidget(titulo_secao("Participação por pagamento", "chart-pie"))
         self.pizza = Grafico("pizza")
         pl.addWidget(self.pizza, 1)
         graficos.addWidget(pizza, 4)
         l.addLayout(graficos)
         table, tl = caixa()
-        tl.addWidget(texto("Detalhamento por semana", 14, bold=True))
+        tl.addWidget(titulo_secao("Detalhamento por semana", "calendar-days"))
         self.ana_tabela = W.QTableWidget(0, 8)
         self.ana_tabela.setHorizontalHeaderLabels(
             [
@@ -1271,7 +1478,7 @@ class Aplicativo(W.QWidget):
         l.addWidget(table)
         baixo = W.QHBoxLayout()
         comp, cl = caixa()
-        cl.addWidget(texto("Comparar períodos (A e B)", 14, bold=True))
+        cl.addWidget(titulo_secao("Comparar períodos (A e B)", "arrow-right-left"))
         cl.addWidget(
             texto("Consulta independente dos filtros de Vendas.", 9, C["muted"])
         )
@@ -1295,7 +1502,7 @@ class Aplicativo(W.QWidget):
         cl.addWidget(self.ana_comparacao)
         baixo.addWidget(comp, 4)
         det, dl = caixa()
-        dl.addWidget(texto("Detalhes do período", 14, bold=True))
+        dl.addWidget(titulo_secao("Detalhes do período", "list"))
         dl.addWidget(texto("Mesma seleção aplicada em Vendas.", 9, C["muted"]))
         for nome, ico, acao in [
             ("Resultados por dia da semana", "calendar-days", self.detalhes_dias),

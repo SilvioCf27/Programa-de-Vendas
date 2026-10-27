@@ -2,6 +2,12 @@
 
 Esta revisão aplica a direção das três imagens enviadas pelo usuário. **É uma demo isolada com dados fictícios; o aplicativo instalado e a PWA continuam inalterados.** A implementação visual usa PySide6 para avaliar o desenho. Isso não encerra a comparação técnica com Tkinter nem autoriza a substituição do desktop.
 
+## Segunda rodada de fidelidade
+
+[Comparação com as referências e limites desta rodada](COMPARACAO_VISUAL.md).
+
+Cartões de pagamento agora mostram participação e barras; a faixa semanal usa foto recortada proporcionalmente. Comparação anterior e participação voltaram a ser painéis distintos. Painéis mais escuros, ícones em blocos coloridos, filtros compactos, ações de edição/exclusão e acessos inferiores de Finanças foram refinados. As capturas abaixo já mostram essa rodada.
+
 ## Vendas
 
 Navegação lateral, seis indicadores, semana atual independente do filtro e histórico com filtros à direita. A largura da coluna de dia da semana não recebe todo o espaço restante. Seleção múltipla, ações por linha e paginação estão disponíveis.
@@ -26,6 +32,7 @@ Na cópia de estudo já preparada, feche a demo anterior e rode no terminal do V
 
 ```powershell
 git pull --ff-only origin reforma/estudo-interface
+.\.venv-estudo\Scripts\python.exe -m pip install -r prototipos/reforma/requirements.txt
 .\.venv-estudo\Scripts\python.exe prototipos/reforma/noturno_demo.py
 ```
 
@@ -61,8 +68,8 @@ Em 1.280 × 800, os seis indicadores se reorganizam em duas linhas. Há rolagem 
 
 ## Verificações desta entrega
 
-- **15 testes da revisão Noturno passaram** no Linux com Python 3.13.5 / PySide6 6.10.2: totais em centavos, períodos, zero/futuro, isolamento, seleção por página, totais independentes da paginação, consultas, A/B, cancelamento e confirmação de exclusão, última página, estado vazio, atualização financeira, navegação e largura menor.
-- **4 testes das demos anteriores passaram**, preservando a comparação.
+- **16 testes da revisão Noturno passaram** no Linux com Python 3.13.5 / PySide6 6.10.2: totais em centavos, períodos, zero/futuro, isolamento, seleção por página, totais independentes da paginação, consultas, A/B, cancelamento e confirmação de exclusão, última página, estado vazio, atualização financeira, navegação e largura menor.
+- **4 testes das demos anteriores passaram na entrega anterior**, preservando a comparação; não foram repetidos nesta rodada, pois seus arquivos não mudaram.
 - PNGs de recursos conferidos; SVGs e fontes locais, com licenças incluídas. Capturas feitas da interface executada, em 1.536 × 1.024 e 1.280 × 800; não são imagens geradas para simular o resultado.
 - Não foram executados os testes completos de produção nesta entrega: seu código não foi modificado.
 - **Pendentes:** Windows real, escalas 100/125/150%, teclado e leitores de tela em revisão completa, outros temas, integração com o banco e a sincronização, empacotamento e atualização. Os testes Linux não substituem esses ensaios.

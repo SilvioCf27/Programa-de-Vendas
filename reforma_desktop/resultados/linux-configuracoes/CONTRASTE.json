@@ -1,0 +1,46 @@
+{
+  "pares": {
+    "escuro": {
+      "text/panel": 13.939,
+      "muted/panel": 8.04,
+      "text/primary_start": 5.154,
+      "text/primary_end": 4.817,
+      "text/primary_hover": 4.584,
+      "text/query": 4.965
+    },
+    "claro": {
+      "text/panel": 15.533,
+      "muted/panel": 4.759,
+      "text/primary_start": 12.62,
+      "text/primary_end": 12.62,
+      "text/primary_hover": 13.336,
+      "text/query": 12.62
+    },
+    "grafite": {
+      "text/panel": 13.208,
+      "muted/panel": 7.821,
+      "text/primary_start": 4.769,
+      "text/primary_end": 4.769,
+      "text/primary_hover": 5.093,
+      "text/query": 4.769
+    },
+    "areia": {
+      "text/panel": 12.634,
+      "muted/panel": 7.573,
+      "text/primary_start": 5.068,
+      "text/primary_end": 5.068,
+      "text/primary_hover": 4.618,
+      "text/query": 5.068
+    },
+    "aurora": {
+      "text/panel": 14.329,
+      "muted/panel": 8.062,
+      "text/primary_start": 11.132,
+      "text/primary_end": 11.132,
+      "text/primary_hover": 8.458,
+      "text/query": 11.132
+    }
+  },
+  "limite": 4.5,
+  "observacao": "Pares centrais; não é auditoria de todos os widgets, estados ou acessibilidade completa."
+}

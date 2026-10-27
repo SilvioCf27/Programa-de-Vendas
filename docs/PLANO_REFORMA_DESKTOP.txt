@@ -816,8 +816,12 @@ VALIDAÇÃO E LIMITES
 64 testes locais da integração aprovados, incluindo oito de configurações.
 Os cinco temas abrem as três áreas em processos separados (15 cenários), com
 contagens e integridade SQLite preservadas. Persistência, falhas, seleção e
-backup com conteúdo financeiro/histórico foram conferidos. Evidências Windows,
-regressão, imagens e limites serão registrados em reforma_desktop/CONFIGURACOES.md.
+backup com conteúdo financeiro/histórico foram conferidos.
+Windows: integração 64/64, aplicação 202/202 e protótipos 31/31 aprovados,
+sem falhas/erros/ignorados. Execução 40583007189; base aa4f785.
+Linux: integração 64/64, protótipos 31/31; aplicação 200 aprovados e 2 ignorados
+por requererem Windows. Resolução da VM restaurada; capturas inspecionadas.
+Evidências, imagens e limites: reforma_desktop/CONFIGURACOES.md.
 Continuam pendentes restauração/verificação externa, Drive, sessão/nuvem,
 edição do fechamento e atualizador Qt. Etapas 5, 6 e 7 não foram antecipadas.
 Versão 1.7.1, dados pessoais, código funcional e PWA permanecem preservados.

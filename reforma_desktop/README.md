@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Entrega atual:** [Finanças funcional, comandos, imagem e validação](FINANCAS.md). [Análises](ANALISES.md) e Vendas continuam integradas. O andamento atual está na seção 21 do plano; os resultados anteriores permanecem como histórico.
+**Entrega atual:** [Configurações, preferências, cinco temas e backup local](CONFIGURACOES.md). [Finanças](FINANCAS.md), [Análises](ANALISES.md) e Vendas continuam integradas. O andamento atual está na seção 22 do plano; os resultados anteriores permanecem como histórico.
 
 A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 
@@ -47,7 +47,7 @@ O lançador original `executar.py`, o executável instalado e `noturno_demo.py` 
 
 As três telas já estão integradas no banco de estudo. Consultas e formulários financeiros estão no guia atual acima. A regra de fechamento pode ser consultada; sua edição ainda virá com configurações e nuvem.
 
-Configurações completas, editor da preferência de abertura, cinco temas, sincronização/sessão, Drive, restauração e atualizador serão integrados na ordem do plano. Esta entrada fica **offline**; os registros de teste não vão para celular ou nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Existe apenas a identidade Noturno nesta fatia.
+Editor da preferência de abertura, cinco temas e criação de backup local já estão integrados. Restauração/verificação de cópias, Drive, sincronização/sessão, edição do fechamento e atualizador seguem na ordem do plano. Esta entrada fica **offline**; os registros de teste não vão para celular ou nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Noite conserva a identidade Noturno; as outras paletas são opções para a próxima abertura.
 
 A aprovação visual não foi reaberta. A integração ainda não representa equivalência completa, estabilidade de uma release, validação manual Windows/DPI/leitor de tela ou teste do atualizador.
 

@@ -23,6 +23,7 @@ class FormularioBase(W.QDialog):
         scroll.setWidgetResizable(True)
         self.corpo = W.QWidget()
         self.layout = W.QVBoxLayout(self.corpo)
+        self.layout.setAlignment(Q.Qt.AlignmentFlag.AlignTop)
         scroll.setWidget(self.corpo)
         root.addWidget(scroll, 1)
         self.erro = texto('', 10, C['red'])
@@ -185,11 +186,13 @@ class FormularioTaxas(FormularioBase):
             limites = self.seletor.consulta().limites()
         except ValueError as erro:
             self.aviso_semana.setText(str(erro))
+            self.aviso_semana.show()
             return
         if self.intervalo and limites != self.intervalo:
             self.aviso_semana.setText('Semana alterada — clique em Carregar. Os campos abaixo ainda pertencem à semana carregada.')
         else:
             self.aviso_semana.setText('')
+        self.aviso_semana.setVisible(bool(self.aviso_semana.text()))
 
     def carregar(self):
         if self.intervalo and any(c.text() != self.iniciais[d] for d, c in self.campos.items()):

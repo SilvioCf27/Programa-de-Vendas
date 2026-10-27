@@ -469,13 +469,14 @@ class Janela(W.QWidget):
 
 
 def preparar_interface():
+    Q.QLocale.setDefault(Q.QLocale('pt_BR'))
     app = preparar()
     paleta = app.palette()
     for papel, cor in [(G.QPalette.ColorRole.Window, C['bg']), (G.QPalette.ColorRole.WindowText, C['text']), (G.QPalette.ColorRole.Base, C['field']), (G.QPalette.ColorRole.AlternateBase, C['alternate']), (G.QPalette.ColorRole.Text, C['text']), (G.QPalette.ColorRole.Button, C['field']), (G.QPalette.ColorRole.ButtonText, C['text']), (G.QPalette.ColorRole.Highlight, C['selected']), (G.QPalette.ColorRole.HighlightedText, C['text']), (G.QPalette.ColorRole.ToolTipBase, C['field']), (G.QPalette.ColorRole.ToolTipText, C['text'])]:
         paleta.setColor(papel, G.QColor(cor))
     paleta.setColor(G.QPalette.ColorGroup.Disabled, G.QPalette.ColorRole.Text, G.QColor(C['discrete']))
     app.setPalette(paleta)
-    app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit, QSpinBox {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;}'))
+    app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit, QSpinBox {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;} QCalendarWidget QAbstractItemView {selection-color:@text@;selection-background-color:@selected@;} QCalendarWidget QAbstractItemView::item:selected {color:@text@;background:@selected@;}'))
     return app
 
 

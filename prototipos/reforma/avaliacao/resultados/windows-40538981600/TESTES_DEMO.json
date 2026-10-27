@@ -1,0 +1,22 @@
+{
+  "suite": "prototipos/reforma",
+  "plataforma": "win32",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "executados": 31,
+  "aprovados": 29,
+  "falhas": [
+    {
+      "teste": "test_navegacao_tk_preserva_selecao_e_consulta (test_estudo.ModeloTests.test_navegacao_tk_preserva_selecao_e_consulta)",
+      "erro": "Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\test_estudo.py\", line 84, in test_navegacao_tk_preserva_selecao_e_consulta\n    self.executar(\"tkinter_demo.py\", {})\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\test_estudo.py\", line 73, in executar\n    self.assertEqual(r.returncode, 0, r.stdout + r.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\tkinter_demo.py\", line 535, in <module>\n    app.testar()\n    ~~~~~~~~~~^^\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\tkinter_demo.py\", line 515, in testar\n    assert self.tabela.winfo_height() > 300\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n\n"
+    },
+    {
+      "teste": "test_janela_estreita_preserva_acesso_as_tres_areas (test_noturno.TelaTests.test_janela_estreita_preserva_acesso_as_tres_areas)",
+      "erro": "Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\test_noturno.py\", line 278, in test_janela_estreita_preserva_acesso_as_tres_areas\n    self.assertLessEqual(\n    ~~~~~~~~~~~~~~~~~~~~^\n        self.w.scroll.widget().width(), self.w.scroll.viewport().width(), area\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\nAssertionError: 734 not less than or equal to 726 : Vendas\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": false,
+  "dados": "Diretório temporário descartado; sem contas configuradas."
+}

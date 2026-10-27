@@ -1,0 +1,3281 @@
+{
+  "data_utc": "2026-10-27T16:36:51.422381+00:00",
+  "commit": "45370d217270732859da88b05ceec52f0cacb14f",
+  "plataforma": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "metodo": "Mesmo SQLite temporário gerado deterministicamente; mesmas consultas, tabelas e paginação de 50; subprocessos novos alternados. Ensaio técnico, não implementação nem comparação do aplicativo inteiro.",
+  "repeticoes": 5,
+  "resultados": [
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 94.551,
+      "rss_inicial": 28483584,
+      "rss_pos_carga": 28786688,
+      "rss_final": 28848128,
+      "crescimento_ciclos": 61440,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 28827648
+        },
+        {
+          "ciclo": 10,
+          "rss": 28827648
+        },
+        {
+          "ciclo": 15,
+          "rss": 28827648
+        },
+        {
+          "ciclo": 20,
+          "rss": 28831744
+        },
+        {
+          "ciclo": 25,
+          "rss": 28831744
+        },
+        {
+          "ciclo": 30,
+          "rss": 28831744
+        },
+        {
+          "ciclo": 35,
+          "rss": 28839936
+        },
+        {
+          "ciclo": 40,
+          "rss": 28844032
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 28864512,
+      "pico_processo_so": 28663808,
+      "atraso_heartbeat_max_ms": 14.137,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.707,
+          "p95_ms": 0.707,
+          "max_ms": 0.707
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 13.839,
+          "p95_ms": 13.839,
+          "max_ms": 13.839
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.766,
+          "p95_ms": 0.766,
+          "max_ms": 0.766
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 12.39,
+          "p95_ms": 12.39,
+          "max_ms": 12.39
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.472,
+          "p95_ms": 0.472,
+          "max_ms": 0.472
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 8.679,
+          "p95_ms": 8.679,
+          "max_ms": 8.679
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.751,
+          "p95_ms": 5.751,
+          "max_ms": 5.751
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.123,
+          "p95_ms": 0.312,
+          "max_ms": 0.421
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.021,
+          "p95_ms": 7.201,
+          "max_ms": 8.041
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.032,
+          "p95_ms": 8.183,
+          "max_ms": 8.829
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.301,
+          "p95_ms": 6.982,
+          "max_ms": 9.44
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.587,
+          "p95_ms": 7.986,
+          "max_ms": 9.036
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.712,
+          "p95_ms": 7.399,
+          "max_ms": 10.364
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.98,
+          "p95_ms": 16.309,
+          "max_ms": 18.263
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 2212.041
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 131.109,
+      "rss_inicial": 64438272,
+      "rss_pos_carga": 64716800,
+      "rss_final": 68960256,
+      "crescimento_ciclos": 4243456,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 67080192
+        },
+        {
+          "ciclo": 10,
+          "rss": 67112960
+        },
+        {
+          "ciclo": 15,
+          "rss": 67145728
+        },
+        {
+          "ciclo": 20,
+          "rss": 68915200
+        },
+        {
+          "ciclo": 25,
+          "rss": 68923392
+        },
+        {
+          "ciclo": 30,
+          "rss": 68935680
+        },
+        {
+          "ciclo": 35,
+          "rss": 68947968
+        },
+        {
+          "ciclo": 40,
+          "rss": 68960256
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 68960256,
+      "pico_processo_so": 68947968,
+      "atraso_heartbeat_max_ms": 21.423,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.652,
+          "p95_ms": 0.652,
+          "max_ms": 0.652
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 8.178,
+          "p95_ms": 8.178,
+          "max_ms": 8.178
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.404,
+          "p95_ms": 0.404,
+          "max_ms": 0.404
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.154,
+          "p95_ms": 6.154,
+          "max_ms": 6.154
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.231,
+          "p95_ms": 0.231,
+          "max_ms": 0.231
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 6.444,
+          "p95_ms": 6.444,
+          "max_ms": 6.444
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.638,
+          "p95_ms": 5.638,
+          "max_ms": 5.638
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.094,
+          "p95_ms": 0.193,
+          "max_ms": 0.225
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.817,
+          "p95_ms": 5.513,
+          "max_ms": 5.799
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.164,
+          "p95_ms": 7.03,
+          "max_ms": 8.905
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.937,
+          "p95_ms": 7.437,
+          "max_ms": 7.98
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.119,
+          "p95_ms": 6.656,
+          "max_ms": 7.762
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.059,
+          "p95_ms": 6.39,
+          "max_ms": 12.064
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 10.293,
+          "p95_ms": 12.228,
+          "max_ms": 18.25
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 1874.188
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 125.266,
+      "rss_inicial": 64147456,
+      "rss_pos_carga": 64421888,
+      "rss_final": 68694016,
+      "crescimento_ciclos": 4272128,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 66850816
+        },
+        {
+          "ciclo": 10,
+          "rss": 68632576
+        },
+        {
+          "ciclo": 15,
+          "rss": 68636672
+        },
+        {
+          "ciclo": 20,
+          "rss": 68644864
+        },
+        {
+          "ciclo": 25,
+          "rss": 68648960
+        },
+        {
+          "ciclo": 30,
+          "rss": 68665344
+        },
+        {
+          "ciclo": 35,
+          "rss": 68681728
+        },
+        {
+          "ciclo": 40,
+          "rss": 68694016
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 68767744,
+      "pico_processo_so": 68730880,
+      "atraso_heartbeat_max_ms": 20.093,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.554,
+          "p95_ms": 0.554,
+          "max_ms": 0.554
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 8.165,
+          "p95_ms": 8.165,
+          "max_ms": 8.165
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.29,
+          "p95_ms": 0.29,
+          "max_ms": 0.29
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.694,
+          "p95_ms": 6.694,
+          "max_ms": 6.694
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.23,
+          "p95_ms": 0.23,
+          "max_ms": 0.23
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 5.437,
+          "p95_ms": 5.437,
+          "max_ms": 5.437
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.366,
+          "p95_ms": 5.366,
+          "max_ms": 5.366
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.097,
+          "p95_ms": 0.203,
+          "max_ms": 1.141
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 4.048,
+          "p95_ms": 5.759,
+          "max_ms": 8.372
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.33,
+          "p95_ms": 7.164,
+          "max_ms": 7.632
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.856,
+          "p95_ms": 8.451,
+          "max_ms": 9.271
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.311,
+          "p95_ms": 6.909,
+          "max_ms": 10.652
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.211,
+          "p95_ms": 6.763,
+          "max_ms": 7.616
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 10.63,
+          "p95_ms": 12.934,
+          "max_ms": 17.239
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 1925.225
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 90.867,
+      "rss_inicial": 28176384,
+      "rss_pos_carga": 28459008,
+      "rss_final": 28528640,
+      "crescimento_ciclos": 69632,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 10,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 15,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 20,
+          "rss": 28504064
+        },
+        {
+          "ciclo": 25,
+          "rss": 28508160
+        },
+        {
+          "ciclo": 30,
+          "rss": 28508160
+        },
+        {
+          "ciclo": 35,
+          "rss": 28516352
+        },
+        {
+          "ciclo": 40,
+          "rss": 28524544
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 28545024,
+      "pico_processo_so": 28233728,
+      "atraso_heartbeat_max_ms": 10.078,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.036,
+          "p95_ms": 1.036,
+          "max_ms": 1.036
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.109,
+          "p95_ms": 14.109,
+          "max_ms": 14.109
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.355,
+          "p95_ms": 0.355,
+          "max_ms": 0.355
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 13.847,
+          "p95_ms": 13.847,
+          "max_ms": 13.847
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.292,
+          "p95_ms": 0.292,
+          "max_ms": 0.292
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 16.296,
+          "p95_ms": 16.296,
+          "max_ms": 16.296
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 7.387,
+          "p95_ms": 7.387,
+          "max_ms": 7.387
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.12,
+          "p95_ms": 0.181,
+          "max_ms": 0.26
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.14,
+          "p95_ms": 7.651,
+          "max_ms": 9.245
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.115,
+          "p95_ms": 8.227,
+          "max_ms": 10.798
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.161,
+          "p95_ms": 7.199,
+          "max_ms": 8.722
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.532,
+          "p95_ms": 7.279,
+          "max_ms": 8.405
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.607,
+          "p95_ms": 6.942,
+          "max_ms": 7.511
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 14.144,
+          "p95_ms": 15.535,
+          "max_ms": 18.197
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 2189.093
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 83.706,
+      "rss_inicial": 28160000,
+      "rss_pos_carga": 28442624,
+      "rss_final": 28499968,
+      "crescimento_ciclos": 57344,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 10,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 15,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 20,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 25,
+          "rss": 28491776
+        },
+        {
+          "ciclo": 30,
+          "rss": 28491776
+        },
+        {
+          "ciclo": 35,
+          "rss": 28495872
+        },
+        {
+          "ciclo": 40,
+          "rss": 28495872
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 28516352,
+      "pico_processo_so": 28221440,
+      "atraso_heartbeat_max_ms": 6.231,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.616,
+          "p95_ms": 0.616,
+          "max_ms": 0.616
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 12.478,
+          "p95_ms": 12.478,
+          "max_ms": 12.478
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.355,
+          "p95_ms": 0.355,
+          "max_ms": 0.355
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 12.73,
+          "p95_ms": 12.73,
+          "max_ms": 12.73
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.299,
+          "p95_ms": 0.299,
+          "max_ms": 0.299
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 7.462,
+          "p95_ms": 7.462,
+          "max_ms": 7.462
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.98,
+          "p95_ms": 5.98,
+          "max_ms": 5.98
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.115,
+          "p95_ms": 0.178,
+          "max_ms": 0.346
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 5.953,
+          "p95_ms": 7.375,
+          "max_ms": 10.853
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.013,
+          "p95_ms": 6.652,
+          "max_ms": 7.41
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.963,
+          "p95_ms": 6.634,
+          "max_ms": 7.944
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.351,
+          "p95_ms": 6.367,
+          "max_ms": 7.054
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.338,
+          "p95_ms": 6.271,
+          "max_ms": 6.934
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.749,
+          "p95_ms": 15.477,
+          "max_ms": 15.993
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 2088.974
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 117.68,
+      "rss_inicial": 64225280,
+      "rss_pos_carga": 64499712,
+      "rss_final": 68849664,
+      "crescimento_ciclos": 4349952,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 66932736
+        },
+        {
+          "ciclo": 10,
+          "rss": 66973696
+        },
+        {
+          "ciclo": 15,
+          "rss": 66985984
+        },
+        {
+          "ciclo": 20,
+          "rss": 67018752
+        },
+        {
+          "ciclo": 25,
+          "rss": 67047424
+        },
+        {
+          "ciclo": 30,
+          "rss": 68825088
+        },
+        {
+          "ciclo": 35,
+          "rss": 68837376
+        },
+        {
+          "ciclo": 40,
+          "rss": 68849664
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 68849664,
+      "pico_processo_so": 68915200,
+      "atraso_heartbeat_max_ms": 17.219,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.6,
+          "p95_ms": 0.6,
+          "max_ms": 0.6
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 7.873,
+          "p95_ms": 7.873,
+          "max_ms": 7.873
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.32,
+          "p95_ms": 0.32,
+          "max_ms": 0.32
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 7.404,
+          "p95_ms": 7.404,
+          "max_ms": 7.404
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.241,
+          "p95_ms": 0.241,
+          "max_ms": 0.241
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 5.814,
+          "p95_ms": 5.814,
+          "max_ms": 5.814
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.156,
+          "p95_ms": 5.156,
+          "max_ms": 5.156
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.089,
+          "p95_ms": 0.165,
+          "max_ms": 0.276
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.612,
+          "p95_ms": 4.92,
+          "max_ms": 5.273
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 4.884,
+          "p95_ms": 6.827,
+          "max_ms": 9.182
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.822,
+          "p95_ms": 6.919,
+          "max_ms": 8.443
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.047,
+          "p95_ms": 6.028,
+          "max_ms": 7.722
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.888,
+          "p95_ms": 5.81,
+          "max_ms": 5.883
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 9.729,
+          "p95_ms": 11.164,
+          "max_ms": 15.764
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 1782.388
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 125.779,
+      "rss_inicial": 64327680,
+      "rss_pos_carga": 64602112,
+      "rss_final": 68800512,
+      "crescimento_ciclos": 4198400,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 66969600
+        },
+        {
+          "ciclo": 10,
+          "rss": 68739072
+        },
+        {
+          "ciclo": 15,
+          "rss": 68743168
+        },
+        {
+          "ciclo": 20,
+          "rss": 68755456
+        },
+        {
+          "ciclo": 25,
+          "rss": 68763648
+        },
+        {
+          "ciclo": 30,
+          "rss": 68771840
+        },
+        {
+          "ciclo": 35,
+          "rss": 68788224
+        },
+        {
+          "ciclo": 40,
+          "rss": 68800512
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 68808704,
+      "pico_processo_so": 68911104,
+      "atraso_heartbeat_max_ms": 20.478,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.499,
+          "p95_ms": 0.499,
+          "max_ms": 0.499
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 6.989,
+          "p95_ms": 6.989,
+          "max_ms": 6.989
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.292,
+          "p95_ms": 0.292,
+          "max_ms": 0.292
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.793,
+          "p95_ms": 6.793,
+          "max_ms": 6.793
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.332,
+          "p95_ms": 0.332,
+          "max_ms": 0.332
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 5.265,
+          "p95_ms": 5.265,
+          "max_ms": 5.265
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.527,
+          "p95_ms": 5.527,
+          "max_ms": 5.527
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.094,
+          "p95_ms": 0.177,
+          "max_ms": 0.265
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.801,
+          "p95_ms": 4.762,
+          "max_ms": 5.8
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.144,
+          "p95_ms": 6.228,
+          "max_ms": 7.013
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.918,
+          "p95_ms": 6.902,
+          "max_ms": 7.881
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.202,
+          "p95_ms": 6.677,
+          "max_ms": 8.094
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.992,
+          "p95_ms": 6.345,
+          "max_ms": 6.48
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 10.045,
+          "p95_ms": 11.706,
+          "max_ms": 16.12
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 1852.041
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 98.603,
+      "rss_inicial": 28176384,
+      "rss_pos_carga": 28454912,
+      "rss_final": 28520448,
+      "crescimento_ciclos": 65536,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 10,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 15,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 20,
+          "rss": 28499968
+        },
+        {
+          "ciclo": 25,
+          "rss": 28504064
+        },
+        {
+          "ciclo": 30,
+          "rss": 28512256
+        },
+        {
+          "ciclo": 35,
+          "rss": 28516352
+        },
+        {
+          "ciclo": 40,
+          "rss": 28516352
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 28536832,
+      "pico_processo_so": 28229632,
+      "atraso_heartbeat_max_ms": 9.137,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.564,
+          "p95_ms": 0.564,
+          "max_ms": 0.564
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 13.185,
+          "p95_ms": 13.185,
+          "max_ms": 13.185
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.507,
+          "p95_ms": 0.507,
+          "max_ms": 0.507
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 11.667,
+          "p95_ms": 11.667,
+          "max_ms": 11.667
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.56,
+          "p95_ms": 0.56,
+          "max_ms": 0.56
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 7.913,
+          "p95_ms": 7.913,
+          "max_ms": 7.913
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 6.161,
+          "p95_ms": 6.161,
+          "max_ms": 6.161
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.122,
+          "p95_ms": 0.185,
+          "max_ms": 0.38
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.118,
+          "p95_ms": 7.776,
+          "max_ms": 9.684
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.227,
+          "p95_ms": 9.22,
+          "max_ms": 9.315
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.176,
+          "p95_ms": 7.202,
+          "max_ms": 9.487
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.533,
+          "p95_ms": 6.115,
+          "max_ms": 7.208
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.579,
+          "p95_ms": 6.708,
+          "max_ms": 19.563
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 14.002,
+          "p95_ms": 15.482,
+          "max_ms": 15.702
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 2189.95
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 86.6,
+      "rss_inicial": 28143616,
+      "rss_pos_carga": 28430336,
+      "rss_final": 28495872,
+      "crescimento_ciclos": 65536,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 28471296
+        },
+        {
+          "ciclo": 10,
+          "rss": 28471296
+        },
+        {
+          "ciclo": 15,
+          "rss": 28471296
+        },
+        {
+          "ciclo": 20,
+          "rss": 28471296
+        },
+        {
+          "ciclo": 25,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 30,
+          "rss": 28487680
+        },
+        {
+          "ciclo": 35,
+          "rss": 28491776
+        },
+        {
+          "ciclo": 40,
+          "rss": 28491776
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 28499968,
+      "pico_processo_so": 28200960,
+      "atraso_heartbeat_max_ms": 7.41,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.766,
+          "p95_ms": 0.766,
+          "max_ms": 0.766
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.369,
+          "p95_ms": 14.369,
+          "max_ms": 14.369
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.37,
+          "p95_ms": 0.37,
+          "max_ms": 0.37
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 13.395,
+          "p95_ms": 13.395,
+          "max_ms": 13.395
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.277,
+          "p95_ms": 0.277,
+          "max_ms": 0.277
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 8.22,
+          "p95_ms": 8.22,
+          "max_ms": 8.22
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 6.678,
+          "p95_ms": 6.678,
+          "max_ms": 6.678
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.113,
+          "p95_ms": 0.16,
+          "max_ms": 0.193
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.156,
+          "p95_ms": 8.288,
+          "max_ms": 13.595
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.153,
+          "p95_ms": 7.485,
+          "max_ms": 11.165
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.31,
+          "p95_ms": 7.977,
+          "max_ms": 11.276
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.559,
+          "p95_ms": 6.025,
+          "max_ms": 11.09
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.465,
+          "p95_ms": 6.095,
+          "max_ms": 10.806
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.821,
+          "p95_ms": 15.222,
+          "max_ms": 15.961
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 2183.562
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 126.027,
+      "rss_inicial": 64454656,
+      "rss_pos_carga": 64729088,
+      "rss_final": 68935680,
+      "crescimento_ciclos": 4206592,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 67092480
+        },
+        {
+          "ciclo": 10,
+          "rss": 68874240
+        },
+        {
+          "ciclo": 15,
+          "rss": 68882432
+        },
+        {
+          "ciclo": 20,
+          "rss": 68886528
+        },
+        {
+          "ciclo": 25,
+          "rss": 68894720
+        },
+        {
+          "ciclo": 30,
+          "rss": 68902912
+        },
+        {
+          "ciclo": 35,
+          "rss": 68923392
+        },
+        {
+          "ciclo": 40,
+          "rss": 68935680
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 68943872,
+      "pico_processo_so": 68976640,
+      "atraso_heartbeat_max_ms": 20.562,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.065,
+          "p95_ms": 1.065,
+          "max_ms": 1.065
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 7.904,
+          "p95_ms": 7.904,
+          "max_ms": 7.904
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.309,
+          "p95_ms": 0.309,
+          "max_ms": 0.309
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.009,
+          "p95_ms": 6.009,
+          "max_ms": 6.009
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.206,
+          "p95_ms": 0.206,
+          "max_ms": 0.206
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 5.018,
+          "p95_ms": 5.018,
+          "max_ms": 5.018
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.078,
+          "p95_ms": 5.078,
+          "max_ms": 5.078
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.095,
+          "p95_ms": 0.207,
+          "max_ms": 0.22
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 4.002,
+          "p95_ms": 5.867,
+          "max_ms": 15.83
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.096,
+          "p95_ms": 7.616,
+          "max_ms": 9.504
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.204,
+          "p95_ms": 12.609,
+          "max_ms": 13.657
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.322,
+          "p95_ms": 11.808,
+          "max_ms": 20.639
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.711,
+          "p95_ms": 9.228,
+          "max_ms": 9.539
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 10.972,
+          "p95_ms": 15.643,
+          "max_ms": 23.675
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 2053.87
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 76.831,
+      "rss_inicial": 30199808,
+      "rss_pos_carga": 38313984,
+      "rss_final": 38334464,
+      "crescimento_ciclos": 20480,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 38322176
+        },
+        {
+          "ciclo": 10,
+          "rss": 38322176
+        },
+        {
+          "ciclo": 15,
+          "rss": 38322176
+        },
+        {
+          "ciclo": 20,
+          "rss": 38322176
+        },
+        {
+          "ciclo": 25,
+          "rss": 38326272
+        },
+        {
+          "ciclo": 30,
+          "rss": 38326272
+        },
+        {
+          "ciclo": 35,
+          "rss": 38330368
+        },
+        {
+          "ciclo": 40,
+          "rss": 38330368
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 38350848,
+      "pico_processo_so": 38154240,
+      "atraso_heartbeat_max_ms": 45.835,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 10.065,
+          "p95_ms": 10.065,
+          "max_ms": 10.065
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 13.239,
+          "p95_ms": 13.239,
+          "max_ms": 13.239
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.326,
+          "p95_ms": 5.326,
+          "max_ms": 5.326
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 9.53,
+          "p95_ms": 9.53,
+          "max_ms": 9.53
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.09,
+          "p95_ms": 6.09,
+          "max_ms": 6.09
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 51.885,
+          "p95_ms": 51.885,
+          "max_ms": 51.885
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 11.187,
+          "p95_ms": 11.187,
+          "max_ms": 11.187
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.123,
+          "p95_ms": 0.185,
+          "max_ms": 0.205
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.098,
+          "p95_ms": 7.748,
+          "max_ms": 8.044
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.206,
+          "p95_ms": 8.162,
+          "max_ms": 17.657
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.193,
+          "p95_ms": 9.78,
+          "max_ms": 15.298
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.552,
+          "p95_ms": 7.14,
+          "max_ms": 9.466
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.504,
+          "p95_ms": 7.356,
+          "max_ms": 8.279
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.834,
+          "p95_ms": 15.511,
+          "max_ms": 19.543
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 2226.061
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 137.783,
+      "rss_inicial": 66228224,
+      "rss_pos_carga": 68980736,
+      "rss_final": 71471104,
+      "crescimento_ciclos": 2490368,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 71340032
+        },
+        {
+          "ciclo": 10,
+          "rss": 71360512
+        },
+        {
+          "ciclo": 15,
+          "rss": 71393280
+        },
+        {
+          "ciclo": 20,
+          "rss": 73158656
+        },
+        {
+          "ciclo": 25,
+          "rss": 71426048
+        },
+        {
+          "ciclo": 30,
+          "rss": 71442432
+        },
+        {
+          "ciclo": 35,
+          "rss": 71458816
+        },
+        {
+          "ciclo": 40,
+          "rss": 71471104
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 73199616,
+      "pico_processo_so": 72773632,
+      "atraso_heartbeat_max_ms": 20.756,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 10.724,
+          "p95_ms": 10.724,
+          "max_ms": 10.724
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 8.62,
+          "p95_ms": 8.62,
+          "max_ms": 8.62
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.128,
+          "p95_ms": 5.128,
+          "max_ms": 5.128
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 7.119,
+          "p95_ms": 7.119,
+          "max_ms": 7.119
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 4.818,
+          "p95_ms": 4.818,
+          "max_ms": 4.818
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 17.845,
+          "p95_ms": 17.845,
+          "max_ms": 17.845
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.27,
+          "p95_ms": 5.27,
+          "max_ms": 5.27
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.102,
+          "p95_ms": 0.355,
+          "max_ms": 0.483
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.848,
+          "p95_ms": 5.178,
+          "max_ms": 6.803
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.175,
+          "p95_ms": 6.783,
+          "max_ms": 7.082
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.937,
+          "p95_ms": 6.919,
+          "max_ms": 7.597
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.294,
+          "p95_ms": 7.839,
+          "max_ms": 15.808
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.147,
+          "p95_ms": 6.565,
+          "max_ms": 7.025
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 10.377,
+          "p95_ms": 14.131,
+          "max_ms": 14.78
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 1977.142
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 120.279,
+      "rss_inicial": 66543616,
+      "rss_pos_carga": 69300224,
+      "rss_final": 73437184,
+      "crescimento_ciclos": 4136960,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 71655424
+        },
+        {
+          "ciclo": 10,
+          "rss": 73424896
+        },
+        {
+          "ciclo": 15,
+          "rss": 73433088
+        },
+        {
+          "ciclo": 20,
+          "rss": 73437184
+        },
+        {
+          "ciclo": 25,
+          "rss": 73437184
+        },
+        {
+          "ciclo": 30,
+          "rss": 73437184
+        },
+        {
+          "ciclo": 35,
+          "rss": 73437184
+        },
+        {
+          "ciclo": 40,
+          "rss": 73437184
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 73707520,
+      "pico_processo_so": 73564160,
+      "atraso_heartbeat_max_ms": 18.283,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.287,
+          "p95_ms": 11.287,
+          "max_ms": 11.287
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 7.5,
+          "p95_ms": 7.5,
+          "max_ms": 7.5
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.701,
+          "p95_ms": 5.701,
+          "max_ms": 5.701
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 7.317,
+          "p95_ms": 7.317,
+          "max_ms": 7.317
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.059,
+          "p95_ms": 5.059,
+          "max_ms": 5.059
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 17.749,
+          "p95_ms": 17.749,
+          "max_ms": 17.749
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.176,
+          "p95_ms": 5.176,
+          "max_ms": 5.176
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.097,
+          "p95_ms": 0.207,
+          "max_ms": 0.237
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.525,
+          "p95_ms": 4.273,
+          "max_ms": 5.559
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 4.818,
+          "p95_ms": 5.563,
+          "max_ms": 7.116
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.009,
+          "p95_ms": 5.868,
+          "max_ms": 9.483
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 4.772,
+          "p95_ms": 6.751,
+          "max_ms": 7.267
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.582,
+          "p95_ms": 5.91,
+          "max_ms": 9.14
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 9.351,
+          "p95_ms": 11.313,
+          "max_ms": 15.787
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 1798.54
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 84.79,
+      "rss_inicial": 30167040,
+      "rss_pos_carga": 38268928,
+      "rss_final": 38285312,
+      "crescimento_ciclos": 16384,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 10,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 15,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 20,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 25,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 30,
+          "rss": 38277120
+        },
+        {
+          "ciclo": 35,
+          "rss": 38281216
+        },
+        {
+          "ciclo": 40,
+          "rss": 38281216
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 38301696,
+      "pico_processo_so": 38121472,
+      "atraso_heartbeat_max_ms": 53.049,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 10.549,
+          "p95_ms": 10.549,
+          "max_ms": 10.549
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.723,
+          "p95_ms": 14.723,
+          "max_ms": 14.723
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 4.938,
+          "p95_ms": 4.938,
+          "max_ms": 4.938
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 13.079,
+          "p95_ms": 13.079,
+          "max_ms": 13.079
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.037,
+          "p95_ms": 6.037,
+          "max_ms": 6.037
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 57.824,
+          "p95_ms": 57.824,
+          "max_ms": 57.824
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.27,
+          "p95_ms": 13.27,
+          "max_ms": 13.27
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.125,
+          "p95_ms": 0.267,
+          "max_ms": 0.406
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.293,
+          "p95_ms": 11.702,
+          "max_ms": 14.613
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.432,
+          "p95_ms": 9.716,
+          "max_ms": 29.021
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.542,
+          "p95_ms": 11.618,
+          "max_ms": 16.995
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.924,
+          "p95_ms": 9.676,
+          "max_ms": 9.834
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.762,
+          "p95_ms": 8.864,
+          "max_ms": 9.668
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 14.063,
+          "p95_ms": 19.191,
+          "max_ms": 28.381
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 2398.766
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 78.601,
+      "rss_inicial": 30248960,
+      "rss_pos_carga": 38375424,
+      "rss_final": 38400000,
+      "crescimento_ciclos": 24576,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 10,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 15,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 20,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 25,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 30,
+          "rss": 38391808
+        },
+        {
+          "ciclo": 35,
+          "rss": 38395904
+        },
+        {
+          "ciclo": 40,
+          "rss": 38395904
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 38416384,
+      "pico_processo_so": 38146048,
+      "atraso_heartbeat_max_ms": 44.947,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.614,
+          "p95_ms": 11.614,
+          "max_ms": 11.614
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.31,
+          "p95_ms": 14.31,
+          "max_ms": 14.31
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.102,
+          "p95_ms": 5.102,
+          "max_ms": 5.102
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 12.113,
+          "p95_ms": 12.113,
+          "max_ms": 12.113
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.951,
+          "p95_ms": 6.951,
+          "max_ms": 6.951
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 48.984,
+          "p95_ms": 48.984,
+          "max_ms": 48.984
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 12.173,
+          "p95_ms": 12.173,
+          "max_ms": 12.173
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.125,
+          "p95_ms": 0.171,
+          "max_ms": 0.254
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.006,
+          "p95_ms": 12.366,
+          "max_ms": 16.881
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 5.954,
+          "p95_ms": 8.993,
+          "max_ms": 19.802
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.141,
+          "p95_ms": 16.637,
+          "max_ms": 19.728
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.445,
+          "p95_ms": 6.384,
+          "max_ms": 13.495
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.483,
+          "p95_ms": 6.965,
+          "max_ms": 10.457
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.637,
+          "p95_ms": 15.929,
+          "max_ms": 22.434
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 2288.685
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 122.594,
+      "rss_inicial": 66441216,
+      "rss_pos_carga": 69210112,
+      "rss_final": 73293824,
+      "crescimento_ciclos": 4083712,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 71499776
+        },
+        {
+          "ciclo": 10,
+          "rss": 73285632
+        },
+        {
+          "ciclo": 15,
+          "rss": 73289728
+        },
+        {
+          "ciclo": 20,
+          "rss": 73293824
+        },
+        {
+          "ciclo": 25,
+          "rss": 73293824
+        },
+        {
+          "ciclo": 30,
+          "rss": 73293824
+        },
+        {
+          "ciclo": 35,
+          "rss": 73293824
+        },
+        {
+          "ciclo": 40,
+          "rss": 73293824
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 73293824,
+      "pico_processo_so": 73388032,
+      "atraso_heartbeat_max_ms": 20.154,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.613,
+          "p95_ms": 11.613,
+          "max_ms": 11.613
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 8.119,
+          "p95_ms": 8.119,
+          "max_ms": 8.119
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.655,
+          "p95_ms": 5.655,
+          "max_ms": 5.655
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.35,
+          "p95_ms": 6.35,
+          "max_ms": 6.35
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 4.781,
+          "p95_ms": 4.781,
+          "max_ms": 4.781
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 15.712,
+          "p95_ms": 15.712,
+          "max_ms": 15.712
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.062,
+          "p95_ms": 5.062,
+          "max_ms": 5.062
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.093,
+          "p95_ms": 0.189,
+          "max_ms": 0.372
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.438,
+          "p95_ms": 4.105,
+          "max_ms": 4.894
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 4.481,
+          "p95_ms": 5.1,
+          "max_ms": 5.42
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.072,
+          "p95_ms": 5.741,
+          "max_ms": 6.006
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 4.646,
+          "p95_ms": 5.034,
+          "max_ms": 7.012
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.408,
+          "p95_ms": 5.0,
+          "max_ms": 5.193
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 8.929,
+          "p95_ms": 9.548,
+          "max_ms": 14.39
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 1702.691
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 123.703,
+      "rss_inicial": 66207744,
+      "rss_pos_carga": 68964352,
+      "rss_final": 73101312,
+      "crescimento_ciclos": 4136960,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 71315456
+        },
+        {
+          "ciclo": 10,
+          "rss": 73093120
+        },
+        {
+          "ciclo": 15,
+          "rss": 73097216
+        },
+        {
+          "ciclo": 20,
+          "rss": 73101312
+        },
+        {
+          "ciclo": 25,
+          "rss": 73101312
+        },
+        {
+          "ciclo": 30,
+          "rss": 73101312
+        },
+        {
+          "ciclo": 35,
+          "rss": 73101312
+        },
+        {
+          "ciclo": 40,
+          "rss": 73101312
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 73109504,
+      "pico_processo_so": 73220096,
+      "atraso_heartbeat_max_ms": 16.813,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 10.075,
+          "p95_ms": 10.075,
+          "max_ms": 10.075
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 7.888,
+          "p95_ms": 7.888,
+          "max_ms": 7.888
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 4.89,
+          "p95_ms": 4.89,
+          "max_ms": 4.89
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.316,
+          "p95_ms": 6.316,
+          "max_ms": 6.316
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 4.744,
+          "p95_ms": 4.744,
+          "max_ms": 4.744
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 15.497,
+          "p95_ms": 15.497,
+          "max_ms": 15.497
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.167,
+          "p95_ms": 5.167,
+          "max_ms": 5.167
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.1,
+          "p95_ms": 0.251,
+          "max_ms": 0.329
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.536,
+          "p95_ms": 7.301,
+          "max_ms": 7.883
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 4.867,
+          "p95_ms": 8.202,
+          "max_ms": 9.869
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.364,
+          "p95_ms": 8.626,
+          "max_ms": 9.744
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 4.893,
+          "p95_ms": 7.268,
+          "max_ms": 14.179
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.683,
+          "p95_ms": 6.575,
+          "max_ms": 8.352
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 9.515,
+          "p95_ms": 14.61,
+          "max_ms": 15.989
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 1888.237
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 84.675,
+      "rss_inicial": 30253056,
+      "rss_pos_carga": 38359040,
+      "rss_final": 38375424,
+      "crescimento_ciclos": 16384,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 10,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 15,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 20,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 25,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 30,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 35,
+          "rss": 38371328
+        },
+        {
+          "ciclo": 40,
+          "rss": 38371328
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 38391808,
+      "pico_processo_so": 38137856,
+      "atraso_heartbeat_max_ms": 42.626,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.273,
+          "p95_ms": 11.273,
+          "max_ms": 11.273
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.927,
+          "p95_ms": 14.927,
+          "max_ms": 14.927
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 4.786,
+          "p95_ms": 4.786,
+          "max_ms": 4.786
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 13.067,
+          "p95_ms": 13.067,
+          "max_ms": 13.067
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 4.952,
+          "p95_ms": 4.952,
+          "max_ms": 4.952
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 48.238,
+          "p95_ms": 48.238,
+          "max_ms": 48.238
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 12.101,
+          "p95_ms": 12.101,
+          "max_ms": 12.101
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.122,
+          "p95_ms": 0.211,
+          "max_ms": 0.216
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.136,
+          "p95_ms": 6.748,
+          "max_ms": 7.455
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.209,
+          "p95_ms": 7.011,
+          "max_ms": 8.371
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.427,
+          "p95_ms": 8.151,
+          "max_ms": 12.491
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.657,
+          "p95_ms": 7.423,
+          "max_ms": 15.297
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.59,
+          "p95_ms": 6.997,
+          "max_ms": 9.183
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 14.213,
+          "p95_ms": 15.716,
+          "max_ms": 24.586
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 2295.043
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "8.6.16",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 76.997,
+      "rss_inicial": 30257152,
+      "rss_pos_carga": 38359040,
+      "rss_final": 38375424,
+      "crescimento_ciclos": 16384,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 10,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 15,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 20,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 25,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 30,
+          "rss": 38367232
+        },
+        {
+          "ciclo": 35,
+          "rss": 38371328
+        },
+        {
+          "ciclo": 40,
+          "rss": 38371328
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 38391808,
+      "pico_processo_so": 38137856,
+      "atraso_heartbeat_max_ms": 42.183,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.297,
+          "p95_ms": 11.297,
+          "max_ms": 11.297
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.733,
+          "p95_ms": 14.733,
+          "max_ms": 14.733
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.279,
+          "p95_ms": 5.279,
+          "max_ms": 5.279
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 12.377,
+          "p95_ms": 12.377,
+          "max_ms": 12.377
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.603,
+          "p95_ms": 5.603,
+          "max_ms": 5.603
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 47.514,
+          "p95_ms": 47.514,
+          "max_ms": 47.514
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 11.234,
+          "p95_ms": 11.234,
+          "max_ms": 11.234
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.117,
+          "p95_ms": 0.16,
+          "max_ms": 0.224
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 6.043,
+          "p95_ms": 6.768,
+          "max_ms": 10.533
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 6.184,
+          "p95_ms": 7.062,
+          "max_ms": 10.37
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 6.248,
+          "p95_ms": 6.615,
+          "max_ms": 7.085
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.733,
+          "p95_ms": 6.58,
+          "max_ms": 7.236
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 5.619,
+          "p95_ms": 6.626,
+          "max_ms": 8.365
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 13.872,
+          "p95_ms": 15.517,
+          "max_ms": 17.386
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 2225.9
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "linux",
+      "python": "3.13.5",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "DejaVu Sans",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 117.646,
+      "rss_inicial": 66318336,
+      "rss_pos_carga": 69050368,
+      "rss_final": 73129984,
+      "crescimento_ciclos": 4079616,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 71344128
+        },
+        {
+          "ciclo": 10,
+          "rss": 73121792
+        },
+        {
+          "ciclo": 15,
+          "rss": 73125888
+        },
+        {
+          "ciclo": 20,
+          "rss": 73129984
+        },
+        {
+          "ciclo": 25,
+          "rss": 73129984
+        },
+        {
+          "ciclo": 30,
+          "rss": 73129984
+        },
+        {
+          "ciclo": 35,
+          "rss": 73129984
+        },
+        {
+          "ciclo": 40,
+          "rss": 73129984
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 73555968,
+      "pico_processo_so": 73293824,
+      "atraso_heartbeat_max_ms": 19.165,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 11.186,
+          "p95_ms": 11.186,
+          "max_ms": 11.186
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 8.384,
+          "p95_ms": 8.384,
+          "max_ms": 8.384
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.065,
+          "p95_ms": 5.065,
+          "max_ms": 5.065
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.867,
+          "p95_ms": 5.867,
+          "max_ms": 5.867
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 4.074,
+          "p95_ms": 4.074,
+          "max_ms": 4.074
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 17.413,
+          "p95_ms": 17.413,
+          "max_ms": 17.413
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 5.34,
+          "p95_ms": 5.34,
+          "max_ms": 5.34
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.098,
+          "p95_ms": 0.176,
+          "max_ms": 0.728
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 3.769,
+          "p95_ms": 4.433,
+          "max_ms": 5.617
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 4.806,
+          "p95_ms": 5.8,
+          "max_ms": 6.111
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 5.427,
+          "p95_ms": 6.375,
+          "max_ms": 9.297
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 5.046,
+          "p95_ms": 7.052,
+          "max_ms": 8.28
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 4.652,
+          "p95_ms": 6.06,
+          "max_ms": 6.868
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 9.671,
+          "p95_ms": 11.398,
+          "max_ms": 16.075
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 1838.193
+    }
+  ],
+  "probes_uia": []
+}

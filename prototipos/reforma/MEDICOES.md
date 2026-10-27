@@ -1,5 +1,7 @@
 # Medições e limites do estudo
 
+**Atualização:** esta é a medição histórica da base. A comparação equivalente ampliada e os pacotes Windows estão no [relatório técnico atual](avaliacao/DECISAO_TECNICA.md); as pendências abaixo descrevem a época desta primeira medição.
+
 Os números abaixo são de processos novos, em Linux com display virtual. Não são medições do seu computador Windows. Foram usadas três repetições para cada volume; a tabela mostra a mediana. Os JSONs ao lado mantêm os resultados individuais.
 
 Ambiente da base: **Linux x86_64**, Python **3.13.5**, Tk **8.6.16**, SQLite **3.46.1**. Banco e lançamentos fictícios em pasta temporária. Nenhuma conta ou rede configurada.

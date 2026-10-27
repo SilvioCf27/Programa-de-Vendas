@@ -1,12 +1,8 @@
 # Estudos da reforma do desktop
 
-**Rodada atual:** [janelas secundárias e validação](JANELAS_SECUNDARIAS.md). O andamento oficial permanece na seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
+**Rodada atual:** [comparação técnica e recomendação](avaliacao/DECISAO_TECNICA.md), registrada na seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
 
-**Entrega anterior:** [demo Noturno com as três telas e guia de teste](NOTURNO.md). As capturas e instruções dessa página abaixo documentam a primeira proposta; a nova revisão está no link acima.
-
-**Estudo para revisão — não é uma nova versão do programa.**
-
-**Etapa atual: prototipação e validação final, com decisão técnica pendente.** O usuário aprovou visualmente as três telas principais com ressalvas. Esta rodada refina as janelas secundárias; não inicia a migração. A comparação técnica da Etapa 3 ainda é parcial. As seções abaixo sobre a primeira proposta são histórico, não o estado atual de aprovação.
+A revisão estética das três telas e quatro janelas foi aprovada. Recomenda-se PySide6; a escolha tecnológica aguarda aprovação explícita. A Etapa 4 não foi iniciada. Os estudos abaixo não substituem o programa funcional 1.7.1.
 
 - [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
 - [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)

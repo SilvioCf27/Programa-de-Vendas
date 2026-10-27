@@ -1,6 +1,6 @@
 # Janelas secundárias — continuidade da reforma
 
-Esta entrega pertence às **Etapas 2/2A de prototipação e revisão**, conforme a seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A aprovação visual das telas principais foi registrada separadamente da escolha da ferramenta. Não houve migração funcional, alteração da PWA ou nova versão estável.
+Esta entrega pertence às **Etapas 2/2A de prototipação e revisão**, conforme a seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A aprovação visual das telas principais foi registrada separadamente da escolha da ferramenta. Não houve migração funcional, alteração da PWA ou nova versão estável.
 
 As três telas principais permaneceram visualmente inalteradas: suas capturas foram renderizadas e comparadas pixel a pixel com as da entrega anterior neste ambiente Linux, sem diferenças. A intervenção está nos detalhes abaixo, todos com dados fictícios e sem acesso ao banco pessoal.
 
@@ -79,15 +79,6 @@ Os [resultados de escala](ESCALAS_NOTURNO.json) são **simulação em Qt/Linux**
 
 ## Retomada do plano
 
-Esta página é o relatório visual da intervenção; **não substitui o plano**. Na seção 17, o andamento está consolidado assim:
+Esta página documenta a entrega visual, agora aprovada pelo usuário junto com a direção das três telas principais. Correções pontuais de legibilidade/comportamento durante testes Windows continuam permitidas.
 
-| Etapa | Estado atual |
-| --- | --- |
-| 0 — Aprovação do plano | Concluída |
-| 1 — Levantamento e base | Em andamento: mapa e medições Linux entregues, cobertura e Windows pendentes |
-| 2/2A — Protótipos e revisão | Em andamento: telas principais aprovadas com ressalvas; detalhes desta entrega aguardam avaliação |
-| 3 — Ferramenta e layout final | Parcial: comparação equivalente inicial de abertura/RSS existe; critérios técnicos completos e decisão formal pendentes |
-| 4 — Implementação funcional | Não iniciada; depende da Etapa 3 e aprovação |
-| 5–7 | Pendentes na cronologia original |
-
-A próxima atividade é concluir a revisão visual destes detalhes e completar a comparação técnica da Etapa 3: resposta e memória sob uso equivalente, distribuição/empacotamento, manutenção, temas e acessibilidade, com ensaios Windows e escalas reais. Só então apresentar a recomendação e obter aprovação explícita da ferramenta antes da Etapa 4. Nenhuma medição leve da demo é apresentada como prova de ganho de desempenho no aplicativo completo.
+A comparação técnica foi concluída e a recomendação está em [DECISAO_TECNICA.md](avaliacao/DECISAO_TECNICA.md). O estado atual está na seção 18 do plano: Etapas 2/2A visualmente aprovadas; Etapa 3 aguarda aprovação explícita da ferramenta; Etapa 4 não iniciada. O programa estável, seus dados e a PWA permanecem preservados.

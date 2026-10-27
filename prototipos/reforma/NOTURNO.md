@@ -1,6 +1,8 @@
 # Revisão Noturno — demonstração para avaliar no VS Code
 
-**Entrega atual:** [janelas secundárias refinadas](JANELAS_SECUNDARIAS.md). As três telas principais abaixo foram preservadas. O estado oficial da reforma está na seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
+A comparação técnica está em [DECISAO_TECNICA.md](avaliacao/DECISAO_TECNICA.md). A aprovação visual não autoriza a migração.
+
+**Visual aprovado pelo usuário:** [janelas secundárias refinadas](JANELAS_SECUNDARIAS.md). As três telas principais abaixo foram preservadas. O estado oficial da reforma está na seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
 
 Esta revisão aplica a direção das três imagens enviadas pelo usuário. **É uma demo isolada com dados fictícios; o aplicativo instalado e a PWA continuam inalterados.** A implementação visual usa PySide6 para avaliar o desenho. Isso não encerra a comparação técnica com Tkinter nem autoriza a substituição do desktop.
 

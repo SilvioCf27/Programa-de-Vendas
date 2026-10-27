@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 5 — continuidade e conferência de etapas em 27/10/2026.
-Estado: telas principais da demo aprovadas visualmente com ressalvas;
-janelas secundárias em revisão; escolha técnica e validação final pendentes.
+Versão do plano: 6 — aprovação estética e avaliação técnica em 27/10/2026.
+Estado: revisão estética desta entrega aprovada; comparação técnica entregue;
+escolha tecnológica aguarda aprovação explícita. Etapa 4 não iniciada.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -10,9 +10,9 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 16 registram o histórico de complementos anteriores.
-A seção 17 consolida o andamento ATUAL; os estados antigos permanecem como
-registro de sua época. A nova orientação do usuário está preservada em
+As seções 10 a 17 registram o histórico de complementos anteriores.
+A seção 18 registra a aprovação estética e a avaliação técnica ATUAL; os
+estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
 a decisão técnica e aprovação previstas na Etapa 3.
@@ -342,13 +342,13 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-Finalizar a revisão visual das janelas secundárias (Etapas 2/2A), conferir
-as pendências técnicas da Etapa 3 e completar a comparação equivalente entre
-Tkinter e PySide6, antes de recomendar a ferramenta e solicitar sua aprovação.
-As telas principais foram aprovadas visualmente com ressalvas nesta rodada,
-sem aprovação automática da migração. A seção 17 registra as evidências e
-as pendências concretas. Nesta execução não foi iniciada a Etapa 4.
-
+A revisão estética desta entrega foi aprovada. A comparação técnica e a
+recomendação PySide6 estão entregues na seção 18 e no relatório vinculado.
+A próxima atividade é a aprovação explícita da ferramenta pelo usuário,
+como exige a Etapa 3. Sem essa aprovação, a Etapa 4 não começa.
+Depois dela, manter a sequência original: navegação/Vendas, Análises,
+Finanças e configurações/formulários, sem substituir a versão estável antes
+das verificações de equivalência e publicação previstas no plano.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -560,3 +560,53 @@ telas e 36 das janelas, em Linux/Qt com fatores 1, 1,25 e 1,5. Incluídos
 Não houve validação Windows real, leitor de tela, pacote ou atualização.
 Resultado visual e limites: prototipos/reforma/JANELAS_SECUNDARIAS.md.
 Após revisar esta entrega, retomar a Etapa 3 a partir das pendências acima.
+
+18. APROVAÇÃO ESTÉTICA E RETOMADA DA AVALIAÇÃO TÉCNICA — 27/10/2026
+
+O usuário aprovou visualmente as quatro janelas secundárias e a direção das
+três telas principais. Está concluída a revisão estética desta entrega,
+permitindo correções pontuais de legibilidade/comportamento durante os testes
+Windows. A aprovação NÃO autoriza migração funcional nem a Etapa 4.
+A versão 1 permanece intacta no histórico. A revisão anterior (v5) também
+foi preservada antes desta atualização. Não há novo roteiro de projeto.
+
+Foram autorizados cenários equivalentes, medições, testes e empacotamento
+experimental para concluir a avaliação das Etapas 1 e 3. A decisão técnica
+será apresentada com resultados e limitações no relatório vinculado abaixo.
+O estudo não modifica ProgramFeira, banco pessoal, sincronização ou PWA;
+seus executáveis têm nomes próprios e não são publicados como release.
+
+RESULTADO DA AVALIAÇÃO TÉCNICA
+Relatório: prototipos/reforma/avaliacao/DECISAO_TECNICA.md.
+Reprodução: prototipos/reforma/avaliacao/README.md.
+Recomendação: PySide6, sujeita à aprovação explícita; não foi adotada ainda.
+Cenários iguais: 224/5.000 vendas fictícias, mesmas consultas e totais,
+50 linhas por página, cinco processos por ferramenta/volume e 40 ciclos.
+Windows nativo em VM Full HD: 202/202 testes da aplicação e 31/31 dos estudos
+aprovados. Dois executáveis de ensaio empacotados e aprovados, sem release.
+Tk abriu mais rápido e usou menos memória; Qt respondeu melhor à navegação
+medida e expôs mais elementos nomeados à UI Automation. O relatório registra
+medianas, extremos, picos de memória, tamanhos e dependências/licenças.
+
+ANDAMENTO ATUAL (substitui os estados históricos da seção 17)
+- Etapa 0: plano aprovado, sem alteração da sequência original.
+- Etapa 1: inventário e base controlada levantados; perfil da aplicação
+  preservado e comparação ampliada Linux/Windows entregue. Não medidos:
+  espera real de rede/Drive e cobertura manual completa dos estados.
+  Essas limitações estão documentadas; não declarar medição de conta real.
+- Etapas 2/2A: revisão estética desta entrega CONCLUÍDA por aprovação do
+  usuário: três telas e quatro janelas. Ajustes pontuais Windows permitidos.
+- Etapa 3: avaliação técnica e recomendação ENTREGUES; aguarda aprovação
+  explícita da ferramenta. DPI real, leitor de tela completo e equivalência
+  dos cinco temas finais ainda exigem verificação; não foram simulados como
+  concluídos. Fatores de aplicação/paletas e UIA foram ensaiados nas duas.
+- Etapa 4: NÃO INICIADA; bloqueada até aprovação da escolha tecnológica.
+- Etapas 5, 6 e 7: pendentes na sequência original. Pacotes de estudo não
+  substituem teste de atualização/recuperação da futura release completa.
+
+PRESERVAÇÃO E LIMITES
+ProgramFeira, executar.py, banco inicial, banco pessoal, sincronização,
+PWA e mecanismos da versão funcional 1.7.1 não foram alterados. Somente
+estudo, testes de protótipos, automação isolada e documentação foram editados.
+Não houve otimização integrada nem migração funcional nesta avaliação.
+O histórico v1 permanece byte a byte; v5 foi arquivada antes desta revisão.

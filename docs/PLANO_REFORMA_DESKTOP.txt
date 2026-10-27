@@ -772,10 +772,12 @@ vazia. Só acrescenta finanças fictícias se não houver lançamentos/históric
 não duplica finanças ao reabrir nem quando as vendas de teste forem apagadas.
 
 VALIDAÇÃO E CONTINUIDADE
-Testes da integração incluem os cenários financeiros e a reabertura segura
-dos exemplos; resultados finais serão registrados após validação.
-Evidências e execução Windows/regressão serão conferidas e registradas em
-reforma_desktop/FINANCAS.md. Falha preliminar na semana inicial foi corrigida
+56/56 testes da integração aprovados no Linux e Windows, incluindo 24 de
+Finanças. Windows: aplicação 202/202 e protótipos 31/31 aprovados, sem falhas,
+erros ou ignorados. Execução 40561114351, base dc2555a; resolução restaurada.
+Linux: aplicação 200 aprovados e 2 ignorados por requererem Windows;
+protótipos 31/31 aprovados. Capturas inspecionadas e reabertura verificada.
+Evidências e limitações: reforma_desktop/FINANCAS.md. Falha preliminar na semana inicial foi corrigida
 com comparação de datas em Python, em vez de comparação QVariant por identidade.
 Qt offscreen não substitui interação manual, DPI real ou leitor de tela.
 Nenhum executável novo foi publicado; versão 1.7.1, dados pessoais, mecanismos

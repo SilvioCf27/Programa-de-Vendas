@@ -1,6 +1,6 @@
 # Análises integrada — Etapa 4
 
-Esta é a segunda entrega funcional em PySide6, na mesma entrada de estudo. A tela usa o banco separado da reforma e os cálculos da versão estável. Finanças será a próxima integração; o executável 1.7.1, o banco pessoal, a sincronização e a PWA continuam preservados.
+Esta é a segunda entrega funcional em PySide6, na mesma entrada de estudo. A tela usa o banco separado da reforma e os cálculos da versão estável. A continuidade de [Finanças já foi integrada](FINANCAS.md); o executável 1.7.1, o banco pessoal, a sincronização e a PWA continuam preservados.
 
 ![Análises conectada aos exemplos fictícios](imagens/analises-integrada.png)
 
@@ -68,4 +68,4 @@ Os testes Qt usam backend `offscreen`. Eles não substituem interação no compu
 
 ## Próxima atividade
 
-Integrar **Finanças**, mantendo a sequência da Etapa 4: consultas, despesas/parcelas, taxas e histórico de fechamento. Configurações e demais mecanismos vêm depois, antes das verificações das Etapas 5 e 6. O [plano original em andamento](../docs/PLANO_REFORMA_DESKTOP.txt), seção 20, continua sendo a referência.
+A atividade prevista nesta entrega era integrar **Finanças**, já realizada na continuidade documentada acima: consultas, despesas/parcelas, taxas e histórico de fechamento. Configurações e demais mecanismos vêm depois, antes das verificações das Etapas 5 e 6. O [plano original em andamento](../docs/PLANO_REFORMA_DESKTOP.txt), seção 20, continua sendo a referência.

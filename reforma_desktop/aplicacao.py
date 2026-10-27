@@ -81,6 +81,7 @@ class Janela(W.QWidget):
         self.consulta = Consulta()
         self.resultado = None
         self.analises = None
+        self.financas = None
         self.ordem = (1, True)
         self.area = None
         self.nav = {}
@@ -146,17 +147,6 @@ class Janela(W.QWidget):
         self.scroll.setWidget(self.body)
         self.stack.addWidget(self.scroll)
         self.paginas = {'Vendas': self.scroll}
-        for nome in ('Finanças',):
-            w, layout = caixa(24)
-            layout.addWidget(texto(nome, 20, bold=True))
-            layout.addWidget(texto('Integração pendente na sequência da Etapa 4.', 12, C['muted']))
-            observacao = texto('Esta entrada ainda não oferece os recursos desta área. Eles continuam disponíveis no programa estável 1.7.1. A prévia visual permanece em noturno_demo.py.', 11, C['muted'])
-            observacao.setWordWrap(True)
-            layout.addWidget(observacao)
-            layout.addWidget(botao('Voltar para Vendas', lambda: self.mostrar('Vendas'), 'chevron-left'))
-            layout.addStretch()
-            self.paginas[nome] = w
-            self.stack.addWidget(w)
         self.status = texto(f'Estudo local · dados: {pasta} · sincronização não conectada nesta entrada', 8, C['muted'])
         self.status.setWordWrap(True)
         ml.addWidget(self.status)
@@ -276,6 +266,11 @@ class Janela(W.QWidget):
         self.fechamento.toggled.connect(lambda: self.sincronizar('fechamento'))
 
     def mostrar(self, nome):
+        if nome == 'Finanças' and self.financas is None:
+            from reforma_desktop.painel_financas import PainelFinancas
+            self.financas = PainelFinancas(self)
+            self.paginas[nome] = self.financas
+            self.stack.addWidget(self.financas)
         if nome == 'Análises' and self.analises is None:
             from reforma_desktop.painel_analises import PainelAnalises
             self.analises = PainelAnalises(self)
@@ -286,8 +281,13 @@ class Janela(W.QWidget):
         self.titulo.setText(nome)
         if nome == 'Análises':
             self.analises.atualizar()
-        self.nova.setVisible(nome == 'Vendas')
-        self.exportar.setVisible(nome == 'Vendas')
+        if nome == 'Finanças':
+            self.financas.atualizar()
+        self.nova.setVisible(nome in ('Vendas', 'Finanças'))
+        self.nova.setText('Nova despesa' if nome == 'Finanças' else 'Nova venda')
+        self.exportar.setVisible(nome in ('Vendas', 'Finanças'))
+        self.exportar.setText('Exportar vendas' if nome == 'Finanças' else 'Exportar relatório')
+        self.exportar.setToolTip('Exporta a consulta aplicada em Vendas; não exporta lançamentos financeiros.')
         for n, b in self.nav.items():
             b.setProperty('active', n == nome)
             b.style().unpolish(b)
@@ -362,6 +362,8 @@ class Janela(W.QWidget):
         self.preencher_tabela()
         if self.analises is not None:
             self.analises.invalidar()
+        if self.financas is not None:
+            self.financas.invalidar()
 
     def preencher_tabela(self):
         if self.resultado is None:
@@ -403,7 +405,9 @@ class Janela(W.QWidget):
         self.aplicar()
 
     def nova_venda(self):
-        self.abrir_formulario()
+        if self.area == 'Finanças':
+            return self.financas.abrir_despesa()
+        return self.abrir_formulario()
 
     def editar(self, identificador):
         esperado = next((r for r in self.resultado['linhas'] if r[0] == identificador), None)
@@ -464,14 +468,30 @@ class Janela(W.QWidget):
         W.QMessageBox.information(self, 'Temas', 'Esta primeira integração utiliza a identidade Noturno aprovada. Os cinco temas do programa estável serão preservados e verificados na reforma completa.')
 
 
-def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
+def preparar_interface():
     app = preparar()
-    app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;}'))
+    paleta = app.palette()
+    for papel, cor in [(G.QPalette.ColorRole.Window, C['bg']), (G.QPalette.ColorRole.WindowText, C['text']), (G.QPalette.ColorRole.Base, C['field']), (G.QPalette.ColorRole.AlternateBase, C['alternate']), (G.QPalette.ColorRole.Text, C['text']), (G.QPalette.ColorRole.Button, C['field']), (G.QPalette.ColorRole.ButtonText, C['text']), (G.QPalette.ColorRole.Highlight, C['selected']), (G.QPalette.ColorRole.HighlightedText, C['text']), (G.QPalette.ColorRole.ToolTipBase, C['field']), (G.QPalette.ColorRole.ToolTipText, C['text'])]:
+        paleta.setColor(papel, G.QColor(cor))
+    paleta.setColor(G.QPalette.ColorGroup.Disabled, G.QPalette.ColorRole.Text, G.QColor(C['discrete']))
+    app.setPalette(paleta)
+    app.setStyleSheet(app.styleSheet() + estilo('QLineEdit, QDateEdit, QSpinBox {background:@field@;color:@text@;border:1px solid @border@;border-radius:6px;padding:7px;} QLineEdit:focus, QDateEdit:focus {border:2px solid @turquoise@;} QMenu {background:@field@;color:@text@;border:1px solid @border@;} QMenu::item:selected {background:@selected@;}'))
+    return app
+
+
+def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
+    app = preparar_interface()
     servico = ServicoVendas()
     if exemplo and not banco.listar_vendas():
         hoje = servico.hoje()
         for dias, valores in [(40, ('100', '25', '30')), (9, ('80', '40', '50')), (2, ('120', '35,50', '90')), (1, ('0', '0', '0')), (0, ('75', '45', '100'))]:
             servico.salvar((hoje - timedelta(days=dias)).isoformat(), *valores)
+        from ProgramFeira import financeiro
+        financeiro.inicializar()
+        financeiro.salvar_lancamento('despesa', (hoje - timedelta(days=2)).isoformat(), 'Reposição fictícia', '75,50', 'Dinheiro', 'Feira')
+        compra = hoje.replace(day=9).isoformat()
+        financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
+        financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
     janela = Janela(servico, pasta)
     janela.mostrar(pagina)
     janela.show()

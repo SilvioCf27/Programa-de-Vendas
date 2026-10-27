@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 8 — Etapa 4, integração de Análises em 27/10/2026.
+Versão do plano: 9 — Etapa 4, integração de Finanças em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 4 em andamento: navegação, Vendas e Análises em dados isolados.
+Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -10,8 +10,8 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 19 registram o histórico de complementos anteriores.
-A seção 20 registra a integração de Análises e a implementação ATUAL; os
+As seções 10 a 20 registram o histórico de complementos anteriores.
+A seção 21 registra a integração de Finanças e a implementação ATUAL; os
 estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,13 +342,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A Etapa 4 prossegue na sequência original. Navegação e Vendas foram integradas
-na entrada isolada; esta entrega conecta Análises (semanas, comparação A/B e
-detalhes) ao núcleo existente, com a consulta aplicada em Vendas.
-Próxima atividade após esta entrega: integrar Finanças, incluindo consultas,
-lançamentos/parcelas, taxas e histórico de fechamento. Configurações e demais
-formulários/mecanismos vêm depois, antes da revisão conjunta. Preservar o
-programa 1.7.1 e o banco pessoal; não substituir a entrada estável agora.
+A Etapa 4 continua na sequência original. As três telas principais estão
+conectadas ao núcleo na entrada isolada. Esta entrega integra Finanças:
+consultas, despesas/parcelas, taxas, histórico anual e leitura de fechamento.
+Próxima atividade: configurações e demais mecanismos/formulários, incluindo
+preferências/temas, backups/restauração/Drive, sessão/nuvem, atualização e a
+edição do fechamento por vigência. Depois, revisão conjunta e verificações
+das Etapas 5/6. Preservar 1.7.1, banco pessoal e PWA até a validação final;
+não substituir a entrada estável por esta implementação de estudo.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -717,3 +718,64 @@ Qt offscreen não valida
 DPI real, leitor de tela completo ou interação no computador do usuário.
 Banco pessoal, versão 1.7.1, entrada estável, backups/sincronização e PWA
 permanecem sem alteração. Etapas 5/6/7 permanecem pendentes na ordem original.
+
+21. ETAPA 4 — INTEGRAÇÃO FUNCIONAL DE FINANÇAS — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+O usuário autorizou o próximo passo após Análises. A integração de Finanças
+segue a ordem original da Etapa 4 e a direção visual aprovada. A versão v8
+foi arquivada antes desta atualização; a versão v1 original permanece intacta.
+
+ENTREGA
+Finanças é criada na primeira visita e consulta Semana/Mês/Fechamento/Ano,
+com ano/mês/semana adaptativos, sem aplicar seletores pendentes ao gravar.
+Saldo, despesas, falta cobrir, bruto, taxas e vendas menos taxas usam o núcleo
+financeiro existente. Recortes da lista/páginas não reduzem os resumos.
+Ausência de taxa não é isenção; históricos parciais não são rateados e geram
+aviso de saldo provisório. Estimativas ficam identificadas.
+
+Despesas têm data explícita, valor TOTAL da compra, meio/categoria e parcelas.
+No crédito, a primeira fatura vem da data original: compras no dia 09 entram
+no próximo fechamento. A prévia mostra faturas e valores; centavos somam o
+total. Editar qualquer parcela abre/atualiza a compra inteira com confirmação,
+incluindo meses anteriores. Registros antigos preservam faturas até informar
+explicitamente a compra original. Histórico incompleto ou alterado é recusado.
+Exclusão individual/em lote remove somente os lançamentos selecionados, com
+confirmação, backup verificado e transação; outras parcelas ficam preservadas.
+Uma exclusão parcial pode impedir editar a compra incompleta, como no núcleo.
+
+Taxas da maquininha são lançadas em reais por data de venda, agrupadas em um
+formulário semanal. A semana inicial é a da referência, não a primeira opção
+da lista. Trocar a seleção exige Carregar; campos não mudam de data em silêncio.
+Descartar taxas ainda digitadas exige confirmação. Campos vazios mantêm taxas;
+remover usa Excluir. Datas cobertas por histórico anual não são duplicadas.
+
+Histórico de taxas permite criar, editar/excluir por ano e natureza Confirmada
+ou Estimada. O ano é protegido na edição; criar não sobrescreve outro registro
+existente. Cobertura, observação e total acumulado seguem o núcleo, sem rateio.
+Despesas por semana reutiliza a janela aprovada e considera a consulta inteira,
+sem taxas, agrupando crédito pela fatura e outros meios pelo pagamento.
+
+INTEGRAÇÃO E LIMITES
+Regras, banco, backup e transações usam financeiro.py e módulos existentes;
+não houve edição do código de ProgramFeira. A lista tem paginação e seleção
+por página. Navegação conserva telas e um timer. Alterações invalidam snapshots
+sem aplicar consultas pendentes. Exportar no cabeçalho de Finanças continua
+exportando VENDAS e é nomeado assim; exportação financeira não foi adicionada.
+
+A regra de fechamento é usada por vigência e seu histórico é de leitura nesta
+entrega. Edição/sincronização virão com configurações/nuvem: não foi inventada
+conta local para contornar vínculos/proteções do núcleo. Temas completos,
+configurações, restauração/Drive, sessão/nuvem e atualizador Qt seguem pendentes.
+O lançamento --exemplo inclui dados financeiros fictícios somente ao criar
+exemplos em banco de vendas vazio; não repovoa uma pasta de estudo existente.
+
+VALIDAÇÃO E CONTINUIDADE
+55 testes locais da integração aprovados, incluindo 23 novos de Finanças.
+Evidências e execução Windows/regressão serão conferidas e registradas em
+reforma_desktop/FINANCAS.md. Falha preliminar na semana inicial foi corrigida
+com comparação de datas em Python, em vez de comparação QVariant por identidade.
+Qt offscreen não substitui interação manual, DPI real ou leitor de tela.
+Nenhum executável novo foi publicado; versão 1.7.1, dados pessoais, mecanismos
+existentes e PWA permanecem preservados. Próximo item: configurações e demais
+mecanismos da Etapa 4; Etapas 5, 6 e 7 continuam pendentes na ordem original.

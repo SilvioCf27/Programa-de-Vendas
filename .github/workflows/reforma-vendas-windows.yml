@@ -1,4 +1,4 @@
-name: Reforma Qt - Vendas e Análises
+name: Reforma Qt - Vendas, Análises e Finanças
 on:
   push:
     branches: ['reforma/estudo-interface']
@@ -25,7 +25,7 @@ jobs:
         run: python -m pip install -r prototipos/reforma/requirements.txt openpyxl==3.1.5
       - name: Preparar resolução da VM de teste
         run: python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json
-      - name: Verificar Vendas e Análises integradas
+      - name: Verificar as três áreas integradas
         run: python reforma_desktop/validar.py --saida resultados-qt/INTEGRACAO_QT.json
       - name: Conferir regressão da versão estável
         if: always()

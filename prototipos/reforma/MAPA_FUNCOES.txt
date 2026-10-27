@@ -125,3 +125,24 @@ A04: tela própria; snapshot completo da seleção aplicada, sem busca/paginaç�
 A01–A04 têm integração funcional testada, não validação completa Windows/DPI,
      acessibilidade, empacotamento ou release. Evidências em ANALISES.md.
 F01–F10 continuam próximos itens da Etapa 4. G01–G07 completos seguem pendentes.
+
+CONTINUIDADE DA ETAPA 4 — FINANÇAS, 27/10/2026
+F01/F02: consulta adaptativa e resumo via financeiro.limites/resumir, com
+        avisos de cobertura parcial/estimativa; independente de Vendas.
+F03/F04: cadastro/edição da compra inteira por qualquer parcela, total,
+        confirmação, cancelamento e exclusão individual/lote integrados.
+F05: datas originais, fatura seguinte no dia 09, legado e prévia usam o núcleo;
+     datas não retornam ao mês atual ao preencher outros campos.
+F06: taxas por semana/data, carregamento explícito, vazio/zero, proteção de
+     sobreposição anual e taxas alteradas integrados/testados.
+F07/F08: histórico anual confirmado/estimado, cobertura sem rateio e despesas
+        por semana integrados; janela semanal aprovada reaproveitada.
+F09: leitura e uso da regra por vigência integrados. EDIÇÃO/SINCRONIZAÇÃO ainda
+     pendentes com configurações e nuvem; nenhuma conta fictícia foi vinculada.
+F10: seleção/paginação e exclusão em lote confirmada/transacional com backup;
+     exclusão parcial preserva as outras parcelas e pode bloquear editar grupo
+     incompleto, conforme a proteção existente.
+G01–G07 completos permanecem para a continuação: preferências/temas, dados,
+        backups/restauração/Drive, sessão/nuvem, migração e atualizador.
+        Backup local anterior às alterações já é reutilizado nesta fatia.
+Relatório: reforma_desktop/FINANCAS.md. Não é equivalência completa/release.

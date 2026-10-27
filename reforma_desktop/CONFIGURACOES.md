@@ -1,5 +1,7 @@
 # Configurações — preferências, temas e backup local
 
+Continuidade: [restauração, verificação e Drive manual](RECUPERACAO.md).
+
 Esta é a primeira parte das configurações Qt na Etapa 4. Vendas, Análises e Finanças continuam conectadas ao banco separado de estudo. A versão funcional 1.7.1, o banco pessoal, seus backups/Drive, sincronização e PWA não foram alterados.
 
 A entrega anterior de Finanças foi concluída e enviada ao GitHub, com 56 testes da integração, 202 da aplicação e 31 dos protótipos aprovados no Windows. Não houve arquivo pendente nem perda de trabalho por limite de tokens. As verificações manuais/Windows/DPI e os mecanismos ainda não migrados são pendências planejadas, descritas no plano.

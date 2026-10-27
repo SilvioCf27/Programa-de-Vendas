@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 10 — Etapa 4, configurações/preferências em 27/10/2026.
+Versão do plano: 11 — Etapa 4, restauração/Drive em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -343,12 +343,12 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-Esta entrega conecta preferências de abertura, cinco temas para a próxima
-abertura e criação de backup local verificado. Não substitui a entrada estável.
-Próxima atividade: restauração/verificação de cópias e Drive; depois, sessão/
-sincronização, edição do fechamento por vigência e atualização. Revisão
-conjunta e Etapas 5/6 vêm após a equivalência, preservando 1.7.1, banco pessoal
-e PWA. O estudo continua sem conexão autenticada ou leitura do banco pessoal.
+Esta entrega conecta verificação externa, restauração com cópia anterior e
+transferência ao Drive, manual ou ao fechar, em conjunto exclusivo do estudo.
+Próxima atividade: sessão/sincronização, edição do
+fechamento por vigência e atualização. Revisão conjunta e Etapas 5/6 vêm após
+a equivalência. Versão 1.7.1, banco pessoal e PWA permanecem preservados.
+O estudo continua sem conexão autenticada ou leitura do banco pessoal.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -825,3 +825,29 @@ Evidências, imagens e limites: reforma_desktop/CONFIGURACOES.md.
 Continuam pendentes restauração/verificação externa, Drive, sessão/nuvem,
 edição do fechamento e atualizador Qt. Etapas 5, 6 e 7 não foram antecipadas.
 Versão 1.7.1, dados pessoais, código funcional e PWA permanecem preservados.
+
+23. ETAPA 4 — VERIFICAÇÃO, RESTAURAÇÃO E DRIVE MANUAL — 27/10/2026
+
+A versão v10 foi arquivada sem reescrever o histórico. Continuidade autorizada
+pelo usuário. O estudo Qt reutiliza recuperacao.testar_recuperacao e
+banco.restaurar_backup, mantendo a validação defensiva de arquivos externos.
+Verificar apenas ensaia a restauração em diretório temporário. Restaurar pede
+confirmação (Não por padrão), cria cópia anterior antes da substituição e
+exige encerrar/reabrir o estudo; não reutiliza snapshots ou regras em memória.
+Falha não informa sucesso; o relógio da interface fica suspenso na operação.
+
+Operações externas rodam em QThread com retorno por sinais, sem executar
+widgets no trabalhador. Fechamento da janela é impedido durante a operação.
+Drive usa backup_drive existente: snapshot e análise SQLite somente locais,
+transporte com SHA-256 e publicação/retenção existentes. A configuração só
+aceita o conjunto Gestao-da-Feira-Estudo-Qt-Backups, com subpasta do núcleo,
+para não substituir/remover as cópias reais da versão funcional.
+O resultado confirma gravação local na pasta, não sincronização remota,
+autoria da cópia, permissões Google ou proteção contra malware no Windows.
+Cópia manual e ao fechar estão integradas. Falha ao fechar permite continuar
+ou confirmar saída sem cópia; Não é a opção padrão. Progresso impede fechar
+durante o trabalho. O envio remoto continua a cargo do cliente do Drive.
+
+Validação e limitações registradas em reforma_desktop/RECUPERACAO.md.
+Etapa 4 segue em andamento. Não há migração do banco pessoal, conexão real,
+release, alteração da versão funcional, PWA ou antecipação das Etapas 5/6/7.

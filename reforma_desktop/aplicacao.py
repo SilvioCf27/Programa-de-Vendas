@@ -463,6 +463,10 @@ class Janela(W.QWidget):
             self.dia_exibido = hoje
             self.atualizar()
 
+    def closeEvent(self, evento):
+        from reforma_desktop.operacoes_backup import fechar_com_backup
+        fechar_com_backup(self, evento)
+
     def configuracoes(self):
         from reforma_desktop.configuracoes import Configuracoes
         janela = Configuracoes(self)

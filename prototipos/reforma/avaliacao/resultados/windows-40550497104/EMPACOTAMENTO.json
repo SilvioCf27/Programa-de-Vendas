@@ -1,0 +1,297 @@
+{
+  "pacotes": [
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "build_segundos": 13.73,
+      "arquivos": 1034,
+      "bytes_instalados": 32454755,
+      "bytes_zip": 15006424,
+      "autoteste": {
+        "ferramenta": "tk",
+        "plataforma": "win32",
+        "python": "3.13.16",
+        "biblioteca": "8.6.15",
+        "sqlite": "3.50.4",
+        "frozen": true,
+        "volume": 224,
+        "ciclos": 5,
+        "escala": 1,
+        "janela": [
+          1280,
+          800
+        ],
+        "fonte": "Segoe UI",
+        "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+        "registros": 224,
+        "total_centavos": 3889000,
+        "abertura_gui_ms": 173.278,
+        "rss_inicial": 45174784,
+        "rss_pos_carga": 45551616,
+        "rss_final": 45584384,
+        "crescimento_ciclos": 32768,
+        "memoria_por_ciclo": [
+          {
+            "ciclo": 5,
+            "rss": 47562752
+          }
+        ],
+        "dialogos_vivos_apos_ciclos": 0,
+        "pico_amostrado": 47562752,
+        "pico_processo_so": 47562752,
+        "atraso_heartbeat_max_ms": 25.924,
+        "tempos": {
+          "consulta_Análises": {
+            "n": 1,
+            "mediana_ms": 0.886,
+            "p95_ms": 0.886,
+            "max_ms": 0.886
+          },
+          "primeira_Análises": {
+            "n": 1,
+            "mediana_ms": 62.754,
+            "p95_ms": 62.754,
+            "max_ms": 62.754
+          },
+          "consulta_Finanças": {
+            "n": 1,
+            "mediana_ms": 0.608,
+            "p95_ms": 0.608,
+            "max_ms": 0.608
+          },
+          "primeira_Finanças": {
+            "n": 1,
+            "mediana_ms": 54.105,
+            "p95_ms": 54.105,
+            "max_ms": 54.105
+          },
+          "consulta_todas": {
+            "n": 1,
+            "mediana_ms": 0.729,
+            "p95_ms": 0.729,
+            "max_ms": 0.729
+          },
+          "tabela_completa": {
+            "n": 1,
+            "mediana_ms": 38.924,
+            "p95_ms": 38.924,
+            "max_ms": 38.924
+          },
+          "retorno_paginado": {
+            "n": 1,
+            "mediana_ms": 17.966,
+            "p95_ms": 17.966,
+            "max_ms": 17.966
+          },
+          "consulta_mes": {
+            "n": 5,
+            "mediana_ms": 0.266,
+            "p95_ms": 0.357,
+            "max_ms": 0.357
+          },
+          "aplicar_mes": {
+            "n": 5,
+            "mediana_ms": 39.448,
+            "p95_ms": 41.003,
+            "max_ms": 41.003
+          },
+          "aplicar_todas": {
+            "n": 5,
+            "mediana_ms": 18.639,
+            "p95_ms": 18.89,
+            "max_ms": 18.89
+          },
+          "navegacao_Análises": {
+            "n": 5,
+            "mediana_ms": 41.498,
+            "p95_ms": 41.977,
+            "max_ms": 41.977
+          },
+          "navegacao_Finanças": {
+            "n": 5,
+            "mediana_ms": 36.278,
+            "p95_ms": 40.064,
+            "max_ms": 40.064
+          },
+          "navegacao_Vendas": {
+            "n": 5,
+            "mediana_ms": 35.09,
+            "p95_ms": 35.335,
+            "max_ms": 35.335
+          },
+          "abrir_fechar_detalhe": {
+            "n": 5,
+            "mediana_ms": 64.007,
+            "p95_ms": 65.683,
+            "max_ms": 65.683
+          }
+        },
+        "teclado": {
+          "tecla": "Down",
+          "selecao": true,
+          "foco": true,
+          "takefocus": "1"
+        },
+        "acessibilidade": {
+          "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+          "nome_janela": "Estudo técnico — Tkinter",
+          "cabecalhos": true
+        },
+        "uia": null,
+        "visual": null
+      },
+      "avisos_licenca_incluidos": [
+        "_internal\\_tk_data\\license.terms",
+        "_internal\\recursos\\icones\\LICENSE"
+      ],
+      "observacao": "Mesmo ensaio técnico e mesmos recursos; não é o executável final. PATH limpo, mas não é máquina física sem Python instalado."
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "build_segundos": 21.02,
+      "arquivos": 244,
+      "bytes_instalados": 109571872,
+      "bytes_zip": 43799918,
+      "autoteste": {
+        "ferramenta": "qt",
+        "plataforma": "win32",
+        "python": "3.13.16",
+        "biblioteca": "6.10.2",
+        "sqlite": "3.50.4",
+        "frozen": true,
+        "volume": 224,
+        "ciclos": 5,
+        "escala": 1,
+        "janela": [
+          1280,
+          800
+        ],
+        "fonte": "Segoe UI",
+        "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+        "registros": 224,
+        "total_centavos": 3889000,
+        "abertura_gui_ms": 155.505,
+        "rss_inicial": 73302016,
+        "rss_pos_carga": 73592832,
+        "rss_final": 74276864,
+        "crescimento_ciclos": 684032,
+        "memoria_por_ciclo": [
+          {
+            "ciclo": 5,
+            "rss": 74272768
+          }
+        ],
+        "dialogos_vivos_apos_ciclos": 0,
+        "pico_amostrado": 78053376,
+        "pico_processo_so": 78118912,
+        "atraso_heartbeat_max_ms": 68.174,
+        "tempos": {
+          "consulta_Análises": {
+            "n": 1,
+            "mediana_ms": 0.87,
+            "p95_ms": 0.87,
+            "max_ms": 0.87
+          },
+          "primeira_Análises": {
+            "n": 1,
+            "mediana_ms": 18.223,
+            "p95_ms": 18.223,
+            "max_ms": 18.223
+          },
+          "consulta_Finanças": {
+            "n": 1,
+            "mediana_ms": 0.578,
+            "p95_ms": 0.578,
+            "max_ms": 0.578
+          },
+          "primeira_Finanças": {
+            "n": 1,
+            "mediana_ms": 16.05,
+            "p95_ms": 16.05,
+            "max_ms": 16.05
+          },
+          "consulta_todas": {
+            "n": 1,
+            "mediana_ms": 0.416,
+            "p95_ms": 0.416,
+            "max_ms": 0.416
+          },
+          "tabela_completa": {
+            "n": 1,
+            "mediana_ms": 14.883,
+            "p95_ms": 14.883,
+            "max_ms": 14.883
+          },
+          "retorno_paginado": {
+            "n": 1,
+            "mediana_ms": 14.265,
+            "p95_ms": 14.265,
+            "max_ms": 14.265
+          },
+          "consulta_mes": {
+            "n": 5,
+            "mediana_ms": 0.234,
+            "p95_ms": 0.256,
+            "max_ms": 0.256
+          },
+          "aplicar_mes": {
+            "n": 5,
+            "mediana_ms": 14.731,
+            "p95_ms": 14.74,
+            "max_ms": 14.74
+          },
+          "aplicar_todas": {
+            "n": 5,
+            "mediana_ms": 14.268,
+            "p95_ms": 14.739,
+            "max_ms": 14.739
+          },
+          "navegacao_Análises": {
+            "n": 5,
+            "mediana_ms": 16.183,
+            "p95_ms": 16.892,
+            "max_ms": 16.892
+          },
+          "navegacao_Finanças": {
+            "n": 5,
+            "mediana_ms": 13.764,
+            "p95_ms": 13.916,
+            "max_ms": 13.916
+          },
+          "navegacao_Vendas": {
+            "n": 5,
+            "mediana_ms": 13.59,
+            "p95_ms": 14.406,
+            "max_ms": 14.406
+          },
+          "abrir_fechar_detalhe": {
+            "n": 5,
+            "mediana_ms": 60.257,
+            "p95_ms": 62.078,
+            "max_ms": 62.078
+          }
+        },
+        "teclado": {
+          "tecla": "Down",
+          "selecao": true,
+          "foco": true,
+          "nome": "Tabela de registros fictícios"
+        },
+        "acessibilidade": {
+          "ponte": "QAccessible; não substitui UIA/NVDA",
+          "interface": true,
+          "role": "Role.Table",
+          "nome": "Tabela de registros fictícios"
+        },
+        "uia": null,
+        "visual": null
+      },
+      "avisos_licenca_incluidos": [
+        "_internal\\recursos\\icones\\LICENSE"
+      ],
+      "observacao": "Mesmo ensaio técnico e mesmos recursos; não é o executável final. PATH limpo, mas não é máquina física sem Python instalado."
+    }
+  ],
+  "pyinstaller": "6.16.0"
+}

@@ -143,6 +143,19 @@ class RecuperacaoTests(unittest.TestCase):
         self.assertTrue(j.relogio.isActive())
         backup_drive.desativar(banco.CAMINHO_BANCO)
 
+    def test_captura_com_drive_configurado_nao_inicia_thread_ao_sair(self):
+        import subprocess
+        from reforma_desktop.ambiente import MARCADOR, CONTEUDO
+        (self.pasta/MARCADOR).write_text(CONTEUDO, encoding='utf-8')
+        raiz = self.pasta/'drive-ficticio'
+        raiz.mkdir()
+        dados = configurar_drive(banco.CAMINHO_BANCO, raiz)
+        captura = self.pasta/'captura.png'
+        r = subprocess.run([sys.executable, str(ROOT/'executar_reforma.py'), '--pasta-estudo', str(self.pasta), '--captura', str(captura)], cwd=ROOT, capture_output=True, text=True, timeout=45)
+        self.assertEqual(r.returncode, 0, r.stdout+r.stderr)
+        self.assertTrue(captura.is_file())
+        self.assertFalse((Path(dados['pasta'])/backup_drive.SUBPASTA).exists())
+
     def test_drive_recusa_configuracao_do_programa_estavel(self):
         backup_drive.salvar_config(self.pasta, {'pasta':str(self.pasta)})
         with self.assertRaisesRegex(ValueError, 'própria'):

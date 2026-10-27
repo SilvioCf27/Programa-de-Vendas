@@ -513,6 +513,8 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
             app.processEvents()
         if not janela.grab().save(str(captura)):
             raise OSError('Não foi possível salvar a captura no caminho informado.')
+        # Captura não entra no loop nem deve iniciar uma cópia assíncrona.
+        janela._fechamento_autorizado = True
         janela.close()
         return 0
     return app.exec()

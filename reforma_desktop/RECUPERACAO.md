@@ -29,7 +29,9 @@ A leitura externa usa os limites e a validação estrutural do núcleo, com SQLi
 
 No Drive, SQLite abre somente arquivos locais. O snapshot é transportado e conferido por SHA-256 antes da publicação. A configuração e as versões do estudo ficam separadas das cópias do programa funcional. Isso não garante proteção contra malware com acesso ao Windows/Drive nem substitui a segurança da conta.
 
-Verificação, restauração e cópia manual rodam fora da thread gráfica. Enquanto a operação termina, a janela impede novas ações e fechamento; o relógio de atualização fica suspenso. Falhas são exibidas sem mensagem de sucesso.
+Verificação, restauração e cópias do Drive rodam fora da thread gráfica. Enquanto a operação termina, a janela impede novas ações e fechamento; o relógio de atualização fica suspenso. Falhas são exibidas sem mensagem de sucesso.
+
+O modo técnico `--captura` salva a imagem e sai sem iniciar backup ao fechar; ele não entra no loop interativo.
 
 ## Validação
 

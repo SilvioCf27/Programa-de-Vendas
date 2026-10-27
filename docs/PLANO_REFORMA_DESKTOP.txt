@@ -826,7 +826,7 @@ Continuam pendentes restauração/verificação externa, Drive, sessão/nuvem,
 edição do fechamento e atualizador Qt. Etapas 5, 6 e 7 não foram antecipadas.
 Versão 1.7.1, dados pessoais, código funcional e PWA permanecem preservados.
 
-23. ETAPA 4 — VERIFICAÇÃO, RESTAURAÇÃO E DRIVE MANUAL — 27/10/2026
+23. ETAPA 4 — VERIFICAÇÃO, RESTAURAÇÃO E DRIVE — 27/10/2026
 
 A versão v10 foi arquivada sem reescrever o histórico. Continuidade autorizada
 pelo usuário. O estudo Qt reutiliza recuperacao.testar_recuperacao e

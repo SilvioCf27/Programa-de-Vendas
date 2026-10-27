@@ -1,7 +1,21 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 4 — referências recebidas e controles adicionais aprovados.
-Estado: protótipos iniciais em avaliação; layout e ferramenta não aprovados.
+Versão do plano: 5 — continuidade e conferência de etapas em 27/10/2026.
+Estado: telas principais da demo aprovadas visualmente com ressalvas;
+janelas secundárias em revisão; escolha técnica e validação final pendentes.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
+
+REFERÊNCIA PRINCIPAL E HISTÓRICO
+Este é o plano principal em revisão rastreável, não um roteiro independente.
+A versão 1 de 26/10/2026 foi preservada byte a byte em:
+docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
+Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
+SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
+As seções 10 a 16 registram o histórico de complementos anteriores.
+A seção 17 consolida o andamento ATUAL; os estados antigos permanecem como
+registro de sua época. A nova orientação do usuário está preservada em
+docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
+Nenhum complemento revoga o inventário funcional ou autoriza migração sem
+a decisão técnica e aprovação previstas na Etapa 3.
 
 1. OBJETIVO E DIREÇÃO
 
@@ -326,11 +340,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 [ ] A adaptação da PWA e as novas funções estão separadas desta entrega, com
     seus próximos passos registrados para depois da aprovação do desktop.
 
-9. PRÓXIMO PASSO APÓS APROVAR ESTE DOCUMENTO
+9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-Executar as demos localmente e usar a galeria e o briefing na etapa 2A.
-Aguardar as referências visuais do usuário, refinar o protótipo e só então
-retomar a decisão técnica. As medições e o mapa inicial já estão disponíveis.
+Finalizar a revisão visual das janelas secundárias (Etapas 2/2A), conferir
+as pendências técnicas da Etapa 3 e completar a comparação equivalente entre
+Tkinter e PySide6, antes de recomendar a ferramenta e solicitar sua aprovação.
+As telas principais foram aprovadas visualmente com ressalvas nesta rodada,
+sem aprovação automática da migração. A seção 17 registra as evidências e
+as pendências concretas. Nesta execução não foi iniciada a Etapa 4.
 
 
 10. REGISTRO DO INÍCIO DO ESTUDO
@@ -439,3 +456,107 @@ Os cinco temas, funções e regras do programa estável não foram alterados.
 A demo continua somente Noturno, sem conexão com os dados reais; a equivalência
 integrada e a validação Windows continuam pendentes. O documento não transforma
 as prévias dos formulários em implementações funcionais nem autoriza removê-las.
+
+17. ANDAMENTO CONSOLIDADO — 27/10/2026
+
+A referência de trajetória continua sendo a versão 1 deste plano. O usuário
+confirmou que as telas principais da demo estão aprovadas visualmente, com
+pequenos ajustes e validação final pendentes. Este complemento autoriza apenas
+o refinamento das janelas secundárias, validação e conferência do andamento.
+Não autoriza migrar funcionalidades, alterar o banco/PWA ou publicar release.
+
+ETAPA 0 — CONCLUÍDA
+Entrega: TXT original e autorização do usuário para iniciar o estudo.
+Evidência: versão 1 do commit 2a42f43 preservada no histórico; aprovação
+registrada nesta conversa e na seção 6.
+Pendência: nenhuma para iniciar a prototipação. A aprovação é do plano, não
+da ferramenta nem da substituição da interface funcional.
+
+ETAPA 1 — EM ANDAMENTO (levantamento e base Linux executados)
+Entregas: MAPA_FUNCOES.txt, MEDICOES.md, BASE_MEDICOES.json.
+Evidência: três processos novos por volume, 224 e 5.000 vendas fictícias,
+com 75 e 1.667 lançamentos; abertura, visitas às áreas e atualização geral.
+O ensaio instrumentou leitura, inserção, Análises, relatório e dimensionamento
+de colunas; este último dominou a atualização no ambiente medido.
+Pendências: cobertura completa dos estados/atalhos/formulários do inventário,
+base comparável no Windows e caracterização da espera de rede real. Os ensaios
+Linux não incluíram sessão autenticada, sincronização real ou Drive.
+Não confundir o mapa de funções com prova de equivalência implementada.
+
+ETAPA 2 / COMPLEMENTO 2A — EM ANDAMENTO
+Entregas: protótipos iniciais Tkinter e PySide6 comparáveis; referências
+visuais e recursos aprovados; demo Noturno; janelas secundárias refinadas.
+Evidências: Finanças inicial com os mesmos 12 lançamentos e 1.440 x 960 nas
+duas ferramentas; testes de navegação; capturas; refinamento da demo atual.
+Decisão do usuário: identidade e três telas principais aprovadas visualmente
+com ressalvas; janelas auxiliares recebem a revisão desta execução.
+Pendências: avaliação visual das janelas auxiliares pelo usuário e validação
+final, incluindo Windows. A versão Noturno mais rica só existe em PySide6:
+não é uma nova comparação equivalente contra o Tkinter inicial.
+O refinamento pontual pertence a estas etapas, não reinicia a reforma.
+
+ETAPA 3 — EM ANDAMENTO (análise técnica parcial, decisão não aprovada)
+Comparação efetivamente disponível:
+- Abertura e RSS: três repetições dos protótipos iniciais equivalentes no Linux.
+  Medianas: Tkinter 101,2 ms / 24,4 MiB; PySide6 175,3 ms / 64,4 MiB.
+  Medição antes dos testes/capturas; não é pico de memória nem tamanho instalado.
+- Dependências: Tkinter usa biblioteca padrão mais recursos já existentes;
+  PySide6 Essentials 6.10.2 está isolado nos requisitos do estudo.
+- Manutenção: a aplicação atual tem interface e algumas ações juntas em main;
+  uma escolha por Qt exigirá adaptar apenas as fronteiras necessárias,
+  preservando serviços, regras, banco, sessão e protocolos atuais.
+- Teclado/acessibilidade: há nomes acessíveis, controles nativos e ensaios
+  parciais de Tab, Escape e navegação de tabela; não é auditoria completa.
+- Escalas: renderização Linux/Qt em 1, 1,25 e 1,5 e três tamanhos de janela.
+  Não equivale a DPI do Windows.
+
+Critérios ainda sem comparação equivalente concluída:
+- Resposta de navegação/consultas com trabalho e volumes equivalentes nas
+  duas alternativas; os tempos do programa inteiro e de demos não se comparam
+  como se representassem ganho ou perda da migração.
+- Memória máxima e crescimento após uso repetido equivalente; os números
+  atuais são RSS antes da interação dos protótipos iniciais.
+- Empacotamento Windows das duas alternativas, tamanho instalado, plugins Qt,
+  execução em máquina sem dependências e ensaio com atualizador/recuperação.
+- Condições de distribuição de todas as dependências Qt e avisos aplicáveis.
+  Fontes e ícones têm licenças locais; isso não conclui o exame do pacote Qt.
+- Cinco temas equivalentes, teclado completo, leitor de tela e contraste
+  nas duas alternativas, em Windows 100%, 125% e 150%.
+- Recomendação técnica consolidada e aprovação explícita da ferramenta.
+
+Não há autorização implícita para a migração por preferência visual. A próxima
+atividade técnica é completar estes critérios e apresentar uma decisão
+fundamentada; não pedir aprovação de uma migração ainda sem essas evidências.
+
+ETAPA 4 — BLOQUEADA PELA ETAPA 3; NÃO INICIADA
+Aguardam-se decisão técnica e aprovação. Mantém-se a sequência original:
+navegação/Vendas, Análises, Finanças, configurações/formulários, revisão.
+Não houve extração de regras, mudança da entrada ou mistura de toolkits.
+
+ETAPA 5 — PENDENTE
+A base foi medida, mas não há otimização integrada nem comparação equivalente
+do aplicativo reformado. Não declarar esta etapa concluída pelas demos.
+
+ETAPA 6 — PENDENTE
+Testes de demo não substituem equivalência funcional, pacote Windows, ensaio
+de atualização, dados/sessão/configurações e aprovação final. Sem nova release.
+
+ETAPA 7 — PENDENTE
+PWA e novas funcionalidades permanecem para a etapa prevista. As exceções já
+autorizadas de seleção múltipla, exclusão em lote e paginação da seção 12
+continuam registradas; esta rodada não acrescenta recursos de negócio.
+
+REGISTRO DESTA INTERVENÇÃO PONTUAL
+Escopo: janelas Vendas da consulta completa, Resultados por dia da semana,
+Despesas por semana e Semana atual; acabamento equivalente em informações,
+pagamentos e evolução. Componentes compartilhados com a demo; sem redesenhar
+as três telas principais. Capturas principais foram renderizadas novamente
+e comparadas com a entrega anterior: pixels idênticos neste ambiente.
+Dados: somente estado fictício em memória, sem banco, conta ou nuvem.
+Validação: 31 testes automatizados aprovados (19 da demo, 8 de janelas,
+4 dos estudos iniciais); 63 cenários de renderização aprovados, sendo 27 das
+telas e 36 das janelas, em Linux/Qt com fatores 1, 1,25 e 1,5. Incluídos
+5.000 registros, valores altos, estados vazios, ordenação, Tab e Escape.
+Não houve validação Windows real, leitor de tela, pacote ou atualização.
+Resultado visual e limites: prototipos/reforma/JANELAS_SECUNDARIAS.md.
+Após revisar esta entrega, retomar a Etapa 3 a partir das pendências acima.

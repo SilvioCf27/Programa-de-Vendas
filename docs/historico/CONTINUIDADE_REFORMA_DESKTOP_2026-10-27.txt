@@ -1,0 +1,317 @@
+# Gestão da Feira — Continuidade da reforma desktop conforme plano oficial
+
+## 1. Documento principal e hierarquia das decisões
+
+Antes de iniciar qualquer alteração, leia integralmente o arquivo `PLANO_REFORMA_DESKTOP.txt`, versão 1, de 26/10/2026, existente no projeto.
+
+Esse documento estabelece o escopo, o inventário funcional, as etapas, os critérios de validação, as restrições e a cronologia da reforma desktop.
+
+**Ele deve continuar sendo a referência principal para conduzir o projeto.**
+
+As instruções posteriores, incluindo os refinamentos visuais e os feedbacks do usuário, devem ser interpretadas como complementos ou ajustes pontuais desse plano.
+
+Não substituir o planejamento original por um novo roteiro independente.
+
+Não considerar cada novo feedback como autorização para reiniciar o projeto, alterar sua arquitetura, antecipar etapas ou abandonar decisões anteriores.
+
+Quando uma orientação posterior modificar uma decisão do plano, registrar essa alteração de forma explícita, mantendo o histórico e a justificativa.
+
+Preservar a versão original do documento, registrando revisões de maneira rastreável.
+
+---
+
+## 2. Estado atual do projeto
+
+O aplicativo funcional Gestão da Feira está na versão desktop 1.7.1, desenvolvido em Python com Tkinter e SQLite.
+
+A reforma visual está sendo estudada em uma frente isolada, com uma demonstração PySide6.
+
+As três telas principais da demonstração — Vendas, Análises e Finanças — já passaram por várias revisões e estão visualmente aprovadas, ressalvados pequenos ajustes e a validação final.
+
+O tema Noturno possui uma identidade visual definida, incluindo:
+
+- Barra lateral com imagem da feira.
+- Logotipo e navegação.
+- Fonte Inter.
+- Paleta escura com destaques semânticos.
+- Indicadores financeiros.
+- Gráficos e tabelas.
+- Componentes e ícones consistentes.
+- Organização própria para Vendas, Análises e Finanças.
+
+Não reformular novamente essas telas sem necessidade demonstrada.
+
+A aprovação visual da demonstração não representa aprovação automática da migração tecnológica nem autorização para modificar o aplicativo funcional.
+
+---
+
+## 3. Prioridade imediata — Refinar as janelas secundárias
+
+As quatro capturas mais recentes mostram:
+
+1. Vendas da consulta completa.
+2. Resultados por dia da semana.
+3. Despesas por semana.
+4. Semana atual independente dos filtros.
+
+Essas janelas ainda apresentam uma identidade visual incompleta.
+
+A próxima intervenção deve corrigir essa diferença utilizando os componentes, cores, fontes e padrões já estabelecidos na demonstração PySide6.
+
+### Vendas da consulta completa
+
+Substituir a lista simples por uma tabela estruturada, preservando os registros e os valores da consulta aplicada.
+
+Usar cabeçalhos, colunas proporcionais, alinhamento monetário, quantidade de registros e total quando disponíveis.
+
+### Resultados por dia da semana
+
+Criar um detalhamento analítico com barras horizontais proporcionais, totais monetários e quantidade de dias registrados.
+
+Preservar os sete dias da semana, inclusive aqueles sem registros.
+
+Não criar barras fictícias para valores zerados.
+
+### Despesas por semana
+
+Organizar os intervalos e valores em uma tabela ou lista financeira estruturada.
+
+Preservar integralmente o critério de agrupamento e a consulta financeira independente.
+
+### Semana atual
+
+Avaliar uma janela compacta ou um painel contextual integrado à tela de Vendas.
+
+A apresentação deve mostrar o intervalo da semana, total, dias registrados e distribuição por pagamento quando houver vendas.
+
+Quando não houver registros, utilizar um estado vazio proporcional ao conteúdo.
+
+Preservar obrigatoriamente a independência dos filtros e o recorte de segunda-feira até hoje, sem incluir vendas futuras.
+
+### Padrão compartilhado
+
+Criar ou reutilizar componentes comuns para:
+
+- Cabeçalhos e títulos.
+- Ícones.
+- Tabelas e listas.
+- Estados vazios.
+- Botões de fechamento.
+- Margens e espaçamentos.
+- Redimensionamento.
+- Navegação por teclado.
+- Ajudas contextuais.
+
+Inspecionar as demais janelas secundárias já existentes e corrigir inconsistências visuais equivalentes dentro de um escopo limitado.
+
+Não implementar novas funcionalidades de negócio nesta rodada.
+
+---
+
+## 4. Validação final da identidade visual
+
+Após refinar as janelas secundárias, realizar uma última rodada de validação visual.
+
+Verificar as três telas principais e suas janelas auxiliares.
+
+Testar, quando possível, no Windows:
+
+- DPI de 100%, 125% e 150%.
+- Janela maximizada e reduzida.
+- Textos longos e valores elevados.
+- Tabelas com muitos registros.
+- Consultas sem resultados.
+- Navegação por teclado.
+- Abertura e fechamento de janelas.
+- Contraste e legibilidade.
+- Preservação do estado ao navegar.
+
+Registrar claramente quais verificações ocorreram no Windows real e quais foram apenas simuladas.
+
+Não utilizar essa validação como justificativa para redesenhar novamente as telas principais sem um problema concreto.
+
+---
+
+## 5. Retomar a cronologia original após o refinamento
+
+Esta é uma instrução essencial.
+
+**Ao concluir qualquer solicitação pontual do usuário, retomar o andamento do projeto a partir da etapa correspondente do `PLANO_REFORMA_DESKTOP.txt`.**
+
+O feedback visual atual é uma atividade de refinamento dentro das etapas de prototipação e aprovação.
+
+Ele não substitui as etapas seguintes.
+
+Antes de avançar, verificar o que já foi efetivamente concluído nas etapas 0, 1, 2 e 3.
+
+Não presumir conclusão apenas porque existem arquivos, capturas ou relatórios.
+
+Identificar:
+
+- O que foi concluído e validado.
+- O que foi executado parcialmente.
+- O que permanece pendente.
+- O que exige aprovação do usuário.
+- Qual é a próxima atividade prevista no plano.
+
+Em especial, verificar se a comparação entre Tkinter e PySide6 foi concluída com critérios equivalentes, incluindo desempenho, memória, dependências, manutenção, distribuição, acessibilidade e comportamento em diferentes escalas.
+
+Se as medições exigidas ainda não foram realizadas, não ignorá-las.
+
+A preferência visual pela demo PySide6 não substitui a decisão técnica documentada.
+
+---
+
+## 6. Preservação integral das funcionalidades
+
+O inventário V01–V08, A01–A04, F01–F09 e G01–G07 do plano original permanece obrigatório.
+
+Nenhuma função pode ser removida ou simplificada silenciosamente.
+
+Preservar especialmente:
+
+- Cadastro, edição e exclusão de vendas.
+- Duplicidade por data.
+- Histórico, seleção, ordenação e atalhos.
+- Filtros e consultas aplicadas.
+- Indicadores, médias e comparações.
+- Semana atual independente.
+- Exportações CSV e Excel.
+- Comparador A/B independente.
+- Consulta financeira independente.
+- Despesas, taxas e compras parceladas.
+- Datas de compra e fatura.
+- Histórico de regras de fechamento.
+- Cinco temas.
+- Preferências e configurações.
+- Backup e restauração.
+- Login e sessão.
+- Sincronização e tratamento de conflitos.
+- Atualizador e recuperação.
+- Funcionamento local sem internet.
+
+Preservar o banco SQLite, o caminho de dados, as preferências e os mecanismos de sincronização existentes.
+
+Não modificar a PWA nesta etapa.
+
+Não adicionar funcionalidades novas antes da etapa prevista para isso.
+
+---
+
+## 7. Preparação da implementação
+
+Após a aprovação visual e a decisão formal sobre a ferramenta, seguir a Etapa 4 do plano original.
+
+A sequência inicial prevista é:
+
+1. Navegação e Vendas.
+2. Análises.
+3. Finanças.
+4. Configurações e formulários.
+5. Revisão conjunta.
+
+Ajustes na ordem somente quando houver justificativa técnica documentada.
+
+Se PySide6 for escolhida, não reescrever o aplicativo do zero sem necessidade.
+
+Priorizar o reaproveitamento das regras de negócio, serviços, modelos, banco e mecanismos existentes.
+
+Separar a interface das regras somente na medida necessária e verificar a equivalência de cada extração.
+
+Manter a versão Tkinter funcional e protegida durante a implementação.
+
+Não misturar os dois sistemas gráficos na mesma janela.
+
+Não substituir a entrada principal do aplicativo antes da equivalência funcional.
+
+---
+
+## 8. Continuidade após novos feedbacks
+
+Durante o desenvolvimento, o usuário poderá solicitar alterações visuais, correções, esclarecimentos ou ajustes de comportamento.
+
+Essas solicitações devem ser tratadas da seguinte forma:
+
+**A. Feedback dentro do escopo aprovado**
+
+Executar o ajuste, validar e registrar o resultado.
+
+Depois, continuar a etapa corrente conforme o plano.
+
+**B. Feedback que modifica uma decisão anterior**
+
+Identificar a divergência, explicar suas consequências e solicitar aprovação quando necessário.
+
+Registrar a decisão antes de continuar a parte afetada.
+
+**C. Correção de erro ou regressão**
+
+Corrigir o problema, executar os testes pertinentes e verificar se outras funções foram afetadas.
+
+Retomar a etapa interrompida.
+
+**D. Nova funcionalidade fora do escopo**
+
+Registrar a sugestão para a etapa apropriada, sem antecipar sua implementação.
+
+O objetivo é manter continuidade e evitar que solicitações pontuais provoquem mudanças desnecessárias na direção do projeto.
+
+Não interpretar esta instrução como autorização para avançar automaticamente por pontos que exigem aprovação explícita.
+
+---
+
+## 9. Controle do andamento
+
+Manter um registro objetivo do progresso, vinculado às etapas do plano original.
+
+Para cada etapa, informar:
+
+- Estado: pendente, em andamento, bloqueada ou concluída.
+- Entregas realizadas.
+- Evidências de validação.
+- Pendências.
+- Decisões do usuário.
+- Próxima atividade.
+
+Não declarar uma etapa concluída enquanto seus critérios essenciais estiverem pendentes.
+
+Quando houver uma intervenção pontual, registrar a qual etapa ela pertence.
+
+Evitar documentos paralelos que contradigam o planejamento principal.
+
+---
+
+## 10. Entrega desta rodada
+
+Nesta execução, realizar apenas:
+
+1. Refinamento visual das janelas secundárias apresentadas.
+2. Correções visuais equivalentes nas demais janelas existentes, dentro de escopo limitado.
+3. Validação final da demonstração.
+4. Atualização do registro de andamento.
+5. Conferência das etapas já executadas em relação ao plano original.
+6. Identificação objetiva da próxima atividade.
+
+Não iniciar a migração funcional nesta execução.
+
+Não alterar o banco de produção.
+
+Não modificar a PWA.
+
+Não publicar nova versão estável.
+
+Ao concluir, apresentar o resultado visual e informar exatamente onde o projeto se encontra dentro do `PLANO_REFORMA_DESKTOP.txt`.
+
+Se a próxima atividade exigir aprovação, aguardar essa aprovação.
+
+Se for uma atividade já autorizada, independente e prevista na etapa corrente, poderá continuar normalmente, respeitando as restrições do plano.
+
+---
+
+## Diretriz permanente
+
+**O `PLANO_REFORMA_DESKTOP.txt` define a trajetória do projeto. Os feedbacks posteriores refinam essa trajetória, mas não a substituem.**
+
+A cada nova interação, preservar as decisões anteriores, executar o ajuste solicitado e retomar a cronologia definida.
+
+A prioridade é concluir a reforma do Gestão da Feira com identidade visual consistente, equivalência funcional comprovada, dados protegidos e implementação controlada.

@@ -14,6 +14,7 @@ app = preparar()
 janela = Aplicativo()
 janela.show()
 resultados = []
+janelas = []
 for largura, altura in [(1536, 1024), (1280, 800), (1000, 700)]:
     janela.resize(largura, altura)
     for area in ["Vendas", "Análises", "Finanças"]:
@@ -34,12 +35,35 @@ for largura, altura in [(1536, 1024), (1280, 800), (1000, 700)]:
                 dpr=janela.devicePixelRatioF(),
             )
         )
+    for nome in ["vendas", "dias", "despesas", "semana"]:
+        d = janela.criar_detalhe(nome)
+        d.show()
+        for _ in range(12):
+            app.processEvents()
+        assert d.corpo.width() <= d.scroll.viewport().width(), (nome, largura)
+        assert d.fechar.isVisible()
+        d.grab()
+        janelas.append(
+            dict(
+                detalhe=nome,
+                janela_principal=[largura, altura],
+                dimensoes=d.size().toTuple(),
+                viewport=d.scroll.viewport().width(),
+                conteudo=d.corpo.width(),
+                rolagem_vertical=d.scroll.verticalScrollBar().maximum(),
+                dpr=d.devicePixelRatioF(),
+            )
+        )
+        d.close()
+        d.deleteLater()
+        app.processEvents()
 Path(args.saida).write_text(
     json.dumps(
         dict(
             plataforma="Linux / Qt offscreen; não é um ensaio Windows",
             escala=os.environ.get("QT_SCALE_FACTOR", "1"),
             cenarios=resultados,
+            janelas_secundarias=janelas,
         ),
         ensure_ascii=False,
         indent=2,
@@ -48,6 +72,6 @@ Path(args.saida).write_text(
 )
 janela.close()
 print(
-    f"{len(resultados)} cenários renderizados, sem corte horizontal externo; escala Qt "
+    f"{len(resultados)} telas e {len(janelas)} janelas secundárias renderizadas sem corte horizontal externo; escala Qt "
     + os.environ.get("QT_SCALE_FACTOR", "1")
 )

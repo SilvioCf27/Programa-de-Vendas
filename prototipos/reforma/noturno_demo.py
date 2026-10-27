@@ -25,143 +25,35 @@ from estado_demo import Estado, HOJE, MESES, DIAS, agrupar, limites, dividir
 from modelo import moeda, AJUDAS
 from apresentacao_noturno import variacao_percentual
 
+from janelas_noturno import (
+    janela_vendas,
+    janela_dias,
+    janela_despesas,
+    janela_texto,
+    janela_pagamentos,
+    JanelaDetalhe,
+    Coluna,
+    contexto,
+)
+
 R = Path(__file__).resolve().parent / "recursos"
 from tema_noturno import C, ESTILO, estilo, TIPOGRAFIA, ESPACOS
 
 FAMILIA = "Segoe UI"
 
 
-def texto(s, size=10, color=None, bold=False, tipo=None):
-    w = W.QLabel(s)
-    pixels = TIPOGRAFIA[tipo] if tipo else round(size * 4 / 3)
-    w.setStyleSheet(
-        f'font-size:{pixels}px;color:{color or C["text"]};font-weight:{600 if bold else 400};background:transparent;border:0;'
-    )
-    return w
-
-
-def icone(nome, cor=None, size=20):
-    data = (
-        (R / "icones" / f"{nome}.svg")
-        .read_text()
-        .replace("currentColor", cor or C["text"])
-    )
-    pix = G.QPixmap(size * 2, size * 2)
-    pix.fill(Q.Qt.GlobalColor.transparent)
-    painter = G.QPainter(pix)
-    QtSvg.QSvgRenderer(Q.QByteArray(data.encode())).render(painter)
-    painter.end()
-    pix.setDevicePixelRatio(2)
-    return G.QIcon(pix)
-
-
-def botao(s, acao, nome=None, primary=False, danger=False):
-    b = W.QPushButton(s)
-    b.setMinimumHeight(36)
-    if nome:
-        b.setIcon(icone(nome))
-    b.setIconSize(Q.QSize(19, 19))
-    b.setProperty("primary", primary)
-    b.setProperty("query", nome == "search")
-    b.setProperty("danger", danger)
-    b.setCursor(Q.Qt.CursorShape.PointingHandCursor)
-    if not s and nome:
-        b.setAccessibleName({"settings": "Configurações"}.get(nome, nome))
-    b.clicked.connect(acao)
-    return b
-
-
-def combo(itens, atual=None):
-    w = W.QComboBox()
-    w.addItems([str(x) for x in itens])
-    w.setSizeAdjustPolicy(
-        W.QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
-    )
-    w.setMinimumContentsLength(4)
-    if atual is not None:
-        w.setCurrentText(str(atual))
-    return w
-
-
-def caixa(margem=14):
-    w = W.QFrame()
-    w.setProperty("panel", True)
-    layout = W.QVBoxLayout(w)
-    layout.setContentsMargins(margem, margem, margem, margem)
-    layout.setSpacing(10)
-    return w, layout
-
-
-def ajuda(chave, mensagem=None):
-    s = mensagem or AJUDAS.get(
-        chave,
-        "Indicador da consulta aplicada, incluindo dias registrados com zero. Totais não são limitados à página visível.",
-    )
-    b = botao("?", lambda: W.QMessageBox.information(b, "Como interpretar", s))
-    b.setFixedSize(23, 23)
-    b.setStyleSheet(estilo("padding:0;font-size:10pt;color:@muted@;"))
-    b.setToolTip(s)
-    b.setAccessibleName("Ajuda: " + chave)
-    return b
-
-
-def cor_alpha(valor, alfa):
-    cor = G.QColor(valor)
-    cor.setAlpha(alfa)
-    return cor
-
-
-def tile(nome, cor, size=40):
-    w = W.QLabel()
-    w.setPixmap(icone(nome, cor, 25).pixmap(25, 25))
-    w.setAlignment(Q.Qt.AlignmentFlag.AlignCenter)
-    w.setFixedSize(size, size)
-    w.setStyleSheet(
-        f"background:{cor}22;border:0;border-radius:9px;".replace(
-            cor + "22",
-            "rgba(" + ",".join(str(x) for x in G.QColor(cor).getRgb()[:3]) + ",35)",
-        )
-    )
-    return w
-
-
-def titulo_secao(nome, ico, sub=None):
-    w = W.QWidget()
-    h = W.QHBoxLayout(w)
-    h.setContentsMargins(0, 0, 0, 0)
-    h.setSpacing(12)
-    h.addWidget(tile(ico, C["blue"], 34))
-    col = W.QVBoxLayout()
-    col.setSpacing(3)
-    col.addWidget(texto(nome, 14, bold=True, tipo="painel"))
-    if sub:
-        col.addWidget(texto(sub, 9, C["muted"]))
-    h.addLayout(col, 1)
-    w.setSizePolicy(W.QSizePolicy.Policy.Expanding, W.QSizePolicy.Policy.Fixed)
-    return w
-
-
-def acesso(nome, sub, ico, cor, acao):
-    b = botao("", acao)
-    h = W.QHBoxLayout(b)
-    h.setContentsMargins(12, 12, 12, 12)
-    h.addWidget(tile(ico, cor, 42))
-    col = W.QVBoxLayout()
-    col.setSpacing(5)
-    title = texto(nome, 10, bold=True)
-    title.setWordWrap(True)
-    col.addWidget(title)
-    label = texto(sub, 8, C["muted"])
-    label.setWordWrap(True)
-    col.addWidget(label)
-    h.addLayout(col, 1)
-    h.addWidget(texto("›", 22, cor))
-    # Labels must not intercept clicks intended for the whole access card.
-    for w in b.findChildren(W.QWidget):
-        w.setAttribute(Q.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-    b.setAccessibleName(nome)
-    b.setMinimumHeight(76)
-    return b
+from componentes_noturno import (
+    texto,
+    icone,
+    botao,
+    combo,
+    caixa,
+    ajuda,
+    cor_alpha,
+    tile,
+    titulo_secao,
+    acesso,
+)
 
 
 class FaixaSemana(W.QFrame):
@@ -857,20 +749,41 @@ class Aplicativo(W.QWidget):
             "Prévia visual. Este formulário ainda não está conectado à lógica do aplicativo. Nenhum dado real será acessado ou alterado.",
         )
 
+    def abrir_detalhe(self, janela):
+        try:
+            janela.exec()
+        finally:
+            janela.deleteLater()
+
     def detalhes(self, nome, linhas):
-        d = W.QDialog(self)
-        d.setWindowTitle(nome)
-        d.resize(760, 480)
-        l = W.QVBoxLayout(d)
-        l.addWidget(texto(nome, 18, bold=True))
-        area = W.QTextBrowser()
-        area.setPlainText("\n\n".join(linhas))
-        area.setStyleSheet(
-            estilo("background:@panel@;border:1px solid @border@;padding:15px;")
-        )
-        l.addWidget(area)
-        l.addWidget(botao("Fechar", d.accept))
-        d.exec()
+        self.abrir_detalhe(janela_texto(self, nome, linhas))
+
+    def criar_detalhe(self, nome):
+        from datetime import timedelta
+
+        if nome == "despesas":
+            return janela_despesas(
+                self,
+                self.estado.consultar_financas(self.intervalo_financas),
+                self.intervalo_financas,
+            )
+        if nome == "semana":
+            periodo = (HOJE - timedelta(days=HOJE.weekday()), HOJE)
+            return janela_vendas(
+                self,
+                self.estado.consultar_vendas(periodo),
+                periodo,
+                "Semana atual — independente dos filtros",
+                True,
+            )
+        rows = self.estado.consultar_vendas(self.intervalo_vendas, self.dias)
+        if nome == "vendas":
+            return janela_vendas(self, rows, self.intervalo_vendas)
+        if nome == "dias":
+            return janela_dias(self, rows, self.intervalo_vendas)
+        if nome == "pagamentos":
+            return janela_pagamentos(self, rows, self.intervalo_vendas)
+        raise ValueError("Detalhe desconhecido: " + nome)
 
     def mostrar(self, nome):
         if self.area == nome:
@@ -1269,16 +1182,7 @@ class Aplicativo(W.QWidget):
             label.setText(moeda(sum(getattr(r, key) for r in semana)))
 
     def detalhar_semana(self):
-        from datetime import timedelta
-
-        rows = self.estado.consultar_vendas(
-            (HOJE - timedelta(days=HOJE.weekday()), HOJE)
-        )
-        self.detalhes(
-            "Semana atual — independente dos filtros",
-            [f"{r.data:%d/%m/%Y} · {moeda(r.total)}" for r in rows]
-            or ["Nenhuma venda registrada até hoje nesta semana fictícia."],
-        )
+        self.abrir_detalhe(self.criar_detalhe("semana"))
 
     def construir_financas(self, l):
         filtro, fl = caixa(12)
@@ -1528,21 +1432,7 @@ class Aplicativo(W.QWidget):
         )
 
     def despesas_semanas(self):
-        from datetime import timedelta
-
-        grupos = {}
-        for r in self.estado.consultar_financas(self.intervalo_financas):
-            if not r.taxa:
-                segunda = r.data - timedelta(days=r.data.weekday())
-                grupos[segunda] = grupos.get(segunda, 0) + r.valor
-        self.detalhes(
-            "Despesas por semana",
-            [
-                f"{d:%d/%m} a {d+timedelta(days=6):%d/%m}: {moeda(v)}"
-                for d, v in sorted(grupos.items(), reverse=True)
-            ]
-            or ["Sem despesas no período."],
-        )
+        self.abrir_detalhe(self.criar_detalhe("despesas"))
 
     def construir_analises(self, l):
         topo = W.QHBoxLayout()
@@ -1662,7 +1552,7 @@ class Aplicativo(W.QWidget):
                 (
                     "Formas de pagamento",
                     "chart-pie",
-                    lambda: self.detalhes("Formas de pagamento", [self.participacao]),
+                    self.detalhes_pagamentos,
                 ),
                 ("Lista de vendas da seleção", "list", self.detalhes_vendas),
             ]
@@ -1758,14 +1648,10 @@ class Aplicativo(W.QWidget):
         self.ana_percentual.setText(variacao_percentual(va, vb))
 
     def detalhes_dias(self):
-        rows = self.estado.consultar_vendas(self.intervalo_vendas, self.dias)
-        self.detalhes(
-            "Resultados por dia da semana",
-            [
-                f"{s}: {moeda(sum(r.total for r in rows if r.data.weekday()==i))} · {sum(r.data.weekday()==i for r in rows)} dias registrados"
-                for i, s in enumerate(DIAS)
-            ],
-        )
+        self.abrir_detalhe(self.criar_detalhe("dias"))
+
+    def detalhes_pagamentos(self):
+        self.abrir_detalhe(self.criar_detalhe("pagamentos"))
 
     def detalhes_evolucao(self):
         from datetime import timedelta
@@ -1784,21 +1670,32 @@ class Aplicativo(W.QWidget):
             )
             key = d.replace(day=1)
             grupos[key] = grupos.get(key, 0) + r.total
-        self.detalhes(
-            "Evolução por " + modo.lower() + " — seleção aplicada",
-            [f"{k:%m/%Y}: {moeda(v)}" for k, v in sorted(grupos.items())]
-            or ["Sem vendas."],
+        d = JanelaDetalhe(
+            self,
+            "Evolução por " + modo.lower(),
+            contexto(self.intervalo_vendas),
+            "trending-up",
         )
+        d.resumo(
+            [
+                ("Total da seleção", moeda(sum(grupos.values()))),
+                ("Períodos com registros", len(grupos)),
+            ]
+        )
+        if grupos:
+            d.adicionar_tabela(
+                [Coluna("Período", "mes", True), Coluna("Vendas", "moeda")],
+                sorted(grupos.items()),
+            )
+        else:
+            d.vazio(
+                "Sem vendas nesta consulta",
+                "Altere os filtros de Vendas para consultar outro período.",
+            )
+        self.abrir_detalhe(d)
 
     def detalhes_vendas(self):
-        self.detalhes(
-            "Vendas da consulta completa",
-            [
-                f"{r.data:%d/%m/%Y}: {moeda(r.total)}"
-                for r in self.estado.consultar_vendas(self.intervalo_vendas, self.dias)
-            ]
-            or ["Sem vendas."],
-        )
+        self.abrir_detalhe(self.criar_detalhe("vendas"))
 
     def confirmar_exclusao(self, area, ids):
         if not ids:
@@ -1861,6 +1758,9 @@ if __name__ == "__main__":
         "--pagina", choices=["Vendas", "Análises", "Finanças"], default="Vendas"
     )
     p.add_argument("--captura")
+    p.add_argument(
+        "--detalhe", choices=["vendas", "dias", "despesas", "semana", "pagamentos"]
+    )
     p.add_argument("--largura", type=int, default=1536)
     p.add_argument("--altura", type=int, default=1024)
     args = p.parse_args()
@@ -1870,10 +1770,18 @@ if __name__ == "__main__":
     janela.mostrar(args.pagina)
     janela.show()
     app.processEvents()
+    alvo = janela
+    detalhe = None
+    if args.detalhe:
+        detalhe = janela.criar_detalhe(args.detalhe)
+        detalhe.show()
+        alvo = detalhe
     if args.captura:
         for _ in range(6):
             app.processEvents()
-        janela.grab().save(args.captura)
+        alvo.grab().save(args.captura)
+        if detalhe:
+            detalhe.close()
         janela.close()
     else:
         sys.exit(app.exec())

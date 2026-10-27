@@ -1,10 +1,12 @@
 # Estudos da reforma do desktop
 
-**Nova entrega:** [demo Noturno com as três telas e guia de teste](NOTURNO.md). As capturas e instruções dessa página abaixo documentam a primeira proposta; a nova revisão está no link acima.
+**Rodada atual:** [janelas secundárias e validação](JANELAS_SECUNDARIAS.md). O andamento oficial permanece na seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
+
+**Entrega anterior:** [demo Noturno com as três telas e guia de teste](NOTURNO.md). As capturas e instruções dessa página abaixo documentam a primeira proposta; a nova revisão está no link acima.
 
 **Estudo para revisão — não é uma nova versão do programa.**
 
-**Etapa atual: definir a identidade visual.** A composição inicial ainda precisa de refinamento e não foi aprovada. Antes da escolha técnica, o usuário vai testar as demos e avaliar referências criadas com outra IA.
+**Etapa atual: prototipação e validação final, com decisão técnica pendente.** O usuário aprovou visualmente as três telas principais com ressalvas. Esta rodada refina as janelas secundárias; não inicia a migração. A comparação técnica da Etapa 3 ainda é parcial. As seções abaixo sobre a primeira proposta são histórico, não o estado atual de aprovação.
 
 - [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
 - [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)
@@ -98,4 +100,4 @@ Fechar as demos descarta a interação; nenhuma venda é gravada. Não substitua
 - [Medições brutas do programa atual](BASE_MEDICOES.json)
 - [Medições brutas dos protótipos](PROTOTIPOS_MEDICOES.json)
 
-O próximo passo é executar as demos localmente e obter propostas de identidade visual com o material acima. Depois refinaremos a composição escolhida em uma demo, antes da escolha técnica e da integração às regras reais. Uma preferência por aparência não será tratada como autorização para alterar cálculos ou excluir funções.
+O andamento atual e a próxima atividade estão na seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A preferência visual não substitui a decisão técnica nem autoriza alterar cálculos ou excluir funções. As janelas secundárias desta rodada estão na [galeria da entrega](JANELAS_SECUNDARIAS.md).

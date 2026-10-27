@@ -1,0 +1,304 @@
+GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
+Versão do plano: 1 — 26/10/2026
+Estado: rascunho para aprovação do usuário.
+Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
+
+1. OBJETIVO E DIREÇÃO
+
+O programa já funciona e atende ao uso diário. Esta reforma deve tornar a
+leitura, a navegação e as ações mais claras, com melhor aproveitamento do
+espaço. Não se trata apenas de trocar cores, fontes ou contornos.
+
+A prioridade é corrigir a hierarquia: informações essenciais em destaque,
+ações fáceis de encontrar, tabelas com área útil e detalhes secundários
+acessíveis sem ocupar permanentemente a tela.
+
+O desktop continua em Python. A escolha entre Tkinter e PySide6 será feita
+após comparar protótipos e medir resultados. Python não precisa ser trocado
+para reorganizar a interface.
+
+Esta primeira etapa é exclusiva do desktop. A adaptação da PWA ficará para
+depois da aprovação do layout definitivo. Os dados e a sincronização entre
+as duas versões devem continuar compatíveis durante todo o processo.
+
+2. DECISÕES JÁ ALINHADAS
+
+- Preservar a aparência, a ordem e a leitura dos blocos superiores aprovados
+  na tela inicial, incluindo os indicadores de vendas e o resumo semanal.
+- A tela inicial reúne esses blocos, o histórico de vendas e seus filtros.
+- Análises e Finanças devem ter telas próprias, com espaço para seu conteúdo.
+  Elas mantêm a primeira linha comum do aplicativo e a navegação principal,
+  sem repetir os indicadores de vendas da tela inicial.
+- Dar identidade e separação claras a Vendas, Análises e Finanças. A forma
+  definitiva de representar essa navegação será avaliada nos protótipos.
+- Evitar abas dentro de abas. Trocar essa organização por seções, ações de
+  contexto ou áreas de detalhe, sem perder o acesso às funções atuais.
+- Em Análises, priorizar resultados por semana e comparação A/B.
+- Reorganizar o resumo do período, preservando seus dados e cálculos.
+- Em Finanças, dar espaço real aos lançamentos. Os resumos devem apoiar a
+  leitura, sem comprimir a lista nem gerar grandes áreas vazias.
+- Remover o menu Exportar da barra superior da janela. Manter as exportações
+  CSV e Excel no botão já existente ao lado de Nova venda.
+- Usar espaçamento, alinhamento, tipografia e contraste de forma consistente.
+- Reduzir explicações permanentes e usar ajudas contextuais quando adequado.
+- Novas funcionalidades ficam para a última etapa, após aprovar o layout.
+
+3. COMO TRATAR TEXTOS E AJUDAS
+
+Rótulos e ações precisam fazer sentido sem exigir que o usuário abra uma
+explicação. O ponto de interrogação complementa a leitura; não deve compensar
+um nome ambíguo ou esconder uma informação necessária para decidir.
+
+Explicações de fórmulas, médias, períodos e exemplos podem ir para ajudas
+curtas ao passar o mouse. As mesmas ajudas devem poder ser abertas por clique
+e pelo teclado. Uma ajuda não pode desaparecer antes de permitir a leitura.
+
+Devem continuar visíveis quando relevantes: período consultado, filtros ainda
+não aplicados, campos inválidos, operação em andamento, ausência de conexão,
+conflitos, saldo provisório ou estimado e confirmação de ação destrutiva.
+
+Valores brutos, taxas, despesas e saldo não podem ser apresentados de forma
+que sugira um cálculo diferente. Saldo não será renomeado para lucro sem uma
+mudança de regra discutida separadamente.
+
+4. INVENTÁRIO DAS FUNÇÕES A PRESERVAR
+
+A lista abaixo parte do código atual. Na etapa de levantamento, cada item
+receberá o caminho atual, o destino proposto e a forma de conferir o resultado.
+Funções adicionais encontradas no levantamento também devem entrar na lista.
+
+V01 — Cadastro, edição e exclusão de vendas, com confirmação e validação.
+V02 — Uma venda por data, mantendo o tratamento correto de duplicidade e a
+      capacidade de gravar normalmente depois de uma tentativa recusada.
+V03 — Histórico, ordenação, seleção, edição por duplo clique e navegação por
+      teclado; valores monetários e datas formatados corretamente.
+V04 — Filtros de ano, mês, fechamento e dias da semana; aplicar, limpar e
+      distinguir campos em preparação da consulta efetivamente aplicada.
+V05 — Totais, dinheiro, Pix, cartão, participação, dias de feira, média e
+      comparação com o período anterior.
+V06 — Semana atual independente dos filtros: segunda-feira até hoje, sem
+      incluir registros futuros; atualização ao gravar, sincronizar e virar
+      o dia, sem alterar formulários ou filtros em preparação.
+V07 — Preferência de abertura: fechamento atual, mês atual, ano atual ou todas
+      as vendas, com persistência local e respeito ao histórico de regras.
+V08 — CSV e Excel da seleção aplicada. Remover apenas o acesso duplicado do
+      menu, preservando o botão, os formatos e o conteúdo dos arquivos.
+
+A01 — Histórico semanal com totais, dias registrados e médias; semanas
+      parciais e ausência de registros claramente identificadas.
+A02 — Comparação A/B por data, mês, fechamento e intervalo, independente dos
+      filtros de Vendas conforme a regra atual desse comparador.
+A03 — Resumo do período, comparação anterior, formas de pagamento, resultados
+      por dia da semana e evolução mensal ou por fechamento.
+A04 — A consulta geral de Análises continua usando a seleção aplicada em
+      Vendas, como no desktop atual. Ter uma tela própria não muda esse
+      contrato. Mostrar o período e oferecer um caminho claro aos filtros.
+      Tornar essa consulta independente seria outra mudança, a alinhar antes.
+
+F01 — Consulta própria de Finanças por semana, mês, fechamento e ano, com
+      seletores adaptados ao período escolhido.
+F02 — Vendas brutas, taxas, vendas menos taxas, despesas/meta, falta cobrir e
+      saldo após despesas, preservando os significados e avisos atuais.
+F03 — Cadastro, edição e exclusão de despesas e lançamentos de taxas; meios
+      de pagamento, categorias, descrições e visualização por semana.
+F04 — Compras parceladas: valor total, divisão exata em centavos e edição da
+      compra inteira a partir de qualquer parcela, com as proteções atuais.
+F05 — Data da compra e data da fatura separadas. Compra no dia do fechamento
+      entra na fatura seguinte; registros antigos preservam a data conhecida.
+F06 — Taxas da maquininha por semana e dia, incluindo vários dias de uma vez.
+F07 — Ajustes anuais históricos confirmados ou estimados, cobertura de datas,
+      impedimento de sobreposição e ausência de rateio indevido.
+F08 — Despesas agrupadas por semana e histórico de taxas anuais. Podem mudar
+      de lugar, mas precisam continuar acessíveis sem abas aninhadas confusas.
+F09 — Configuração de fechamento por vigência, preservando o histórico e as
+      regras das consultas já existentes.
+
+G01 — Os cinco temas atuais, fontes, ícones, legibilidade e preferências.
+      A nova interface precisa demonstrar equivalência visual antes da troca.
+G02 — Acesso às configurações, local dos dados, versão e diagnósticos.
+G03 — Backup local, restauração, verificação de integridade e backup na pasta
+      do Drive, com as verificações de segurança e retenção existentes.
+G04 — Login, sessão protegida no Windows, desconexão e sincronização manual
+      e automática, incluindo retomada de operações e revisão de conflitos.
+G05 — Conferência e transferência inicial para a nuvem, sem duplicação.
+G06 — Atualizador do executável, verificação do pacote, backup antes da troca
+      e recuperação dos arquivos da versão anterior quando necessária.
+G07 — Uso local sem internet e indicações honestas do estado da nuvem.
+
+Continuam valendo em todos os lugares: dias registrados com zero contam como
+feiras; ausência de registro não conta. Cada consulta preserva sua regra atual
+para registros futuros. A reforma não reclassifica compras, não recalcula
+histórico e não altera protocolos, permissões ou regras do banco.
+
+5. PROPOSTA INICIAL DE ORGANIZAÇÃO — A VALIDAR NO PROTÓTIPO
+
+VENDAS / TELA INICIAL
+Manter os blocos superiores aprovados. Reconstruir a área inferior com
+histórico predominante, filtros próximos e compactos, colunas proporcionais
+e ações alinhadas. A redução da janela não pode inutilizar a tabela.
+
+ANÁLISES
+Usar o espaço da tela para resultados semanais como principal ponto de entrada.
+Disponibilizar Comparar A/B com uma ação clara e campos organizados. Os detalhes
+do período ficam em uma seção própria, com acesso visível e menor destaque.
+Não repetir a tela inicial completa e não esconder funções para simplificar
+apenas a aparência. A composição exata será mostrada antes de implementar.
+
+FINANÇAS
+Priorizar a leitura do período e a lista de lançamentos. Organizar os mesmos
+indicadores em níveis de importância, sem remover os secundários. Aproximar
+as ações da lista e dar largura útil à descrição, às datas e aos valores.
+Despesas por semana e ajustes históricos terão acesso secundário explícito,
+sem competir permanentemente com o espaço dos lançamentos.
+
+Em todas as telas, manter o estado ao navegar: consulta aplicada, seleção,
+rolagem e campos em preparação, quando fizer sentido. Um formulário aberto
+não pode ser perdido por uma atualização ou mudança de área. Se houver um
+impedimento para navegar, explicá-lo e permitir concluir ou cancelar a edição.
+
+6. ETAPAS E ENTREGAS
+
+ETAPA 0 — APROVAR ESTE PLANO
+Entrega: este TXT e a confirmação do escopo pelo usuário.
+Estado: aguardando aprovação. Nenhuma interface foi trocada nesta etapa.
+Registrar neste mesmo documento eventuais ajustes de direção.
+
+ETAPA 1 — LEVANTAR A INTERFACE E MEDIR A BASE ATUAL
+Mapear o inventário, as telas, as ações e os estados de navegação. Registrar
+onde há informação repetida, espaço ocioso, desalinhamento ou conteúdo cortado.
+Medir abertura e primeira visita e retorno a cada área, distinguindo consulta
+ao banco, cálculos, construção de widgets e espera de rede.
+Usar dados fictícios representativos e um conjunto ampliado. Registrar máquina,
+versões, quantidade de registros e repetições para comparar depois.
+Entrega: mapa de funções e medições, com hipóteses separadas de causas provadas.
+
+Pontos já observados no código, ainda sem diagnóstico de causa do lag:
+atualizar Vendas também reconstrói Análises; entrar em Finanças consulta os
+dados e preenche tabelas. Esses caminhos serão medidos antes de otimizar.
+
+ETAPA 2 — COMPARAR DOIS PROTÓTIPOS
+Construir primeiro uma representação de Finanças em Tkinter refinado e outra
+em PySide6, com o mesmo conteúdo, dados, dimensões e operações demonstradas.
+Finanças é a referência inicial porque concentra o problema de hierarquia,
+a lista espremida e a disputa de espaço entre blocos.
+Mostrar também a navegação e a organização prevista de Vendas e Análises para
+avaliar o conjunto. Não reconstruir o programa completo duas vezes.
+Os protótipos usam processos e pastas isolados, somente dados fictícios e sem
+acesso à conta, ao banco pessoal, ao Drive ou à sincronização de produção.
+Distinguir ações demonstradas de ações já conectadas à lógica real.
+Entrega: imagens comparáveis e uma demonstração interativa quando útil. Se
+as imagens do chat não abrirem, disponibilizar uma prévia acessível no GitHub.
+A publicação da prévia não implica aprovação da interface nem nova release.
+
+ETAPA 3 — ESCOLHER A FERRAMENTA E APROVAR O LAYOUT
+Comparar clareza, espaço da tabela, alinhamento, navegação, ajudas, teclado,
+fontes, temas e adaptação a diferentes tamanhos e escalas do Windows.
+Comparar também tempo de abertura, resposta, memória, tamanho do pacote,
+dependências, manutenção e condições de distribuição.
+Tkinter tem menor custo de troca e pode continuar se atender ao resultado.
+PySide6 amplia os recursos de interface, mas exige revisar integração, tarefas
+em segundo plano, temas, empacotamento e testes. Não é automaticamente mais
+rápido. As primeiras medições de um protótipo leve não representam sozinhas
+a velocidade do programa completo.
+Entrega: recomendação fundamentada e aprovação do usuário para a ferramenta
+e para o layout. A escolha visual e a escolha técnica devem ficar registradas.
+
+ETAPA 4 — IMPLEMENTAR POR PARTES
+Preparar a navegação e a separação entre interface e regras apenas no necessário.
+Se houver regra misturada a uma tela, preservá-la e verificar a equivalência
+ao extraí-la; não reescrever cálculos junto com o visual.
+Sequência inicial: navegação e Vendas; Análises; Finanças; configurações e
+formulários; revisão conjunta. Ajustar a sequência se os protótipos justificarem.
+A cada entrega, mostrar o resultado, atualizar o mapa de funções e conferir
+que os caminhos antigos têm um equivalente acessível no novo desenho.
+Não misturar os dois sistemas de interface dentro de uma mesma janela. Se a
+escolha for PySide6, integrar por etapas isoladas e substituir a entrada do
+aplicativo somente depois de verificar a equivalência.
+
+ETAPA 5 — REFINAR A FLUIDEZ E VALIDAR O CONJUNTO
+Comparar os mesmos cenários da base atual. Evitar consultas, cálculos e
+reconstruções visuais desnecessárias de telas não visíveis. Carregar detalhes
+quando forem usados e invalidar resultados guardados ao mudar os dados.
+Nenhuma otimização pode mostrar dados antigos como se estivessem atualizados.
+Rede e tarefas demoradas não devem bloquear a interação. Widgets continuam
+sendo manipulados pela thread da interface, respeitando a ferramenta escolhida.
+A troca de tela não pode duplicar agendadores, sincronizações ou eventos.
+Sem animações artificiais, atrasos de propósito ou efeitos que prejudiquem
+leitura. Medir antes e depois; escolher metas de melhoria a partir da base,
+sem prometer números antes de obter medições comparáveis.
+
+ETAPA 6 — REVISAR, APROVAR E PUBLICAR
+Validar cada item do inventário, com atenção a parcelas, datas, dinheiro,
+conflitos, backups, atualização e formulários em preparação.
+Executar os testes adequados à mudança, adaptando os testes gráficos à nova
+estrutura sem retirar as verificações de negócio e de proteção dos dados.
+Conferir janelas menores, tela cheia, escalas do Windows de 100%, 125% e 150%,
+quando disponíveis, os temas, o teclado e os textos. Informar o que não puder
+ser verificado e como essa pendência será resolvida antes da publicação.
+Gerar e testar o executável no Windows com banco fictício. Ensaiar a atualização
+a partir da versão estável, incluindo dados, sessão, configurações e recuperação.
+Compatibilidade do banco não será presumida só porque o arquivo abre.
+Entrega: revisão visual do usuário, relatório dos testes, notas da versão e
+publicação aprovada. Os protótipos não substituem o executável em uso.
+
+ETAPA 7 — ADAPTAR A PWA E AVALIAR NOVAS FUNCIONALIDADES
+Somente após aprovar e estabilizar o layout do desktop, planejar a adaptação
+do PWA, respeitando interação por toque e o espaço do celular.
+Depois, avaliar novas funções e bibliotecas em uma lista separada, com problema
+concreto, benefício, manutenção e impacto sobre a interface aprovada.
+Ferramentas essenciais ao protótipo, à interface escolhida e aos testes podem
+ser avaliadas antes. Isso não autoriza acrescentar recursos de negócio durante
+a reforma. Bibliotecas de gráficos, automações ou recursos adicionais esperam
+esta última etapa, salvo uma necessidade indispensável alinhada com o usuário.
+
+7. CONTROLE DE MUDANÇAS E COMUNICAÇÃO
+
+Antes de cada etapa: explicar objetivo, áreas afetadas, resultado esperado e
+como ele será verificado. Ao concluir: mostrar o que mudou, o que foi testado,
+limitações encontradas e a próxima etapa.
+
+Se surgir dúvida que altere regra, comportamento, acesso a uma função, conteúdo
+dos dados ou escopo aprovado, apresentar o caso e aguardar a resposta antes de
+seguir com essa parte. Outras atividades independentes podem continuar.
+Escolhas de acabamento coerentes com o desenho aprovado não precisam gerar
+uma pergunta a cada ajuste. Mudanças de direção devem atualizar este plano.
+
+Manter alterações pequenas e revisáveis. Commits de planejamento e protótipos
+podem ser identificados como tais, mas uma nova interface não será lançada como
+versão estável antes da aprovação visual e das verificações previstas.
+Usar uma frente de desenvolvimento separada da versão em uso para implementar
+a reforma; correções urgentes da versão estável permanecem distinguíveis.
+
+Nenhum dado pessoal será incluído no repositório ou nas prévias. Não restaurar,
+substituir ou migrar o banco pessoal para testar layout. Alterações de estrutura
+ou protocolo que se tornem necessárias exigem justificativa, plano de backup,
+compatibilidade e alinhamento específico antes de execução.
+Preservar o banco em %LOCALAPPDATA%\ProgramFeira\vendas.db, o caminho
+customizado PROGRAMFEIRA_DATA_DIR quando existente, as preferências locais e
+a sessão protegida. Mudar de ferramenta visual não exige trocar o banco nem
+o mecanismo de sincronização. Uma alteração disso precisa de alinhamento
+específico e não faz parte desta aprovação visual.
+A aprovação de uma aparência não autoriza alterar cálculos ou remover funções.
+
+8. CRITÉRIOS PARA CONCLUIR A ENTREGA DO DESKTOP
+
+[ ] Cada função do inventário tem destino e acesso conferidos.
+[ ] Os blocos superiores aprovados foram preservados na tela inicial.
+[ ] Análises e Finanças têm telas próprias e hierarquia clara.
+[ ] O histórico semanal e a comparação A/B são fáceis de encontrar.
+[ ] Os lançamentos financeiros têm espaço útil e ações próximas.
+[ ] A navegação evita abas aninhadas e preserva o contexto do usuário.
+[ ] O menu duplicado Exportar saiu; CSV e Excel continuam pelo botão existente.
+[ ] Textos e ajudas foram revisados sem esconder avisos essenciais.
+[ ] Temas, teclado, dimensões e escalas foram conferidos, com pendências claras.
+[ ] As medições de fluidez são comparáveis e sem regressões inexplicadas.
+[ ] Regras, dados, backup, sessão, sincronização e atualizador foram validados.
+[ ] O usuário aprovou o layout definitivo.
+[ ] O pacote Windows e o ensaio de atualização foram aprovados.
+[ ] A adaptação da PWA e as novas funções estão separadas desta entrega, com
+    seus próximos passos registrados para depois da aprovação do desktop.
+
+9. PRÓXIMO PASSO APÓS APROVAR ESTE DOCUMENTO
+
+Levantar o mapa de funções e as medições e, em seguida, preparar a comparação
+de Finanças em Tkinter e PySide6. A decisão de tecnologia permanece em aberto.

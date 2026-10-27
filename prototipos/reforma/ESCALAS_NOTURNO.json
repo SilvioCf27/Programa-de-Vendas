@@ -84,6 +84,188 @@
         "rolagem_vertical": 371,
         "dpr": 1.0
       }
+    ],
+    "janelas_secundarias": [
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          516
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          600
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          480
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      }
     ]
   },
   {
@@ -171,6 +353,188 @@
         "rolagem_vertical": 371,
         "dpr": 1.25
       }
+    ],
+    "janelas_secundarias": [
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          516
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          600
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          480
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      }
     ]
   },
   {
@@ -256,6 +620,188 @@
         "viewport": 726,
         "conteudo": 726,
         "rolagem_vertical": 371,
+        "dpr": 1.5
+      }
+    ],
+    "janelas_secundarias": [
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1536,
+          1024
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          516
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          600
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          960,
+          480
+        ],
+        "viewport": 920,
+        "conteudo": 920,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1280,
+          800
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "vendas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          516
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "dias",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          600
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "despesas",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          936,
+          480
+        ],
+        "viewport": 896,
+        "conteudo": 896,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "detalhe": "semana",
+        "janela_principal": [
+          1000,
+          700
+        ],
+        "dimensoes": [
+          640,
+          340
+        ],
+        "viewport": 600,
+        "conteudo": 600,
+        "rolagem_vertical": 0,
         "dpr": 1.5
       }
     ]

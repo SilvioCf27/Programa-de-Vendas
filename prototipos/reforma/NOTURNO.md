@@ -1,5 +1,7 @@
 # Revisão Noturno — demonstração para avaliar no VS Code
 
+**Entrega atual:** [janelas secundárias refinadas](JANELAS_SECUNDARIAS.md). As três telas principais abaixo foram preservadas. O estado oficial da reforma está na seção 17 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).
+
 Esta revisão aplica a direção das três imagens enviadas pelo usuário. **É uma demo isolada com dados fictícios; o aplicativo instalado e a PWA continuam inalterados.** A implementação visual usa PySide6 para avaliar o desenho. Isso não encerra a comparação técnica com Tkinter nem autoriza a substituição do desktop.
 
 ## Refinamento orientado pelo Read.txt completo
@@ -72,7 +74,7 @@ Em 1.280 × 800, os seis indicadores se reorganizam em duas linhas. Há rolagem 
 
 [Ver Vendas em janela menor](imagens/noturno-vendas-menor.png)
 
-## Verificações desta entrega
+## Verificações da rodada anterior das telas principais
 
 - **19 testes da revisão Noturno passaram** no Linux com Python 3.13.5 / PySide6 6.10.2: totais em centavos, períodos, zero/futuro, isolamento, seleção por página, totais independentes da paginação, consultas, A/B, cancelamento e confirmação de exclusão, última página, estado vazio, atualização financeira, navegação e largura menor.
 - **4 testes das demos anteriores passaram novamente**, preservando a comparação.

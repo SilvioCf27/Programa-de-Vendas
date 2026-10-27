@@ -30,7 +30,19 @@ Se não tiver o Python 3.13, confira as versões instaladas com `py -0p`. Python
 
 Para a demo Tkinter sozinha não é necessário instalar os requisitos: ela usa a biblioteca padrão. PySide6 precisa da instalação acima. Caso apareça `No module named tkinter`, modifique a instalação do Python no Windows e habilite Tcl/Tk.
 
-## 3. Rodar pelo terminal ou pelo botão de execução
+## 3. Abrir a nova revisão Noturno
+
+Depois de preparar o ambiente ou atualizar essa cópia com `git pull --ff-only origin reforma/estudo-interface`, execute:
+
+```powershell
+.\.venv-estudo\Scripts\python.exe prototipos/reforma/noturno_demo.py
+```
+
+No VS Code, selecione o interpretador `.venv-estudo\Scripts\python.exe` e escolha **Reforma — identidade Noturno (nova demo)** em Executar e Depurar; pressione F5.
+
+Esta é a revisão com navegação lateral, fundos, Inter e controles de seleção/paginação. As fontes e imagens já estão incluídas; não precisa instalá-las no Windows. Os mesmos requisitos da demo Qt anterior são suficientes. Veja [o que funciona e as limitações](NOTURNO.md).
+
+## Demos anteriores para comparação
 
 Pelo terminal:
 

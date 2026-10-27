@@ -1,4 +1,6 @@
-# Primeira proposta para a reforma do desktop
+# Estudos da reforma do desktop
+
+**Nova entrega:** [demo Noturno com as três telas e guia de teste](NOTURNO.md). As capturas e instruções dessa página abaixo documentam a primeira proposta; a nova revisão está no link acima.
 
 **Estudo para revisão — não é uma nova versão do programa.**
 

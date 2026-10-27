@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — IDENTIDADE CONSOLIDADA PARA A PRÓXIMA DEMO
-Estado: recursos conferidos; aplicação na demo ainda pendente.
+Estado: identidade aplicada à revisão Noturno; revisão visual e Windows pendentes.
 
 DECISÕES DO USUÁRIO
 A paleta da mensagem Paleta oficial proposta — Tema Noturno prevalece sobre
@@ -56,3 +56,8 @@ fictícios coerentes. Manter a versão estável e o banco pessoal inalterados.
 Demonstrar seleção múltipla, exclusão em lote e paginação aprovadas, com alcance
 explícito, confirmação e totais da consulta completa, conforme o plano.
 Revisar a demo com o usuário antes de integrar as regras reais ou publicar versão.
+
+REVISÃO NAVEGÁVEL DISPONÍVEL
+Execução: noturno_demo.py. Capturas, limites e validação: NOTURNO.md.
+Os recursos foram copiados para recursos/; Inter 400/500/600/700 foi preparada
+com licença, sem alterar as fontes do aplicativo estável.

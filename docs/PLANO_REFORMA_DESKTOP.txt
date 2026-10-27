@@ -401,3 +401,16 @@ um conjunto único de ícones. Os recursos recebidos foram conferidos quanto a
 formato, resolução, transparência e estrutura do SVG. Especificação e limites:
 prototipos/reforma/IDENTIDADE_VISUAL.txt. Não é necessário novo pedido de
 descrição à outra IA para iniciar a próxima revisão da demo.
+
+14. REVISÃO NOTURNO PARA AVALIAÇÃO
+
+A identidade consolidada foi aplicada a uma nova demo isolada em PySide6,
+com navegação lateral e Vendas, Análises e Finanças. A escolha serve para
+avaliar a execução do desenho e ainda não decide a ferramenta de produção.
+As primeiras demos Tkinter e Qt permanecem disponíveis para comparação.
+Seleção múltipla, exclusão em lote com confirmação e paginação são operacionais
+apenas no estado fictício em memória, sem SQLite, rede ou sincronização.
+Formulários reais, banco e integração com as regras históricas não foram
+substituídos. Não há migração nem nova versão do executável.
+A revisão visual do usuário e os ensaios no Windows continuam pendentes.
+Capturas, execução e relatório desta entrega: prototipos/reforma/NOTURNO.md.

@@ -11,6 +11,15 @@
       "justMyCode": true
     },
     {
+      "name": "Reforma — identidade Noturno (nova demo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/prototipos/reforma/noturno_demo.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "Estudo visual — Tkinter",
       "type": "debugpy",
       "request": "launch",

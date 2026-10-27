@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 9 — Etapa 4, integração de Finanças em 27/10/2026.
+Versão do plano: 10 — Etapa 4, configurações/preferências em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -10,8 +10,8 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 20 registram o histórico de complementos anteriores.
-A seção 21 registra a integração de Finanças e a implementação ATUAL; os
+As seções 10 a 21 registram o histórico de complementos anteriores.
+A seção 22 registra configurações/preferências e a implementação ATUAL; os
 estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,14 +342,13 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A Etapa 4 continua na sequência original. As três telas principais estão
-conectadas ao núcleo na entrada isolada. Esta entrega integra Finanças:
-consultas, despesas/parcelas, taxas, histórico anual e leitura de fechamento.
-Próxima atividade: configurações e demais mecanismos/formulários, incluindo
-preferências/temas, backups/restauração/Drive, sessão/nuvem, atualização e a
-edição do fechamento por vigência. Depois, revisão conjunta e verificações
-das Etapas 5/6. Preservar 1.7.1, banco pessoal e PWA até a validação final;
-não substituir a entrada estável por esta implementação de estudo.
+A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
+Esta entrega conecta preferências de abertura, cinco temas para a próxima
+abertura e criação de backup local verificado. Não substitui a entrada estável.
+Próxima atividade: restauração/verificação de cópias e Drive; depois, sessão/
+sincronização, edição do fechamento por vigência e atualização. Revisão
+conjunta e Etapas 5/6 vêm após a equivalência, preservando 1.7.1, banco pessoal
+e PWA. O estudo continua sem conexão autenticada ou leitura do banco pessoal.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -783,3 +782,42 @@ Qt offscreen não substitui interação manual, DPI real ou leitor de tela.
 Nenhum executável novo foi publicado; versão 1.7.1, dados pessoais, mecanismos
 existentes e PWA permanecem preservados. Próximo item: configurações e demais
 mecanismos da Etapa 4; Etapas 5, 6 e 7 continuam pendentes na ordem original.
+
+22. ETAPA 4 — CONFIGURAÇÕES, PREFERÊNCIAS E BACKUP LOCAL — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+O usuário autorizou o próximo passo e perguntou sobre o encerramento anterior.
+Finanças foi finalizada, testada e enviada, sem arquivos pendentes. A limitação
+de tokens não interrompeu aquela entrega; limites manuais permanecem registrados.
+Esta parte continua configurações na ordem original, sem declarar toda a
+Etapa 4 concluída. A versão v9 foi arquivada antes desta revisão.
+
+ENTREGA
+Configurações Qt permite salvar o período inicial de Vendas usando o módulo
+preferencias existente. O período vale na próxima abertura; salvar não aplica
+filtros pendentes, não limpa seleção e não altera o banco. Tema tem gravação
+independente, sem prometer transação conjunta entre arquivos de preferências.
+
+Noite, Claro, Grafite, Areia e Aurora preservam os identificadores existentes.
+Noite conserva a identidade Noturno aprovada. Os outros temas adaptam as paletas
+do núcleo; espelho de dados é verificado por teste sem importar Tk nem depender
+de arquivo-fonte ao executar. Fontes, ícones e organização foram preservados.
+Aplicação do tema somente na próxima abertura é explícita: não há reconstrução
+das telas ou descarte de formulário. Claro usa fundos sólidos para legibilidade;
+temas escuros conservam os recursos noturnos. Tonalidades de ação recebem apenas
+correção de contraste (texto/ícone pelo menos 4,5:1 nos pares verificados).
+Isso não é certificação de acessibilidade de todos os widgets ou dos temas.
+
+Criar backup local agora usa banco.criar_backup, incluindo vendas, finanças e
+históricos, com verificação existente e retorno do caminho. Não substitui o
+banco nem envia ao Drive. Falha é apresentada sem informar sucesso.
+
+VALIDAÇÃO E LIMITES
+64 testes locais da integração aprovados, incluindo oito de configurações.
+Os cinco temas abrem as três áreas em processos separados (15 cenários), com
+contagens e integridade SQLite preservadas. Persistência, falhas, seleção e
+backup com conteúdo financeiro/histórico foram conferidos. Evidências Windows,
+regressão, imagens e limites serão registrados em reforma_desktop/CONFIGURACOES.md.
+Continuam pendentes restauração/verificação externa, Drive, sessão/nuvem,
+edição do fechamento e atualizador Qt. Etapas 5, 6 e 7 não foram antecipadas.
+Versão 1.7.1, dados pessoais, código funcional e PWA permanecem preservados.

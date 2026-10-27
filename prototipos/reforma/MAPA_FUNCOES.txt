@@ -146,3 +146,16 @@ G01–G07 completos permanecem para a continuação: preferências/temas, dados,
         backups/restauração/Drive, sessão/nuvem, migração e atualizador.
         Backup local anterior às alterações já é reutilizado nesta fatia.
 Relatório: reforma_desktop/FINANCAS.md. Não é equivalência completa/release.
+
+CONTINUIDADE DA ETAPA 4 — CONFIGURAÇÕES/PREFERÊNCIAS, 27/10/2026
+V07: editor Qt do período inicial integrado com preferencias.py; vale ao reabrir,
+     sem aplicar consulta pendente. Persistência/reabertura testadas.
+G01: cinco temas compatíveis aplicados na abertura, sem reconstruir estado.
+     Paridade dos dados de paleta com o núcleo, 15 cenários de abertura e pares
+     centrais de contraste testados; DPI e acessibilidade completa pendentes.
+G02: painel Qt de configurações e caminho de dados acessíveis; preferência/
+     tema e backup local funcionais. Demais ações identificadas como pendentes.
+G03: criação manual de backup local verificado integrada. Restauração,
+     verificação de cópia externa, Drive e fechamento com cópia ainda pendentes.
+G04/G05/G06/F09 edição: próximos mecanismos, sem conta real nesta entrada.
+Etapa 4 não concluída; relatório: reforma_desktop/CONFIGURACOES.md.

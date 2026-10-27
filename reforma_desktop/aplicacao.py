@@ -16,6 +16,8 @@ from ProgramFeira.preferencias import carregar_periodo_inicial
 from ProgramFeira.exportacao import exportar
 from reforma_desktop.vendas import Consulta, ServicoVendas
 from janelas_noturno import janela_vendas
+from reforma_desktop.temas import FundoQt as Fundo, FaixaSemanaQt as FaixaSemana, aplicar_tokens, NOMES
+from ProgramFeira.preferencias import carregar_tema
 
 
 class FormularioVenda(W.QDialog):
@@ -121,8 +123,8 @@ class Janela(W.QWidget):
         header.addStretch()
         acoes = W.QHBoxLayout()
         acoes.addWidget(botao('', self.configuracoes, 'settings'))
-        tema = botao('Tema: Noturno', self.temas, 'moon')
-        tema.setToolTip('Os demais temas serão integrados e verificados antes da substituição do programa.')
+        tema = botao('Tema: ' + NOMES[carregar_tema(pasta)], self.temas, 'moon')
+        tema.setToolTip('Escolha o tema para a próxima abertura nas configurações.')
         acoes.addWidget(tema)
         self.exportar = botao('Exportar relatório', lambda: None, 'download')
         menu = W.QMenu(self.exportar)
@@ -462,13 +464,18 @@ class Janela(W.QWidget):
             self.atualizar()
 
     def configuracoes(self):
-        W.QMessageBox.information(self, 'Dados desta implementação', f'Banco de estudo:\n{banco.CAMINHO_BANCO}\n\nBackups locais verificados:\n{self.pasta / "backups"}\n\nNuvem, Drive, restauração, preferências e atualizador continuam disponíveis no programa estável. A integração Qt seguirá a sequência do plano.')
+        from reforma_desktop.configuracoes import Configuracoes
+        janela = Configuracoes(self)
+        janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        janela.open()
+        return janela
 
     def temas(self):
-        W.QMessageBox.information(self, 'Temas', 'Esta primeira integração utiliza a identidade Noturno aprovada. Os cinco temas do programa estável serão preservados e verificados na reforma completa.')
+        return self.configuracoes()
 
 
-def preparar_interface():
+def preparar_interface(tema='escuro'):
+    aplicar_tokens(tema)
     Q.QLocale.setDefault(Q.QLocale('pt_BR'))
     app = preparar()
     paleta = app.palette()
@@ -481,7 +488,7 @@ def preparar_interface():
 
 
 def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
-    app = preparar_interface()
+    app = preparar_interface(carregar_tema(pasta))
     servico = ServicoVendas()
     if exemplo and not banco.listar_vendas():
         hoje = servico.hoje()

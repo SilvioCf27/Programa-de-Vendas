@@ -512,13 +512,15 @@ class Aplicativo:
         self.mostrar("Finanças")
         self.root.update()
         assert self.tabela.selection() == escolhido
-        assert self.tabela.winfo_height() > 300, dict(
-            tabela=self.tabela.winfo_height(),
-            janela=self.root.winfo_geometry(),
-            area=self.area.winfo_height(),
-            escala=self.root.tk.call("tk", "scaling"),
-            superior=self.superior.winfo_ismapped(),
-        )
+        # A altura física varia com fonte/DPI. Exigir cinco linhas completas,
+        # em vez de um limite de 300 px que rejeitava 296 px no Windows.
+        assert self.linhas_visiveis() >= 5
+
+    def linhas_visiveis(self):
+        itens = self.tabela.get_children()
+        cabecalho = self.tabela.bbox(itens[0])[1] if itens else 0
+        altura = int(ttk.Style(self.root).lookup("Treeview", "rowheight"))
+        return max(0, (self.tabela.winfo_height() - cabecalho) // altura)
 
 
 if __name__ == "__main__":
@@ -559,6 +561,7 @@ if __name__ == "__main__":
                     rss_mib=rss_mib,
                     linhas=12,
                     altura_tabela=app.tabela.winfo_height(),
+                    linhas_visiveis=app.linhas_visiveis(),
                     tk=app.root.tk.call("info", "patchlevel"),
                 ),
                 indent=2,

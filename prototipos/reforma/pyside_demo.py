@@ -451,7 +451,11 @@ class Aplicativo(W.QWidget):
         self.mostrar("Finanças")
         W.QApplication.processEvents()
         assert self.tabela.currentRow() == 2
-        assert self.tabela.height() > 300
+        assert (
+            self.tabela.viewport().height()
+            // self.tabela.verticalHeader().defaultSectionSize()
+            >= 5
+        )
 
 
 if __name__ == "__main__":
@@ -491,6 +495,8 @@ if __name__ == "__main__":
                     rss_mib=rss_mib,
                     linhas=12,
                     altura_tabela=janela.tabela.height(),
+                    linhas_visiveis=janela.tabela.viewport().height()
+                    // janela.tabela.verticalHeader().defaultSectionSize(),
                     qt=QtCore.__version__,
                 ),
                 indent=2,

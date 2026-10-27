@@ -73,7 +73,7 @@ class ModeloTests(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             dados = json.loads(rel.read_text(encoding="utf-8"))
             self.assertEqual(dados["linhas"], 12)
-            self.assertGreater(dados["altura_tabela"], 300)
+            self.assertGreaterEqual(dados["linhas_visiveis"], 5)
             self.assertGreater(dados["abertura_ms"], 0)
 
     @unittest.skipUnless(

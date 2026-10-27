@@ -1,6 +1,7 @@
 """Executa testes existentes em diretório de dados temporário e registra evidência."""
 
 import argparse
+from importlib.metadata import version
 import json
 import os
 from pathlib import Path
@@ -28,6 +29,10 @@ with tempfile.TemporaryDirectory(prefix="feira-suite-tecnica-") as temp:
         plataforma=sys.platform,
         python=platform.python_version(),
         sqlite=sqlite3.sqlite_version,
+        dependencias={
+            nome: version(nome)
+            for nome in ("PySide6_Essentials", "shiboken6", "openpyxl")
+        },
         executados=resultado.testsRun,
         aprovados=resultado.testsRun
         - len(resultado.failures)

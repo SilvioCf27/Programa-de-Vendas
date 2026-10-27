@@ -1,0 +1,4 @@
+{
+  "commit_base": "86478827bb500d0a995f15c63d0b24b2ea9b8e00",
+  "observacao": "Ensaios temporários sem conta/nuvem. SQLite 3.50.4 selecionado apenas nos processos Linux de teste; proteção do aplicativo preservada."
+}

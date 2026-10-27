@@ -57,8 +57,28 @@ Os testes da primeira fatia verificam gravação e backup, falhas, atomicidade d
 .\.venv-estudo\Scripts\python.exe reforma_desktop/validar.py --saida resultado-vendas-qt.json
 ```
 
-O workflow `reforma-vendas-windows.yml` repete essa suíte e as suítes existentes da aplicação e dos protótipos no Windows, sem gerar release, executável público ou acessar dados pessoais. Os resultados desta entrega serão vinculados abaixo após sua conferência.
+O workflow `reforma-vendas-windows.yml` repete essa suíte e as suítes existentes da aplicação e dos protótipos no Windows, sem gerar release, executável público ou acessar dados pessoais. Os testes Qt usam o backend `offscreen`; confirmam comportamento dos controles e operações no Windows, mas não substituem sua inspeção interativa, DPI real ou leitor de tela. A resolução Full HD da VM é preparada/restaurada para os testes Tk existentes. Os resultados conferidos estão abaixo.
 
 Para sua revisão manual: cadastre uma venda fictícia; tente repetir a data e depois corrija; edite e cancele uma edição; aplique mês/ano/fechamento; deixe um filtro pendente e confira que o resumo não muda; selecione/exclua registros; exporte com mais de uma página; visite Análises/Finanças e retorne para Vendas. São verificações da entrada isolada, não do seu banco real.
 
 A próxima integração prevista é **Análises: resultados semanais, comparação A/B e detalhes do período**. Depois, Finanças e configurações/formulários. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
+
+
+### Resultado desta entrega
+
+| Ambiente | Vendas Qt | Aplicação estável | Protótipos |
+| --- | --- | --- | --- |
+| Windows Server 2025 / Python 3.13.16 / SQLite 3.50.4 | 18/18 aprovados | 202/202 aprovados | 31/31 aprovados |
+| Linux / Python 3.13.5 / SQLite 3.50.4 | 18/18 aprovados | 200 aprovados, 2 ignorados | 31/31 aprovados |
+
+No Linux, os dois ignorados dependem de PowerShell/DPAPI nativos do Windows; passaram na VM Windows. Nenhuma falha ou erro permanece na rodada final. O SQLite local compatível foi selecionado somente para os processos de teste, sem alterar a proteção dos backups.
+
+Evidência final: [execução Windows 40551429100](https://github.com/SilvioCf27/Programa-de-Vendas/actions/runs/40551429100), commit-base `86478827bb500d0a995f15c63d0b24b2ea9b8e00`:
+
+- [Vendas Qt](resultados/windows-40551429100/VENDAS_QT.json), [aplicação estável](resultados/windows-40551429100/PRODUCAO.json) e [protótipos](resultados/windows-40551429100/PROTOTIPOS.json).
+- [Origem](resultados/windows-40551429100/ORIGEM.json) e [resolução/restauração da VM](resultados/windows-40551429100/TELA_WINDOWS.json).
+- [Vendas Qt no Linux](resultados/linux/VENDAS_QT.json), [regressão da aplicação](resultados/linux/PRODUCAO.json) e [protótipos](resultados/linux/PROTOTIPOS.json).
+
+A primeira execução Windows (`40550497209`) aprovou Vendas Qt e a aplicação, mas falhou na área visível da tabela do protótipo Tk antigo, com o monitor virtual em 1.024 × 768. A automação passou a preparar/restaurar Full HD, como na comparação anterior; o código e a exigência de linhas visíveis do protótipo não foram alterados. A repetição `40551010313` passou nos 17 testes Qt então existentes e nas duas suítes. A rodada final acrescentou o teste de janela estreita e passou nos 18. Os JSONs dessas passagens foram preservados como histórico, sem misturar seus resultados com os finais.
+
+Também foi verificada a abertura gráfica por `executar_reforma.py` e sua reabertura duas vezes na mesma pasta temporária de estudo: cinco exemplos, sem duplicação, com integridade SQLite aprovada. A captura desta página foi inspecionada. Permanecem pendentes a inspeção interativa no seu Windows, DPI real, acessibilidade completa e pacote/atualizador da aplicação reformada; não foi publicado executável novo.

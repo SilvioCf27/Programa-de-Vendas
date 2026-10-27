@@ -1,5 +1,7 @@
 # Janelas secundárias — continuidade da reforma
 
+**Atualização da cronologia:** a estética e a escolha PySide6 foram aprovadas. A Etapa 4 começou pela [integração funcional de Vendas em banco separado](../../reforma_desktop/README.md). A seção 19 do plano contém o andamento atual; esta página preserva o relatório visual anterior.
+
 Esta entrega pertence às **Etapas 2/2A de prototipação e revisão**, conforme a seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A aprovação visual das telas principais foi registrada separadamente da escolha da ferramenta. Não houve migração funcional, alteração da PWA ou nova versão estável.
 
 As três telas principais permaneceram visualmente inalteradas: suas capturas foram renderizadas e comparadas pixel a pixel com as da entrega anterior neste ambiente Linux, sem diferenças. A intervenção está nos detalhes abaixo, todos com dados fictícios e sem acesso ao banco pessoal.

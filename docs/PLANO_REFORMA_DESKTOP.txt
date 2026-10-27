@@ -651,6 +651,13 @@ A lista detalhada de cobertura/pendências está no MAPA_FUNCOES.txt.
 
 VALIDAÇÃO E CONTINUIDADE
 Relatório, comandos e resultados: reforma_desktop/README.md.
+Windows: 18/18 testes da integração, 202/202 da aplicação estável e 31/31 dos
+protótipos aprovados; execução 40551429100, commit-base 8647882.
+Linux: 18/18 e 31/31 aprovados; aplicação 200 aprovados e 2 ignorados por
+requererem Windows. Sem falhas/erros finais. Backend Qt offscreen nos testes;
+inspeção interativa Windows/DPI real ainda pendente. Resolução da VM restaurada.
+A captura foi inspecionada; a entrada foi reaberta sem duplicar exemplos.
+Histórico da falha inicial por resolução da VM e repetições no README citado.
 Testes cobrem regras compartilhadas e operações gráficas em bancos fictícios;
 esta integração não constitui release nem equivalência do programa completo.
 Etapas 5 e 6 ainda pendentes: desempenho integrado, ensaios de uso Windows,

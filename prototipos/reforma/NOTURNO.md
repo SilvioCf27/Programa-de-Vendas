@@ -1,5 +1,7 @@
 # Revisão Noturno — demonstração para avaliar no VS Code
 
+**Atualização da cronologia:** a estética e a escolha PySide6 foram aprovadas. A Etapa 4 começou pela [integração funcional de Vendas em banco separado](../../reforma_desktop/README.md). A seção 19 do plano contém o andamento atual; esta página preserva o relatório visual anterior.
+
 A comparação técnica está em [DECISAO_TECNICA.md](avaliacao/DECISAO_TECNICA.md). A aprovação visual não autoriza a migração.
 
 **Visual aprovado pelo usuário:** [janelas secundárias refinadas](JANELAS_SECUNDARIAS.md). As três telas principais abaixo foram preservadas. O estado oficial da reforma está na seção 18 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt).

@@ -1,0 +1,18 @@
+{
+  "suite": "prototipos/reforma",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "executados": 31,
+  "aprovados": 30,
+  "falhas": [
+    {
+      "teste": "test_navegacao_tk_preserva_selecao_e_consulta (test_estudo.ModeloTests.test_navegacao_tk_preserva_selecao_e_consulta)",
+      "erro": "Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\test_estudo.py\", line 84, in test_navegacao_tk_preserva_selecao_e_consulta\n    self.executar(\"tkinter_demo.py\", {})\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\test_estudo.py\", line 73, in executar\n    self.assertEqual(r.returncode, 0, r.stdout + r.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\tkinter_demo.py\", line 543, in <module>\n    app.testar()\n    ~~~~~~~~~~^^\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\tkinter_demo.py\", line 517, in testar\n    assert self.linhas_visiveis() >= 5\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": false,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

@@ -1,0 +1,13 @@
+{
+  "suite": "reforma_desktop/tests",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "executados": 73,
+  "aprovados": 73,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

@@ -1,0 +1,4280 @@
+{
+  "data_utc": "2026-10-27T16:28:22.421938+00:00",
+  "commit": "83a4aee4b7192c57861317352a84539407de61a3",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "metodo": "Mesmo SQLite temporário gerado deterministicamente; mesmas consultas, tabelas e paginação de 50; subprocessos novos alternados. Ensaio técnico, não implementação nem comparação do aplicativo inteiro.",
+  "repeticoes": 5,
+  "resultados": [
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 1310.642,
+      "rss_inicial": 44957696,
+      "rss_pos_carga": 45113344,
+      "rss_final": 45142016,
+      "crescimento_ciclos": 28672,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 47112192
+        },
+        {
+          "ciclo": 10,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 15,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 20,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 25,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 30,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 35,
+          "rss": 47120384
+        },
+        {
+          "ciclo": 40,
+          "rss": 47120384
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 47120384,
+      "pico_processo_so": 47120384,
+      "atraso_heartbeat_max_ms": 87.099,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.861,
+          "p95_ms": 0.861,
+          "max_ms": 0.861
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 41.313,
+          "p95_ms": 41.313,
+          "max_ms": 41.313
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.531,
+          "p95_ms": 0.531,
+          "max_ms": 0.531
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 53.152,
+          "p95_ms": 53.152,
+          "max_ms": 53.152
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.393,
+          "p95_ms": 0.393,
+          "max_ms": 0.393
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 36.879,
+          "p95_ms": 36.879,
+          "max_ms": 36.879
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 18.08,
+          "p95_ms": 18.08,
+          "max_ms": 18.08
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.211,
+          "p95_ms": 0.272,
+          "max_ms": 0.321
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.477,
+          "p95_ms": 39.137,
+          "max_ms": 43.731
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.546,
+          "p95_ms": 35.47,
+          "max_ms": 36.258
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.583,
+          "p95_ms": 40.44,
+          "max_ms": 41.017
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 25.974,
+          "p95_ms": 34.491,
+          "max_ms": 35.123
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.151,
+          "p95_ms": 33.568,
+          "max_ms": 33.771
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 54.183,
+          "p95_ms": 73.277,
+          "max_ms": 73.869
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 9917.14
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 585.208,
+      "rss_inicial": 72769536,
+      "rss_pos_carga": 73400320,
+      "rss_final": 74129408,
+      "crescimento_ciclos": 729088,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 74039296
+        },
+        {
+          "ciclo": 10,
+          "rss": 74047488
+        },
+        {
+          "ciclo": 15,
+          "rss": 74047488
+        },
+        {
+          "ciclo": 20,
+          "rss": 74051584
+        },
+        {
+          "ciclo": 25,
+          "rss": 74051584
+        },
+        {
+          "ciclo": 30,
+          "rss": 74055680
+        },
+        {
+          "ciclo": 35,
+          "rss": 74063872
+        },
+        {
+          "ciclo": 40,
+          "rss": 74129408
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 77910016,
+      "pico_processo_so": 77975552,
+      "atraso_heartbeat_max_ms": 293.063,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.838,
+          "p95_ms": 0.838,
+          "max_ms": 0.838
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 19.154,
+          "p95_ms": 19.154,
+          "max_ms": 19.154
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.511,
+          "p95_ms": 0.511,
+          "max_ms": 0.511
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 18.446,
+          "p95_ms": 18.446,
+          "max_ms": 18.446
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.372,
+          "p95_ms": 0.372,
+          "max_ms": 0.372
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 13.805,
+          "p95_ms": 13.805,
+          "max_ms": 13.805
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 12.526,
+          "p95_ms": 12.526,
+          "max_ms": 12.526
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.192,
+          "p95_ms": 0.23,
+          "max_ms": 0.285
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.864,
+          "p95_ms": 15.016,
+          "max_ms": 18.793
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.58,
+          "p95_ms": 14.229,
+          "max_ms": 18.837
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.41,
+          "p95_ms": 16.146,
+          "max_ms": 22.433
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.09,
+          "p95_ms": 13.565,
+          "max_ms": 17.64
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.161,
+          "p95_ms": 13.74,
+          "max_ms": 13.87
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.039,
+          "p95_ms": 57.652,
+          "max_ms": 58.828
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 6080.092
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 228.488,
+      "rss_inicial": 70955008,
+      "rss_pos_carga": 71577600,
+      "rss_final": 72302592,
+      "crescimento_ciclos": 724992,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 72138752
+        },
+        {
+          "ciclo": 10,
+          "rss": 72179712
+        },
+        {
+          "ciclo": 15,
+          "rss": 72179712
+        },
+        {
+          "ciclo": 20,
+          "rss": 72187904
+        },
+        {
+          "ciclo": 25,
+          "rss": 72224768
+        },
+        {
+          "ciclo": 30,
+          "rss": 72237056
+        },
+        {
+          "ciclo": 35,
+          "rss": 72245248
+        },
+        {
+          "ciclo": 40,
+          "rss": 72302592
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76083200,
+      "pico_processo_so": 76148736,
+      "atraso_heartbeat_max_ms": 64.976,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.85,
+          "p95_ms": 0.85,
+          "max_ms": 0.85
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.999,
+          "p95_ms": 17.999,
+          "max_ms": 17.999
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.482,
+          "p95_ms": 0.482,
+          "max_ms": 0.482
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.291,
+          "p95_ms": 15.291,
+          "max_ms": 15.291
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.338,
+          "p95_ms": 0.338,
+          "max_ms": 0.338
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 14.631,
+          "p95_ms": 14.631,
+          "max_ms": 14.631
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.708,
+          "p95_ms": 13.708,
+          "max_ms": 13.708
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.198,
+          "p95_ms": 0.558,
+          "max_ms": 0.606
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.742,
+          "p95_ms": 14.156,
+          "max_ms": 14.543
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.388,
+          "p95_ms": 14.172,
+          "max_ms": 14.848
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.271,
+          "p95_ms": 15.788,
+          "max_ms": 15.941
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 12.758,
+          "p95_ms": 13.581,
+          "max_ms": 13.838
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 12.975,
+          "p95_ms": 13.293,
+          "max_ms": 13.526
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 55.557,
+          "p95_ms": 58.708,
+          "max_ms": 61.053
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 5650.34
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 168.027,
+      "rss_inicial": 41287680,
+      "rss_pos_carga": 41660416,
+      "rss_final": 41717760,
+      "crescimento_ciclos": 57344,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 43679744
+        },
+        {
+          "ciclo": 10,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 15,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 20,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 25,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 30,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 35,
+          "rss": 43687936
+        },
+        {
+          "ciclo": 40,
+          "rss": 43696128
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 43696128,
+      "pico_processo_so": 43696128,
+      "atraso_heartbeat_max_ms": 34.654,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.843,
+          "p95_ms": 0.843,
+          "max_ms": 0.843
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 40.874,
+          "p95_ms": 40.874,
+          "max_ms": 40.874
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.547,
+          "p95_ms": 0.547,
+          "max_ms": 0.547
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 36.009,
+          "p95_ms": 36.009,
+          "max_ms": 36.009
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.646,
+          "p95_ms": 2.646,
+          "max_ms": 2.646
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 19.306,
+          "p95_ms": 19.306,
+          "max_ms": 19.306
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 34.541,
+          "p95_ms": 34.541,
+          "max_ms": 34.541
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.213,
+          "p95_ms": 0.272,
+          "max_ms": 0.322
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.238,
+          "p95_ms": 38.263,
+          "max_ms": 38.679
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.079,
+          "p95_ms": 35.693,
+          "max_ms": 36.191
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.572,
+          "p95_ms": 40.373,
+          "max_ms": 40.573
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.114,
+          "p95_ms": 35.249,
+          "max_ms": 39.165
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.094,
+          "p95_ms": 33.523,
+          "max_ms": 33.671
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 59.769,
+          "p95_ms": 74.547,
+          "max_ms": 80.986
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 8636.472
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 163.214,
+      "rss_inicial": 41385984,
+      "rss_pos_carga": 41766912,
+      "rss_final": 41799680,
+      "crescimento_ciclos": 32768,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 10,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 15,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 20,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 25,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 30,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 35,
+          "rss": 43778048
+        },
+        {
+          "ciclo": 40,
+          "rss": 43778048
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 43778048,
+      "pico_processo_so": 43778048,
+      "atraso_heartbeat_max_ms": 33.595,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.875,
+          "p95_ms": 0.875,
+          "max_ms": 0.875
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 41.414,
+          "p95_ms": 41.414,
+          "max_ms": 41.414
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.497,
+          "p95_ms": 0.497,
+          "max_ms": 0.497
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 52.677,
+          "p95_ms": 52.677,
+          "max_ms": 52.677
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.635,
+          "p95_ms": 2.635,
+          "max_ms": 2.635
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 36.18,
+          "p95_ms": 36.18,
+          "max_ms": 36.18
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 17.568,
+          "p95_ms": 17.568,
+          "max_ms": 17.568
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.203,
+          "p95_ms": 0.269,
+          "max_ms": 0.303
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 29.077,
+          "p95_ms": 37.634,
+          "max_ms": 38.854
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.103,
+          "p95_ms": 35.068,
+          "max_ms": 36.142
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.845,
+          "p95_ms": 40.444,
+          "max_ms": 40.599
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 17.395,
+          "p95_ms": 35.181,
+          "max_ms": 36.215
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.187,
+          "p95_ms": 33.857,
+          "max_ms": 34.606
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 61.192,
+          "p95_ms": 73.651,
+          "max_ms": 93.406
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 8675.872
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 231.474,
+      "rss_inicial": 70901760,
+      "rss_pos_carga": 71462912,
+      "rss_final": 72245248,
+      "crescimento_ciclos": 782336,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 72105984
+        },
+        {
+          "ciclo": 10,
+          "rss": 72146944
+        },
+        {
+          "ciclo": 15,
+          "rss": 72163328
+        },
+        {
+          "ciclo": 20,
+          "rss": 72167424
+        },
+        {
+          "ciclo": 25,
+          "rss": 72171520
+        },
+        {
+          "ciclo": 30,
+          "rss": 72192000
+        },
+        {
+          "ciclo": 35,
+          "rss": 72200192
+        },
+        {
+          "ciclo": 40,
+          "rss": 72245248
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76025856,
+      "pico_processo_so": 76091392,
+      "atraso_heartbeat_max_ms": 64.753,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.809,
+          "p95_ms": 0.809,
+          "max_ms": 0.809
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 18.011,
+          "p95_ms": 18.011,
+          "max_ms": 18.011
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.878,
+          "p95_ms": 0.878,
+          "max_ms": 0.878
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.912,
+          "p95_ms": 15.912,
+          "max_ms": 15.912
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.339,
+          "p95_ms": 0.339,
+          "max_ms": 0.339
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 14.302,
+          "p95_ms": 14.302,
+          "max_ms": 14.302
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.319,
+          "p95_ms": 13.319,
+          "max_ms": 13.319
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.208,
+          "p95_ms": 0.296,
+          "max_ms": 0.492
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 14.185,
+          "p95_ms": 24.396,
+          "max_ms": 33.189
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 14.297,
+          "p95_ms": 30.598,
+          "max_ms": 39.267
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 16.392,
+          "p95_ms": 25.69,
+          "max_ms": 41.638
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.204,
+          "p95_ms": 22.629,
+          "max_ms": 25.725
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.965,
+          "p95_ms": 23.704,
+          "max_ms": 39.708
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 59.339,
+          "p95_ms": 83.964,
+          "max_ms": 94.852
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 6524.985
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 244.448,
+      "rss_inicial": 70942720,
+      "rss_pos_carga": 71507968,
+      "rss_final": 72347648,
+      "crescimento_ciclos": 839680,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 72171520
+        },
+        {
+          "ciclo": 10,
+          "rss": 72196096
+        },
+        {
+          "ciclo": 15,
+          "rss": 72196096
+        },
+        {
+          "ciclo": 20,
+          "rss": 72208384
+        },
+        {
+          "ciclo": 25,
+          "rss": 72237056
+        },
+        {
+          "ciclo": 30,
+          "rss": 72306688
+        },
+        {
+          "ciclo": 35,
+          "rss": 72314880
+        },
+        {
+          "ciclo": 40,
+          "rss": 72347648
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76128256,
+      "pico_processo_so": 76210176,
+      "atraso_heartbeat_max_ms": 71.828,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.78,
+          "p95_ms": 0.78,
+          "max_ms": 0.78
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.728,
+          "p95_ms": 17.728,
+          "max_ms": 17.728
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.503,
+          "p95_ms": 0.503,
+          "max_ms": 0.503
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.12,
+          "p95_ms": 15.12,
+          "max_ms": 15.12
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.59,
+          "p95_ms": 0.59,
+          "max_ms": 0.59
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 13.455,
+          "p95_ms": 13.455,
+          "max_ms": 13.455
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.157,
+          "p95_ms": 13.157,
+          "max_ms": 13.157
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.21,
+          "p95_ms": 0.496,
+          "max_ms": 0.888
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 14.089,
+          "p95_ms": 20.12,
+          "max_ms": 22.6
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 14.405,
+          "p95_ms": 17.627,
+          "max_ms": 20.801
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 16.666,
+          "p95_ms": 20.497,
+          "max_ms": 30.827
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.267,
+          "p95_ms": 18.39,
+          "max_ms": 18.986
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.857,
+          "p95_ms": 18.959,
+          "max_ms": 19.36
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 58.743,
+          "p95_ms": 76.428,
+          "max_ms": 92.412
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 7151.453
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 174.336,
+      "rss_inicial": 41385984,
+      "rss_pos_carga": 41746432,
+      "rss_final": 41791488,
+      "crescimento_ciclos": 45056,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 43761664
+        },
+        {
+          "ciclo": 10,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 15,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 20,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 25,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 30,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 35,
+          "rss": 43769856
+        },
+        {
+          "ciclo": 40,
+          "rss": 43769856
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 43769856,
+      "pico_processo_so": 43769856,
+      "atraso_heartbeat_max_ms": 33.752,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.841,
+          "p95_ms": 0.841,
+          "max_ms": 0.841
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 42.47,
+          "p95_ms": 42.47,
+          "max_ms": 42.47
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.52,
+          "p95_ms": 0.52,
+          "max_ms": 0.52
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 36.721,
+          "p95_ms": 36.721,
+          "max_ms": 36.721
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 3.193,
+          "p95_ms": 3.193,
+          "max_ms": 3.193
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 40.615,
+          "p95_ms": 40.615,
+          "max_ms": 40.615
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 18.687,
+          "p95_ms": 18.687,
+          "max_ms": 18.687
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.212,
+          "p95_ms": 0.302,
+          "max_ms": 0.401
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 37.006,
+          "p95_ms": 41.317,
+          "max_ms": 48.064
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.126,
+          "p95_ms": 35.308,
+          "max_ms": 36.783
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.892,
+          "p95_ms": 47.417,
+          "max_ms": 53.697
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.158,
+          "p95_ms": 35.858,
+          "max_ms": 44.122
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 32.97,
+          "p95_ms": 34.231,
+          "max_ms": 42.764
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 54.317,
+          "p95_ms": 73.328,
+          "max_ms": 84.184
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 10412.58
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 167.09,
+      "rss_inicial": 41181184,
+      "rss_pos_carga": 41627648,
+      "rss_final": 41689088,
+      "crescimento_ciclos": 61440,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 10,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 15,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 20,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 25,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 30,
+          "rss": 43638784
+        },
+        {
+          "ciclo": 35,
+          "rss": 43667456
+        },
+        {
+          "ciclo": 40,
+          "rss": 43667456
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 43667456,
+      "pico_processo_so": 43667456,
+      "atraso_heartbeat_max_ms": 33.859,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.791,
+          "p95_ms": 0.791,
+          "max_ms": 0.791
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 67.189,
+          "p95_ms": 67.189,
+          "max_ms": 67.189
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.497,
+          "p95_ms": 0.497,
+          "max_ms": 0.497
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 52.157,
+          "p95_ms": 52.157,
+          "max_ms": 52.157
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 3.487,
+          "p95_ms": 3.487,
+          "max_ms": 3.487
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 36.495,
+          "p95_ms": 36.495,
+          "max_ms": 36.495
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 17.468,
+          "p95_ms": 17.468,
+          "max_ms": 17.468
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.209,
+          "p95_ms": 0.371,
+          "max_ms": 0.435
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.797,
+          "p95_ms": 45.086,
+          "max_ms": 47.614
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.136,
+          "p95_ms": 21.1,
+          "max_ms": 36.451
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.628,
+          "p95_ms": 40.885,
+          "max_ms": 41.252
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.023,
+          "p95_ms": 39.996,
+          "max_ms": 42.526
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.06,
+          "p95_ms": 36.068,
+          "max_ms": 42.449
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 61.602,
+          "p95_ms": 72.906,
+          "max_ms": 73.235
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 8954.49
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 233.919,
+      "rss_inicial": 70971392,
+      "rss_pos_carga": 71553024,
+      "rss_final": 72294400,
+      "crescimento_ciclos": 741376,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 72196096
+        },
+        {
+          "ciclo": 10,
+          "rss": 72220672
+        },
+        {
+          "ciclo": 15,
+          "rss": 72220672
+        },
+        {
+          "ciclo": 20,
+          "rss": 72224768
+        },
+        {
+          "ciclo": 25,
+          "rss": 72232960
+        },
+        {
+          "ciclo": 30,
+          "rss": 72253440
+        },
+        {
+          "ciclo": 35,
+          "rss": 72269824
+        },
+        {
+          "ciclo": 40,
+          "rss": 72294400
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76075008,
+      "pico_processo_so": 76140544,
+      "atraso_heartbeat_max_ms": 67.527,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.389,
+          "p95_ms": 1.389,
+          "max_ms": 1.389
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 18.874,
+          "p95_ms": 18.874,
+          "max_ms": 18.874
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.489,
+          "p95_ms": 0.489,
+          "max_ms": 0.489
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.96,
+          "p95_ms": 15.96,
+          "max_ms": 15.96
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.523,
+          "p95_ms": 0.523,
+          "max_ms": 0.523
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 14.33,
+          "p95_ms": 14.33,
+          "max_ms": 14.33
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.925,
+          "p95_ms": 13.925,
+          "max_ms": 13.925
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.196,
+          "p95_ms": 0.261,
+          "max_ms": 0.607
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.757,
+          "p95_ms": 14.378,
+          "max_ms": 14.712
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.627,
+          "p95_ms": 14.671,
+          "max_ms": 14.816
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.286,
+          "p95_ms": 16.167,
+          "max_ms": 16.536
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.06,
+          "p95_ms": 13.802,
+          "max_ms": 14.479
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.018,
+          "p95_ms": 13.85,
+          "max_ms": 18.769
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.037,
+          "p95_ms": 58.44,
+          "max_ms": 67.733
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 5715.667
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 175.344,
+      "rss_inicial": 43241472,
+      "rss_pos_carga": 51556352,
+      "rss_final": 51601408,
+      "crescimento_ciclos": 45056,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 53571584
+        },
+        {
+          "ciclo": 10,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 15,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 20,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 25,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 30,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 35,
+          "rss": 53579776
+        },
+        {
+          "ciclo": 40,
+          "rss": 53579776
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 53579776,
+      "pico_processo_so": 53579776,
+      "atraso_heartbeat_max_ms": 53.413,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.087,
+          "p95_ms": 15.087,
+          "max_ms": 15.087
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 42.101,
+          "p95_ms": 42.101,
+          "max_ms": 42.101
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 7.011,
+          "p95_ms": 7.011,
+          "max_ms": 7.011
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 37.054,
+          "p95_ms": 37.054,
+          "max_ms": 37.054
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.776,
+          "p95_ms": 5.776,
+          "max_ms": 5.776
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 74.381,
+          "p95_ms": 74.381,
+          "max_ms": 74.381
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 22.404,
+          "p95_ms": 22.404,
+          "max_ms": 22.404
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.224,
+          "p95_ms": 0.304,
+          "max_ms": 0.898
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.98,
+          "p95_ms": 38.686,
+          "max_ms": 39.286
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.113,
+          "p95_ms": 35.549,
+          "max_ms": 37.852
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.941,
+          "p95_ms": 40.75,
+          "max_ms": 41.741
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.3,
+          "p95_ms": 35.186,
+          "max_ms": 36.339
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.146,
+          "p95_ms": 33.731,
+          "max_ms": 35.658
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 60.092,
+          "p95_ms": 72.805,
+          "max_ms": 74.96
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 8748.54
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 230.866,
+      "rss_inicial": 73019392,
+      "rss_pos_carga": 76271616,
+      "rss_final": 76840960,
+      "crescimento_ciclos": 569344,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 76763136
+        },
+        {
+          "ciclo": 10,
+          "rss": 76783616
+        },
+        {
+          "ciclo": 15,
+          "rss": 76783616
+        },
+        {
+          "ciclo": 20,
+          "rss": 76820480
+        },
+        {
+          "ciclo": 25,
+          "rss": 76820480
+        },
+        {
+          "ciclo": 30,
+          "rss": 76820480
+        },
+        {
+          "ciclo": 35,
+          "rss": 76824576
+        },
+        {
+          "ciclo": 40,
+          "rss": 76840960
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 80621568,
+      "pico_processo_so": 80687104,
+      "atraso_heartbeat_max_ms": 68.645,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 14.659,
+          "p95_ms": 14.659,
+          "max_ms": 14.659
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.76,
+          "p95_ms": 17.76,
+          "max_ms": 17.76
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.202,
+          "p95_ms": 6.202,
+          "max_ms": 6.202
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.756,
+          "p95_ms": 15.756,
+          "max_ms": 15.756
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.613,
+          "p95_ms": 5.613,
+          "max_ms": 5.613
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 33.246,
+          "p95_ms": 33.246,
+          "max_ms": 33.246
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 16.051,
+          "p95_ms": 16.051,
+          "max_ms": 16.051
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.201,
+          "p95_ms": 0.283,
+          "max_ms": 0.597
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 14.099,
+          "p95_ms": 14.689,
+          "max_ms": 14.834
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.725,
+          "p95_ms": 14.749,
+          "max_ms": 15.597
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.29,
+          "p95_ms": 16.506,
+          "max_ms": 19.323
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.31,
+          "p95_ms": 13.891,
+          "max_ms": 14.114
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.267,
+          "p95_ms": 14.188,
+          "max_ms": 14.343
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.515,
+          "p95_ms": 58.332,
+          "max_ms": 60.86
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 1,
+      "processo_total_ms": 5846.222
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 231.812,
+      "rss_inicial": 73035776,
+      "rss_pos_carga": 76222464,
+      "rss_final": 76853248,
+      "crescimento_ciclos": 630784,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 76738560
+        },
+        {
+          "ciclo": 10,
+          "rss": 76763136
+        },
+        {
+          "ciclo": 15,
+          "rss": 76779520
+        },
+        {
+          "ciclo": 20,
+          "rss": 76787712
+        },
+        {
+          "ciclo": 25,
+          "rss": 76812288
+        },
+        {
+          "ciclo": 30,
+          "rss": 76816384
+        },
+        {
+          "ciclo": 35,
+          "rss": 76824576
+        },
+        {
+          "ciclo": 40,
+          "rss": 76853248
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 80633856,
+      "pico_processo_so": 80699392,
+      "atraso_heartbeat_max_ms": 66.619,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.97,
+          "p95_ms": 15.97,
+          "max_ms": 15.97
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.409,
+          "p95_ms": 17.409,
+          "max_ms": 17.409
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.18,
+          "p95_ms": 6.18,
+          "max_ms": 6.18
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.595,
+          "p95_ms": 15.595,
+          "max_ms": 15.595
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.598,
+          "p95_ms": 5.598,
+          "max_ms": 5.598
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 30.342,
+          "p95_ms": 30.342,
+          "max_ms": 30.342
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 14.107,
+          "p95_ms": 14.107,
+          "max_ms": 14.107
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.203,
+          "p95_ms": 0.248,
+          "max_ms": 0.277
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 14.074,
+          "p95_ms": 14.614,
+          "max_ms": 15.202
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.871,
+          "p95_ms": 14.274,
+          "max_ms": 14.863
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.348,
+          "p95_ms": 16.186,
+          "max_ms": 20.386
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.364,
+          "p95_ms": 13.807,
+          "max_ms": 22.346
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.065,
+          "p95_ms": 13.798,
+          "max_ms": 16.108
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 57.436,
+          "p95_ms": 59.124,
+          "max_ms": 59.899
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 5887.98
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 160.638,
+      "rss_inicial": 43638784,
+      "rss_pos_carga": 52355072,
+      "rss_final": 52400128,
+      "crescimento_ciclos": 45056,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 54370304
+        },
+        {
+          "ciclo": 10,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 15,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 20,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 25,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 30,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 35,
+          "rss": 54378496
+        },
+        {
+          "ciclo": 40,
+          "rss": 54378496
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 54378496,
+      "pico_processo_so": 54378496,
+      "atraso_heartbeat_max_ms": 53.382,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 14.817,
+          "p95_ms": 14.817,
+          "max_ms": 14.817
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 60.189,
+          "p95_ms": 60.189,
+          "max_ms": 60.189
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.049,
+          "p95_ms": 6.049,
+          "max_ms": 6.049
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 52.577,
+          "p95_ms": 52.577,
+          "max_ms": 52.577
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.219,
+          "p95_ms": 6.219,
+          "max_ms": 6.219
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 73.337,
+          "p95_ms": 73.337,
+          "max_ms": 73.337
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 21.171,
+          "p95_ms": 21.171,
+          "max_ms": 21.171
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.22,
+          "p95_ms": 0.471,
+          "max_ms": 0.935
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.81,
+          "p95_ms": 39.158,
+          "max_ms": 39.807
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.367,
+          "p95_ms": 35.45,
+          "max_ms": 45.998
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.94,
+          "p95_ms": 41.138,
+          "max_ms": 50.322
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.19,
+          "p95_ms": 35.667,
+          "max_ms": 41.674
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.315,
+          "p95_ms": 33.91,
+          "max_ms": 34.237
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.165,
+          "p95_ms": 64.975,
+          "max_ms": 73.391
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 2,
+      "processo_total_ms": 8797.03
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 161.976,
+      "rss_inicial": 43204608,
+      "rss_pos_carga": 51580928,
+      "rss_final": 51625984,
+      "crescimento_ciclos": 45056,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 53596160
+        },
+        {
+          "ciclo": 10,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 15,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 20,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 25,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 30,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 35,
+          "rss": 53604352
+        },
+        {
+          "ciclo": 40,
+          "rss": 53604352
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 53604352,
+      "pico_processo_so": 53604352,
+      "atraso_heartbeat_max_ms": 53.225,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.2,
+          "p95_ms": 15.2,
+          "max_ms": 15.2
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 59.933,
+          "p95_ms": 59.933,
+          "max_ms": 59.933
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.889,
+          "p95_ms": 5.889,
+          "max_ms": 5.889
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 51.96,
+          "p95_ms": 51.96,
+          "max_ms": 51.96
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.742,
+          "p95_ms": 5.742,
+          "max_ms": 5.742
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 73.708,
+          "p95_ms": 73.708,
+          "max_ms": 73.708
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 21.008,
+          "p95_ms": 21.008,
+          "max_ms": 21.008
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.22,
+          "p95_ms": 0.286,
+          "max_ms": 0.312
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 36.823,
+          "p95_ms": 38.316,
+          "max_ms": 39.193
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.094,
+          "p95_ms": 35.091,
+          "max_ms": 36.879
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.729,
+          "p95_ms": 40.989,
+          "max_ms": 42.307
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.234,
+          "p95_ms": 35.022,
+          "max_ms": 35.153
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.03,
+          "p95_ms": 33.936,
+          "max_ms": 34.335
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 53.582,
+          "p95_ms": 63.697,
+          "max_ms": 76.408
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 8725.448
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 229.197,
+      "rss_inicial": 73015296,
+      "rss_pos_carga": 76369920,
+      "rss_final": 77033472,
+      "crescimento_ciclos": 663552,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 76918784
+        },
+        {
+          "ciclo": 10,
+          "rss": 76931072
+        },
+        {
+          "ciclo": 15,
+          "rss": 76935168
+        },
+        {
+          "ciclo": 20,
+          "rss": 76935168
+        },
+        {
+          "ciclo": 25,
+          "rss": 76935168
+        },
+        {
+          "ciclo": 30,
+          "rss": 77017088
+        },
+        {
+          "ciclo": 35,
+          "rss": 77021184
+        },
+        {
+          "ciclo": 40,
+          "rss": 77033472
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 80814080,
+      "pico_processo_so": 80879616,
+      "atraso_heartbeat_max_ms": 67.415,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 16.357,
+          "p95_ms": 16.357,
+          "max_ms": 16.357
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.422,
+          "p95_ms": 17.422,
+          "max_ms": 17.422
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.729,
+          "p95_ms": 6.729,
+          "max_ms": 6.729
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 14.649,
+          "p95_ms": 14.649,
+          "max_ms": 14.649
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.687,
+          "p95_ms": 5.687,
+          "max_ms": 5.687
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 30.017,
+          "p95_ms": 30.017,
+          "max_ms": 30.017
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.017,
+          "p95_ms": 13.017,
+          "max_ms": 13.017
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.204,
+          "p95_ms": 0.249,
+          "max_ms": 0.549
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.811,
+          "p95_ms": 14.179,
+          "max_ms": 14.556
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.704,
+          "p95_ms": 14.249,
+          "max_ms": 14.345
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.222,
+          "p95_ms": 15.693,
+          "max_ms": 16.768
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.09,
+          "p95_ms": 13.54,
+          "max_ms": 13.612
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.063,
+          "p95_ms": 13.572,
+          "max_ms": 13.792
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.391,
+          "p95_ms": 58.449,
+          "max_ms": 59.48
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 3,
+      "processo_total_ms": 5791.53
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 228.559,
+      "rss_inicial": 72925184,
+      "rss_pos_carga": 76222464,
+      "rss_final": 76808192,
+      "crescimento_ciclos": 585728,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 76746752
+        },
+        {
+          "ciclo": 10,
+          "rss": 76759040
+        },
+        {
+          "ciclo": 15,
+          "rss": 76759040
+        },
+        {
+          "ciclo": 20,
+          "rss": 76759040
+        },
+        {
+          "ciclo": 25,
+          "rss": 76759040
+        },
+        {
+          "ciclo": 30,
+          "rss": 76759040
+        },
+        {
+          "ciclo": 35,
+          "rss": 76763136
+        },
+        {
+          "ciclo": 40,
+          "rss": 76808192
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 80588800,
+      "pico_processo_so": 80654336,
+      "atraso_heartbeat_max_ms": 65.715,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.638,
+          "p95_ms": 15.638,
+          "max_ms": 15.638
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 18.238,
+          "p95_ms": 18.238,
+          "max_ms": 18.238
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 7.119,
+          "p95_ms": 7.119,
+          "max_ms": 7.119
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 17.967,
+          "p95_ms": 17.967,
+          "max_ms": 17.967
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.161,
+          "p95_ms": 6.161,
+          "max_ms": 6.161
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 29.483,
+          "p95_ms": 29.483,
+          "max_ms": 29.483
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.616,
+          "p95_ms": 13.616,
+          "max_ms": 13.616
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.206,
+          "p95_ms": 0.253,
+          "max_ms": 0.283
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.853,
+          "p95_ms": 14.205,
+          "max_ms": 15.941
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.515,
+          "p95_ms": 14.159,
+          "max_ms": 20.695
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.039,
+          "p95_ms": 15.706,
+          "max_ms": 16.032
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 12.949,
+          "p95_ms": 13.457,
+          "max_ms": 14.138
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 12.948,
+          "p95_ms": 13.339,
+          "max_ms": 13.593
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 55.303,
+          "p95_ms": 58.208,
+          "max_ms": 73.401
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 5759.401
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 163.634,
+      "rss_inicial": 43601920,
+      "rss_pos_carga": 52318208,
+      "rss_final": 52367360,
+      "crescimento_ciclos": 49152,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 54337536
+        },
+        {
+          "ciclo": 10,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 15,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 20,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 25,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 30,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 35,
+          "rss": 54345728
+        },
+        {
+          "ciclo": 40,
+          "rss": 54345728
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 54345728,
+      "pico_processo_so": 54345728,
+      "atraso_heartbeat_max_ms": 53.039,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 14.901,
+          "p95_ms": 14.901,
+          "max_ms": 14.901
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 42.567,
+          "p95_ms": 42.567,
+          "max_ms": 42.567
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.287,
+          "p95_ms": 6.287,
+          "max_ms": 6.287
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 36.372,
+          "p95_ms": 36.372,
+          "max_ms": 36.372
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 6.241,
+          "p95_ms": 6.241,
+          "max_ms": 6.241
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 73.382,
+          "p95_ms": 73.382,
+          "max_ms": 73.382
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 21.108,
+          "p95_ms": 21.108,
+          "max_ms": 21.108
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.219,
+          "p95_ms": 0.296,
+          "max_ms": 0.433
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 37.28,
+          "p95_ms": 38.442,
+          "max_ms": 39.393
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.026,
+          "p95_ms": 19.96,
+          "max_ms": 37.027
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 39.545,
+          "p95_ms": 40.726,
+          "max_ms": 41.276
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.12,
+          "p95_ms": 35.708,
+          "max_ms": 45.704
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.084,
+          "p95_ms": 33.925,
+          "max_ms": 34.145
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 60.108,
+          "p95_ms": 72.421,
+          "max_ms": 75.681
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 4,
+      "processo_total_ms": 8849.079
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 164.166,
+      "rss_inicial": 43708416,
+      "rss_pos_carga": 52191232,
+      "rss_final": 52236288,
+      "crescimento_ciclos": 45056,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 10,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 15,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 20,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 25,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 30,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 35,
+          "rss": 54214656
+        },
+        {
+          "ciclo": 40,
+          "rss": 54214656
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 54214656,
+      "pico_processo_so": 54214656,
+      "atraso_heartbeat_max_ms": 53.77,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.087,
+          "p95_ms": 15.087,
+          "max_ms": 15.087
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 42.549,
+          "p95_ms": 42.549,
+          "max_ms": 42.549
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 5.931,
+          "p95_ms": 5.931,
+          "max_ms": 5.931
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 51.615,
+          "p95_ms": 51.615,
+          "max_ms": 51.615
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.973,
+          "p95_ms": 5.973,
+          "max_ms": 5.973
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 74.414,
+          "p95_ms": 74.414,
+          "max_ms": 74.414
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 21.599,
+          "p95_ms": 21.599,
+          "max_ms": 21.599
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.245,
+          "p95_ms": 0.406,
+          "max_ms": 0.805
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 37.159,
+          "p95_ms": 38.429,
+          "max_ms": 41.067
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 18.23,
+          "p95_ms": 20.035,
+          "max_ms": 36.902
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 40.207,
+          "p95_ms": 41.867,
+          "max_ms": 42.145
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 34.453,
+          "p95_ms": 35.424,
+          "max_ms": 35.904
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 33.372,
+          "p95_ms": 34.142,
+          "max_ms": 34.292
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 61.033,
+          "p95_ms": 73.305,
+          "max_ms": 76.066
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 8832.46
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 5000,
+      "ciclos": 40,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "1d56065463449ca3d2878959024a191284b64f71456430047c49d583b7a1450d",
+      "registros": 5000,
+      "total_centavos": 86990700,
+      "abertura_gui_ms": 223.664,
+      "rss_inicial": 73015296,
+      "rss_pos_carga": 76382208,
+      "rss_final": 76992512,
+      "crescimento_ciclos": 610304,
+      "memoria_por_ciclo": [
+        {
+          "ciclo": 5,
+          "rss": 76877824
+        },
+        {
+          "ciclo": 10,
+          "rss": 76922880
+        },
+        {
+          "ciclo": 15,
+          "rss": 76939264
+        },
+        {
+          "ciclo": 20,
+          "rss": 76951552
+        },
+        {
+          "ciclo": 25,
+          "rss": 76951552
+        },
+        {
+          "ciclo": 30,
+          "rss": 76967936
+        },
+        {
+          "ciclo": 35,
+          "rss": 76976128
+        },
+        {
+          "ciclo": 40,
+          "rss": 76992512
+        }
+      ],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 80773120,
+      "pico_processo_so": 80838656,
+      "atraso_heartbeat_max_ms": 63.674,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 15.248,
+          "p95_ms": 15.248,
+          "max_ms": 15.248
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.512,
+          "p95_ms": 17.512,
+          "max_ms": 17.512
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 6.268,
+          "p95_ms": 6.268,
+          "max_ms": 6.268
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 15.185,
+          "p95_ms": 15.185,
+          "max_ms": 15.185
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 5.588,
+          "p95_ms": 5.588,
+          "max_ms": 5.588
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 29.955,
+          "p95_ms": 29.955,
+          "max_ms": 29.955
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.356,
+          "p95_ms": 13.356,
+          "max_ms": 13.356
+        },
+        "consulta_mes": {
+          "n": 40,
+          "mediana_ms": 0.204,
+          "p95_ms": 0.249,
+          "max_ms": 0.283
+        },
+        "aplicar_mes": {
+          "n": 40,
+          "mediana_ms": 13.968,
+          "p95_ms": 14.449,
+          "max_ms": 15.21
+        },
+        "aplicar_todas": {
+          "n": 40,
+          "mediana_ms": 13.769,
+          "p95_ms": 14.183,
+          "max_ms": 14.767
+        },
+        "navegacao_Análises": {
+          "n": 40,
+          "mediana_ms": 15.243,
+          "p95_ms": 15.882,
+          "max_ms": 16.27
+        },
+        "navegacao_Finanças": {
+          "n": 40,
+          "mediana_ms": 13.184,
+          "p95_ms": 13.553,
+          "max_ms": 13.675
+        },
+        "navegacao_Vendas": {
+          "n": 40,
+          "mediana_ms": 13.095,
+          "p95_ms": 13.713,
+          "max_ms": 14.627
+        },
+        "abrir_fechar_detalhe": {
+          "n": 40,
+          "mediana_ms": 56.922,
+          "p95_ms": 58.68,
+          "max_ms": 59.032
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": null,
+      "repeticao": 5,
+      "processo_total_ms": 5805.061
+    }
+  ],
+  "probes_uia": [
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 1,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 164.272,
+      "rss_inicial": 41299968,
+      "rss_pos_carga": 41672704,
+      "rss_final": 41705472,
+      "crescimento_ciclos": 32768,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 43683840,
+      "pico_processo_so": 43683840,
+      "atraso_heartbeat_max_ms": 24.124,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.884,
+          "p95_ms": 0.884,
+          "max_ms": 0.884
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 63.925,
+          "p95_ms": 63.925,
+          "max_ms": 63.925
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.548,
+          "p95_ms": 0.548,
+          "max_ms": 0.548
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 53.241,
+          "p95_ms": 53.241,
+          "max_ms": 53.241
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.57,
+          "p95_ms": 2.57,
+          "max_ms": 2.57
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 20.588,
+          "p95_ms": 20.588,
+          "max_ms": 20.588
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 17.701,
+          "p95_ms": 17.701,
+          "max_ms": 17.701
+        },
+        "consulta_mes": {
+          "n": 1,
+          "mediana_ms": 0.184,
+          "p95_ms": 0.184,
+          "max_ms": 0.184
+        },
+        "aplicar_mes": {
+          "n": 1,
+          "mediana_ms": 17.464,
+          "p95_ms": 17.464,
+          "max_ms": 17.464
+        },
+        "aplicar_todas": {
+          "n": 1,
+          "mediana_ms": 17.734,
+          "p95_ms": 17.734,
+          "max_ms": 17.734
+        },
+        "navegacao_Análises": {
+          "n": 1,
+          "mediana_ms": 38.791,
+          "p95_ms": 38.791,
+          "max_ms": 38.791
+        },
+        "navegacao_Finanças": {
+          "n": 1,
+          "mediana_ms": 38.183,
+          "p95_ms": 38.183,
+          "max_ms": 38.183
+        },
+        "navegacao_Vendas": {
+          "n": 1,
+          "mediana_ms": 37.562,
+          "p95_ms": 37.562,
+          "max_ms": 37.562
+        },
+        "abrir_fechar_detalhe": {
+          "n": 1,
+          "mediana_ms": 67.401,
+          "p95_ms": 67.401,
+          "max_ms": 67.401
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": {
+        "disponivel": true,
+        "resultado": {
+          "total": 8,
+          "elementos": [
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            }
+          ],
+          "janela": "Estudo técnico — Tkinter"
+        }
+      },
+      "visual": null
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 1,
+      "escala": 1,
+      "janela": [
+        1280,
+        800
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 226.364,
+      "rss_inicial": 70922240,
+      "rss_pos_carga": 71487488,
+      "rss_final": 72040448,
+      "crescimento_ciclos": 552960,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76926976,
+      "pico_processo_so": 76926976,
+      "atraso_heartbeat_max_ms": 64.145,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.86,
+          "p95_ms": 0.86,
+          "max_ms": 0.86
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.391,
+          "p95_ms": 17.391,
+          "max_ms": 17.391
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.491,
+          "p95_ms": 0.491,
+          "max_ms": 0.491
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 16.43,
+          "p95_ms": 16.43,
+          "max_ms": 16.43
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.366,
+          "p95_ms": 0.366,
+          "max_ms": 0.366
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 14.639,
+          "p95_ms": 14.639,
+          "max_ms": 14.639
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 14.069,
+          "p95_ms": 14.069,
+          "max_ms": 14.069
+        },
+        "consulta_mes": {
+          "n": 1,
+          "mediana_ms": 0.187,
+          "p95_ms": 0.187,
+          "max_ms": 0.187
+        },
+        "aplicar_mes": {
+          "n": 1,
+          "mediana_ms": 14.754,
+          "p95_ms": 14.754,
+          "max_ms": 14.754
+        },
+        "aplicar_todas": {
+          "n": 1,
+          "mediana_ms": 14.523,
+          "p95_ms": 14.523,
+          "max_ms": 14.523
+        },
+        "navegacao_Análises": {
+          "n": 1,
+          "mediana_ms": 16.893,
+          "p95_ms": 16.893,
+          "max_ms": 16.893
+        },
+        "navegacao_Finanças": {
+          "n": 1,
+          "mediana_ms": 14.179,
+          "p95_ms": 14.179,
+          "max_ms": 14.179
+        },
+        "navegacao_Vendas": {
+          "n": 1,
+          "mediana_ms": 13.627,
+          "p95_ms": 13.627,
+          "max_ms": 13.627
+        },
+        "abrir_fechar_detalhe": {
+          "n": 1,
+          "mediana_ms": 62.148,
+          "p95_ms": 62.148,
+          "max_ms": 62.148
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": {
+        "disponivel": true,
+        "resultado": {
+          "total": 137,
+          "elementos": [
+            {
+              "foco": true,
+              "tipo": "ControlType.Button",
+              "nome": "Vendas"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.Button",
+              "nome": "Análises"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.Button",
+              "nome": "Finanças"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Group",
+              "nome": ""
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.Table",
+              "nome": "Tabela de registros fictícios"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Pane",
+              "nome": ""
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Header",
+              "nome": "Data"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Header",
+              "nome": "Dinheiro"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Header",
+              "nome": "Pix"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Header",
+              "nome": "Cartão"
+            },
+            {
+              "foco": false,
+              "tipo": "ControlType.Header",
+              "nome": "Total"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-26"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 80,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 30,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 40,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 150,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-25"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 81,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 31,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 41,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 153,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-24"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 82,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 32,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 42,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 156,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-23"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 83,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 33,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 43,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 159,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-22"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 84,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 34,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 44,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 162,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-21"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 85,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 35,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 45,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 165,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-20"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 86,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 36,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 46,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 168,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-19"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 87,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 37,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 47,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 171,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-18"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 88,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 38,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 48,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 174,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-17"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 89,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 39,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 49,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 177,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-16"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 90,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 40,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 50,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 180,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-15"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 91,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 30,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 51,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 172,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-14"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 92,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 31,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 52,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 175,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-13"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 93,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 32,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 53,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 178,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-12"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 94,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 33,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 54,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 181,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-11"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 95,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 34,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 55,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 184,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-10"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 96,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 35,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 56,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 187,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-09"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 80,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 36,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 57,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 173,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-08"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 81,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 37,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 58,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 176,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-07"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 82,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 38,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 59,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 179,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-06"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 83,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 39,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 60,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 182,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-05"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 84,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 40,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 61,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 185,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-04"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 85,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 30,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 62,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 177,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-03"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 86,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 31,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 40,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 157,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "2026-10-02"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 87,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 32,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 41,00"
+            },
+            {
+              "foco": true,
+              "tipo": "ControlType.DataItem",
+              "nome": "R$ 160,00"
+            }
+          ],
+          "janela": "Estudo técnico — PySide6"
+        }
+      },
+      "visual": null
+    }
+  ]
+}

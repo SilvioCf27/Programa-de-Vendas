@@ -35,6 +35,7 @@ jobs:
       - name: Verificar a demo sem migrar funcionalidades
         run: python prototipos/reforma/avaliacao/verificar_suites.py --suite prototipos/reforma --saida resultados-tecnicos/TESTES_DEMO.json
       - name: Gerar e executar os dois pacotes de estudo
+        if: always()
         run: python prototipos/reforma/avaliacao/empacotar_ensaio.py --saida resultados-tecnicos/pacotes
       - name: Restaurar a resolução da VM
         if: always()

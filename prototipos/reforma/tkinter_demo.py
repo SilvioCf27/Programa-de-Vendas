@@ -512,7 +512,13 @@ class Aplicativo:
         self.mostrar("Finanças")
         self.root.update()
         assert self.tabela.selection() == escolhido
-        assert self.tabela.winfo_height() > 300
+        assert self.tabela.winfo_height() > 300, dict(
+            tabela=self.tabela.winfo_height(),
+            janela=self.root.winfo_geometry(),
+            area=self.area.winfo_height(),
+            escala=self.root.tk.call("tk", "scaling"),
+            superior=self.superior.winfo_ismapped(),
+        )
 
 
 if __name__ == "__main__":

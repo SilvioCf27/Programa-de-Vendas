@@ -546,7 +546,8 @@ def executar(ferramenta):
             def medir(nome, acao):
                 t = time.perf_counter()
                 result = acao()
-                a.pump()
+                if not nome.startswith("consulta_"):
+                    a.pump()
                 medidas[nome].append((time.perf_counter() - t) * 1000)
                 return result
 

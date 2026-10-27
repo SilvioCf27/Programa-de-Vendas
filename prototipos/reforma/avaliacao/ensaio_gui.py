@@ -104,12 +104,12 @@ class TkAdapter:
         self.tk = tk
         self.ttk = ttk
         self.root = tk.Tk()
-        self.root.geometry("1280x800")
+        self.root.geometry(f"{round(1280*escala)}x{round(800*escala)}")
         self.root.title("Estudo técnico — Tkinter")
         self.root.tk.call("tk", "scaling", 96 / 72 * escala)
         style = ttk.Style(self.root)
         style.theme_use("clam")
-        style.configure("Treeview", font=(FONTE, 10), rowheight=30)
+        style.configure("Treeview", font=(FONTE, 10), rowheight=round(30 * escala))
         style.configure("Treeview.Heading", font=(FONTE, 10, "bold"))
         self.root.option_add("*Font", (FONTE, 10))
         self.paginas = {}
@@ -441,6 +441,73 @@ $out=@();for($i=0;$i -lt [Math]::Min($x.Count,200);$i++){$c=$x[$i].Current;$out+
             return dict(disponivel=False, motivo=(err or out)[-1000:])
 
 
+def verificar_paletas(adapter):
+    import ast
+
+    path = Path(__file__).resolve().parents[3] / "ProgramFeira/interface/visual.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    paletas = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            target = node.targets[0]
+            if isinstance(target, ast.Name) and target.id == "PALETAS":
+                paletas.update(ast.literal_eval(node.value))
+            if (
+                isinstance(target, ast.Subscript)
+                and isinstance(target.value, ast.Name)
+                and target.value.id == "PALETAS"
+            ):
+                paletas[ast.literal_eval(target.slice)] = ast.literal_eval(node.value)
+    result = []
+
+    def contraste(a, b):
+        def lum(x):
+            v = [int(x[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+            v = [n / 12.92 if n <= 0.04045 else ((n + 0.055) / 1.055) ** 2.4 for n in v]
+            return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]
+
+        x, y = sorted([lum(a), lum(b)])
+        return round((y + 0.05) / (x + 0.05), 2)
+
+    for nome, p in paletas.items():
+        if isinstance(adapter, TkAdapter):
+            style = adapter.ttk.Style(adapter.root)
+            adapter.root.configure(bg=p["fundo"])
+            style.configure("TFrame", background=p["fundo"])
+            style.configure(
+                "TButton", foreground=p["texto"], background=p["superficie"]
+            )
+            style.configure(
+                "Treeview",
+                background=p["superficie"],
+                fieldbackground=p["superficie"],
+                foreground=p["texto"],
+            )
+            style.configure(
+                "Treeview.Heading", background=p["cabecalho"], foreground=p["texto"]
+            )
+            style.map(
+                "Treeview",
+                background=[("selected", p["selecionado"])],
+                foreground=[("selected", p["texto_selecionado"])],
+            )
+        else:
+            adapter.app.setStyleSheet(
+                f'QWidget{{background:{p["fundo"]};color:{p["texto"]};}} QTableView{{background:{p["superficie"]};alternate-background-color:{p["alternada"]};color:{p["texto"]};selection-background-color:{p["selecionado"]};selection-color:{p["texto_selecionado"]};}} QHeaderView::section{{background:{p["cabecalho"]};color:{p["texto"]};}} QPushButton{{background:{p["superficie"]};color:{p["texto"]};padding:8px;}}'
+            )
+        adapter.pump()
+        result.append(
+            dict(
+                tema=nome,
+                texto_sobre_superficie=contraste(p["texto"], p["superficie"]),
+                secundario_sobre_superficie=contraste(p["muted"], p["superficie"]),
+                selecao=contraste(p["texto_selecionado"], p["selecionado"]),
+                observacao="Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface.",
+            )
+        )
+    return result
+
+
 def executar(ferramenta):
     p = argparse.ArgumentParser()
     p.add_argument("--volume", type=int, default=224)
@@ -448,6 +515,7 @@ def executar(ferramenta):
     p.add_argument("--ciclos", type=int, default=40)
     p.add_argument("--escala", type=float, default=1)
     p.add_argument("--uia", action="store_true")
+    p.add_argument("--visual", action="store_true")
     args = p.parse_args()
     if not 1 <= args.volume <= 10000 or not 1 <= args.ciclos <= 200:
         raise SystemExit("Limites do estudo inválidos")
@@ -517,6 +585,7 @@ def executar(ferramenta):
             keyboard = a.keyboard()
             access = a.acessibilidade()
             uia = probe_uia(a) if args.uia else None
+            visual = verificar_paletas(a) if args.visual else None
             versao = (
                 a.root.tk.call("info", "patchlevel")
                 if ferramenta == "tk"
@@ -574,6 +643,7 @@ def executar(ferramenta):
                 teclado=keyboard,
                 acessibilidade=access,
                 uia=uia,
+                visual=visual,
             )
             a.close()
             Path(args.saida).write_text(

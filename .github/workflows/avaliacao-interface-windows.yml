@@ -26,6 +26,12 @@ jobs:
         run: New-Item -ItemType Directory -Force resultados-tecnicos
       - name: Medir cenários equivalentes em Windows
         run: python prototipos/reforma/avaliacao/executar_comparacao.py --uia --saida resultados-tecnicos/COMPARACAO_WINDOWS.json
+      - name: Conferir escalas e viabilidade das cinco paletas
+        run: python prototipos/reforma/avaliacao/verificar_escalas.py resultados-tecnicos
+      - name: Verificar o aplicativo atual em dados fictícios
+        run: python prototipos/reforma/avaliacao/verificar_suites.py --suite tests --saida resultados-tecnicos/TESTES_PRODUCAO.json
+      - name: Verificar a demo sem migrar funcionalidades
+        run: python prototipos/reforma/avaliacao/verificar_suites.py --suite prototipos/reforma --saida resultados-tecnicos/TESTES_DEMO.json
       - name: Gerar e executar os dois pacotes de estudo
         run: python prototipos/reforma/avaliacao/empacotar_ensaio.py --saida resultados-tecnicos/pacotes
       - name: Guardar relatórios de estudo e erros em uma frente própria
@@ -37,7 +43,7 @@ jobs:
         run: |
           $relatorio = "prototipos/reforma/avaliacao/resultados/windows-$env:RUN_ID"
           New-Item -ItemType Directory -Force $relatorio
-          if (Test-Path resultados-tecnicos/COMPARACAO_WINDOWS.json) { Copy-Item resultados-tecnicos/COMPARACAO_WINDOWS.json $relatorio }
+          Get-ChildItem resultados-tecnicos -File -Filter "*.json" | Copy-Item -Destination $relatorio
           if (Test-Path resultados-tecnicos/pacotes/EMPACOTAMENTO.json) { Copy-Item resultados-tecnicos/pacotes/EMPACOTAMENTO.json $relatorio }
           Get-ChildItem resultados-tecnicos -Recurse -File -Filter '*.log' | Copy-Item -Destination $relatorio
           @{ commit_base=$env:COMMIT_BASE; execucao=$env:RUN_ID; observacao='Ensaio isolado. Sem release, migração, PWA ou dados reais.' } | ConvertTo-Json | Set-Content "$relatorio/ORIGEM.json" -Encoding utf8

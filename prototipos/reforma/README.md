@@ -12,6 +12,10 @@ Esta frente contém o levantamento inicial e dois protótipos reais de interface
 com os mesmos dados inventados, período e dimensões. A versão estável, seu banco,
 a sessão, a sincronização e a PWA não foram alterados.
 
+## Referências recebidas
+
+A paleta Noturno, a fonte Inter e os recursos gráficos individuais foram confirmados. Veja a [identidade consolidada e a conferência dos arquivos](IDENTIDADE_VISUAL.txt). As capturas abaixo ainda mostram a primeira demo, **anterior à aplicação dessa identidade**.
+
 ## A proposta de Finanças
 
 - Tela própria, sem repetir os cartões de vendas.

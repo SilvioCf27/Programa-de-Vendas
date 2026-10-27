@@ -1,0 +1,58 @@
+GESTÃO DA FEIRA — IDENTIDADE CONSOLIDADA PARA A PRÓXIMA DEMO
+Estado: recursos conferidos; aplicação na demo ainda pendente.
+
+DECISÕES DO USUÁRIO
+A paleta da mensagem Paleta oficial proposta — Tema Noturno prevalece sobre
+os códigos diferentes da prancha Guia visual SaaS. As imagens das três telas
+orientam a composição; textos, datas e cálculos seguem as regras do programa.
+Fonte principal: Inter nos pesos 400, 500, 600 e 700. Alternativa: Segoe UI.
+Fundos decorativos: feira iluminada com luzes quentes e céu azul-escuro.
+Logotipo independente: barraca verde-turquesa.
+Ícones de interface: adotar um único conjunto vetorial consistente, com Lucide
+como referência recomendada. Registrar a licença dos arquivos efetivamente usados.
+
+PALETA PRINCIPAL CONFIRMADA
+Fundo principal #071525; barra lateral #091B30; painéis #10243B;
+campos #142C47; bordas #254362; linhas alternadas #172E48.
+Texto principal #EAF2FF; secundário #A5BCD5; discreto #718DA9.
+Verde principal #00B889; turquesa #2ED9BA; azul #3B91FF;
+ciano #38BDF8; amarelo #F5B942; roxo #A477F5;
+vermelho #F05264; verde positivo #34D399; azul profundo #2563D9.
+Conferir contraste no controle real; os códigos não substituem essa verificação.
+
+RECURSOS ENVIADOS E CONFERIDOS
+Origem: main, commit 95db8f9. Os nomes abaixo estão na raiz do repositório.
+Não confundir com a prancha de apresentação, que reúne imagens e molduras.
+- download.png: fundo lateral, 365 x 1000, PNG RGBA.
+- download (1).png: fundo superior, 1118 x 528, PNG RGBA.
+- download (2).png: logotipo raster, 512 x 512, PNG RGBA com transparência.
+- download.svg: logotipo vetorial, viewBox 0 0 256 256, gradiente turquesa.
+- Kit Visual de Mercado Noturno.png: prancha 1774 x 887, somente referência.
+
+Os PNGs individuais abrem corretamente. O logo tem transparência real: não
+carrega um quadriculado pintado ao redor. O SVG contém apenas elementos de
+vetor/gradiente, sem scripts nem referências externas.
+Os fundos também têm canal alfa e serão compostos sobre a cor escura do tema.
+O lateral é suficiente para a largura estreita proposta; o superior deve ser
+recortado proporcionalmente, sem esticar. A qualidade em DPI alto será avaliada
+na demo: a resolução não prova fidelidade em qualquer monitor.
+O PNG e o SVG do logo não são pixel a pixel idênticos. Usar o SVG como base
+escalável e manter o PNG como alternativa; avaliar a aparência na demo.
+A fotografia da prancha não é exatamente igual aos arquivos separados. Os
+arquivos individuais enviados são os recursos de implementação recebidos.
+Não é necessário pedir à outra IA nova descrição de cada imagem ou ícone.
+
+TIPOGRAFIA E DISTRIBUIÇÃO
+O projeto já distribui derivações da Inter nos pesos 400 e 600 sob SIL OFL,
+com nomes internos Feira Text. Os pesos 500 e 700 ainda precisam ser preparados
+ou obtidos da fonte oficial para a demo, com licença e identificação corretas.
+Não assumir que a Inter esteja instalada no computador do usuário nem depender
+de download da fonte em tempo de uso. Segoe UI é alternativa quando necessário.
+
+PRÓXIMA ETAPA
+Incorporar os recursos com nomes claros na pasta isolada de protótipos, aplicar
+paleta/tipografia e reproduzir a navegação lateral e as três telas com dados
+fictícios coerentes. Manter a versão estável e o banco pessoal inalterados.
+Demonstrar seleção múltipla, exclusão em lote e paginação aprovadas, com alcance
+explícito, confirmação e totais da consulta completa, conforme o plano.
+Revisar a demo com o usuário antes de integrar as regras reais ou publicar versão.

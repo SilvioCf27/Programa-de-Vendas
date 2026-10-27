@@ -391,3 +391,13 @@ Critérios para implementar e conferir esses controles:
 Os detalhes visuais adicionais serão enviados pelo usuário. Até recebê-los,
 não presumir fontes, arquivos de fundo ou logotipo exatos. Seguir pelo
 protótipo e pela revisão visual antes de integrar ao programa estável.
+
+13. IDENTIDADE E RECURSOS CONFIRMADOS
+
+O usuário confirmou a paleta Paleta oficial proposta — Tema Noturno, com fundo
+#071525. Confirmou Inter 400/500/600/700, com Segoe UI como alternativa, fundos
+decorativos individuais e logotipo independente. Lucide é a referência para
+um conjunto único de ícones. Os recursos recebidos foram conferidos quanto a
+formato, resolução, transparência e estrutura do SVG. Especificação e limites:
+prototipos/reforma/IDENTIDADE_VISUAL.txt. Não é necessário novo pedido de
+descrição à outra IA para iniciar a próxima revisão da demo.

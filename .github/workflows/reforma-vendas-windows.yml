@@ -23,6 +23,8 @@ jobs:
           python-version: '3.13'
       - name: Instalar dependências isoladas
         run: python -m pip install -r prototipos/reforma/requirements.txt openpyxl==3.1.5
+      - name: Preparar resolução da VM de teste
+        run: python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json
       - name: Verificar a primeira integração de Vendas
         run: python reforma_desktop/validar.py --saida resultados-qt/VENDAS_QT.json
       - name: Conferir regressão da versão estável
@@ -31,6 +33,11 @@ jobs:
       - name: Conferir protótipos visuais preservados
         if: always()
         run: python reforma_desktop/validar.py --suite prototipos/reforma --saida resultados-qt/PROTOTIPOS.json
+      - name: Restaurar resolução da VM
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path resultados-qt/TELA_WINDOWS.json) { python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json --restaurar }
       - name: Registrar evidências na frente de estudo
         if: always()
         shell: pwsh

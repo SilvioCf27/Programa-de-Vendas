@@ -1,0 +1,84 @@
+MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
+Base: desktop 1.7.1; levantamento por leitura do código. Não é um relatório de
+migração concluída. Os protótipos demonstram a distribuição, não todas as ações.
+
+ID   Origem atual                              Destino / conferência prevista
+
+V01  main.py: cadastrar, editar e excluir       Histórico e ações próximas à lista.
+     venda, cancelar_edicao                    Conferir cadastro, edição, exclusão,
+                                               cancelamento e formulário pendente.
+V02  database/banco.py: gravar e índice único   Mesmas regras; recusa de data repetida
+                                               seguida de nova gravação válida.
+V03  main.py: atualizar_tabela, ordenação,      Histórico com colunas proporcionais;
+     ajustar_larguras_colunas                   manter teclado, seleção e rolagem.
+V04  main.py: obter_filtros, sincronizar_       Painel de filtros de Vendas. Aplicar
+     filtros, limpar_filtros                    sem confundir campos pendentes.
+V05  resumos.py e main.atualizar_resumo         Blocos superiores aprovados; preservar
+                                               cálculos, período e participação.
+V06  semanas.py e main.atualizar_semana_atual   Mesma faixa independente dos filtros;
+                                               testar domingo, segunda e meia-noite.
+V07  preferencias.py e Configuracoes           Preferência de abertura nas configurações;
+                                               salvar e conferir após reabrir.
+V08  exportacao.py, main.exportar_visualizacao Botão superior existente. Retirar só o
+                                               menu duplicado; conferir CSV e Excel.
+
+A01  semanas.agrupar_semanas, PainelAnalises    Conteúdo principal de Análises; manter
+                                               recortes parciais e dias zerados.
+A02  interface/painel_comparacao.py             Ação Comparar A/B abre sua área de
+                                               consulta; preservar os dois seletores.
+A03  interface/analises.py, grafico.py,         Detalhes do período, com acesso próprio;
+     tendencias.py                             pagamentos, dias da semana, comparação
+                                               anterior e evolução permanecem.
+A04  main.atualizar_tabela e                    Tela separada, seleção aplicada em Vendas
+     PainelAnalises.atualizar                   ainda identificada. A/B independente.
+
+F01  interface/seletor_financeiro.py,           Consulta de Finanças no cabeçalho da área;
+     financeiro.limites                         mesmos quatro tipos e histórico.
+F02  financeiro.resumo_periodo                 Três indicadores principais e três
+                                               secundários; nenhum cálculo excluído.
+F03  PainelFinanceiro.formulario, editar,      Ações junto aos lançamentos. Manter tipo,
+     excluir e financeiro.salvar_lancamento    meio, categoria e validações nos formulários.
+F04  financeiro.compra_do_lancamento e         Editar a compra por qualquer parcela;
+     salvar_lancamento                         conferir valor total, centavos e atomicidade.
+F05  fechamento.primeira_fatura,               Formulário continua separando compra e
+     CampoData e financeiro                    fatura. Conferir dia 09 e registros antigos.
+F06  PainelFinanceiro.formulario_taxas         Ação Taxas da maquininha; preservar
+                                               semana, dias e proteção de sobreposição.
+F07  financeiro.salvar_taxa_anual,             Acesso Histórico de taxas; preservar
+     resumo_periodo e formulario_anual         cobertura, estimativa e ausência de rateio.
+F08  financeiro.semanas e tabelas financeiras  Acesso Despesas por semana e Histórico de
+                                               taxas, sem comprimir a lista principal.
+F09  fechamento.py, painel_nuvem e             Configuração por vigência. Preservar
+     configuracao_fechamento.py                 sincronização e períodos antigos.
+
+G01  interface/visual.py, acabamento.py,       Temas e preferências preservados na entrega
+     icones.py, fontes.py, preferencias.py     final. O estudo atual apresenta só Noite.
+G02  Configuracoes, diagnostico.py, main       Primeira linha comum: configurações,
+                                               versão e caminhos continuam acessíveis.
+G03  backup_drive.py, recuperacao.py,          Configurações e fechamento do programa;
+     database/entrada_backup.py,               testar cópia, restauração, recusa de
+     armazenamento.py, painel_backup.py        adulteração e caminhos redirecionados.
+G04  nuvem.py, sincronizacao.py,               Estado de conexão visível, sessão DPAPI,
+     automacao_nuvem.py, sessao_windows.py,    sincronização manual/automática e conflitos.
+     painel_nuvem.py e conflitos.py            Não conectar estes módulos ao protótipo.
+G05  migracao_nuvem.py e painel_nuvem.py        Acesso pela conexão com a nuvem, com
+                                               conferência anterior ao envio.
+G06  atualizador.py, painel_atualizacao.py,    Mesmo caminho do executável e protocolo
+     assets/aplicar_atualizacao.ps1            de atualização. Testar instalação antiga
+                                               recebendo a nova, além de recuperação.
+G07  banco.py, painel_nuvem e painel_backup    Uso local sem internet; consulta ou cópia
+                                               local não promete envio remoto concluído.
+
+OBSERVAÇÕES CONFIRMADAS NA LEITURA
+- Vendas atualiza Análises mesmo quando a área não está visível.
+- Finanças refaz consulta e preenche suas tabelas ao entrar na área.
+- O resumo financeiro consulta lançamentos e a tela também os lista.
+- O ajuste de largura percorre valores da tabela; seu custo foi instrumentado.
+- Várias ações estão montadas junto da interface em main.py. Uma troca de toolkit
+  exige extrair apenas o necessário, sem presumir que basta trocar widgets.
+
+REGRA DE ACEITAÇÃO
+Para cada ID, conferir o acesso e o resultado na implementação final. Mudar o
+nome ou a posição de um controle não substitui a verificação do comportamento.
+A inspeção acima não prova ausência de bugs nem equivale ao teste de cada ação
+em PySide6: essa integração ainda não foi iniciada.

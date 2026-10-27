@@ -1,0 +1,68 @@
+{
+  "data_utc": "2026-10-27T00:24:36.484173+00:00",
+  "python": "3.13.5",
+  "plataforma": "Linux x86_64",
+  "dimensoes": [
+    1440,
+    960
+  ],
+  "escala_estudo": "96 DPI; não valida escalas do Windows",
+  "fonte": "Segoe UI no Windows; DejaVu Sans no Linux",
+  "observacao": "Inicialização até primeira exibição, antes dos testes e capturas. Exclui o início do processo Python. RSS antes dos testes. Protótipos não têm a lógica inteira nem rede/banco; não comparar como substitutos do programa completo.",
+  "resultados": [
+    {
+      "ferramenta": "Tkinter",
+      "abertura_ms": 102.78,
+      "rss_mib": 24.45,
+      "linhas": 12,
+      "altura_tabela": 343,
+      "tk": "8.6.16",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "Tkinter",
+      "abertura_ms": 101.16,
+      "rss_mib": 24.45,
+      "linhas": 12,
+      "altura_tabela": 343,
+      "tk": "8.6.16",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "Tkinter",
+      "abertura_ms": 92.28,
+      "rss_mib": 24.45,
+      "linhas": 12,
+      "altura_tabela": 343,
+      "tk": "8.6.16",
+      "repeticao": 3
+    },
+    {
+      "ferramenta": "PySide6",
+      "abertura_ms": 175.35,
+      "rss_mib": 63.68,
+      "linhas": 12,
+      "altura_tabela": 361,
+      "qt": "6.10.2",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "PySide6",
+      "abertura_ms": 176.82,
+      "rss_mib": 64.84,
+      "linhas": 12,
+      "altura_tabela": 361,
+      "qt": "6.10.2",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "PySide6",
+      "abertura_ms": 165.87,
+      "rss_mib": 64.42,
+      "linhas": 12,
+      "altura_tabela": 361,
+      "qt": "6.10.2",
+      "repeticao": 3
+    }
+  ]
+}

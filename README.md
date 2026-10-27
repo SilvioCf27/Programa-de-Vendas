@@ -18,7 +18,9 @@ Veja os cuidados e a recuperação em [ATUALIZACOES.md](docs/ATUALIZACOES.md).
 
 O [plano da reforma do desktop](docs/PLANO_REFORMA_DESKTOP.txt) registra o escopo,
 as funções a preservar e as etapas de comparação entre Tkinter e PySide6.
-É um rascunho para aprovação; a ferramenta ainda não foi escolhida.
+O plano foi aprovado; a ferramenta ainda não foi escolhida.
+Os [primeiros estudos comparativos](prototipos/reforma/README.md) estão nesta
+frente de desenvolvimento, sem substituir a versão estável.
 
 ## Resumos semanais no desktop e celular
 

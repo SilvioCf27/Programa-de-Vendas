@@ -1,6 +1,6 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 1 — 26/10/2026
-Estado: rascunho para aprovação do usuário.
+Versão do plano: 2 — início do estudo autorizado pelo usuário.
+Estado: plano aprovado; levantamento e primeiros protótipos disponíveis para revisão.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 1. OBJETIVO E DIREÇÃO
@@ -160,7 +160,7 @@ impedimento para navegar, explicá-lo e permitir concluir ou cancelar a edição
 
 ETAPA 0 — APROVAR ESTE PLANO
 Entrega: este TXT e a confirmação do escopo pelo usuário.
-Estado: aguardando aprovação. Nenhuma interface foi trocada nesta etapa.
+Estado: aprovado pelo usuário nesta conversa. A versão estável foi preservada.
 Registrar neste mesmo documento eventuais ajustes de direção.
 
 ETAPA 1 — LEVANTAR A INTERFACE E MEDIR A BASE ATUAL
@@ -302,3 +302,16 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 Levantar o mapa de funções e as medições e, em seguida, preparar a comparação
 de Finanças em Tkinter e PySide6. A decisão de tecnologia permanece em aberto.
+
+
+10. REGISTRO DO INÍCIO DO ESTUDO
+
+Frente separada: reforma/estudo-interface. Não há nova release do executável.
+Mapa inicial: prototipos/reforma/MAPA_FUNCOES.txt.
+Medições e limites: prototipos/reforma/MEDICOES.md e arquivos JSON ao lado.
+Prévias reais Tkinter e PySide6: prototipos/reforma/README.md.
+
+O levantamento inicial e os dois protótipos foram preparados com dados
+fictícios. A comparação Windows, as escalas e o pacote Qt continuam pendentes.
+A ferramenta, os formulários definitivos e o layout final ainda não foram
+aprovados. Não iniciar a substituição do aplicativo a partir desta prévia.

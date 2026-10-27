@@ -82,3 +82,9 @@ Para cada ID, conferir o acesso e o resultado na implementação final. Mudar o
 nome ou a posição de um controle não substitui a verificação do comportamento.
 A inspeção acima não prova ausência de bugs nem equivale ao teste de cada ação
 em PySide6: essa integração ainda não foi iniciada.
+
+EXTENSÃO APROVADA APÓS AS REFERÊNCIAS VISUAIS — AINDA NÃO IMPLEMENTADA
+V09 / F10 — Seleção múltipla, exclusão em lote e paginação em Vendas e Finanças.
+Preservar totais e exportações da consulta completa, indicar alcance da seleção,
+confirmar exclusão e verificar transação, sincronização e parcelas selecionadas.
+Detalhamento e critérios: docs/PLANO_REFORMA_DESKTOP.txt, seção 12.

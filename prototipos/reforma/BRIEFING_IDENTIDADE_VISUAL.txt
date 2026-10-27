@@ -47,7 +47,9 @@ RESTRIÇÕES E PREFERÊNCIAS
 5. Menos explicação permanente. Usar rótulos claros e ? para complementos,
    com acesso por mouse, clique e teclado. Período aplicado, validação, conflito,
    estimativa e conexão não podem ficar escondidos quando afetam a leitura.
-6. Não criar novas funções, metas comerciais, notificações ou gráficos inéditos.
+6. Seleção múltipla, exclusão em lote e paginação foram aprovadas pelo usuário
+   nas referências recebidas e devem ser previstas. Além dessas exceções, não
+   criar novas funções, metas comerciais, notificações ou gráficos inéditos.
    Não remover filtros, campos, valores ou ações existentes. Alterar um nome
    não pode mudar o significado de um indicador ou de uma ação.
 7. Apresentar inicialmente uma composição escura com contraste confortável.
@@ -79,7 +81,8 @@ seleção aplicada e distinguir alterações ainda não aplicadas. Manter as reg
 atuais de combinação dos campos, sem inventar outro filtro por conveniência.
 Nova venda continua acessível no cabeçalho; CSV/Excel no botão de exportação.
 A preferência de abertura (fechamento/mês/ano/todas) fica nas configurações.
-Não inventar busca ou paginação funcional a partir de uma imagem decorativa.
+Prever seleção múltipla, exclusão em lote e paginação, agora aprovadas.
+Não acrescentar busca como nova função sem aprovação específica.
 
 TELA 2 — ANÁLISES
 Objetivo: entender o resultado por semana e comparar períodos.
@@ -145,8 +148,10 @@ Exemplo da regra atual: fechamento dia 09; compra em 09/10 entra na fatura de
 é outra informação. Há histórico de regras de fechamento; não recalcular o
 passado apenas por redesenhar a interface.
 Compra R$100,00 em 3x: R$33,33 + R$33,33 + R$33,34. Sempre informar o valor TOTAL.
-Editar qualquer parcela abre a compra inteira; excluir continua removendo só
-a parcela selecionada. Os rótulos e confirmações devem refletir essa diferença.
+Editar qualquer parcela abre a compra inteira; excluir remove apenas as
+parcelas selecionadas, inclusive na exclusão em lote aprovada, sem ampliar
+a ação automaticamente para a compra inteira. Os rótulos e confirmações
+devem refletir essa diferença.
 Taxas da maquininha: selecionar semana e informar taxas por dia; valores anuais
 antigos permanecem no histórico com cobertura e indicação confirmado/estimado.
 Não apresentar taxa como valor de venda nem duplicar despesa no pagamento da

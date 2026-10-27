@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 3 — referências e identidade visual antes da escolha técnica.
+Versão do plano: 4 — referências recebidas e controles adicionais aprovados.
 Estado: protótipos iniciais em avaliação; layout e ferramenta não aprovados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
@@ -41,7 +41,8 @@ as duas versões devem continuar compatíveis durante todo o processo.
   CSV e Excel no botão já existente ao lado de Nova venda.
 - Usar espaçamento, alinhamento, tipografia e contraste de forma consistente.
 - Reduzir explicações permanentes e usar ajudas contextuais quando adequado.
-- Novas funcionalidades ficam para a última etapa, após aprovar o layout.
+- Novas funcionalidades ficam para a última etapa, salvo a aprovação explícita
+  de seleção múltipla, exclusão em lote e paginação registrada na seção 12.
 
 3. COMO TRATAR TEXTOS E AJUDAS
 
@@ -81,6 +82,8 @@ V06 — Semana atual independente dos filtros: segunda-feira até hoje, sem
       o dia, sem alterar formulários ou filtros em preparação.
 V07 — Preferência de abertura: fechamento atual, mês atual, ano atual ou todas
       as vendas, com persistência local e respeito ao histórico de regras.
+V09 — Seleção múltipla, exclusão em lote e paginação do histórico, conforme
+      aprovação específica da seção 12. Conferir consultas e totais globais.
 V08 — CSV e Excel da seleção aplicada. Remover apenas o acesso duplicado do
       menu, preservando o botão, os formatos e o conteúdo dos arquivos.
 
@@ -112,6 +115,8 @@ F08 — Despesas agrupadas por semana e histórico de taxas anuais. Podem mudar
       de lugar, mas precisam continuar acessíveis sem abas aninhadas confusas.
 F09 — Configuração de fechamento por vigência, preservando o histórico e as
       regras das consultas já existentes.
+F10 — Seleção múltipla, exclusão em lote e paginação dos lançamentos, conforme
+      seção 12, sem transformar a exclusão de parcelas em exclusão de compras.
 
 G01 — Os cinco temas atuais, fontes, ícones, legibilidade e preferências.
       A nova interface precisa demonstrar equivalência visual antes da troca.
@@ -348,3 +353,41 @@ para construir a identidade visual a partir das funções de cada tela.
 Destacou o espaço vazio desproporcional em retângulos informativos de Finanças.
 A organização inicial não está aprovada: é material de referência funcional.
 Não iniciar migração nem nova release enquanto essa avaliação estiver aberta.
+
+12. APROVAÇÃO DOS CONTROLES DAS REFERÊNCIAS VISUAIS
+
+O usuário disponibilizou três imagens em docs/imagens na frente main:
+- Painel de Vendas em Modo Noturno.png
+- Painel de Análises da Feira.png
+- Painel Financeiro da Gestão da Feira.png
+
+As imagens orientam a composição e a identidade. Textos, datas, números e
+seletores devem seguir o comportamento correto do programa, não eventuais
+erros do desenho. Em Finanças, Falta cobrir representa as despesas ainda
+não cobertas pelas vendas após taxas, não parcelas pendentes de recebimento.
+O usuário autorizou adaptar os filtros desenhados aos seletores reais e
+substituir os números e datas por exemplos fictícios coerentes.
+
+Seleção múltipla, exclusão em lote e paginação foram explicitamente aprovadas
+pelo usuário para esta reforma do desktop. São exceções à postergação geral
+de novas funcionalidades. Devem ser implementadas, verificadas e comitadas
+na frente da reforma; não são apenas decoração nem estão concluídas por
+registrar a aprovação neste documento. Não há nova release nesta etapa.
+
+Critérios para implementar e conferir esses controles:
+- Paginar a apresentação sem limitar os totais, as análises ou a exportação
+  à página visível. Cada recurso continua usando sua consulta aplicada.
+- Identificar a quantidade selecionada e o alcance da ação. Selecionar todos
+  não pode incluir registros ocultos sem explicitar esse alcance ao usuário.
+- Exigir confirmação clara antes da exclusão em lote; cancelar não altera
+  dados. Verificar transação e sincronização, sem exclusões parciais silenciosas.
+- Preservar a diferença entre editar a compra inteira e excluir parcelas
+  selecionadas. Não ampliar a exclusão automaticamente para o grupo inteiro.
+- Conferir mudança de página, filtro, atualização e sincronização para evitar
+  seleção oculta ou aplicada a registros diferentes dos escolhidos.
+- Conferir totais, página vazia após exclusão, quantidade de registros e
+  proteções já existentes para grupos de parcelas incompletos.
+
+Os detalhes visuais adicionais serão enviados pelo usuário. Até recebê-los,
+não presumir fontes, arquivos de fundo ou logotipo exatos. Seguir pelo
+protótipo e pela revisão visual antes de integrar ao programa estável.

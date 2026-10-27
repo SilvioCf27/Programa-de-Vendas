@@ -1,0 +1,993 @@
+{
+  "plataforma": "win32",
+  "observacao": "Fatores de aplicação 1/1,25/1,5; não é troca do DPI real do monitor nem teste com leitor de tela.",
+  "resultados": [
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.0,
+      "janela": [
+        1028,
+        749
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 181.97,
+      "rss_inicial": 40169472,
+      "rss_pos_carga": 40525824,
+      "rss_final": 40550400,
+      "crescimento_ciclos": 24576,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 42528768,
+      "pico_processo_so": 43343872,
+      "atraso_heartbeat_max_ms": 25.452,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.281,
+          "p95_ms": 1.281,
+          "max_ms": 1.281
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 43.256,
+          "p95_ms": 43.256,
+          "max_ms": 43.256
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.588,
+          "p95_ms": 0.588,
+          "max_ms": 0.588
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 54.516,
+          "p95_ms": 54.516,
+          "max_ms": 54.516
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.823,
+          "p95_ms": 2.823,
+          "max_ms": 2.823
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 19.31,
+          "p95_ms": 19.31,
+          "max_ms": 19.31
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 35.436,
+          "p95_ms": 35.436,
+          "max_ms": 35.436
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.267,
+          "p95_ms": 0.314,
+          "max_ms": 0.314
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 20.191,
+          "p95_ms": 23.077,
+          "max_ms": 23.077
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 18.687,
+          "p95_ms": 19.137,
+          "max_ms": 19.137
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 39.55,
+          "p95_ms": 40.705,
+          "max_ms": 40.705
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 26.848,
+          "p95_ms": 35.565,
+          "max_ms": 35.565
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 35.471,
+          "p95_ms": 36.539,
+          "max_ms": 36.539
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 46.84,
+          "p95_ms": 63.612,
+          "max_ms": 63.612
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.0,
+      "janela": [
+        1028,
+        749
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 233.648,
+      "rss_inicial": 68734976,
+      "rss_pos_carga": 69296128,
+      "rss_final": 69869568,
+      "crescimento_ciclos": 573440,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 74059776,
+      "pico_processo_so": 74059776,
+      "atraso_heartbeat_max_ms": 65.161,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.023,
+          "p95_ms": 1.023,
+          "max_ms": 1.023
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 17.027,
+          "p95_ms": 17.027,
+          "max_ms": 17.027
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.594,
+          "p95_ms": 0.594,
+          "max_ms": 0.594
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 14.953,
+          "p95_ms": 14.953,
+          "max_ms": 14.953
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.466,
+          "p95_ms": 0.466,
+          "max_ms": 0.466
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 13.989,
+          "p95_ms": 13.989,
+          "max_ms": 13.989
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.02,
+          "p95_ms": 13.02,
+          "max_ms": 13.02
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.259,
+          "p95_ms": 0.28,
+          "max_ms": 0.28
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 12.916,
+          "p95_ms": 12.919,
+          "max_ms": 12.919
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 12.411,
+          "p95_ms": 13.466,
+          "max_ms": 13.466
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 14.647,
+          "p95_ms": 14.793,
+          "max_ms": 14.793
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 12.948,
+          "p95_ms": 13.167,
+          "max_ms": 13.167
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 12.302,
+          "p95_ms": 13.209,
+          "max_ms": 13.209
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 55.998,
+          "p95_ms": 57.973,
+          "max_ms": 57.973
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.25,
+      "janela": [
+        1028,
+        749
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 185.608,
+      "rss_inicial": 40292352,
+      "rss_pos_carga": 40644608,
+      "rss_final": 40669184,
+      "crescimento_ciclos": 24576,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 42647552,
+      "pico_processo_so": 43356160,
+      "atraso_heartbeat_max_ms": 43.789,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.901,
+          "p95_ms": 0.901,
+          "max_ms": 0.901
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 36.391,
+          "p95_ms": 36.391,
+          "max_ms": 36.391
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.578,
+          "p95_ms": 0.578,
+          "max_ms": 0.578
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 33.465,
+          "p95_ms": 33.465,
+          "max_ms": 33.465
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.932,
+          "p95_ms": 2.932,
+          "max_ms": 2.932
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 17.815,
+          "p95_ms": 17.815,
+          "max_ms": 17.815
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 29.024,
+          "p95_ms": 29.024,
+          "max_ms": 29.024
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.249,
+          "p95_ms": 0.277,
+          "max_ms": 0.277
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 24.403,
+          "p95_ms": 33.093,
+          "max_ms": 33.093
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 15.369,
+          "p95_ms": 15.906,
+          "max_ms": 15.906
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 34.715,
+          "p95_ms": 34.929,
+          "max_ms": 34.929
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 21.69,
+          "p95_ms": 28.898,
+          "max_ms": 28.898
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 22.433,
+          "p95_ms": 28.81,
+          "max_ms": 28.81
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 48.517,
+          "p95_ms": 55.134,
+          "max_ms": 55.134
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.25,
+      "janela": [
+        822,
+        599
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 235.771,
+      "rss_inicial": 69525504,
+      "rss_pos_carga": 70430720,
+      "rss_final": 70864896,
+      "crescimento_ciclos": 434176,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 76210176,
+      "pico_processo_so": 76275712,
+      "atraso_heartbeat_max_ms": 64.94,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.028,
+          "p95_ms": 1.028,
+          "max_ms": 1.028
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 14.589,
+          "p95_ms": 14.589,
+          "max_ms": 14.589
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.575,
+          "p95_ms": 0.575,
+          "max_ms": 0.575
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 13.937,
+          "p95_ms": 13.937,
+          "max_ms": 13.937
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.529,
+          "p95_ms": 0.529,
+          "max_ms": 0.529
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 11.661,
+          "p95_ms": 11.661,
+          "max_ms": 11.661
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 9.268,
+          "p95_ms": 9.268,
+          "max_ms": 9.268
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.256,
+          "p95_ms": 0.259,
+          "max_ms": 0.259
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 10.537,
+          "p95_ms": 10.91,
+          "max_ms": 10.91
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 9.563,
+          "p95_ms": 10.115,
+          "max_ms": 10.115
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 11.801,
+          "p95_ms": 12.387,
+          "max_ms": 12.387
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 10.383,
+          "p95_ms": 10.496,
+          "max_ms": 10.496
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 9.755,
+          "p95_ms": 10.322,
+          "max_ms": 10.322
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 50.636,
+          "p95_ms": 53.906,
+          "max_ms": 53.906
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    },
+    {
+      "ferramenta": "tk",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "8.6.15",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.5,
+      "janela": [
+        1028,
+        749
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 194.822,
+      "rss_inicial": 40304640,
+      "rss_pos_carga": 40652800,
+      "rss_final": 40681472,
+      "crescimento_ciclos": 28672,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 42659840,
+      "pico_processo_so": 43335680,
+      "atraso_heartbeat_max_ms": 43.264,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 0.884,
+          "p95_ms": 0.884,
+          "max_ms": 0.884
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 31.803,
+          "p95_ms": 31.803,
+          "max_ms": 31.803
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.589,
+          "p95_ms": 0.589,
+          "max_ms": 0.589
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 42.182,
+          "p95_ms": 42.182,
+          "max_ms": 42.182
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 2.85,
+          "p95_ms": 2.85,
+          "max_ms": 2.85
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 28.856,
+          "p95_ms": 28.856,
+          "max_ms": 28.856
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 13.303,
+          "p95_ms": 13.303,
+          "max_ms": 13.303
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.219,
+          "p95_ms": 0.22,
+          "max_ms": 0.22
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 14.933,
+          "p95_ms": 16.002,
+          "max_ms": 16.002
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 20.63,
+          "p95_ms": 27.378,
+          "max_ms": 27.378
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 35.52,
+          "p95_ms": 40.93,
+          "max_ms": 40.93
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 19.534,
+          "p95_ms": 26.158,
+          "max_ms": 26.158
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 18.683,
+          "p95_ms": 24.807,
+          "max_ms": 24.807
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 46.427,
+          "p95_ms": 54.441,
+          "max_ms": 54.441
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "takefocus": "1"
+      },
+      "acessibilidade": {
+        "ponte": "Tk/ttk; exige validação UIA e leitor de tela no Windows",
+        "nome_janela": "Estudo técnico — Tkinter",
+        "cabecalhos": true
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    },
+    {
+      "ferramenta": "qt",
+      "plataforma": "win32",
+      "python": "3.13.16",
+      "biblioteca": "6.10.2",
+      "sqlite": "3.50.4",
+      "frozen": false,
+      "volume": 224,
+      "ciclos": 2,
+      "escala": 1.5,
+      "janela": [
+        685,
+        499
+      ],
+      "fonte": "Segoe UI",
+      "sha_dados": "5249771080813da6bcb95a56ea093294f27fe1f0ff624638f10302342d517008",
+      "registros": 224,
+      "total_centavos": 3889000,
+      "abertura_gui_ms": 234.441,
+      "rss_inicial": 69644288,
+      "rss_pos_carga": 70426624,
+      "rss_final": 71012352,
+      "crescimento_ciclos": 585728,
+      "memoria_por_ciclo": [],
+      "dialogos_vivos_apos_ciclos": 0,
+      "pico_amostrado": 77385728,
+      "pico_processo_so": 77451264,
+      "atraso_heartbeat_max_ms": 66.007,
+      "tempos": {
+        "consulta_Análises": {
+          "n": 1,
+          "mediana_ms": 1.057,
+          "p95_ms": 1.057,
+          "max_ms": 1.057
+        },
+        "primeira_Análises": {
+          "n": 1,
+          "mediana_ms": 12.832,
+          "p95_ms": 12.832,
+          "max_ms": 12.832
+        },
+        "consulta_Finanças": {
+          "n": 1,
+          "mediana_ms": 0.659,
+          "p95_ms": 0.659,
+          "max_ms": 0.659
+        },
+        "primeira_Finanças": {
+          "n": 1,
+          "mediana_ms": 10.845,
+          "p95_ms": 10.845,
+          "max_ms": 10.845
+        },
+        "consulta_todas": {
+          "n": 1,
+          "mediana_ms": 0.487,
+          "p95_ms": 0.487,
+          "max_ms": 0.487
+        },
+        "tabela_completa": {
+          "n": 1,
+          "mediana_ms": 8.979,
+          "p95_ms": 8.979,
+          "max_ms": 8.979
+        },
+        "retorno_paginado": {
+          "n": 1,
+          "mediana_ms": 9.729,
+          "p95_ms": 9.729,
+          "max_ms": 9.729
+        },
+        "consulta_mes": {
+          "n": 2,
+          "mediana_ms": 0.309,
+          "p95_ms": 0.344,
+          "max_ms": 0.344
+        },
+        "aplicar_mes": {
+          "n": 2,
+          "mediana_ms": 8.829,
+          "p95_ms": 9.398,
+          "max_ms": 9.398
+        },
+        "aplicar_todas": {
+          "n": 2,
+          "mediana_ms": 9.529,
+          "p95_ms": 9.789,
+          "max_ms": 9.789
+        },
+        "navegacao_Análises": {
+          "n": 2,
+          "mediana_ms": 9.542,
+          "p95_ms": 9.837,
+          "max_ms": 9.837
+        },
+        "navegacao_Finanças": {
+          "n": 2,
+          "mediana_ms": 9.01,
+          "p95_ms": 9.438,
+          "max_ms": 9.438
+        },
+        "navegacao_Vendas": {
+          "n": 2,
+          "mediana_ms": 7.88,
+          "p95_ms": 8.29,
+          "max_ms": 8.29
+        },
+        "abrir_fechar_detalhe": {
+          "n": 2,
+          "mediana_ms": 48.65,
+          "p95_ms": 49.922,
+          "max_ms": 49.922
+        }
+      },
+      "teclado": {
+        "tecla": "Down",
+        "selecao": true,
+        "foco": true,
+        "nome": "Tabela de registros fictícios"
+      },
+      "acessibilidade": {
+        "ponte": "QAccessible; não substitui UIA/NVDA",
+        "interface": true,
+        "role": "Role.Table",
+        "nome": "Tabela de registros fictícios"
+      },
+      "uia": null,
+      "visual": [
+        {
+          "tema": "claro",
+          "texto_sobre_superficie": 15.53,
+          "secundario_sobre_superficie": 4.76,
+          "selecao": 9.49,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "escuro",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.4,
+          "selecao": 8.4,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "grafite",
+          "texto_sobre_superficie": 13.21,
+          "secundario_sobre_superficie": 7.82,
+          "selecao": 9.79,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "areia",
+          "texto_sobre_superficie": 12.63,
+          "secundario_sobre_superficie": 7.57,
+          "selecao": 7.73,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        },
+        {
+          "tema": "aurora",
+          "texto_sobre_superficie": 14.33,
+          "secundario_sobre_superficie": 8.06,
+          "selecao": 12.6,
+          "observacao": "Renderização da paleta no cenário técnico; não equivalência dos cinco temas na futura interface."
+        }
+      ]
+    }
+  ]
+}

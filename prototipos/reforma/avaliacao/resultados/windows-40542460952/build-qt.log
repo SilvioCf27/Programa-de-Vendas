@@ -1,0 +1,87 @@
+
+128 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.9
+128 INFO: Python: 3.13.16
+150 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+150 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.13.16\x64
+150 INFO: wrote D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\spec\EnsaioQt.spec
+153 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+154 INFO: Module search paths (PYTHONPATH):
+['D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\avaliacao',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\python313.zip',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\DLLs',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages',
+ 'D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\avaliacao']
+395 INFO: Appending 'datas' from .spec
+399 INFO: checking Analysis
+399 INFO: Building Analysis because Analysis-00.toc is non existent
+399 INFO: Looking for Python shared library...
+399 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.13.16\x64\python313.dll
+399 INFO: Running Analysis Analysis-00.toc
+399 INFO: Target bytecode optimization level: 0
+399 INFO: Initializing module dependency graph...
+400 INFO: Initializing module graph hook caches...
+414 INFO: Analyzing modules for base_library.zip ...
+1110 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2353 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+3696 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5272 INFO: Caching module dependency graph...
+5313 INFO: Analyzing D:\a\Programa-de-Vendas\Programa-de-Vendas\prototipos\reforma\avaliacao\entrada_qt.py
+5390 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5437 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5442 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5482 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5795 INFO: Processing standard module hook 'hook-psutil.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+5904 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6065 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6295 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+8084 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+9437 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+10924 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+11133 INFO: Processing standard module hook 'hook-PySide6.QtSvg.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+11285 INFO: Processing module hooks (post-graph stage)...
+11317 INFO: Performing binary vs. data reclassification (161 entries)
+11345 INFO: Looking for ctypes DLLs
+11378 INFO: Analyzing run-time hooks ...
+11380 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+11383 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+11385 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+11387 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+11396 INFO: Creating base_library.zip...
+11418 INFO: Looking for dynamic libraries
+11618 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\shiboken6']
+11618 INFO: Extra DLL search directories (PATH): ['C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6']
+12686 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\python313.dll'.
+12687 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+12687 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+12687 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+12688 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+12688 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+12688 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+12696 INFO: Warnings written to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\qt\EnsaioQt\warn-EnsaioQt.txt
+12713 INFO: Graph cross-reference written to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\qt\EnsaioQt\xref-EnsaioQt.html
+12733 INFO: checking PYZ
+12733 INFO: Building PYZ because PYZ-00.toc is non existent
+12733 INFO: Building PYZ (ZlibArchive) D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\qt\EnsaioQt\PYZ-00.pyz
+12920 INFO: Building PYZ (ZlibArchive) D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\qt\EnsaioQt\PYZ-00.pyz completed successfully.
+12925 INFO: checking PKG
+12925 INFO: Building PKG because PKG-00.toc is non existent
+12925 INFO: Building PKG (CArchive) EnsaioQt.pkg
+12939 INFO: Building PKG (CArchive) EnsaioQt.pkg completed successfully.
+12940 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.13.16\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+12940 INFO: checking EXE
+12940 INFO: Building EXE because EXE-00.toc is non existent
+12940 INFO: Building EXE from EXE-00.toc
+12940 INFO: Copying bootloader EXE to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\qt\EnsaioQt\EnsaioQt.exe
+12942 INFO: Copying icon to EXE
+12944 INFO: Copying 0 resources to EXE
+12944 INFO: Embedding manifest in EXE
+12946 INFO: Appending PKG archive to EXE
+12947 INFO: Fixing EXE headers
+13014 INFO: Building EXE from EXE-00.toc completed successfully.
+13018 INFO: checking COLLECT
+13018 INFO: Building COLLECT because COLLECT-00.toc is non existent
+13018 INFO: Building COLLECT COLLECT-00.toc
+13220 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+13225 INFO: Build complete! The results are available in: D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\pacotes

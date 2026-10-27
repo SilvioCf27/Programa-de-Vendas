@@ -1,0 +1,18 @@
+{
+  "suite": "prototipos/reforma",
+  "plataforma": "win32",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "dependencias": {
+    "PySide6_Essentials": "6.10.2",
+    "shiboken6": "6.10.2",
+    "openpyxl": "3.1.5"
+  },
+  "executados": 31,
+  "aprovados": 31,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": true,
+  "dados": "Diretório temporário descartado; sem contas configuradas."
+}

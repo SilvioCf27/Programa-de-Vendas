@@ -1,0 +1,76 @@
+
+199 INFO: PyInstaller: 6.16.0, contrib hooks: 2026.9
+200 INFO: Python: 3.13.16
+223 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+223 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.13.16\x64
+224 INFO: wrote D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\spec\EnsaioTk.spec
+231 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+232 INFO: Module search paths (PYTHONPATH):
+['D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\avaliacao',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\python313.zip',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\DLLs',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages',
+ 'D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\prototipos\\reforma\\avaliacao']
+468 INFO: Appending 'datas' from .spec
+470 INFO: checking Analysis
+470 INFO: Building Analysis because Analysis-00.toc is non existent
+470 INFO: Looking for Python shared library...
+470 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.13.16\x64\python313.dll
+470 INFO: Running Analysis Analysis-00.toc
+470 INFO: Target bytecode optimization level: 0
+470 INFO: Initializing module dependency graph...
+471 INFO: Initializing module graph hook caches...
+487 INFO: Analyzing modules for base_library.zip ...
+1767 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+3870 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+4966 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5747 INFO: Caching module dependency graph...
+5786 INFO: Analyzing D:\a\Programa-de-Vendas\Programa-de-Vendas\prototipos\reforma\avaliacao\entrada_tk.py
+5866 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5912 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5917 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5964 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6267 INFO: Processing standard module hook 'hook-psutil.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+6356 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+6357 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+6976 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7026 INFO: Processing module hooks (post-graph stage)...
+7055 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7065 INFO: Performing binary vs. data reclassification (968 entries)
+7692 INFO: Looking for ctypes DLLs
+7719 INFO: Analyzing run-time hooks ...
+7720 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+7723 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+7748 INFO: Creating base_library.zip...
+7769 INFO: Looking for dynamic libraries
+7903 INFO: Extra DLL search directories (AddDllDirectory): []
+7903 INFO: Extra DLL search directories (PATH): []
+8685 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.13.16\\x64\\python313.dll'.
+8704 INFO: Warnings written to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\tk\EnsaioTk\warn-EnsaioTk.txt
+8721 INFO: Graph cross-reference written to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\tk\EnsaioTk\xref-EnsaioTk.html
+8757 INFO: checking PYZ
+8757 INFO: Building PYZ because PYZ-00.toc is non existent
+8757 INFO: Building PYZ (ZlibArchive) D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\tk\EnsaioTk\PYZ-00.pyz
+8962 INFO: Building PYZ (ZlibArchive) D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\tk\EnsaioTk\PYZ-00.pyz completed successfully.
+8975 INFO: checking PKG
+8975 INFO: Building PKG because PKG-00.toc is non existent
+8975 INFO: Building PKG (CArchive) EnsaioTk.pkg
+8988 INFO: Building PKG (CArchive) EnsaioTk.pkg completed successfully.
+8988 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.13.16\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+8989 INFO: checking EXE
+8989 INFO: Building EXE because EXE-00.toc is non existent
+8989 INFO: Building EXE from EXE-00.toc
+8989 INFO: Copying bootloader EXE to D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\build\tk\EnsaioTk\EnsaioTk.exe
+8991 INFO: Copying icon to EXE
+8993 INFO: Copying 0 resources to EXE
+8993 INFO: Embedding manifest in EXE
+8995 INFO: Appending PKG archive to EXE
+8996 INFO: Fixing EXE headers
+9062 INFO: Building EXE from EXE-00.toc completed successfully.
+9071 INFO: checking COLLECT
+9071 INFO: Building COLLECT because COLLECT-00.toc is non existent
+9071 INFO: Building COLLECT COLLECT-00.toc
+9741 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+9778 INFO: Build complete! The results are available in: D:\a\Programa-de-Vendas\Programa-de-Vendas\resultados-tecnicos\pacotes\pacotes

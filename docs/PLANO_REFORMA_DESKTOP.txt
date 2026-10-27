@@ -848,6 +848,12 @@ Cópia manual e ao fechar estão integradas. Falha ao fechar permite continuar
 ou confirmar saída sem cópia; Não é a opção padrão. Progresso impede fechar
 durante o trabalho. O envio remoto continua a cargo do cliente do Drive.
 
-Validação e limitações registradas em reforma_desktop/RECUPERACAO.md.
+Validação: Linux 73/73 da integração, 200 da aplicação aprovados e dois
+ignorados por exigirem Windows, 31/31 dos protótipos. Windows 73/73, 202/202 e
+31/31, sem falhas/erros/ignorados. Execução 40604664397, base fc1cd9b; resolução
+da VM restaurada. A captura técnica sai sem iniciar backup assíncrono, com
+teste específico. Evidências: reforma_desktop/RECUPERACAO.md.
+Não foram acessados Drive real, dados pessoais ou contas; renderização
+offscreen não substitui interação manual, DPI, leitor de tela ou empacotamento.
 Etapa 4 segue em andamento. Não há migração do banco pessoal, conexão real,
 release, alteração da versão funcional, PWA ou antecipação das Etapas 5/6/7.

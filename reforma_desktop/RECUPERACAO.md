@@ -35,6 +35,8 @@ O modo técnico `--captura` salva a imagem e sai sem iniciar backup ao fechar; e
 
 ## Validação
 
-A validação desta entrega cobre restauração real, cancelamento, arquivo inválido, cópia anterior, isolamento das versões do Drive, cópia ao fechar, recuperação após falha e resposta do loop gráfico durante trabalho em segundo plano. Os números e relatórios serão acrescentados após a rodada final. Os testes usam somente diretórios fictícios; não representam acesso ao Drive real, interação manual, leitor de tela, DPI ou teste de instalador.
+A validação desta entrega cobre restauração real, cancelamento, arquivo inválido, cópia anterior, isolamento das versões do Drive, cópia ao fechar, recuperação após falha e resposta do loop gráfico durante trabalho em segundo plano. Linux: **73/73 da integração**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**. Relatórios em [resultados/linux-recuperacao](resultados/linux-recuperacao). **Windows: 73/73 da integração, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas, erros ou testes ignorados. [Relatórios da execução 40604664397](resultados/windows-40604664397), base `fc1cd9b`. A resolução da VM foi restaurada. Qt usa renderização offscreen: o sistema de arquivos e os testes específicos de Windows são nativos, mas isso não substitui interação humana.
+
+Os testes usam somente diretórios fictícios; não representam acesso ao Drive real, interação manual, leitor de tela, DPI ou teste de instalador.
 
 Próxima atividade: sessão/sincronização; depois, edição do fechamento e atualização, na ordem da Etapa 4 original. Etapas 5 e 6 e o novo executável continuam pendentes.

@@ -43,7 +43,7 @@ jobs:
           @{ commit_base=$env:COMMIT_BASE; execucao=$env:RUN_ID; observacao='Ensaio isolado. Sem release, migração, PWA ou dados reais.' } | ConvertTo-Json | Set-Content "$relatorio/ORIGEM.json" -Encoding utf8
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- $relatorio
+          git add -f -- $relatorio
           git commit -m "Registra estudo Windows $env:RUN_ID"
           git push origin "HEAD:refs/heads/reforma/resultados-windows-$env:RUN_ID"
       - uses: actions/upload-artifact@v4

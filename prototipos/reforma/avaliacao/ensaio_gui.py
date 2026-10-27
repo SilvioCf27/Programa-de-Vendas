@@ -259,14 +259,17 @@ class QtAdapter:
 
     def pump(self):
         self.app.processEvents()
+        self.Q.QCoreApplication.sendPostedEvents(
+            None, self.Q.QEvent.Type.DeferredDelete
+        )
 
     def table(self, parent, headers, rows):
         W = self.W
         Q = self.Q
 
         class Model(Q.QAbstractTableModel):
-            def __init__(self, headers, rows):
-                super().__init__()
+            def __init__(self, headers, rows, parent=None):
+                super().__init__(parent)
                 self.headers = headers
                 self.rows = formatar(headers, rows)
 
@@ -294,7 +297,7 @@ class QtAdapter:
 
         t = W.QTableView(parent)
         t.setAccessibleName("Tabela de registros fictícios")
-        t.setModel(Model(headers, rows))
+        t.setModel(Model(headers, rows, t))
         t.verticalHeader().setDefaultSectionSize(30)
         t.verticalHeader().hide()
         t.horizontalHeader().setSectionResizeMode(W.QHeaderView.ResizeMode.Stretch)
@@ -396,7 +399,7 @@ def probe_uia(adapter):
     ctypes.windll.user32.GetAncestor.argtypes = [ctypes.c_void_p, ctypes.c_uint]
     ctypes.windll.user32.GetAncestor.restype = ctypes.c_void_p
     hwnd = int(ctypes.windll.user32.GetAncestor(adapter.hwnd(), 2) or adapter.hwnd())
-    script = """Add-Type -AssemblyName UIAutomationClient; Add-Type -AssemblyName UIAutomationTypes;
+    script = """[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new(); Add-Type -AssemblyName UIAutomationClient; Add-Type -AssemblyName UIAutomationTypes;
 $r=[System.Windows.Automation.AutomationElement]::FromHandle([IntPtr]HWND);
 $x=$r.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition);
 $out=@();for($i=0;$i -lt [Math]::Min($x.Count,200);$i++){$c=$x[$i].Current;$out+=@{tipo=$c.ControlType.ProgrammaticName;nome=$c.Name;foco=$c.IsKeyboardFocusable}};
@@ -406,28 +409,32 @@ $out=@();for($i=0;$i -lt [Math]::Min($x.Count,200);$i++){$c=$x[$i].Current;$out+
     with tempfile.TemporaryDirectory(prefix="feira-uia-") as temp:
         arq = Path(temp) / "probe.ps1"
         arq.write_text(script, encoding="utf-8-sig")
-        proc = subprocess.Popen(
-            [
-                "powershell",
-                "-NoProfile",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-File",
-                str(arq),
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        prazo = time.monotonic() + 15
-        while proc.poll() is None and time.monotonic() < prazo:
-            adapter.pump()
-            time.sleep(0.005)
-        if proc.poll() is None:
-            proc.kill()
-        out, err = proc.communicate()
+        out_path = Path(temp) / "out.txt"
+        err_path = Path(temp) / "err.txt"
+        with out_path.open("w", encoding="utf-8") as stdout, err_path.open(
+            "w", encoding="utf-8"
+        ) as stderr:
+            proc = subprocess.Popen(
+                [
+                    "powershell",
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-File",
+                    str(arq),
+                ],
+                stdout=stdout,
+                stderr=stderr,
+            )
+            prazo = time.monotonic() + 20
+            while proc.poll() is None and time.monotonic() < prazo:
+                adapter.pump()
+                time.sleep(0.005)
+            if proc.poll() is None:
+                proc.kill()
+            proc.wait(timeout=5)
+        out = out_path.read_text(encoding="utf-8-sig", errors="replace")
+        err = err_path.read_text(encoding="utf-8-sig", errors="replace")
         try:
             return dict(disponivel=proc.returncode == 0, resultado=json.loads(out))
         except ValueError:
@@ -485,19 +492,28 @@ def executar(ferramenta):
             medir("tabela_completa", lambda: a.show("Vendas", h, rows))
             medir("retorno_paginado", lambda: a.show("Vendas", h, rows[:50]))
             depois_carga = memoria()
-            for _ in range(args.ciclos):
+            memoria_ciclos = []
+            for ciclo in range(args.ciclos):
                 h2, r2 = medir("consulta_mes", lambda: dados(c, "Vendas", "2026-10-01"))
                 medir("aplicar_mes", lambda: a.show("Vendas", h2, r2[:50]))
                 medir("aplicar_todas", lambda: a.show("Vendas", h, rows[:50]))
                 for pagina in ("Análises", "Finanças", "Vendas"):
                     medir("navegacao_" + pagina, lambda p=pagina: a.show(p))
                 medir("abrir_fechar_detalhe", lambda: a.detail(h, rows[:50]))
+                if (ciclo + 1) % 5 == 0:
+                    memoria_ciclos.append(dict(ciclo=ciclo + 1, rss=memoria()))
             for _ in range(30):
                 a.pump()
                 time.sleep(0.005)
             gc.collect()
             a.pump()
             final = memoria()
+            vivos = (
+                len(a.root.findChildren(a.W.QDialog))
+                if ferramenta == "qt"
+                else sum(isinstance(w, a.tk.Toplevel) for w in a.root.winfo_children())
+            )
+            assert vivos == 0, "Diálogos pendentes no ensaio"
             keyboard = a.keyboard()
             access = a.acessibilidade()
             uia = probe_uia(a) if args.uia else None
@@ -549,6 +565,8 @@ def executar(ferramenta):
                 rss_pos_carga=depois_carga,
                 rss_final=final,
                 crescimento_ciclos=final - depois_carga,
+                memoria_por_ciclo=memoria_ciclos,
+                dialogos_vivos_apos_ciclos=vivos,
                 pico_amostrado=max(peak[0], final),
                 pico_processo_so=so_peak,
                 atraso_heartbeat_max_ms=round(max(a.tick_delays or [0]), 3),

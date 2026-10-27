@@ -1,6 +1,6 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 2 — início do estudo autorizado pelo usuário.
-Estado: plano aprovado; levantamento e primeiros protótipos disponíveis para revisão.
+Versão do plano: 3 — referências e identidade visual antes da escolha técnica.
+Estado: protótipos iniciais em avaliação; layout e ferramenta não aprovados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 1. OBJETIVO E DIREÇÃO
@@ -190,6 +190,29 @@ Entrega: imagens comparáveis e uma demonstração interativa quando útil. Se
 as imagens do chat não abrirem, disponibilizar uma prévia acessível no GitHub.
 A publicação da prévia não implica aprovação da interface nem nova release.
 
+ETAPA 2A — TESTAR LOCALMENTE E DEFINIR A IDENTIDADE VISUAL
+Etapa acrescentada após avaliar os primeiros protótipos. As duas ferramentas
+pareceram visualmente equivalentes ao usuário; a composição inicial ainda
+precisa de refinamento. Isso não aprova nenhuma delas nem o layout mostrado.
+Preparar capturas de Vendas, Análises e Finanças e explicar o objetivo, os
+indicadores, as ações e as limitações de cada esboço. Incluir referências de
+comparação e formulário para orientar o desenho dos detalhes.
+Disponibilizar instruções para executar as demos no VS Code, em cópia separada,
+para acompanhar cada ajuste sem tocar no programa e nos dados em uso.
+O usuário levará esse material a outra IA para obter propostas de identidade
+visual e devolverá as imagens para nossa avaliação e implementação.
+Priorizar proporções, bordas, alinhamento, largura útil das colunas e densidade
+coerente com o conteúdo. Não esticar cartões para preencher a janela nem usar
+grandes retângulos vazios. Manter área de rolagem útil para listas extensas.
+Preservar as funções e os blocos superiores já aprovados da tela inicial.
+Não acrescentar dados ou recursos só para preencher espaço. Sugestões que mudem
+acessos ou fluxos deverão ser discutidas, não aplicadas como simples decoração.
+Entrega: guia para a outra IA, galeria comentada, execução local e imagens
+retornadas pelo usuário. A referência escolhida será traduzida em protótipo
+interativo e revisada antes de substituir a interface real.
+Material: prototipos/reforma/REFERENCIA_VISUAL.md,
+prototipos/reforma/BRIEFING_IDENTIDADE_VISUAL.txt e GUIA_VSCODE.md.
+
 ETAPA 3 — ESCOLHER A FERRAMENTA E APROVAR O LAYOUT
 Comparar clareza, espaço da tabela, alinhamento, navegação, ajudas, teclado,
 fontes, temas e adaptação a diferentes tamanhos e escalas do Windows.
@@ -300,8 +323,9 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMO PASSO APÓS APROVAR ESTE DOCUMENTO
 
-Levantar o mapa de funções e as medições e, em seguida, preparar a comparação
-de Finanças em Tkinter e PySide6. A decisão de tecnologia permanece em aberto.
+Executar as demos localmente e usar a galeria e o briefing na etapa 2A.
+Aguardar as referências visuais do usuário, refinar o protótipo e só então
+retomar a decisão técnica. As medições e o mapa inicial já estão disponíveis.
 
 
 10. REGISTRO DO INÍCIO DO ESTUDO
@@ -315,3 +339,12 @@ O levantamento inicial e os dois protótipos foram preparados com dados
 fictícios. A comparação Windows, as escalas e o pacote Qt continuam pendentes.
 A ferramenta, os formulários definitivos e o layout final ainda não foram
 aprovados. Não iniciar a substituição do aplicativo a partir desta prévia.
+
+11. DEVOLUTIVA DOS PRIMEIROS PROTÓTIPOS
+
+O usuário não identificou diferença visual relevante entre Tkinter e PySide6.
+Solicitou executar as demos no VS Code e acrescentar uma etapa com outra IA
+para construir a identidade visual a partir das funções de cada tela.
+Destacou o espaço vazio desproporcional em retângulos informativos de Finanças.
+A organização inicial não está aprovada: é material de referência funcional.
+Não iniciar migração nem nova release enquanto essa avaliação estiver aberta.

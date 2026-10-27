@@ -2,6 +2,12 @@
 
 **Estudo para revisão — não é uma nova versão do programa.**
 
+**Etapa atual: definir a identidade visual.** A composição inicial ainda precisa de refinamento e não foi aprovada. Antes da escolha técnica, o usuário vai testar as demos e avaliar referências criadas com outra IA.
+
+- [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
+- [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)
+- [Passo a passo para executar e atualizar no VS Code](GUIA_VSCODE.md)
+
 Esta frente contém o levantamento inicial e dois protótipos reais de interface,
 com os mesmos dados inventados, período e dimensões. A versão estável, seu banco,
 a sessão, a sincronização e a PWA não foram alterados.
@@ -86,4 +92,4 @@ Fechar as demos descarta a interação; nenhuma venda é gravada. Não substitua
 - [Medições brutas do programa atual](BASE_MEDICOES.json)
 - [Medições brutas dos protótipos](PROTOTIPOS_MEDICOES.json)
 
-A próxima decisão é aprovar ou ajustar esta hierarquia e indicar a preferência visual. Só depois seguimos para a escolha técnica, com os ensaios Windows que ainda faltam, e para conectar a interface às regras reais. Uma preferência por aparência não será tratada como autorização para alterar cálculos ou excluir funções.
+O próximo passo é executar as demos localmente e obter propostas de identidade visual com o material acima. Depois refinaremos a composição escolhida em uma demo, antes da escolha técnica e da integração às regras reais. Uma preferência por aparência não será tratada como autorização para alterar cálculos ou excluir funções.

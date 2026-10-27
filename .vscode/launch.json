@@ -9,6 +9,32 @@
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true
+    },
+    {
+      "name": "Estudo visual — Tkinter",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/prototipos/reforma/tkinter_demo.py",
+      "args": [
+        "--pagina",
+        "Finanças"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Estudo visual — PySide6",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/prototipos/reforma/pyside_demo.py",
+      "args": [
+        "--pagina",
+        "Finanças"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
     }
   ]
 }

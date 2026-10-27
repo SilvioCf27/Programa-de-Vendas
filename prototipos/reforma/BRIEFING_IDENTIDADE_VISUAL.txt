@@ -1,0 +1,176 @@
+GESTÃO DA FEIRA — BRIEFING PARA PROPOSTA VISUAL DO DESKTOP
+Material para copiar junto das imagens na conversa com a outra IA.
+
+PEDIDO
+Proponha uma identidade visual e uma organização refinada para um aplicativo
+desktop Windows de vendas e finanças pessoais ligado à atividade de feira.
+A linguagem do aplicativo é português do Brasil. O programa já funciona em
+Python, tem banco SQLite local e sincronização com uma versão web para celular.
+Esta tarefa é somente de design do desktop, não de implementação nem de PWA.
+
+Os prints de Tkinter e PySide6 mostram a MESMA composição inicial em duas
+ferramentas. São esboços funcionais, não um layout aprovado. Não é necessário
+imitá-los nem decidir a biblioteca. As imagens do aplicativo anterior servem
+para reconhecer funções e detalhes, não para reproduzir sua hierarquia.
+Todos os valores das referências são fictícios.
+
+O QUE PRECISA MELHORAR
+A aparência atual é muito retangular e genérica. Alguns blocos são maiores
+que seu conteúdo, deixando espaço vazio sem propósito enquanto a lista fica
+espremida. Buscamos proporções, bordas, traços, tipografia e espaçamentos com
+identidade própria, leitura rápida e acabamento profissional, sem animações,
+efeitos excessivos ou cartões decorativos para cada pequeno texto.
+Não basta trocar cores e arredondar tudo: reorganize o conteúdo abaixo da
+navegação para tornar a hierarquia mais clara e dar área útil às tabelas.
+
+Não confunda três situações:
+- Margem interna ajuda a leitura, mas não deve separar excessivamente rótulo,
+  valor, ajuda e informação complementar que pertencem ao mesmo indicador.
+- Uma tabela pode ter altura livre para receber muitos registros e rolagem.
+  Não deve ser espremida para acomodar cartões vazios.
+- Lista vazia precisa de um estado claro, não de dados inventados para encher.
+Não é necessário ocupar cada pixel. O espaço deve indicar agrupamento e
+prioridade, em vez de parecer uma sobra de um contêiner esticado.
+
+RESTRIÇÕES E PREFERÊNCIAS
+1. Preservar a aparência e a leitura dos blocos superiores já aprovados da
+   tela inicial: indicadores de vendas e resumo da semana atual. Consulte a
+   referência do aplicativo anterior; o cabeçalho das demos é só esquemático.
+   A faixa semanal atual pode não aparecer nas capturas antigas.
+2. Manter uma primeira linha comum de marca e ações (configurações, tema,
+   exportar relatório, nova venda), com um único nível claro de navegação
+   entre Vendas, Análises e Finanças. Sem menu Exportar duplicado no topo.
+3. Análises e Finanças são telas próprias: não repetir os indicadores de
+   vendas nelas. Elas compartilham a primeira linha e a navegação principal.
+4. Evitar abas dentro de abas. Não esconder funções para simplificar a imagem;
+   indicar o caminho e desenhar o detalhe quando ele não ficar na tela principal.
+5. Menos explicação permanente. Usar rótulos claros e ? para complementos,
+   com acesso por mouse, clique e teclado. Período aplicado, validação, conflito,
+   estimativa e conexão não podem ficar escondidos quando afetam a leitura.
+6. Não criar novas funções, metas comerciais, notificações ou gráficos inéditos.
+   Não remover filtros, campos, valores ou ações existentes. Alterar um nome
+   não pode mudar o significado de um indicador ou de uma ação.
+7. Apresentar inicialmente uma composição escura com contraste confortável.
+   A estrutura deve comportar os cinco temas existentes; não vincular o desenho
+   a uma única cor nem usar só a cor para transmitir erro ou seleção.
+8. Pensar em Windows maximizado e janela menor: referência 1440 x 960; verificar
+   também 1280 x 800 e prever escala de 125% e 150%. Não depender de texto minúsculo.
+   Se o conteúdo não couber, explicar o comportamento em vez de cortá-lo.
+9. Manter Python. Tkinter e PySide6 ainda estão em avaliação. Prefira elementos
+   realizáveis em uma interface desktop; não se exige uma ilustração impossível
+   de implementar. Uma imagem sozinha não prova viabilidade ou desempenho.
+
+TELA 1 — VENDAS / INÍCIO
+Objetivo: consultar vendas rapidamente, registrar uma venda e acompanhar a
+semana atual sem perder a seleção do histórico.
+
+Acima da navegação, preservar o conjunto aprovado: total do período, dias de
+feira, média por dia, dinheiro, Pix, cartão e informação de participação e
+comparação já existente. A faixa da semana atual acompanha segunda-feira até
+hoje e é INDEPENDENTE dos filtros. Deixar claro que não é outro total do filtro.
+Registros com zero contam como dia de feira; ausência de registro não conta.
+
+Abaixo, reconstruir o histórico predominante com filtros compactos próximos.
+Histórico: identificação, data, dia da semana, dinheiro, Pix, cartão e total;
+manter seleção, ordenação, edição e exclusão. Colunas monetárias não devem ser
+alargadas arbitrariamente. Datas e descrições precisam de espaço legível.
+Filtro: ano, mês, fechamento e dias da semana; aplicar e limpar. Explicitar a
+seleção aplicada e distinguir alterações ainda não aplicadas. Manter as regras
+atuais de combinação dos campos, sem inventar outro filtro por conveniência.
+Nova venda continua acessível no cabeçalho; CSV/Excel no botão de exportação.
+A preferência de abertura (fechamento/mês/ano/todas) fica nas configurações.
+Não inventar busca ou paginação funcional a partir de uma imagem decorativa.
+
+TELA 2 — ANÁLISES
+Objetivo: entender o resultado por semana e comparar períodos.
+A área principal deve priorizar o histórico semanal: intervalo, total, dias
+registrados, média e formas de pagamento disponíveis no detalhamento atual.
+Semanas parciais precisam ser identificadas. Informar qual período está sendo
+analisado: o resumo geral segue os filtros APLICADOS em Vendas. Deve existir um
+caminho claro até esses filtros; tela própria não significa consulta independente.
+
+Comparação A/B tem consulta INDEPENDENTE de Vendas. Desenhar acesso evidente e
+uma tela ou área de detalhe com seletores A e B: dia, mês, fechamento ou intervalo;
+campos de data, mês/ano ou início/fim adaptados ao tipo escolhido. Mostrar os dois
+resultados lado a lado e as diferenças, sem confundir recorte A com recorte B.
+
+Manter o resumo do período acessível: comparação anterior, participação das
+formas de pagamento, resultado por dia da semana e evolução por mês/fechamento.
+Esses detalhes podem estar em outra área de leitura, sem uma segunda barra de
+abas competindo com a navegação principal. Não remover os gráficos já existentes.
+
+TELA 3 — FINANÇAS
+Objetivo: saber se as entradas cobrem os compromissos do período, consultar
+lançamentos e registrar despesas ou taxas sem confundir compra com parcela.
+
+Consulta própria, independente de Vendas: semana, mês, ano e fechamento, com
+campos adaptados e intervalo efetivo visível. Semana usa seleção de intervalo
+segunda-domingo; mês e fechamento usam mês/ano; ano usa ano. A demo ainda mostra
+uma referência fixa, mas o desenho final precisa prever esses campos reais.
+
+Seis informações precisam continuar disponíveis:
+- Vendas brutas: soma de dinheiro, Pix e cartão, sem descontos.
+- Taxas cadastradas: taxas da maquininha e ajustes históricos aplicáveis.
+- Vendas menos taxas: bruto menos taxas, antes das despesas.
+- Despesas a cobrir: soma das despesas do período; é a referência de cobertura.
+- Saldo após despesas: bruto menos taxas menos despesas. Não chamar de lucro,
+  pois as despesas podem incluir a vida pessoal e os custos não são completos.
+- Falta cobrir: parte das despesas ainda não coberta, ou zero se já cobertas.
+
+A demo dá prioridade a três valores e usa uma linha para os outros três; isso
+é uma hipótese, NÃO obrigação de usar três cartões grandes. Proponha a forma
+mais clara e compacta, sem esconder nenhum valor. Agrupe conteúdo relacionado
+sem grandes retângulos vazios. Saldo provisório e taxas estimadas precisam de
+aviso visível quando aplicáveis; detalhes da regra podem ir para ?.
+
+A lista deve ter altura útil e ser o foco operacional: data da fatura/pagamento,
+descrição, valor, meio de pagamento, categoria e indicação de parcela quando
+houver. Data da compra continua disponível separadamente para conferência.
+Não chamar a data da fatura de prazo limite para pagamento. O título Pagamento
+da demo é simplificado e precisa de revisão no desenho final para evitar isso.
+A distinção entre despesa e taxa precisa ficar clara; a coluna Tipo da demo é
+uma possibilidade visual, não uma nova regra ou campo obrigatório de cadastro.
+Ações: nova despesa, taxas da maquininha, editar e excluir a seleção.
+Acessos secundários preservados: despesas por semana, histórico de taxas/ajustes
+anuais e configuração de fechamento por vigência. Não deixar inacessíveis.
+
+FORMULÁRIOS E DETALHES (REFERÊNCIAS COMPLEMENTARES)
+Despesa: descrição, valor TOTAL da compra, data, meio de pagamento, categoria
+e quantidade de parcelas quando aplicável. Crédito usa data da compra e mostra
+prévia das faturas calculadas. Demais meios usam data de pagamento. A data
+digitada não deve ser trocada silenciosamente. Data antiga desconhecida precisa
+continuar identificada, sem presumir uma data da compra.
+Exemplo da regra atual: fechamento dia 09; compra em 09/10 entra na fatura de
+09/11, associada ao período Fechamento Outubro (10/10 a 09/11). Prazo até dia 14
+é outra informação. Há histórico de regras de fechamento; não recalcular o
+passado apenas por redesenhar a interface.
+Compra R$100,00 em 3x: R$33,33 + R$33,33 + R$33,34. Sempre informar o valor TOTAL.
+Editar qualquer parcela abre a compra inteira; excluir continua removendo só
+a parcela selecionada. Os rótulos e confirmações devem refletir essa diferença.
+Taxas da maquininha: selecionar semana e informar taxas por dia; valores anuais
+antigos permanecem no histórico com cobertura e indicação confirmado/estimado.
+Não apresentar taxa como valor de venda nem duplicar despesa no pagamento da
+fatura se as compras já estiverem lançadas.
+
+ESTADOS QUE A PROPOSTA PRECISA PREVER
+Lista cheia, poucos registros e nenhum registro; seleção ativa; filtro alterado
+mas não aplicado; operação em andamento; campo inválido; confirmação de exclusão;
+estado offline; sincronização em andamento/conflito; valor estimado/provisório.
+Ajuda aberta, foco de teclado e texto longo precisam funcionar sem depender de
+uma tela maior. Não é preciso desenhar todos agora, mas explicar a solução.
+
+O QUE ENTREGAR
+A. Três imagens separadas e legíveis: Vendas, Análises e Finanças, com a mesma
+   identidade, dimensões e dados fictícios. Evitar colagem pequena de três telas.
+B. Detalhes separados de Comparação A/B e cadastro/edição de compra parcelada.
+C. Uma folha curta com paleta (códigos), fonte disponível no Windows ou licença
+   de distribuição, tamanhos de texto, grade de espaçamento, margens, raios,
+   bordas, alturas de linha, ícones e estados dos controles.
+D. Uma explicação de onde cada função ficou e do comportamento ao reduzir a
+   janela. Identificar qualquer sugestão que altere acesso ou fluxo para aprovação.
+E. Mostrar como os indicadores de Finanças ficam compactos e como a tabela ganha
+   espaço, sem remover dados e sem preencher a tela com elementos inventados.
+
+As imagens serão revisadas pelo usuário e depois traduzidas em protótipo
+interativo. Não são autorização para mudar regras, banco, sincronização ou
+funcionalidades. A escolha final entre Tkinter e PySide6 ocorrerá depois.

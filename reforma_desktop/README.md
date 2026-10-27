@@ -1,6 +1,8 @@
-# Reforma desktop — primeira integração PySide6
+# Reforma desktop — Vendas e Análises em PySide6
 
-A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. Esta entrega inicia **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
+**Entrega atual:** [Análises funcional, comandos, imagem e validação](ANALISES.md). A tela de Vendas abaixo continua integrada. O andamento atual está na seção 20 do plano; os resultados da primeira entrega permanecem como histórico.
+
+A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 
 ![Vendas integrada em banco fictício](imagens/vendas-integrada.png)
 
@@ -43,7 +45,7 @@ O lançador original `executar.py`, o executável instalado e `noturno_demo.py` 
 
 ## O que ainda não foi migrado
 
-Análises e Finanças têm acessos identificados como integração pendente. Não apresentam dados demonstrativos como se estivessem conectados. Sua prévia completa permanece na demo aprovada, e suas funções reais continuam na versão 1.7.1.
+Análises já está integrada e documentada no guia acima. Finanças mantém o acesso identificado como integração pendente; sua prévia permanece na demo aprovada e suas funções reais continuam disponíveis na versão 1.7.1.
 
 Configurações completas, editor da preferência de abertura, cinco temas, sincronização/sessão, Drive, restauração e atualizador serão integrados na ordem do plano. Esta entrada fica **offline**; os registros de teste não vão para celular ou nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Existe apenas a identidade Noturno nesta fatia.
 
@@ -61,7 +63,7 @@ O workflow `reforma-vendas-windows.yml` repete essa suíte e as suítes existent
 
 Para sua revisão manual: cadastre uma venda fictícia; tente repetir a data e depois corrija; edite e cancele uma edição; aplique mês/ano/fechamento; deixe um filtro pendente e confira que o resumo não muda; selecione/exclua registros; exporte com mais de uma página; visite Análises/Finanças e retorne para Vendas. São verificações da entrada isolada, não do seu banco real.
 
-A próxima integração prevista é **Análises: resultados semanais, comparação A/B e detalhes do período**. Depois, Finanças e configurações/formulários. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
+A integração de Análises foi entregue na continuidade. A próxima parte é **Finanças**, seguida de configurações/formulários. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
 
 
 ### Resultado desta entrega

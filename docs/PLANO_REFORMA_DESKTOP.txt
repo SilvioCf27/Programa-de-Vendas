@@ -708,8 +708,12 @@ por dia usa os mesmos indicadores sem importar o painel Tkinter.
 VALIDAÇÃO E LIMITES
 Relatório e evidências desta rodada: reforma_desktop/ANALISES.md.
 32 testes locais da integração aprovados (18 de Vendas e 14 de Análises).
-Validação Windows/regressão está em conferência; o relatório será atualizado
-com os resultados observados, sem presumir aprovação. Qt offscreen não valida
+Windows: 32/32 da integração, 202/202 da aplicação e 31/31 dos protótipos
+aprovados, sem falhas/erros/ignorados. Execução 40554510830; base 2f3c424.
+Linux: 32/32 e 31/31 aprovados; aplicação 200 aprovados e 2 ignorados por
+requererem Windows (aprovados na VM Windows). Captura gerada e inspecionada.
+Evidências preservadas no relatório. Resolução da VM restaurada ao final.
+Qt offscreen não valida
 DPI real, leitor de tela completo ou interação no computador do usuário.
 Banco pessoal, versão 1.7.1, entrada estável, backups/sincronização e PWA
 permanecem sem alteração. Etapas 5/6/7 permanecem pendentes na ordem original.

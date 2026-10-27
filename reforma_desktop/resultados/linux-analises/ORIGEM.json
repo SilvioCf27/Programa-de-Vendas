@@ -1,0 +1,4 @@
+{
+  "commit_base": "2f3c424e6ed4c87c86bd13c98ff0abbb3902b2ff",
+  "observacao": "Etapa 4 Análises. Dados temporários sem rede/conta. SQLite 3.50.4 selecionado apenas nos processos Linux de teste."
+}

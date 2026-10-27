@@ -767,11 +767,13 @@ A regra de fechamento é usada por vigência e seu histórico é de leitura nest
 entrega. Edição/sincronização virão com configurações/nuvem: não foi inventada
 conta local para contornar vínculos/proteções do núcleo. Temas completos,
 configurações, restauração/Drive, sessão/nuvem e atualizador Qt seguem pendentes.
-O lançamento --exemplo inclui dados financeiros fictícios somente ao criar
-exemplos em banco de vendas vazio; não repovoa uma pasta de estudo existente.
+O lançamento --exemplo cria vendas fictícias quando a lista de vendas está
+vazia. Só acrescenta finanças fictícias se não houver lançamentos/históricos;
+não duplica finanças ao reabrir nem quando as vendas de teste forem apagadas.
 
 VALIDAÇÃO E CONTINUIDADE
-55 testes locais da integração aprovados, incluindo 23 novos de Finanças.
+Testes da integração incluem os cenários financeiros e a reabertura segura
+dos exemplos; resultados finais serão registrados após validação.
 Evidências e execução Windows/regressão serão conferidas e registradas em
 reforma_desktop/FINANCAS.md. Falha preliminar na semana inicial foi corrigida
 com comparação de datas em Python, em vez de comparação QVariant por identidade.

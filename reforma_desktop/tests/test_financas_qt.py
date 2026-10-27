@@ -1,5 +1,7 @@
 """Equivalência financeira e formulários Qt em SQLite temporário, sem nuvem."""
 import os
+import subprocess
+from contextlib import closing
 import sys
 import sqlite3
 import tempfile
@@ -375,3 +377,18 @@ class FinancasTests(unittest.TestCase):
         p.consultar()
         self.assertIs(p.resultado, antes)
         self.assertIn('ano', p.pendente.text())
+
+
+    def test_exemplos_nao_duplicam_financas_ao_reabrir_ou_recriar_vendas(self):
+        pasta = self.pasta / 'entrada-separada'
+        comando = [sys.executable, str(ROOT / 'executar_reforma.py'), '--pasta-estudo', str(pasta), '--exemplo', '--pagina', 'Finanças', '--captura', str(self.pasta / 'captura.png')]
+        for rodada in range(3):
+            if rodada == 2:
+                with closing(sqlite3.connect(pasta / 'vendas.db')) as c, c:
+                    c.execute('DELETE FROM vendas')
+            r = subprocess.run(comando, capture_output=True, text=True, timeout=45, cwd=ROOT)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            with closing(sqlite3.connect(pasta / 'vendas.db')) as c:
+                self.assertEqual(c.execute('SELECT count(*) FROM vendas').fetchone(), (5,))
+                self.assertEqual(c.execute('SELECT count(*) FROM financeiro_lancamentos').fetchone(), (5,))
+                self.assertEqual(c.execute('PRAGMA integrity_check').fetchone(), ('ok',))

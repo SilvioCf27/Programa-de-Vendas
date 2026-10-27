@@ -488,10 +488,11 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
             servico.salvar((hoje - timedelta(days=dias)).isoformat(), *valores)
         from ProgramFeira import financeiro
         financeiro.inicializar()
-        financeiro.salvar_lancamento('despesa', (hoje - timedelta(days=2)).isoformat(), 'Reposição fictícia', '75,50', 'Dinheiro', 'Feira')
-        compra = hoje.replace(day=9).isoformat()
-        financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
-        financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
+        if not financeiro.listar_lancamentos('0001-01-01', '9999-12-31') and not financeiro.listar_taxas_anuais():
+            financeiro.salvar_lancamento('despesa', (hoje - timedelta(days=2)).isoformat(), 'Reposição fictícia', '75,50', 'Dinheiro', 'Feira')
+            compra = hoje.replace(day=9).isoformat()
+            financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
+            financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
     janela = Janela(servico, pasta)
     janela.mostrar(pagina)
     janela.show()

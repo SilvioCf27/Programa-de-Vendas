@@ -32,3 +32,7 @@ A primeira revisão aplicou a identidade, mas simplificou elementos que definiam
 A fidelidade ainda precisa da avaliação do usuário na demo, especialmente no Windows e em sua escala de exibição. A foto é decorativa e os campos são controles reais, por isso o resultado não será idêntico pixel a pixel à imagem gerada. Refinar a aparência não conclui a integração nem decide sozinho a ferramenta final.
 
 As capturas atualizadas estão em [Noturno](NOTURNO.md). Para abrir localmente, a instalação dos requisitos deve usar o mesmo Python da execução; atualizar o Git não instala PySide6.
+
+## Complemento após o Read.txt completo
+
+A rodada mais recente acrescenta os refinamentos específicos de hierarquia e gráficos descritos no [relatório de aplicação do documento](RELATORIO_READ.md). A galeria Noturno foi atualizada e não representa mais somente a primeira rodada descrita na tabela acima.

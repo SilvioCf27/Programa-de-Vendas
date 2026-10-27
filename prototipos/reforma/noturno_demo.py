@@ -23,63 +23,19 @@ except ModuleNotFoundError as exc:
     raise SystemExit(1) from None
 from estado_demo import Estado, HOJE, MESES, DIAS, agrupar, limites, dividir
 from modelo import moeda, AJUDAS
+from apresentacao_noturno import variacao_percentual
 
 R = Path(__file__).resolve().parent / "recursos"
-C = dict(
-    bg="#071525",
-    side="#091B30",
-    panel="#10243B",
-    field="#142C47",
-    border="#254362",
-    text="#EAF2FF",
-    muted="#A5BCD5",
-    green="#00B889",
-    turquoise="#2ED9BA",
-    blue="#3B91FF",
-    yellow="#F5B942",
-    purple="#A477F5",
-    red="#F05264",
-)
+from tema_noturno import C, ESTILO, estilo, TIPOGRAFIA, ESPACOS
+
 FAMILIA = "Segoe UI"
-ESTILO = """
-QWidget { color:#EAF2FF; font-family:"FONTE"; font-size:10pt; }
-QLabel, QScrollArea, QScrollArea>QWidget>QWidget { background:transparent; }
-QScrollArea { border:0; }
-QFrame[panel="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #0B1D31,stop:1 #071525); border:1px solid #254362; border-radius:12px; }
-QPushButton { background:#142C47; border:1px solid #254362; border-radius:7px; padding:8px 12px; font-weight:600; }
-QPushButton:hover { background:#1C3C59; border-color:#3B91FF; }
-QPushButton:focus, QComboBox:focus, QTableWidget:focus { border:2px solid #2ED9BA; }
-QPushButton[primary="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #00A98B,stop:1 #00846E); border-color:#00B889; }
-QPushButton[query="true"] { background:#0763D5; border-color:#237EE5; }
-QPushButton[primary="true"]:hover { background:#00A585; }
-QPushButton[danger="true"] { background:#5F2535; border-color:#A33B50; }
-QPushButton[danger="true"]:hover { background:#883347; }
-QPushButton[nav="true"] { text-align:left; padding:16px 15px; background:transparent; border-color:transparent; font-size:11pt; }
-QPushButton[active="true"] { background:qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 #00675C,stop:1 #00443F); border-color:#008C79; }
-QPushButton:disabled { color:#718DA9; background:#102035; border-color:#1D324A; }
-QComboBox { background:#142C47; border:1px solid #254362; border-radius:6px; padding:7px 8px; min-height:18px; }
-QComboBox QAbstractItemView { background:#142C47; selection-background-color:#00564F; }
-QCheckBox { spacing:6px; background:transparent; }
-QCheckBox::indicator { width:15px; height:15px; border:1px solid #718DA9; border-radius:3px; background:#142C47; }
-QCheckBox::indicator:checked { background:#00B889; border:2px solid #2ED9BA; }
-QTableWidget { background:#09192B; alternate-background-color:#10243B; border:1px solid #254362; border-radius:6px; gridline-color:#254362; selection-background-color:#00564F; }
-QTableWidget::item { padding:5px; border:0; }
-QHeaderView::section { background:#142C47; color:#A5BCD5; padding:8px 4px; border:0; font-weight:600; }
-QScrollBar:vertical { background:#091B30; width:8px; margin:0; }
-QScrollBar::handle:vertical { background:#365878; border-radius:4px; min-height:30px; }
-QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height:0; }
-QScrollBar:horizontal { background:#091B30; height:8px; }
-QScrollBar::handle:horizontal { background:#365878; min-width:30px; }
-QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width:0; }
-QToolTip { color:#EAF2FF; background:#142C47; border:1px solid #254362; padding:9px; }
-QMessageBox, QDialog { background:#091B30; }
-"""
 
 
-def texto(s, size=10, color=None, bold=False):
+def texto(s, size=10, color=None, bold=False, tipo=None):
     w = W.QLabel(s)
+    pixels = TIPOGRAFIA[tipo] if tipo else round(size * 4 / 3)
     w.setStyleSheet(
-        f'font-size:{size}pt;color:{color or C["text"]};font-weight:{600 if bold else 400};background:transparent;border:0;'
+        f'font-size:{pixels}px;color:{color or C["text"]};font-weight:{600 if bold else 400};background:transparent;border:0;'
     )
     return w
 
@@ -101,6 +57,7 @@ def icone(nome, cor=None, size=20):
 
 def botao(s, acao, nome=None, primary=False, danger=False):
     b = W.QPushButton(s)
+    b.setMinimumHeight(36)
     if nome:
         b.setIcon(icone(nome))
     b.setIconSize(Q.QSize(19, 19))
@@ -142,10 +99,16 @@ def ajuda(chave, mensagem=None):
     )
     b = botao("?", lambda: W.QMessageBox.information(b, "Como interpretar", s))
     b.setFixedSize(23, 23)
-    b.setStyleSheet("padding:0;font-size:10pt;color:#A5BCD5;")
+    b.setStyleSheet(estilo("padding:0;font-size:10pt;color:@muted@;"))
     b.setToolTip(s)
     b.setAccessibleName("Ajuda: " + chave)
     return b
+
+
+def cor_alpha(valor, alfa):
+    cor = G.QColor(valor)
+    cor.setAlpha(alfa)
+    return cor
 
 
 def tile(nome, cor, size=40):
@@ -170,7 +133,7 @@ def titulo_secao(nome, ico, sub=None):
     h.addWidget(tile(ico, C["blue"], 34))
     col = W.QVBoxLayout()
     col.setSpacing(3)
-    col.addWidget(texto(nome, 14, bold=True))
+    col.addWidget(texto(nome, 14, bold=True, tipo="painel"))
     if sub:
         col.addWidget(texto(sub, 9, C["muted"]))
     h.addLayout(col, 1)
@@ -185,7 +148,9 @@ def acesso(nome, sub, ico, cor, acao):
     h.addWidget(tile(ico, cor, 42))
     col = W.QVBoxLayout()
     col.setSpacing(5)
-    col.addWidget(texto(nome, 10, bold=True))
+    title = texto(nome, 10, bold=True)
+    title.setWordWrap(True)
+    col.addWidget(title)
     label = texto(sub, 8, C["muted"])
     label.setWordWrap(True)
     col.addWidget(label)
@@ -211,7 +176,7 @@ class FaixaSemana(W.QFrame):
         path = G.QPainterPath()
         path.addRoundedRect(Q.QRectF(self.rect().adjusted(1, 1, -1, -1)), 12, 12)
         p.setClipPath(path)
-        p.fillRect(self.rect(), G.QColor("#052431"))
+        p.fillRect(self.rect(), G.QColor(C["hero"]))
         target = Q.QRectF(self.width() * 0.65, 0, self.width() * 0.35, self.height())
         p.drawPixmap(
             target,
@@ -224,12 +189,12 @@ class FaixaSemana(W.QFrame):
             ),
         )
         fade = G.QLinearGradient(0, 0, self.width(), 0)
-        fade.setColorAt(0, G.QColor("#052431"))
-        fade.setColorAt(0.62, G.QColor("#052431"))
-        fade.setColorAt(1, G.QColor(5, 36, 49, 100))
+        fade.setColorAt(0, G.QColor(C["hero"]))
+        fade.setColorAt(0.62, G.QColor(C["hero"]))
+        fade.setColorAt(1, cor_alpha(C["hero"], 100))
         p.fillRect(self.rect(), fade)
         p.setClipping(False)
-        p.setPen(G.QPen(G.QColor("#00B889"), 1))
+        p.setPen(G.QPen(G.QColor(C["green"]), 1))
         p.setBrush(Q.Qt.BrushStyle.NoBrush)
         p.drawPath(path)
         p.end()
@@ -265,15 +230,33 @@ class Fundo(W.QWidget):
                 target.height(),
             ),
         )
-        p.fillRect(target, G.QColor(7, 21, 37, 45 if self.lateral else 205))
+        p.fillRect(target, cor_alpha(C["bg"], 45 if self.lateral else 205))
         if self.lateral:
             grad = G.QLinearGradient(0, 0, 0, self.height())
-            grad.setColorAt(0, G.QColor(7, 21, 37, 230))
-            grad.setColorAt(0.36, G.QColor(7, 21, 37, 105))
-            grad.setColorAt(0.75, G.QColor(7, 21, 37, 40))
-            grad.setColorAt(1, G.QColor(7, 21, 37, 230))
+            grad.setColorAt(0, cor_alpha(C["bg"], 230))
+            grad.setColorAt(0.36, cor_alpha(C["bg"], 105))
+            grad.setColorAt(0.75, cor_alpha(C["bg"], 40))
+            grad.setColorAt(1, cor_alpha(C["bg"], 230))
             p.fillRect(self.rect(), grad)
         p.end()
+
+
+class LinhaResponsiva(W.QBoxLayout):
+    """Empilha grupos completos quando a largura útil não comporta a linha."""
+
+    def __init__(self, limite=950):
+        super().__init__(W.QBoxLayout.Direction.TopToBottom)
+        self.limite = limite
+
+    def setGeometry(self, rect):
+        sentido = (
+            W.QBoxLayout.Direction.LeftToRight
+            if rect.width() >= self.limite
+            else W.QBoxLayout.Direction.TopToBottom
+        )
+        if self.direction() != sentido:
+            self.setDirection(sentido)
+        super().setGeometry(rect)
 
 
 class Cartoes(W.QWidget):
@@ -324,7 +307,7 @@ class Seletor(W.QWidget):
             )
         )
         self.tipo = combo(tipos, "Fechamento")
-        self.tipo.setMinimumContentsLength(9)
+        self.tipo.setMinimumContentsLength(6 if comparacao else 9)
         self.ano = combo(range(2025, 2028), 2026)
         self.mes = combo(MESES, "Outubro")
         self.semana = combo([])
@@ -360,7 +343,9 @@ class Seletor(W.QWidget):
             campo.setDisplayFormat("dd/MM/yyyy")
             campo.setCalendarPopup(True)
             campo.setStyleSheet(
-                "background:#142C47;border:1px solid #254362;border-radius:6px;padding:7px;"
+                estilo(
+                    "background:@field@;border:1px solid @border@;border-radius:6px;padding:7px;"
+                )
             )
             titulo = texto(nome, 9, C["muted"])
             self.grid.addWidget(titulo, 2, i)
@@ -545,7 +530,7 @@ class Tabela(W.QWidget):
                 self.table.setItem(row, col, item)
             acoes = W.QWidget()
             layout = W.QHBoxLayout(acoes)
-            layout.setContentsMargins(2, 2, 2, 2)
+            layout.setContentsMargins(5, 3, 5, 3)
             layout.setSpacing(5)
             for nome, tip, action in [
                 (
@@ -563,16 +548,16 @@ class Tabela(W.QWidget):
                 b.setFixedSize(30, 30)
                 b.setStyleSheet(
                     "padding:3px;border:1px solid "
-                    + ("#C54A54" if nome == "trash-2" else "#2B69A8")
+                    + (C["delete_border"] if nome == "trash-2" else C["edit_border"])
                     + ";background:"
-                    + ("#A42C3D" if nome == "trash-2" else "#174D80")
+                    + (C["delete"] if nome == "trash-2" else C["edit"])
                     + ";border-radius:5px;"
                 )
                 b.setToolTip(tip)
                 b.setAccessibleName(f"{tip} {identificador}")
                 layout.addWidget(b)
             self.table.setCellWidget(row, self.table.columnCount() - 1, acoes)
-        self.table.setColumnWidth(self.table.columnCount() - 1, 86)
+        self.table.setColumnWidth(self.table.columnCount() - 1, 92)
         self.numero.setText(f"{self.pagina+1} / {self.paginas()}")
         self.voltar.setEnabled(self.pagina > 0)
         self.avancar.setEnabled(self.pagina + 1 < self.paginas())
@@ -610,77 +595,147 @@ class Grafico(W.QWidget):
         super().__init__()
         self.modo = modo
         self.dados = []
+        self.alvos = []
+        self.setMouseTracking(True)
         self.setMinimumHeight(155)
         self.setAccessibleName(
             "Gráfico; valores disponíveis também nas tabelas e legendas"
         )
 
+    def mouseMoveEvent(self, event):
+        for rect, tip in self.alvos:
+            if rect.contains(event.position()):
+                self.setToolTip(tip)
+                break
+        else:
+            self.setToolTip("Valores também disponíveis nas tabelas da seleção.")
+        super().mouseMoveEvent(event)
+
     def paintEvent(self, e):
+        import math
+
         p = G.QPainter(self)
         p.setRenderHint(G.QPainter.RenderHint.Antialiasing)
-        p.setFont(G.QFont(FAMILIA, 9))
+        font = G.QFont(FAMILIA)
+        font.setPixelSize(12)
+        p.setFont(font)
+        self.alvos = []
         if self.modo == "barras":
-            base = self.height() - 32
-            width = max(40, self.width() - 48)
+            left = 74
+            right = self.width() - 12
+            top = 28
+            base = self.height() - 39
             maximum = max([v for _, v in self.dados] + [1])
+            raw = max(100, maximum / 3)
+            power = 10 ** math.floor(math.log10(raw))
+            step_tick = math.ceil(raw / power) * power
+            ceiling = step_tick * 3
             for n in range(4):
-                y = base - (base - 25) * n / 3
-                p.setPen(G.QColor(C["border"]))
-                p.drawLine(38, int(y), self.width() - 5, int(y))
-            for i, (s, val) in enumerate(self.dados):
-                step = width / max(len(self.dados), 1)
-                x = 42 + i * step
-                h = (base - 32) * val / maximum
-                p.setPen(Q.Qt.PenStyle.NoPen)
-                p.setBrush(G.QColor(C["blue"]))
-                p.drawRoundedRect(
-                    Q.QRectF(x, base - max(2, h), step * 0.65, max(2, h)), 4, 4
-                )
-                p.setPen(G.QColor(C["text"]))
-                p.drawText(
-                    Q.QRectF(x - 8, base - h - 22, step * 0.9, 20),
-                    Q.Qt.AlignmentFlag.AlignCenter,
-                    moeda(val),
-                )
+                y = base - (base - top) * n / 3
+                p.setPen(G.QPen(G.QColor(C["border"]), 1))
+                p.drawLine(left, int(y), right, int(y))
                 p.setPen(G.QColor(C["muted"]))
                 p.drawText(
-                    Q.QRectF(x - 8, base + 6, step * 0.9, 22),
-                    Q.Qt.AlignmentFlag.AlignCenter,
-                    s,
+                    Q.QRectF(0, y - 9, left - 8, 18),
+                    Q.Qt.AlignmentFlag.AlignRight,
+                    moeda(step_tick * n),
+                )
+            step = (right - left) / max(1, len(self.dados))
+            stride = max(1, math.ceil(len(self.dados) / 6))
+            for i, (label, value) in enumerate(self.dados):
+                x = left + i * step + step * 0.16
+                bw = step * 0.68
+                bh = (base - top) * value / ceiling
+                rect = Q.QRectF(x, base - bh, bw, bh)
+                if value:
+                    gradient = G.QLinearGradient(0, base - bh, 0, base)
+                    gradient.setColorAt(0, G.QColor(C["blue"]).lighter(115))
+                    gradient.setColorAt(1, G.QColor(C["query"]))
+                    p.setPen(Q.Qt.PenStyle.NoPen)
+                    p.setBrush(gradient)
+                    p.drawRoundedRect(rect, 4, 4)
+                else:
+                    p.setPen(G.QPen(G.QColor(C["muted"]), 2))
+                    p.drawLine(int(x), base, int(x + bw), base)
+                p.setPen(G.QColor(C["text"]))
+                if step >= 60:
+                    p.drawText(
+                        Q.QRectF(x - step * 0.15, base - bh - 23, step, 20),
+                        Q.Qt.AlignmentFlag.AlignCenter,
+                        moeda(value),
+                    )
+                if i % stride == 0:
+                    p.setPen(G.QColor(C["muted"]))
+                    partes = label.split("–")
+                    p.drawText(
+                        Q.QRectF(x - step * 0.15, base + 7, step, 30),
+                        Q.Qt.AlignmentFlag.AlignCenter,
+                        "\n".join(partes),
+                    )
+                self.alvos.append(
+                    (
+                        Q.QRectF(x, base - max(14, bh), bw, max(14, bh)),
+                        label + ": " + moeda(value),
+                    )
+                )
+            if not self.dados:
+                p.setPen(G.QColor(C["muted"]))
+                p.drawText(
+                    self.rect(), Q.Qt.AlignmentFlag.AlignCenter, "Sem vendas na seleção"
                 )
         else:
             total = sum(v for _, v in self.dados)
-            box = Q.QRectF(
-                8,
-                15,
-                min(135, self.width() * 0.34, self.height() - 15),
-                min(135, self.width() * 0.34, self.height() - 15),
-            )
+            diameter = min(145, self.width() * 0.30, self.height() - 6)
+            box = Q.QRectF(5, (self.height() - diameter) / 2, diameter, diameter)
             start = 90 * 16
-            for i, (s, v) in enumerate(self.dados):
-                angle = round(360 * 16 * v / total) if total else 0
-                pen = G.QPen(
-                    G.QColor([C["yellow"], C["purple"], C["blue"]][i]),
-                    12 if self.height() < 120 else 18,
-                )
-                p.setPen(pen)
-                p.drawArc(box.adjusted(10, 10, -10, -10), start, -angle)
+            for i, (label, value) in enumerate(self.dados):
+                color = [C["yellow"], C["purple"], C["blue"]][i]
+                angle = round(360 * 16 * value / total) if total else 0
+                p.setPen(G.QPen(G.QColor(color), 15))
+                p.drawArc(box.adjusted(9, 9, -9, -9), start, -angle)
                 start -= angle
-                percent = f"{v/total*100:.1f}%".replace(".", ",") if total else "—"
+                y = (self.height() - 78) / 2 + i * 28
+                name_x = box.right() + 17
+                money_x = self.width() - 100
+                percent_x = money_x - 57
+                p.setPen(Q.Qt.PenStyle.NoPen)
+                p.setBrush(G.QColor(color))
+                p.drawEllipse(Q.QPointF(name_x + 4, y + 7), 4, 4)
                 p.setPen(G.QColor(C["text"]))
-                if self.height() < 120:
-                    p.drawText(
-                        int(box.right() + 18),
-                        24 + i * 25,
-                        f"{s}   {percent}   {moeda(v)}",
+                p.drawText(
+                    Q.QRectF(name_x + 15, y - 2, max(50, percent_x - name_x - 15), 22),
+                    Q.Qt.AlignmentFlag.AlignLeft,
+                    label,
+                )
+                percent = f"{value/total*100:.1f}%".replace(".", ",") if total else "—"
+                p.drawText(
+                    Q.QRectF(percent_x, y - 2, 50, 22),
+                    Q.Qt.AlignmentFlag.AlignRight,
+                    percent,
+                )
+                p.drawText(
+                    Q.QRectF(money_x, y - 2, 97, 22),
+                    Q.Qt.AlignmentFlag.AlignRight,
+                    moeda(value),
+                )
+                self.alvos.append(
+                    (
+                        Q.QRectF(name_x, y - 2, self.width() - name_x, 24),
+                        label + ": " + moeda(value) + " · " + percent,
                     )
-                else:
-                    p.drawText(int(box.right() + 16), 34 + i * 39, f"{s}   {percent}")
-                    p.setPen(G.QColor(C["muted"]))
-                    p.drawText(int(box.right() + 16), 51 + i * 39, moeda(v))
+                )
             if not total:
+                p.setPen(G.QPen(G.QColor(C["border"]), 15))
+                p.drawArc(box.adjusted(9, 9, -9, -9), 0, 360 * 16)
                 p.setPen(G.QColor(C["muted"]))
                 p.drawText(box, Q.Qt.AlignmentFlag.AlignCenter, "Sem vendas")
+            elif diameter >= 125:
+                p.setPen(G.QColor(C["text"]))
+                p.drawText(
+                    box.adjusted(10, 35, -10, -45),
+                    Q.Qt.AlignmentFlag.AlignCenter,
+                    moeda(total),
+                )
         p.end()
 
 
@@ -739,27 +794,29 @@ class Aplicativo(W.QWidget):
             sl.addWidget(b)
             self.nav[nome] = b
         sl.addStretch()
-        sl.addWidget(
-            botao("Configurações", lambda: self.aviso("Configurações"), "settings")
-        )
-        sl.addWidget(texto("Tema: Noturno", 10, C["muted"]))
-        sl.addWidget(texto("ESTUDO VISUAL · SEM CONEXÃO", 8, C["muted"]))
+        sl.addWidget(texto("PRÉVIA DE INTERFACE", 9, C["muted"]))
+        sl.addWidget(texto("Dados fictícios · sem conexão", 8, C["discrete"]))
         root.addWidget(side)
         main = Fundo()
         ml = W.QVBoxLayout(main)
-        ml.setContentsMargins(20, 18, 20, 10)
+        ml.setContentsMargins(ESPACOS["margem"], 18, ESPACOS["margem"], 10)
         ml.setSpacing(14)
-        header = W.QHBoxLayout()
+        header = LinhaResponsiva(1050)
         title = W.QVBoxLayout()
-        self.titulo = texto("", 25, bold=True)
+        self.titulo = texto("", 24, bold=True, tipo="titulo")
         self.subtitulo = texto("", 10, C["muted"])
         title.addWidget(self.titulo)
         title.addWidget(self.subtitulo)
         header.addLayout(title)
         header.addStretch()
-        header.addWidget(botao("", lambda: self.aviso("Configurações"), "settings"))
-        header.addWidget(botao("Tema: Noturno", lambda: self.aviso("Temas"), "moon"))
-        header.addWidget(
+        acoes_cabecalho = W.QHBoxLayout()
+        acoes_cabecalho.addWidget(
+            botao("", lambda: self.aviso("Configurações"), "settings")
+        )
+        acoes_cabecalho.addWidget(
+            botao("Tema: Noturno", lambda: self.aviso("Temas"), "moon")
+        )
+        acoes_cabecalho.addWidget(
             botao(
                 "Exportar relatório",
                 lambda: self.aviso("Exportar CSV / Excel da consulta de Vendas"),
@@ -774,7 +831,8 @@ class Aplicativo(W.QWidget):
             "plus",
             True,
         )
-        header.addWidget(self.novo)
+        acoes_cabecalho.addWidget(self.novo)
+        header.addLayout(acoes_cabecalho)
         ml.addLayout(header)
         self.scroll = W.QScrollArea()
         self.scroll.setWidgetResizable(True)
@@ -807,7 +865,9 @@ class Aplicativo(W.QWidget):
         l.addWidget(texto(nome, 18, bold=True))
         area = W.QTextBrowser()
         area.setPlainText("\n\n".join(linhas))
-        area.setStyleSheet("background:#10243B;border:1px solid #254362;padding:15px;")
+        area.setStyleSheet(
+            estilo("background:@panel@;border:1px solid @border@;padding:15px;")
+        )
         l.addWidget(area)
         l.addWidget(botao("Fechar", d.accept))
         d.exec()
@@ -825,7 +885,7 @@ class Aplicativo(W.QWidget):
             body = W.QWidget()
             layout = W.QVBoxLayout(body)
             layout.setContentsMargins(0, 0, 0, 0)
-            layout.setSpacing(12)
+            layout.setSpacing(ESPACOS["intervalo"])
             self.paginas[nome] = {"widget": body, "layout": layout, "rolagem": 0}
             {
                 "Vendas": self.construir_vendas,
@@ -853,7 +913,7 @@ class Aplicativo(W.QWidget):
     def cartao(self, titulo, valor, ico, cor, nota=None, chave=None):
         w, l = caixa(12)
         l.setSpacing(6)
-        base = G.QColor("#071525")
+        base = G.QColor(C["bg"])
         accent = G.QColor(cor)
         tint = G.QColor(
             *[
@@ -868,7 +928,9 @@ class Aplicativo(W.QWidget):
             ]
         ).name()
         w.setStyleSheet(
-            f'QFrame[panel="true"]{{border:1px solid {border};background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {tint},stop:1 #08182B);border-radius:12px;}}'
+            estilo(
+                f'QFrame[panel="true"]{{border:1px solid {border};background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {tint},stop:1 @card_end@);border-radius:12px;}}'
+            )
         )
         h = W.QHBoxLayout()
         h.setSpacing(9)
@@ -878,7 +940,7 @@ class Aplicativo(W.QWidget):
         if chave:
             h.addWidget(ajuda(chave))
         l.addLayout(h)
-        value = texto(valor, 22, cor, True)
+        value = texto(valor, 22, cor, True, tipo="valor")
         l.addWidget(value)
         if nota:
             l.addWidget(texto(nota, 9, C["muted"]))
@@ -917,7 +979,9 @@ class Aplicativo(W.QWidget):
             bar.setTextVisible(False)
             bar.setFixedHeight(5)
             bar.setStyleSheet(
-                f"QProgressBar{{background:#22384B;border:0;border-radius:2px;}}QProgressBar::chunk{{background:{color};border-radius:2px;}}"
+                estilo(
+                    f"QProgressBar{{background:@progress_track@;border:0;border-radius:2px;}}QProgressBar::chunk{{background:{color};border-radius:2px;}}"
+                )
             )
             bar.setVisible(len(self.cards) > 3)
             w.layout().addWidget(bar)
@@ -938,7 +1002,30 @@ class Aplicativo(W.QWidget):
         self.semana_valor = texto("", 24, bold=True)
         esquerda.addWidget(self.semana_valor)
         linha.addLayout(esquerda, 1)
-        self.semana_formas = texto("", 10, C["muted"])
+        self.semana_formas = W.QWidget()
+        sg = W.QGridLayout(self.semana_formas)
+        sg.setContentsMargins(16, 0, 16, 0)
+        sg.setVerticalSpacing(7)
+        sg.setColumnStretch(1, 1)
+        sg.addWidget(texto("Por forma de pagamento", 9, C["muted"]), 0, 0, 1, 3)
+        self.semana_pagamentos = {}
+        for n, (nome, key, ico, cor) in enumerate(
+            [
+                ("Dinheiro", "dinheiro", "banknote", C["yellow"]),
+                ("Pix", "pix", "gem", C["purple"]),
+                ("Cartão", "cartao", "credit-card", C["blue"]),
+            ],
+            1,
+        ):
+            image = W.QLabel()
+            image.setPixmap(icone(ico, cor, 18).pixmap(18, 18))
+            image.setFixedWidth(20)
+            sg.addWidget(image, n, 0)
+            sg.addWidget(texto(nome, 10, C["muted"]), n, 1)
+            value = texto("", 10)
+            value.setAlignment(Q.Qt.AlignmentFlag.AlignRight)
+            sg.addWidget(value, n, 2)
+            self.semana_pagamentos[key] = value
         linha.addWidget(self.semana_formas, 1)
         linha.addWidget(
             botao("Ver detalhes da semana", self.detalhar_semana, "arrow-up-right")
@@ -951,7 +1038,7 @@ class Aplicativo(W.QWidget):
         )
         sl.addLayout(linha)
         l.addWidget(semana)
-        faixa = W.QHBoxLayout()
+        faixa = LinhaResponsiva(900)
         faixa.setSpacing(10)
         anterior, fl = caixa(12)
         fl.addWidget(
@@ -960,9 +1047,21 @@ class Aplicativo(W.QWidget):
         self.anterior = texto("", 10, C["muted"])
         self.anterior.setWordWrap(True)
         fl.setAlignment(Q.Qt.AlignmentFlag.AlignTop)
-        fl.addWidget(self.anterior)
+        comparacao_linha = W.QHBoxLayout()
+        comparacao_linha.setSpacing(16)
+        comparacao_linha.addWidget(self.anterior, 1)
+        variacao = W.QVBoxLayout()
+        variacao.setSpacing(3)
+        variacao.addWidget(texto("Variação do total", 9, C["muted"]))
+        self.anterior_diferenca = texto("", 18, bold=True)
+        variacao.addWidget(self.anterior_diferenca)
+        self.anterior_percentual = texto("", 10, C["muted"])
+        variacao.addWidget(self.anterior_percentual)
+        comparacao_linha.addLayout(variacao)
+        fl.addLayout(comparacao_linha)
         faixa.addWidget(anterior, 6)
         participacao, pl = caixa(10)
+        pl.setSpacing(6)
         ph = W.QHBoxLayout()
         ph.addWidget(texto("Participação no período", 11, bold=True))
         ph.addStretch()
@@ -974,12 +1073,12 @@ class Aplicativo(W.QWidget):
         )
         pl.addLayout(ph)
         self.pizza_vendas = Grafico("pizza")
-        self.pizza_vendas.setMinimumHeight(85)
-        self.pizza_vendas.setMaximumHeight(88)
+        self.pizza_vendas.setMinimumHeight(94)
+        self.pizza_vendas.setMaximumHeight(96)
         pl.addWidget(self.pizza_vendas)
         faixa.addWidget(participacao, 5)
         l.addLayout(faixa)
-        baixo = W.QHBoxLayout()
+        baixo = LinhaResponsiva(995)
         baixo.setSpacing(12)
         hist, hl = caixa()
         header = W.QHBoxLayout()
@@ -1010,9 +1109,22 @@ class Aplicativo(W.QWidget):
         grade = W.QGridLayout()
         self.dias_checks = []
         for i, s in enumerate(["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"]):
-            c = W.QCheckBox(s)
+            c = W.QPushButton("✓ " + s)
+            c.setCheckable(True)
             c.setChecked(True)
-            c.toggled.connect(self.pendente_vendas)
+            c.setProperty("day", True)
+            c.setProperty("active", True)
+            c.setAccessibleName(DIAS[i])
+            c.setToolTip(DIAS[i])
+
+            def estado_dia(checked, button=c, name=s):
+                button.setText(("✓ " if checked else "") + name)
+                button.setProperty("active", checked)
+                button.style().unpolish(button)
+                button.style().polish(button)
+                self.pendente_vendas()
+
+            c.toggled.connect(estado_dia)
             grade.addWidget(c, i // 3, i % 3)
             self.dias_checks.append(c)
         ff.addLayout(grade)
@@ -1077,7 +1189,7 @@ class Aplicativo(W.QWidget):
         notas = [
             f"{len(rows)} dias de feira",
             f"Média: {moeda(dividir(total,len(rows)))}",
-            "Inclui dias registrados com zero",
+            "Inclui dias zerados",
         ] + [
             (
                 f"{v/total*100:.1f}% do período".replace(".", ",")
@@ -1116,10 +1228,20 @@ class Aplicativo(W.QWidget):
             anteriores = self.estado.consultar_vendas(anterior, self.dias)
             antes = sum(r.total for r in anteriores)
             self.anterior.setText(
-                f"{anterior[0]:%d/%m/%Y} a {anterior[1]:%d/%m/%Y}\n{moeda(antes)} em {len(anteriores)} dias de feira   ·   Diferença: {moeda(total-antes)}"
+                f"{anterior[0]:%d/%m/%Y} a {anterior[1]:%d/%m/%Y}\n{moeda(antes)} em {len(anteriores)} dias de feira\nMédia anterior: {moeda(dividir(antes,len(anteriores)))}"
             )
+            delta = total - antes
+            self.anterior_diferenca.setText(
+                ("↑ " if delta > 0 else "↓ " if delta < 0 else "= ") + moeda(delta)
+            )
+            self.anterior_diferenca.setStyleSheet(
+                f'font-size:24px;font-weight:700;color:{C["red"] if delta<0 else C["turquoise"]};'
+            )
+            self.anterior_percentual.setText(variacao_percentual(total, antes))
         else:
             self.anterior.setText("Selecione um período para comparar com o anterior.")
+            self.anterior_diferenca.setText("—")
+            self.anterior_percentual.setText("Sem período de referência")
         self.tabela_vendas.preencher(
             [
                 (
@@ -1143,17 +1265,8 @@ class Aplicativo(W.QWidget):
             f"{segunda:%d/%m/%Y} até {HOJE:%d/%m/%Y} · {len(semana)} dias de feira"
         )
         self.semana_valor.setText(moeda(sum(r.total for r in semana)))
-        self.semana_formas.setText(
-            "Por forma de pagamento\n"
-            + "\n".join(
-                s + "   " + moeda(sum(getattr(r, k) for r in semana))
-                for s, k in [
-                    ("Dinheiro", "dinheiro"),
-                    ("Pix", "pix"),
-                    ("Cartão", "cartao"),
-                ]
-            )
-        )
+        for key, label in self.semana_pagamentos.items():
+            label.setText(moeda(sum(getattr(r, key) for r in semana)))
 
     def detalhar_semana(self):
         from datetime import timedelta
@@ -1218,16 +1331,24 @@ class Aplicativo(W.QWidget):
         secundario, sl = caixa(12)
         sh = W.QHBoxLayout()
         self.fin_secundarios = {}
-        for key, title in [
-            ("bruto", "Vendas brutas"),
-            ("taxas", "Taxas cadastradas"),
-            ("liquido", "Vendas menos taxas"),
+        for key, title, ico, cor in [
+            ("bruto", "Vendas brutas", "wallet", C["green"]),
+            ("taxas", "Taxas cadastradas", "percent", C["yellow"]),
+            ("liquido", "Vendas menos taxas", "banknote", C["blue"]),
         ]:
             col = W.QVBoxLayout()
             col.addWidget(texto(title, 9, C["muted"]))
             v = texto("", 15, bold=True)
             col.addWidget(v)
-            sh.addLayout(col, 1)
+            item = W.QHBoxLayout()
+            item.addWidget(tile(ico, cor, 36))
+            item.addLayout(col, 1)
+            sh.addLayout(item, 1)
+            if key != "liquido":
+                line = W.QFrame()
+                line.setFrameShape(W.QFrame.Shape.VLine)
+                line.setStyleSheet(f'color:{C["border"]};')
+                sh.addWidget(line)
             self.fin_secundarios[key] = v
         sh.addWidget(ajuda("taxas"))
         sl.addLayout(sh)
@@ -1431,17 +1552,32 @@ class Aplicativo(W.QWidget):
             botao("Alterar filtros em Vendas", lambda: self.mostrar("Vendas"), "filter")
         )
         l.addLayout(topo)
-        graficos = W.QHBoxLayout()
+        graficos = LinhaResponsiva(950)
         barras, bl = caixa()
         bl.addWidget(titulo_secao("Resultado por semana", "trending-up"))
         self.barras = Grafico()
         bl.addWidget(self.barras, 1)
         graficos.addWidget(barras, 5)
-        resumo, rl = caixa()
+        resumo, rl = caixa(10)
+        rl.setSpacing(8)
         rl.addWidget(titulo_secao("Resumo da seleção", "receipt"))
-        self.ana_resumo = texto("", 12)
-        rl.addWidget(self.ana_resumo)
-        rl.addStretch()
+        self.ana_valores = {}
+        mini = W.QGridLayout()
+        mini.setSpacing(6)
+        for key, nome, row, col, span in [
+            ("total", "Total do período", 0, 0, 2),
+            ("semanas", "Semanas", 1, 0, 1),
+            ("dias", "Dias de feira", 1, 1, 1),
+            ("media", "Média por dia", 2, 0, 2),
+        ]:
+            box, vl = caixa(5)
+            vl.setSpacing(3)
+            vl.addWidget(texto(nome, 8, C["muted"]))
+            value = texto("", 15 if key in ("total", "media") else 17, bold=True)
+            vl.addWidget(value)
+            self.ana_valores[key] = value
+            mini.addWidget(box, row, col, 1, span)
+        rl.addLayout(mini)
         graficos.addWidget(resumo, 2)
         pizza, pl = caixa()
         pl.addWidget(titulo_secao("Participação por pagamento", "chart-pie"))
@@ -1465,7 +1601,10 @@ class Aplicativo(W.QWidget):
             ]
         )
         self.ana_tabela.verticalHeader().hide()
-        self.ana_tabela.setMinimumHeight(205)
+        self.ana_tabela.setMinimumHeight(80)
+        self.ana_tabela.setShowGrid(False)
+        self.ana_tabela.verticalHeader().setDefaultSectionSize(29)
+        self.ana_tabela.horizontalHeader().setFixedHeight(31)
         self.ana_tabela.setAlternatingRowColors(True)
         self.ana_tabela.setEditTriggers(W.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.ana_tabela.horizontalHeader().setSectionResizeMode(
@@ -1476,7 +1615,7 @@ class Aplicativo(W.QWidget):
         )
         tl.addWidget(self.ana_tabela)
         l.addWidget(table)
-        baixo = W.QHBoxLayout()
+        baixo = LinhaResponsiva(995)
         comp, cl = caixa()
         cl.addWidget(titulo_secao("Comparar períodos (A e B)", "arrow-right-left"))
         cl.addWidget(
@@ -1488,33 +1627,58 @@ class Aplicativo(W.QWidget):
         self.a.tipo.setCurrentText("Mês")
         self.b.tipo.setCurrentText("Mês")
         self.b.mes.setCurrentIndex(8)
-        for nome, c in [("Período A", self.a), ("Período B", self.b)]:
-            col = W.QVBoxLayout()
-            col.addWidget(texto(nome, 10, C["turquoise"], True))
+        for nome, c, cor in [
+            ("Período A", self.a, C["turquoise"]),
+            ("Período B", self.b, C["blue"]),
+        ]:
+            group, col = caixa(10)
+            group.setStyleSheet(
+                f'QFrame[panel="true"]{{background:{C["side"]};border:1px solid {cor};border-radius:9px;}}'
+            )
+            col.addWidget(texto(nome, 10, cor, True))
             col.addWidget(c)
-            campos.addLayout(col, 1)
+            campos.addWidget(group, 1)
         cl.addLayout(campos)
         cl.addWidget(
             botao("Comparar períodos", self.comparar, "arrow-right-left", True)
         )
-        self.ana_comparacao = texto("", 10)
+        self.ana_comparacao = texto("", 14, bold=True)
         self.ana_comparacao.setWordWrap(True)
         cl.addWidget(self.ana_comparacao)
+        self.ana_diferenca = texto("", 16, bold=True)
+        cl.addWidget(self.ana_diferenca)
+        self.ana_percentual = texto("", 9, C["muted"])
+        cl.addWidget(self.ana_percentual)
         baixo.addWidget(comp, 4)
         det, dl = caixa()
         dl.addWidget(titulo_secao("Detalhes do período", "list"))
         dl.addWidget(texto("Mesma seleção aplicada em Vendas.", 9, C["muted"]))
-        for nome, ico, acao in [
-            ("Resultados por dia da semana", "calendar-days", self.detalhes_dias),
-            ("Evolução mensal / fechamento", "trending-up", self.detalhes_evolucao),
-            (
-                "Formas de pagamento",
-                "chart-pie",
-                lambda: self.detalhes("Formas de pagamento", [self.participacao]),
-            ),
-            ("Lista de vendas da seleção", "list", self.detalhes_vendas),
-        ]:
-            dl.addWidget(botao(nome, acao, ico))
+        acessos_grid = W.QGridLayout()
+        acessos_grid.setSpacing(10)
+        for indice, (nome, ico, acao) in enumerate(
+            [
+                ("Resultados por dia da semana", "calendar-days", self.detalhes_dias),
+                ("Evolução mensal / fechamento", "trending-up", self.detalhes_evolucao),
+                (
+                    "Formas de pagamento",
+                    "chart-pie",
+                    lambda: self.detalhes("Formas de pagamento", [self.participacao]),
+                ),
+                ("Lista de vendas da seleção", "list", self.detalhes_vendas),
+            ]
+        ):
+            sub = {
+                "Resultados por dia da semana": "Totais e dias registrados de segunda a domingo.",
+                "Evolução mensal / fechamento": "Compare a evolução da seleção ao longo dos períodos.",
+                "Formas de pagamento": "Veja a distribuição entre dinheiro, Pix e cartão.",
+                "Lista de vendas da seleção": "Confira todos os registros da consulta aplicada.",
+            }[nome]
+            button = acesso(
+                nome, sub, ico, C["purple"] if ico == "chart-pie" else C["blue"], acao
+            )
+            button.setMinimumHeight(110)
+            acessos_grid.addWidget(button, indice // 2, indice % 2)
+        dl.addLayout(acessos_grid)
         dl.addStretch()
         baixo.addWidget(det, 3)
         l.addLayout(baixo)
@@ -1532,11 +1696,15 @@ class Aplicativo(W.QWidget):
             + ("todas" if a.year == 1 else f"{a:%d/%m/%Y} a {b:%d/%m/%Y}")
         )
         total = sum(r.total for r in rows)
-        self.ana_resumo.setText(
-            f"Total do período\n{moeda(total)}\n\nSemanas: {len(grupos)}\nDias de feira: {len(rows)}\n\nMédia por dia\n{moeda(dividir(total,len(rows)))}"
-        )
+        for key, val in dict(
+            total=moeda(total),
+            semanas=str(len(grupos)),
+            dias=str(len(rows)),
+            media=moeda(dividir(total, len(rows))),
+        ).items():
+            self.ana_valores[key].setText(val)
         self.barras.dados = [
-            (d.strftime("%d/%m"), sum(r.total for r in rs))
+            (f"{d:%d/%m}–{d+timedelta(days=6):%d/%m}", sum(r.total for r in rs))
             for d, rs in reversed(grupos)
         ]
         self.barras.update()
@@ -1550,6 +1718,12 @@ class Aplicativo(W.QWidget):
         ]
         self.pizza.update()
         self.ana_tabela.setRowCount(len(grupos))
+        altura = (
+            self.ana_tabela.horizontalHeader().height()
+            + 29 * max(1, min(len(grupos), 6))
+            + 6
+        )
+        self.ana_tabela.setFixedHeight(altura)
         for n, (d, rs) in enumerate(grupos):
             total = sum(r.total for r in rs)
             parcial = d < a or d + timedelta(days=6) > b
@@ -1575,9 +1749,13 @@ class Aplicativo(W.QWidget):
             return
         va = sum(r.total for r in self.estado.consultar_vendas(ia))
         vb = sum(r.total for r in self.estado.consultar_vendas(ib))
-        self.ana_comparacao.setText(
-            f"A: {moeda(va)}   |   B: {moeda(vb)}\nDiferença A − B: {moeda(va-vb)}"
+        self.ana_comparacao.setText(f"A: {moeda(va)}   |   B: {moeda(vb)}")
+
+        self.ana_diferenca.setText(f"Diferença A − B: {moeda(va-vb)}")
+        self.ana_diferenca.setStyleSheet(
+            f'font-size:22px;font-weight:700;color:{C["red"] if va<vb else C["turquoise"]};'
         )
+        self.ana_percentual.setText(variacao_percentual(va, vb))
 
     def detalhes_dias(self):
         rows = self.estado.consultar_vendas(self.intervalo_vendas, self.dias)

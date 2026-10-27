@@ -1,0 +1,263 @@
+[
+  {
+    "plataforma": "Linux / Qt offscreen; não é um ensaio Windows",
+    "escala": "1",
+    "cenarios": [
+      {
+        "area": "Vendas",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.0
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 404,
+        "dpr": 1.0
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 466,
+        "dpr": 1.0
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 271,
+        "dpr": 1.0
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1074,
+        "dpr": 1.0
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1198,
+        "dpr": 1.0
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 371,
+        "dpr": 1.0
+      }
+    ]
+  },
+  {
+    "plataforma": "Linux / Qt offscreen; não é um ensaio Windows",
+    "escala": "1.25",
+    "cenarios": [
+      {
+        "area": "Vendas",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.25
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 404,
+        "dpr": 1.25
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 466,
+        "dpr": 1.25
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 271,
+        "dpr": 1.25
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1074,
+        "dpr": 1.25
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1198,
+        "dpr": 1.25
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 371,
+        "dpr": 1.25
+      }
+    ]
+  },
+  {
+    "plataforma": "Linux / Qt offscreen; não é um ensaio Windows",
+    "escala": "1.5",
+    "cenarios": [
+      {
+        "area": "Vendas",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1536,
+        "altura_logica": 1024,
+        "viewport": 1270,
+        "conteudo": 1270,
+        "rolagem_vertical": 0,
+        "dpr": 1.5
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 404,
+        "dpr": 1.5
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 466,
+        "dpr": 1.5
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1280,
+        "altura_logica": 800,
+        "viewport": 1006,
+        "conteudo": 1006,
+        "rolagem_vertical": 271,
+        "dpr": 1.5
+      },
+      {
+        "area": "Vendas",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1074,
+        "dpr": 1.5
+      },
+      {
+        "area": "Análises",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 1198,
+        "dpr": 1.5
+      },
+      {
+        "area": "Finanças",
+        "largura_logica": 1000,
+        "altura_logica": 700,
+        "viewport": 726,
+        "conteudo": 726,
+        "rolagem_vertical": 371,
+        "dpr": 1.5
+      }
+    ]
+  }
+]

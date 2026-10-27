@@ -1,0 +1,615 @@
+Gestão da Feira — Segunda etapa de refinamento visual
+
+1. Objetivo
+
+Realizar uma segunda etapa de refinamento visual da interface desktop do Gestão da Feira, considerando as três telas já implementadas: Vendas, Análises e Finanças.
+
+A implementação atual reproduz satisfatoriamente a estrutura geral dos layouts aprovados, mas ainda apresenta diferenças de acabamento, hierarquia visual, tipografia, iconografia, proporções e distribuição de informações.
+
+O objetivo NÃO é reconstruir o aplicativo, mas elevar a qualidade visual da implementação existente para aproximá-la das referências aprovadas.
+
+Utilize:
+
+As imagens conceituais aprovadas como referência de identidade visual e acabamento.
+
+As capturas atuais do aplicativo como referência das informações e funcionalidades que precisam permanecer.
+
+O código existente como fonte de verdade para regras de negócio, cálculos, navegação e comportamentos.
+
+Quando houver diferenças entre a imagem conceitual e a implementação funcional, preserve as funcionalidades reais e adapte o acabamento visual.
+
+2. Restrições obrigatórias
+
+Antes de modificar qualquer componente, analise a arquitetura atual do projeto.
+
+Preserve o banco SQLite, seus registros e sua estrutura.
+
+Não altere regras de fechamento, cálculos financeiros, filtros, sincronização ou exportação.
+
+Preserve as funcionalidades existentes de cadastro, edição, exclusão e consulta.
+
+Não remova funcionalidades apenas porque não aparecem nas referências visuais.
+
+Não crie funcionalidades fictícias para reproduzir elementos decorativos das imagens.
+
+Preserve os cinco temas existentes, concentrando o refinamento cromático no tema Noturno.
+
+Evite alterações desnecessárias em componentes que já funcionam corretamente.
+
+Mantenha a interface responsiva e compatível com escalas de 100%, 125% e 150% do Windows.
+
+Utilize preferencialmente a biblioteca de interface e os componentes já empregados no projeto.
+
+Não substitua uma implementação funcional por uma representação visual estática.
+
+Se encontrar alguma diferença relevante entre as referências e a arquitetura atual, priorize a preservação funcional e documente a decisão.
+
+3. Identidade visual compartilhada
+
+As três telas devem parecer partes de um único sistema, com identidade consistente.
+
+3.1. Tipografia
+
+Utilize Inter como fonte principal, com Segoe UI como alternativa.
+
+Referências de tamanho:
+
+Elemento
+
+Tamanho
+
+Título principal
+
+28–32 px
+
+Títulos de painéis
+
+17–19 px
+
+Valores principais
+
+27–34 px
+
+Rótulos de indicadores
+
+11–12 px
+
+Textos de tabelas
+
+12–13 px
+
+Botões e campos
+
+12–14 px
+
+Informações auxiliares
+
+11–12 px
+
+Utilize pesos 400, 500, 600 e 700.
+
+Adapte essas referências às limitações e ao sistema de dimensionamento da biblioteca atual.
+
+3.2. Paleta — Tema Noturno
+
+Utilize os seguintes valores como referência cromática central:
+
+Superfícies
+
+Fundo principal: #071525
+
+Barra lateral: #091B30
+
+Painéis: #10243B
+
+Campos: #142C47
+
+Bordas: #254362
+
+Linhas alternadas: #172E48
+
+Tipografia
+
+Texto principal: #EAF2FF
+
+Texto secundário: #A5BCD5
+
+Texto discreto: #718DA9
+
+Destaques
+
+Verde principal: #00B889
+
+Turquesa: #2ED9BA
+
+Azul: #3B91FF
+
+Ciano: #38BDF8
+
+Amarelo: #F5B942
+
+Roxo: #A477F5
+
+Vermelho: #F05264
+
+Centralize essas cores no sistema de temas existente, evitando valores fixos espalhados pelo código.
+
+Não altere arbitrariamente as cores dos outros temas.
+
+3.3. Ícones
+
+A iconografia atual ainda precisa de padronização.
+
+Utilize um conjunto vetorial consistente, preferencialmente Lucide ou equivalente compatível com a arquitetura existente.
+
+Padronize:
+
+Espessura dos traços.
+
+Tamanhos e alinhamentos.
+
+Distância entre ícones e textos.
+
+Contêineres de fundo para ícones de destaque.
+
+Estados normal, hover, pressionado e desabilitado.
+
+Cores semânticas.
+
+Não é necessário criar desenhos personalizados para cada ícone.
+
+Evite misturar ícones com preenchimento sólido e ícones de contorno sem uma regra visual definida.
+
+3.4. Painéis e controles
+
+Referências de acabamento:
+
+Margens externas: 16–24 px.
+
+Espaçamento entre painéis: 12–16 px.
+
+Padding interno: 16–20 px.
+
+Arredondamento de painéis: aproximadamente 12 px.
+
+Arredondamento de botões: 8–10 px.
+
+Bordas discretas de 1 px.
+
+Campos e botões com altura de referência entre 36 e 44 px.
+
+Aplicar gradientes discretos, bordas suaves e profundidade controlada onde fizer sentido.
+
+Evitar sombras exageradas, brilhos excessivos e contornos luminosos em todos os componentes.
+
+3.5. Barra lateral e cabeçalho
+
+Preservar a estrutura de navegação aprovada e a imagem noturna da feira.
+
+Melhorar o alinhamento do logotipo, nome do aplicativo, navegação e rodapé.
+
+A imagem lateral deve continuar decorativa, sem comprometer a leitura.
+
+O fundo superior pode ter maior presença atmosférica, desde que não prejudique o contraste.
+
+Não duplicar desnecessariamente configurações, seleção de tema ou exportação.
+
+4. Tela Vendas
+
+A estrutura atual está próxima da referência aprovada. Concentre as alterações no refinamento dos componentes existentes.
+
+4.1. Indicadores superiores
+
+Preservar os seis indicadores:
+
+Total do período.
+
+Dias de feira.
+
+Média por dia.
+
+Dinheiro.
+
+Pix.
+
+Cartão.
+
+Manter as cores individuais, ícones, botões de ajuda, informações complementares e barras de participação.
+
+Refinar alinhamentos, proporções, espaçamentos e tipografia.
+
+Não simplificar os cartões nem remover informações.
+
+4.2. Semana atual
+
+Este deve continuar sendo um dos principais destaques da tela.
+
+Recuperar o acabamento da referência aprovada, organizando o painel em três regiões:
+
+Região esquerda
+
+Título Semana atual.
+
+Intervalo de segunda-feira até hoje.
+
+Quantidade de dias de feira.
+
+Valor total semanal em destaque.
+
+Região central
+
+Dinheiro.
+
+Pix.
+
+Cartão.
+
+Valores alinhados verticalmente, com ícones correspondentes.
+
+Região direita
+
+Imagem noturna da feira integrada ao painel.
+
+Acesso aos detalhes da semana.
+
+Gradiente de transição entre conteúdo e imagem.
+
+Melhorar o contraste da imagem sem transformá-la no elemento principal.
+
+A semana atual deve continuar independente dos filtros aplicados ao histórico.
+
+4.3. Comparação com o período anterior
+
+A implementação atual apresenta espaço vazio excessivo e pouca hierarquia.
+
+Reorganizar o conteúdo para destacar:
+
+Intervalo anterior.
+
+Total anterior.
+
+Quantidade de dias.
+
+Média anterior.
+
+Diferença monetária.
+
+Diferença percentual, quando disponível.
+
+Utilizar indicador visual de crescimento ou redução, respeitando os valores reais.
+
+Não calcular ou apresentar percentuais fictícios.
+
+A diferença deve receber maior destaque tipográfico.
+
+4.4. Participação por pagamento
+
+Ampliar moderadamente o gráfico de rosca.
+
+Melhorar a distribuição entre gráfico e legenda.
+
+Alinhar percentuais e valores monetários.
+
+Preservar a correspondência cromática entre Dinheiro, Pix e Cartão.
+
+4.5. Histórico e filtros
+
+Refinar a tabela existente, preservando:
+
+Identificação dos registros.
+
+Datas.
+
+Dias da semana.
+
+Valores por pagamento.
+
+Total.
+
+Seleção.
+
+Edição.
+
+Exclusão.
+
+Ordenação e paginação, caso implementadas.
+
+Contagem de registros.
+
+Melhorar espaçamentos e alinhamentos das colunas monetárias.
+
+Padronizar os botões de ação, evitando que fiquem excessivamente próximos às bordas.
+
+Melhorar a apresentação dos filtros, especialmente a seleção de dias da semana.
+
+Preservar a distinção entre filtros editados e filtros efetivamente aplicados.
+
+5. Tela Análises
+
+Esta tela exige maior atenção ao refinamento visual.
+
+5.1. Resultado por semana
+
+Tornar o gráfico semanal mais legível e visualmente refinado.
+
+Melhorar:
+
+Escala vertical.
+
+Linhas de referência discretas.
+
+Espaçamento entre barras.
+
+Rótulos monetários.
+
+Identificação dos intervalos.
+
+Tratamento de valores zerados.
+
+Estados de interação, quando suportados.
+
+O gráfico deve ter protagonismo sem ocupar espaço desproporcional.
+
+5.2. Resumo da seleção
+
+Melhorar a hierarquia entre:
+
+Total do período.
+
+Quantidade de semanas.
+
+Dias de feira.
+
+Média diária.
+
+Destacar os valores principais, evitando um painel composto apenas por linhas de texto.
+
+Não repetir desnecessariamente os seis indicadores de Vendas.
+
+5.3. Participação por pagamento
+
+Refinar o gráfico de rosca, sua legenda e os valores.
+
+Utilizar o mesmo padrão visual de cores e tipografia adotado em Vendas.
+
+5.4. Detalhamento semanal
+
+A tabela atual possui espaço vazio excessivo.
+
+Ajustar a altura do painel ao conteúdo quando possível, respeitando o redimensionamento da janela.
+
+Preservar as colunas, os cálculos e a identificação de semanas completas ou parciais.
+
+Utilizar o espaço recuperado para melhorar os componentes inferiores, sem inventar informações.
+
+5.5. Comparar períodos A/B
+
+Preservar a independência dos filtros do comparador em relação aos filtros de Vendas.
+
+Melhorar a organização dos seletores de cada período.
+
+Distinguir visualmente A e B de maneira discreta e consistente.
+
+Evitar campos excessivamente estreitos.
+
+Dar maior destaque ao resultado da comparação, incluindo valores e diferença.
+
+Não criar uma nova fileira de abas.
+
+5.6. Detalhes do período
+
+Os acessos atuais estão excessivamente semelhantes entre si.
+
+Refinar os quatro acessos existentes:
+
+Resultados por dia da semana.
+
+Evolução mensal/fechamento.
+
+Formas de pagamento.
+
+Lista de vendas da seleção.
+
+Utilizar ícones específicos, melhor hierarquia textual e estados interativos.
+
+Não alterar a função de cada acesso.
+
+6. Tela Finanças
+
+Preservar a organização funcional atual, refinando sua apresentação.
+
+6.1. Consulta financeira
+
+Melhorar proporções e alinhamentos dos seletores de período, ano e mês.
+
+Preservar os modos de consulta existentes, incluindo semana, mês, ano e fechamento, conforme suportados pelo programa.
+
+A consulta financeira deve continuar independente da seleção aplicada em Vendas.
+
+6.2. Indicadores principais
+
+Preservar:
+
+Saldo após despesas.
+
+Despesas a cobrir.
+
+Falta cobrir.
+
+Melhorar o equilíbrio visual dos cartões.
+
+Destacar os valores principais e manter os textos auxiliares próximos.
+
+Utilizar cores semânticas coerentes, sem sugerir que o saldo representa necessariamente lucro líquido.
+
+6.3. Valores secundários
+
+Preservar:
+
+Vendas brutas.
+
+Taxas cadastradas.
+
+Vendas menos taxas.
+
+Melhorar a hierarquia e a separação entre os três resultados.
+
+Não ocultar esses valores nem transformá-los em painéis desproporcionais.
+
+6.4. Lançamentos do período
+
+Refinar a tabela mantendo:
+
+Data da compra.
+
+Data da fatura/pagamento.
+
+Descrição.
+
+Meio de pagamento.
+
+Categoria.
+
+Parcela.
+
+Valor.
+
+Ações existentes.
+
+Dar atenção especial à distinção entre data da compra e data da fatura.
+
+Melhorar a legibilidade das parcelas e dos valores monetários.
+
+Preservar o comportamento de edição da compra inteira quando aplicável.
+
+Ajustar botões de edição, exclusão e seleção.
+
+Manter a paginação, se existente.
+
+6.5. Acessos inferiores
+
+Refinar visualmente os acessos:
+
+Despesas por semana.
+
+Histórico de taxas.
+
+Regra de fechamento.
+
+Aplicar ícones específicos, títulos bem alinhados e descrições auxiliares.
+
+Preservar os comportamentos atuais.
+
+7. Responsividade e comportamento
+
+Verificar a interface em diferentes resoluções e escalas do Windows.
+
+Priorizar:
+
+Ausência de textos cortados.
+
+Ausência de sobreposição de controles.
+
+Redimensionamento adequado de tabelas e painéis.
+
+Rolagem quando necessária.
+
+Legibilidade de filtros e seletores.
+
+Preservação das ações importantes.
+
+Proporções consistentes entre as três telas.
+
+Evitar dimensões fixas excessivas.
+
+Quando a janela for reduzida, priorizar conteúdo funcional sobre elementos decorativos.
+
+8. Estratégia de implementação
+
+Realize o trabalho em etapas:
+
+Etapa 1 — Inspeção
+
+Identifique os componentes compartilhados.
+
+Localize o sistema de temas.
+
+Identifique como os ícones, fontes e imagens são carregados.
+
+Verifique os comportamentos existentes antes de alterar a interface.
+
+Etapa 2 — Identidade compartilhada
+
+Padronize fontes.
+
+Padronize ícones.
+
+Ajuste cores, bordas, botões e painéis.
+
+Refine barra lateral e cabeçalho.
+
+Etapa 3 — Refinamento individual
+
+Vendas.
+
+Análises.
+
+Finanças.
+
+Etapa 4 — Validação
+
+Execute o aplicativo.
+
+Verifique as três telas.
+
+Teste navegação, filtros e ações.
+
+Confira redimensionamento.
+
+Execute os testes automatizados disponíveis.
+
+Corrija regressões encontradas.
+
+Não substitua funcionalidades reais por elementos apenas ilustrativos.
+
+9. Critérios de conclusão
+
+A tarefa será considerada concluída quando:
+
+As três telas apresentarem identidade visual consistente.
+
+O acabamento estiver mais próximo das referências aprovadas.
+
+Ícones, tipografia, margens, bordas e controles estiverem padronizados.
+
+Os painéis de Vendas tiverem melhor hierarquia.
+
+A tela de Análises apresentar gráficos, tabelas e comparador refinados.
+
+A tela de Finanças mantiver todas as informações com melhor legibilidade.
+
+Nenhuma funcionalidade existente tiver sido perdida.
+
+Os cinco temas continuarem disponíveis.
+
+O aplicativo permanecer utilizável em diferentes tamanhos de janela.
+
+Entrega esperada
+
+Implemente as melhorias diretamente no projeto existente.
+
+Ao finalizar, apresente:
+
+Resumo das alterações realizadas.
+
+Arquivos modificados.
+
+Componentes compartilhados criados ou alterados.
+
+Testes executados e respectivos resultados.
+
+Eventuais limitações técnicas.
+
+Capturas atualizadas das três telas, se possível.
+
+Prioridade final: fidelidade visual, consistência, legibilidade e preservação funcional. Não realizar uma reformulação estrutural desnecessária.

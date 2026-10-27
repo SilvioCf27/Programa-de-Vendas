@@ -427,3 +427,15 @@ PySide6. O guia inclui instalação no mesmo Python usado para abrir a demo,
 e a entrada fornece orientação quando a dependência não está instalada.
 Os 16 testes da revisão passaram no Linux. A conferência Windows continua
 pendente; não houve alteração no aplicativo estável, na PWA ou nos dados reais.
+
+16. REFINAMENTO ORIENTADO PELO READ.TXT COMPLETO
+
+O documento enviado pelo usuário foi preservado em
+docs/REFINAMENTO_VISUAL_DESKTOP.txt. A inspeção confirmou o aplicativo estável
+em Tkinter e a demo isolada em PySide6; não houve troca de biblioteca de produção.
+Foram refinados os componentes compartilhados e as três telas existentes da
+demo, com registro por seção em prototipos/reforma/RELATORIO_READ.md.
+Os cinco temas, funções e regras do programa estável não foram alterados.
+A demo continua somente Noturno, sem conexão com os dados reais; a equivalência
+integrada e a validação Windows continuam pendentes. O documento não transforma
+as prévias dos formulários em implementações funcionais nem autoriza removê-las.

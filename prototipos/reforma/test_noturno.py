@@ -12,9 +12,20 @@ from datetime import date
 from PySide6 import QtCore as Q, QtWidgets as W
 from estado_demo import Estado, limites, agrupar
 from noturno_demo import Aplicativo, preparar
+from apresentacao_noturno import variacao_percentual
 
 
 class EstadoTests(unittest.TestCase):
+    def test_percentual_com_base_valida_e_base_zero(self):
+        self.assertEqual(
+            variacao_percentual(200650, 150000), "+33,8% em relação ao anterior"
+        )
+        self.assertEqual(
+            variacao_percentual(5000, 10000), "-50,0% em relação ao anterior"
+        )
+        self.assertEqual(variacao_percentual(100, 0), "Sem base para percentual")
+        self.assertEqual(variacao_percentual(0, 0), "Sem movimento nos dois períodos")
+
     def test_orientacao_quando_pyside_nao_esta_instalado(self):
         r = subprocess.run(
             [sys.executable, "-S", str(Path(__file__).with_name("noturno_demo.py"))],
@@ -248,6 +259,32 @@ class TelaTests(unittest.TestCase):
         self.app.processEvents()
         cards = self.w.cards[0].parentWidget().parentWidget()
         self.assertEqual(cards.colunas, 3)
+
+    def test_resumo_semanal_compacto_e_comparacao_sem_percentual_inventado(self):
+        self.w.mostrar("Análises")
+        self.assertEqual(self.w.ana_valores["total"].text(), "R$ 2.006,50")
+        self.assertEqual(self.w.ana_valores["semanas"].text(), "4")
+        self.assertLess(self.w.ana_tabela.height(), 200)
+        self.w.b.mes.setCurrentIndex(0)
+        self.w.comparar()
+        self.assertEqual(self.w.ana_percentual.text(), "Sem base para percentual")
+
+    def test_janela_estreita_preserva_acesso_as_tres_areas(self):
+        self.w.resize(1000, 700)
+        for area in ("Vendas", "Análises", "Finanças"):
+            self.w.mostrar(area)
+            for _ in range(12):
+                self.app.processEvents()
+            self.assertLessEqual(
+                self.w.scroll.widget().width(), self.w.scroll.viewport().width(), area
+            )
+        self.w.mostrar("Vendas")
+        antes = self.w.cards[0].text()
+        self.w.dias_checks[4].click()
+        self.assertEqual(self.w.cards[0].text(), antes)
+        self.assertTrue(self.w.pendente.isVisible())
+        self.w.aplicar_vendas()
+        self.assertEqual(self.w.cards[1].text(), "3")
 
 
 if __name__ == "__main__":

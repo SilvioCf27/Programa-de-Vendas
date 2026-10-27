@@ -2,11 +2,17 @@
 
 Esta revisão aplica a direção das três imagens enviadas pelo usuário. **É uma demo isolada com dados fictícios; o aplicativo instalado e a PWA continuam inalterados.** A implementação visual usa PySide6 para avaliar o desenho. Isso não encerra a comparação técnica com Tkinter nem autoriza a substituição do desktop.
 
-## Segunda rodada de fidelidade
+## Refinamento orientado pelo Read.txt completo
+
+A rodada atual segue as prioridades do documento enviado: comparação anterior com média e variação real, pagamentos semanais alinhados com ícones, roscas com legendas em colunas, gráfico semanal com escala monetária e intervalos, resumo em valores separados, tabela semanal com altura conforme as linhas, seletores A/B distintos e acessos com descrições. Em Finanças, os três valores secundários ganharam ícones e separadores, preservando a consulta independente.
+
+O acabamento compartilhado foi centralizado em `tema_noturno.py`. Os grupos se empilham em janela estreita, mantendo a rolagem e os acessos. Não há substituição da interface estável nem dos cinco temas atuais por esta demo. Veja o [relatório do Read.txt, arquivos e limites](RELATORIO_READ.md).
+
+## Rodada anterior de fidelidade
 
 [Comparação com as referências e limites desta rodada](COMPARACAO_VISUAL.md).
 
-Cartões de pagamento agora mostram participação e barras; a faixa semanal usa foto recortada proporcionalmente. Comparação anterior e participação voltaram a ser painéis distintos. Painéis mais escuros, ícones em blocos coloridos, filtros compactos, ações de edição/exclusão e acessos inferiores de Finanças foram refinados. As capturas abaixo já mostram essa rodada.
+Cartões de pagamento agora mostram participação e barras; a faixa semanal usa foto recortada proporcionalmente. Comparação anterior e participação voltaram a ser painéis distintos. Painéis mais escuros, ícones em blocos coloridos, filtros compactos, ações de edição/exclusão e acessos inferiores de Finanças foram refinados. As capturas abaixo mostram a revisão mais recente, incluindo as orientações do Read.txt completo.
 
 ## Vendas
 
@@ -68,11 +74,12 @@ Em 1.280 × 800, os seis indicadores se reorganizam em duas linhas. Há rolagem 
 
 ## Verificações desta entrega
 
-- **16 testes da revisão Noturno passaram** no Linux com Python 3.13.5 / PySide6 6.10.2: totais em centavos, períodos, zero/futuro, isolamento, seleção por página, totais independentes da paginação, consultas, A/B, cancelamento e confirmação de exclusão, última página, estado vazio, atualização financeira, navegação e largura menor.
-- **4 testes das demos anteriores passaram na entrega anterior**, preservando a comparação; não foram repetidos nesta rodada, pois seus arquivos não mudaram.
+- **19 testes da revisão Noturno passaram** no Linux com Python 3.13.5 / PySide6 6.10.2: totais em centavos, períodos, zero/futuro, isolamento, seleção por página, totais independentes da paginação, consultas, A/B, cancelamento e confirmação de exclusão, última página, estado vazio, atualização financeira, navegação e largura menor.
+- **4 testes das demos anteriores passaram novamente**, preservando a comparação.
 - PNGs de recursos conferidos; SVGs e fontes locais, com licenças incluídas. Capturas feitas da interface executada, em 1.536 × 1.024 e 1.280 × 800; não são imagens geradas para simular o resultado.
 - Não foram executados os testes completos de produção nesta entrega: seu código não foi modificado.
-- **Pendentes:** Windows real, escalas 100/125/150%, teclado e leitores de tela em revisão completa, outros temas, integração com o banco e a sincronização, empacotamento e atualização. Os testes Linux não substituem esses ensaios.
+- **27 cenários de renderização passaram:** três áreas × três tamanhos lógicos de janela (1.536 × 1.024, 1.280 × 800, 1.000 × 700) × três fatores Qt (1, 1,25 e 1,5). Não houve corte horizontal externo; o conteúdo pode rolar verticalmente. Isso não verifica automaticamente todos os textos nem substitui DPI e interação em Windows real. Resultados em [ESCALAS_NOTURNO.json](ESCALAS_NOTURNO.json).
+- **Pendentes:** Windows real em 100/125/150%, teclado e leitores de tela em revisão completa, outros temas, integração com o banco e a sincronização, empacotamento e atualização. Os testes Linux não substituem esses ensaios.
 
 Para reproduzir os testes desta revisão em uma sessão gráfica Windows:
 

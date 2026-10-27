@@ -1,5 +1,7 @@
 # Abrir as demos no VS Code — Windows
 
+**Etapa 4 iniciada:** para testar cadastro e consultas com o núcleo existente em banco separado, veja [reforma_desktop/README.md](../../reforma_desktop/README.md). Os comandos abaixo continuam abrindo apenas as demos visuais.
+
 A demo é um estudo com dados inventados. Não é necessário abrir o executável, fazer login ou copiar seu banco. Ela não grava vendas nem sincroniza. A versão instalada continua independente.
 
 ## 1. Obter a frente de estudo uma única vez

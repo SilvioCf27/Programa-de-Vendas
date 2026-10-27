@@ -216,6 +216,16 @@ class VendasTests(unittest.TestCase):
         self.assertEqual(len(j.findChildren(Q.QTimer)), 1)
         self.assertNotIn('ProgramFeira.main', sys.modules)
 
+    def test_janela_estreita_nao_corta_conteudo_do_filtro(self):
+        j = self.janela()
+        for largura, altura in [(1000, 700), (1536, 1024)]:
+            j.resize(largura, altura)
+            for _ in range(6):
+                self.app.processEvents()
+            self.assertEqual(j.scroll.horizontalScrollBar().maximum(), 0)
+            self.assertLessEqual(j.body.width(), j.scroll.viewport().width())
+            self.assertTrue(j.nav['Finanças'].isVisible())
+
     def test_virada_do_dia_atualiza_semana_sem_aplicar_filtro_pendente(self):
         self.criar('2026-10-27')
         j = self.janela()

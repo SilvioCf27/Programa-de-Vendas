@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 17 — Etapa 5, medições e fluidez em 28/10/2026.
+Versão do plano: 18 — Etapa 6, contratos HTTPS em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 5: medição e otimizações verificadas; próxima atividade, Etapa 6.
+Etapa 6 iniciada: contratos de integração e preparação da validação real.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -11,7 +11,7 @@ docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
 As seções numeradas registram o histórico das entregas, com seus estados da
-época. A seção 29 registra a etapa ATUAL de medições e fluidez. A orientação de continuidade do
+época. A seção 30 registra o início ATUAL da Etapa 6. A orientação de continuidade do
 usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,13 +342,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A Etapa 4 teve as seis lacunas corrigidas, com regressão e revisão dirigidas
-aprovadas no Linux e no Windows. O usuário autorizou a próxima etapa.
-A Etapa 5 mediu os aplicativos ligados às regras reais em bases fictícias
-e verificou duas otimizações nos dois sistemas. O próximo passo é a Etapa 6
-original: revisão de equivalência e validações para produção. A sequência original
-continua preservada; integrações reais, DPI/acessibilidade, pacote, recuperação
-e atualização 1.7.1 → 2.0 permanecem nas verificações anteriores à publicação.
+A Etapa 5 foi medida e verificada no Linux e no Windows. O usuário autorizou
+prosseguir. A Etapa 6 começa pelos contratos do cliente HTTP existente com
+Qt, usando TLS local e bases fictícias, e mantém rastreáveis as validações
+reais ainda necessárias. As quatro integrações S não passam automaticamente
+a I por esse ensaio. O próximo item é preservar configurações/sessão e preparar
+os adaptadores reais em entrada de validação separada, antes de habilitar uso
+online controlado. Escalas/acessibilidade, pacote, recuperação e atualização
+1.7.1 → 2.0 continuam necessários antes da publicação aprovada.
 Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
@@ -1205,3 +1206,52 @@ DPI real, leitor de tela ou pacote Windows. Não haverá release nesta etapa.
 Etapa 5 concluída no escopo controlado descrito. Próxima atividade: Etapa 6 original: equivalência,
 integrações reais controladas, interação/escala/acessibilidade, pacote e ensaio
 de atualização, com aprovação antes da publicação da versão 2.0.
+
+30. ETAPA 6 — CONTRATOS HTTPS E FRONTEIRAS DE INTEGRAÇÃO — 28/10/2026
+
+AUTORIZAÇÃO E ESCOPO
+O usuário autorizou a próxima etapa após as medições. A versão v17 foi
+arquivada byte a byte. A Etapa 6 foi iniciada, não concluída. Base: 001ad41.
+Nenhuma release, conta externa, banco pessoal, PWA, SQL ou módulo estável
+foi alterado. O protocolo do cliente HTTP existente permanece preservado.
+
+CLIENTE E SESSÃO
+Janela/Conexao permitem fornecer explicitamente um cliente pelo construtor,
+para validar a fronteira sem substituir o cliente de produção. A entrada
+executar_reforma.py continua criando o serviço fictício, sem nova flag ou
+formulário de acesso real. A seleção não lê a configuração pessoal.
+Foi removido o acoplamento da persistência de sessão à URL fixa do serviço
+fictício: salvar/carregar agora usa cliente.url. DPAPI e formato permanecem
+os mesmos, somente na pasta isolada; sem persistir senha ou token de acesso.
+
+ENSAIO DE CONTRATO
+Quatorze testes novos usam ClienteNuvem sem sobrescrever _post e um servidor
+HTTPS em 127.0.0.1, porta aleatória. O socket do hostname fictício é roteado
+somente para esse servidor; qualquer outra saída falha. O opener do teste
+mantém verificação de certificado/hostname e proibição de redirecionamento.
+Certificado/chave são públicos e exclusivos da suíte, confiados somente no
+contexto do teste. Não são instalados no Windows/aplicativo. A contraprova
+sem confiança recusa o certificado antes de enviar credenciais HTTP.
+O estado de servidor ainda é fictício: não é Postgres, RLS ou Supabase real.
+
+COBERTURA
+Login/autorização e cabeçalhos; duas direções e filtros pendentes; renovação
+pela URL correta; reabertura DPAPI sem outro login no Windows; recibo após
+resposta perdida; 401/503/JSON inválido/redirect/PFS01; conflito, revisão
+antiga recusada e escolha explícita; SQL006 ausente sem descartar data da
+compra; fechamento concorrente com parcelas preservadas; interface responsiva
+durante espera e aplicação adiada durante formulário. A entrada padrão segue
+em simulação. Primeira execução do instrumento corrigiu duas premissas do
+teste (sessão nova já em memória e consulta prévia de fechamento), sem mudar
+as regras do núcleo para acomodá-las.
+
+ESTADO E CONTINUIDADE
+Resultado final da regressão Linux/Windows será registrado após a rodada.
+Matriz: 26 I e quatro S (F09/G04/G05/G06), com cobertura de contrato acrescida
+para os três primeiros. Ainda não validar como reais RLS, transações SQL,
+identidade/autorização de conta, concorrência PC/PWA, Drive, pacote, atualização
+ou acessibilidade completa. Não há credenciais ou sessão externa disponíveis.
+Próxima atividade: preparar preservação de preferências/sessão e configuração
+dos adaptadores reais em entrada de validação, com guardas de projeto/pasta;
+depois ensaio online autorizado e conferências previstas na Etapa 6 original.
+Relatório e pendências: reforma_desktop/ETAPA6.md.

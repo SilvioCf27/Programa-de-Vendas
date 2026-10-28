@@ -1,6 +1,6 @@
 MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
-Estado atual: seção final “ETAPA 5 — FLUIDEZ” e
-reforma_desktop/DESEMPENHO.md. Os registros anteriores abaixo preservam
+Estado atual: seção final “ETAPA 6 — CONTRATOS HTTPS” e
+reforma_desktop/ETAPA6.md. Os registros anteriores abaixo preservam
 o levantamento e o estado de cada entrega; não são o estado atual agregado.
 
 Base: desktop 1.7.1; levantamento por leitura do código. Não é um relatório de
@@ -256,3 +256,13 @@ VM: sete pares alternados, mediana 700,16 → 684,50 ms; sem promessa de ganho.
 Linux 127 Qt, 200 estável aprovados/dois nativos ignorados e 31 protótipos.
 R01–R06 continuam conformes. Próxima atividade: Etapa 6 original, inventário e
 integrações reais controladas, escalas/acessibilidade, pacote e atualização.
+
+ETAPA 6 — CONTRATOS HTTPS — 28/10/2026
+Autorizada após a Etapa 5. Cliente existente com _post preservado, Qt e TLS
+local real; servidor/modelo e dados fictícios. URL da sessão desacoplada da
+constante do serviço fictício; nenhum acesso real é habilitado pela entrada.
+14 novos testes cobrem renovação/DPAPI, autorização, transferências/recibos,
+erros/redirect, conflitos, fechamento e datas de compras, com UI responsiva.
+Matriz continua 26 I e quatro S: F09/G04/G05 têm contrato TLS acrescido,
+sem comprovação de Supabase/RLS/contas reais; G06 segue ensaio isolado.
+Próxima atividade e resultados: reforma_desktop/ETAPA6.md. Etapa 6 não concluída.

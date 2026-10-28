@@ -51,7 +51,7 @@ jobs:
           $destino = "reforma_desktop/resultados/windows-$env:RUN_ID"
           New-Item -ItemType Directory -Force $destino
           Get-ChildItem resultados-qt -File -Filter '*.json' | Copy-Item -Destination $destino
-          @{commit_base=$env:COMMIT_BASE; execucao=$env:RUN_ID; observacao='Etapa 4: somente dados fictícios; sem release ou alteração da entrada estável.'} | ConvertTo-Json | Set-Content "$destino/ORIGEM.json" -Encoding utf8
+          @{commit_base=$env:COMMIT_BASE; execucao=$env:RUN_ID; observacao='Etapa 6: contratos HTTPS em loopback e regressão, somente dados fictícios; sem conta externa ou release.'} | ConvertTo-Json | Set-Content "$destino/ORIGEM.json" -Encoding utf8
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -f -- $destino

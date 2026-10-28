@@ -80,7 +80,7 @@ class FormularioVenda(W.QDialog):
 
 
 class Janela(W.QWidget):
-    def __init__(self, servico, pasta):
+    def __init__(self, servico, pasta, *, cliente_nuvem=None):
         super().__init__()
         self.servico, self.pasta = servico, Path(pasta)
         self.setWindowTitle('Gestão da Feira — Etapa 4 · banco de estudo')
@@ -183,7 +183,8 @@ class Janela(W.QWidget):
         self.dia_exibido = servico.hoje()
         self.relogio.start()
         from reforma_desktop.conexao_nuvem import Conexao
-        self.nuvem = Conexao(self)
+        # Ponto de adaptação para contratos isolados; a entrada usa a simulação.
+        self.nuvem = Conexao(self, cliente=cliente_nuvem)
         from reforma_desktop.atualizacoes import Atualizacoes
         self.atualizador = Atualizacoes(self)
         self.nuvem.mudou.connect(lambda: self.status_nuvem.setText(self.nuvem.resumo))

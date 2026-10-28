@@ -3,7 +3,7 @@ from reforma_desktop.diagnostico_qt import pasta_do_objeto, registrar_seguro
 from pathlib import Path
 from PySide6 import QtCore as Q, QtWidgets as W
 from ProgramFeira import nuvem, financeiro, migracao_nuvem, sincronizacao, automacao_nuvem, sessao_windows
-from reforma_desktop.servico_nuvem_estudo import ClienteEstudo, URL
+from reforma_desktop.servico_nuvem_estudo import ClienteEstudo
 
 
 class RelogioQt(Q.QObject):
@@ -57,12 +57,13 @@ class Tarefa(Q.QThread):
 class Conexao(Q.QObject):
     mudou = Q.Signal()
 
-    def __init__(self, janela):
+    def __init__(self, janela, *, cliente=None):
         super().__init__(janela)
         self.janela = janela
         self.pasta = Path(janela.pasta)
         self.banco = self.pasta / 'vendas.db'
-        self.cliente = ClienteEstudo(self.pasta)
+        # Nenhuma configuração pessoal é lida para escolher o transporte.
+        self.cliente = cliente if cliente is not None else ClienteEstudo(self.pasta)
         self.cliente.ao_renovar = self.persistir
         self.sessao = self.preparacao = self.revisao = None
         self.tarefa = None
@@ -96,14 +97,14 @@ class Conexao(Q.QObject):
     def persistir(self, sessao):
         # Callback também pode ser chamado pelo trabalhador. Somente I/O aqui.
         try:
-            sessao_windows.salvar(self.pasta, URL, sessao)
+            sessao_windows.salvar(self.pasta, self.cliente.url, sessao)
             self.aviso_sessao = '' if sessao_windows.DISPONIVEL else ' Fora do Windows, a sessão não é persistida.'
         except OSError:
             self.aviso_sessao = ' A sessão não pôde ser salva; reconecte na próxima abertura.'
 
     def restaurar_sessao(self):
         try:
-            self.sessao = sessao_windows.carregar(self.pasta, URL)
+            self.sessao = sessao_windows.carregar(self.pasta, self.cliente.url)
         except nuvem.ErroNuvem as erro:
             self.informar(str(erro))
             return

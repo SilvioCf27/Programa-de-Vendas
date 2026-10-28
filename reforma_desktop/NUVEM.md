@@ -1,3 +1,5 @@
+**Atualização da Etapa 6:** o [contrato HTTPS](ETAPA6.md) agora também exercita o cliente existente em servidor TLS local. O funcionamento manual descrito abaixo continua em simulação, sem acesso à sua conta.
+
 # Sessão e sincronização Qt — serviço fictício local
 
 Esta parte da Etapa 4 liga a interface PySide6 aos mecanismos de sessão, transferência e sincronização já usados pelo programa. **O transporte é simulado localmente.** Não é uma conexão ao Supabase, ao PWA ou à sua conta pessoal. Os registros fictícios não são enviados ao serviço real.

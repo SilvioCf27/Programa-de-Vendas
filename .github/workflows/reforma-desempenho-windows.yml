@@ -1,0 +1,67 @@
+name: Reforma Qt - Desempenho da Etapa 5
+on:
+  push:
+    branches: ['reforma/estudo-interface']
+    paths:
+      - 'reforma_desktop/desempenho/**'
+      - '.github/workflows/reforma-desempenho-windows.yml'
+permissions:
+  contents: read
+jobs:
+  medir:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Instalar dependências isoladas
+        run: python -m pip install -r prototipos/reforma/requirements.txt openpyxl==3.1.5
+      - name: Preparar resolução da VM
+        run: python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json
+      - name: Medir base anterior e estudo atual em cenários equivalentes
+        shell: pwsh
+        run: |
+          $base = Join-Path $env:RUNNER_TEMP 'feira-etapa5-antes'
+          git worktree add --detach $base 18592c2d1a13108a08b7d46486497aa5d387ed11
+          if ($LASTEXITCODE -ne 0) { throw 'Não foi possível preparar a referência isolada.' }
+          $medidor = Join-Path $base 'reforma_desktop/desempenho'
+          New-Item -ItemType Directory -Force $medidor
+          Copy-Item reforma_desktop/desempenho/medir.py $medidor
+          python "$medidor/medir.py" --saida resultados-qt/DESEMPENHO_ANTES.json
+          if ($LASTEXITCODE -ne 0) { throw 'Medição anterior falhou.' }
+          python reforma_desktop/desempenho/medir.py --saida resultados-qt/DESEMPENHO_DEPOIS.json
+          if ($LASTEXITCODE -ne 0) { throw 'Medição atual falhou.' }
+          git worktree remove --force $base
+      - name: Restaurar resolução da VM
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path resultados-qt/TELA_WINDOWS.json) { python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json --restaurar }
+      - name: Registrar evidências
+        if: always()
+        shell: pwsh
+        env:
+          RUN_ID: ${{ github.run_id }}
+          COMMIT_BASE: ${{ github.sha }}
+        run: |
+          $destino = "reforma_desktop/resultados/desempenho-windows-$env:RUN_ID"
+          New-Item -ItemType Directory -Force $destino
+          Get-ChildItem resultados-qt -File -Filter '*.json' | Copy-Item -Destination $destino
+          @{commit_base=$env:COMMIT_BASE; execucao=$env:RUN_ID; observacao='Etapa 5: aplicativos reais em bases fictícias; sem contas, release ou dados pessoais.'} | ConvertTo-Json | Set-Content "$destino/ORIGEM.json" -Encoding utf8
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- $destino
+          git commit -m "Registra desempenho Windows $env:RUN_ID"
+          git push origin "HEAD:refs/heads/reforma/desempenho-windows-$env:RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Desempenho-Desktop-Qt-Windows
+          path: resultados-qt/*.json
+          retention-days: 14

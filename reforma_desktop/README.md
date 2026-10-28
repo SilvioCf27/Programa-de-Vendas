@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Entrega atual:** [revisão conjunta da Etapa 4](REVISAO_ETAPA4.md), seção 28 do plano. O ensaio do [atualizador](ATUALIZACOES.md) foi confirmado pelo usuário. As seis lacunas foram corrigidas e o roteiro foi repetido; a matriz atual tem 26 itens testados e quatro integrações simuladas; resultados anteriores permanecem como histórico.
+**Entrega atual:** [Etapa 5 — medições e fluidez](DESEMPENHO.md), seção 29 do plano. As seis lacunas da [revisão anterior](REVISAO_ETAPA4.md) passaram no Linux e no Windows. A etapa atual mede o conjunto integrado e preserva a versão funcional 1.7.1.
 
 A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 

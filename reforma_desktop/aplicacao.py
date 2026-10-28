@@ -88,6 +88,7 @@ class Janela(W.QWidget):
         self.setMinimumSize(1000, 700)
         self.consulta = Consulta()
         self.resultado = None
+        self._apresentacao = {}
         self.analises = None
         self.financas = None
         self.ordem = (1, True)
@@ -392,23 +393,37 @@ class Janela(W.QWidget):
     def preencher_tabela(self):
         if self.resultado is None:
             return
+        # Cache limitado ao snapshot atual, pela tupla COMPLETA, nunca só pelo ID.
+        # Reconsulta continua acontecendo em Aplicar/atualizar; busca/ordenação
+        # reaproveitam apenas datas e textos já formatados. Excluídos/fora do
+        # recorte deixam de ser retidos e valores alterados geram outra entrada.
+        anteriores = self._apresentacao
+        apresentacao = {}
+        for v in self.resultado['linhas']:
+            if v in anteriores:
+                apresentacao[v] = anteriores[v]
+            else:
+                dia = banco.converter_data_salva(v[1])
+                valores = tuple(Decimal(str(x)) for x in v[2:])
+                total = sum(valores)
+                campos = [str(v[0]), dia.strftime('%d/%m/%Y') if dia else v[1], DIAS[dia.weekday()] if dia else 'Data não reconhecida',
+                          *(moeda(x) for x in valores), moeda(total)]
+                apresentacao[v] = (dia, valores, total, campos, ' '.join(campos).casefold())
+        self._apresentacao = apresentacao
         coluna, reverso = self.ordem
         def chave(v):
+            dia, valores, total, _, _ = apresentacao[v]
             if coluna == 1:
-                return banco.converter_data_salva(v[1]) or date.min
+                return dia or date.min
             if coluna == 2:
-                d = banco.converter_data_salva(v[1])
-                return d.weekday() if d else -1
+                return dia.weekday() if dia else -1
             if coluna == 6:
-                return sum(Decimal(str(x)) for x in v[2:])
-            return v[0] if coluna == 0 else Decimal(str(v[coluna - 1]))
-        linhas = []
-        for v in sorted(self.resultado['linhas'], key=chave, reverse=reverso):
-            dia = banco.converter_data_salva(v[1])
-            campos = [str(v[0]), dia.strftime('%d/%m/%Y') if dia else v[1], DIAS[dia.weekday()] if dia else 'Data não reconhecida',
-                      *(moeda(Decimal(str(x))) for x in v[2:]), moeda(sum(Decimal(str(x)) for x in v[2:]))]
-            if self.busca.text().casefold() in ' '.join(campos).casefold():
-                linhas.append((v[0], campos))
+                return total
+            return v[0] if coluna == 0 else valores[coluna - 3]
+        busca = self.busca.text().casefold()
+        linhas = [(v[0], apresentacao[v][3])
+                  for v in sorted(self.resultado['linhas'], key=chave, reverse=reverso)
+                  if busca in apresentacao[v][4]]
         self.tabela.preencher(linhas)
 
     def ordenar(self, secao):

@@ -1,6 +1,6 @@
 MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
-Estado atual: seção final “CORREÇÕES E REVISÃO REPETIDA” e
-reforma_desktop/REVISAO_ETAPA4.md. Os registros anteriores abaixo preservam
+Estado atual: seção final “ETAPA 5 — FLUIDEZ” e
+reforma_desktop/DESEMPENHO.md. Os registros anteriores abaixo preservam
 o levantamento e o estado de cada entrega; não são o estado atual agregado.
 
 Base: desktop 1.7.1; levantamento por leitura do código. Não é um relatório de
@@ -236,3 +236,12 @@ ignorados, 31/31 protótipos. Evidências ligadas no relatório.
 Próxima atividade: medições da Etapa 5.
 Não é aprovação de produção, pacote Qt, integração real ou release 2.0.
 Evidências: reforma_desktop/REVISAO_ETAPA4.md, seção de repetição.
+
+ETAPA 5 — FLUIDEZ — 28/10/2026
+Autorizada pelo usuário após a revisão R01–R06 conforme.
+Medição dos aplicativos reais com bases fictícias equivalentes, antes/depois.
+V03: apresentação reutilizada pela tupla completa do snapshot, sem cache SQL;
+V05/V06: leitura completa reutilizada na semana apenas quando não há recorte.
+Cinco novos testes protegem invalidação, frescor, recorte e liberação de cache.
+Resultados/limites e próximas verificações: reforma_desktop/DESEMPENHO.md.
+Produção 1.7.1, contas pessoais, PWA e SQL preservados. Sem pacote/release.

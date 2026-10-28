@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 16 — Etapa 4, correções e repetição da revisão em 28/10/2026.
+Versão do plano: 17 — Etapa 5, medições e fluidez em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 4: revisão técnica repetida; próxima atividade, medições da Etapa 5.
+Etapa 5 iniciada: medição do conjunto integrado e otimizações verificáveis.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -11,7 +11,7 @@ docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
 As seções numeradas registram o histórico das entregas, com seus estados da
-época. A seção 28 registra as correções e a revisão ATUAL. A orientação de continuidade do
+época. A seção 29 registra a etapa ATUAL de medições e fluidez. A orientação de continuidade do
 usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -342,14 +342,13 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A revisão da Etapa 4 foi repetida em dados isolados.
-O usuário autorizou corrigir as seis lacunas e repetir a revisão. R01–R06
-foram corrigidas no estudo, com testes próprios e nova coleta de conformidade.
-A matriz passa a 26 itens com implementação testada e quatro integrações
-simuladas. A regressão e o gate confirmados, registrados na seção 28,
-permitem iniciar as medições da Etapa 5. Integração real, DPI/acessibilidade, pacote,
-recuperação e atualização 1.7.1 → 2.0 continuam nas validações originais,
-sem substituir a versão funcional, abrir o banco pessoal ou alterar a PWA.
+A Etapa 4 teve as seis lacunas corrigidas, com regressão e revisão dirigidas
+aprovadas no Linux e no Windows. O usuário autorizou a próxima etapa.
+A Etapa 5 compara os aplicativos ligados às regras reais em bases fictícias,
+mede o conjunto e otimiza somente custos identificados. A sequência original
+continua preservada; integrações reais, DPI/acessibilidade, pacote, recuperação
+e atualização 1.7.1 → 2.0 permanecem nas verificações anteriores à publicação.
+Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -1146,3 +1145,45 @@ próxima atividade é a Etapa 5: medir abertura,
 navegação, consultas e memória em cenários equivalentes à base. Não publicar
 2.0 ou migrar dados antes das verificações/aprovação das Etapas 5/6.
 Relatório: reforma_desktop/REVISAO_ETAPA4.md.
+
+29. ETAPA 5 — MEDIÇÕES DO CONJUNTO E FLUIDEZ — 28/10/2026
+
+O usuário autorizou prosseguir. A versão v16 foi arquivada byte a byte.
+A referência do estudo antes desta etapa é 18592c2. A versão 1.7.1,
+ProgramFeira, executar.py, banco pessoal, contas, SQL e PWA ficam preservados.
+
+MÉTODO
+Comparar os aplicativos reais Tk e Qt, não as demos técnicas da Etapa 3.
+Mesmo gerador de 224/5.000 vendas e 75/1.667 despesas fictícias; fontes e
+componentes próprios de cada aplicação, tema Grafite, preferência Mês atual,
+área solicitada 1536x960. Qt preserva paginação; Tk preserva tabela integral.
+Três processos novos por ferramenta/volume, ordem alternada. Registrar
+primeira visita, dez retornos sem mudança, Mês, todas, repetir consulta,
+atualização após escrita controlada, Finanças/Ano, SQL e memória. Conferir
+hash dos dados, contagem, valores e invalidação. Abertura exclui preparação
+da fixture/início do interpretador, inclui imports gráficos e primeira exibição.
+Sem sessão, rede, Drive ou banco pessoal. Intervalos entre pulsos de eventos
+são indicadores do ensaio, não garantia de ausência de travamentos.
+
+CORREÇÕES ORIENTADAS PELO PILOTO
+A consulta completa Qt lia a mesma base duas vezes, inclusive para a semana.
+Agora reutiliza a leitura dentro do mesmo comando, sem cache de banco entre
+comandos. Consultas recortadas mantêm a semana independente, sem mudar regra.
+A tabela repetia conversão/formatação de todas as linhas em busca/ordenação
+e reconsulta. Guarda somente a apresentação do snapshot atual, pela tupla
+inteira, não pelo ID. Alterados são reformatados; excluídos/fora da consulta
+não são retidos. Aplicar/atualizar continuam consultando o banco.
+Cinco regressões específicas verificam frescor, recorte, busca, ordenação,
+mesmo ID alterado e liberação do cache. Regressões existentes permanecem.
+
+RESULTADOS E LIMITES
+Coletas completas Linux e Windows e regressão estão em andamento nesta
+entrega. Serão consolidadas em reforma_desktop/DESEMPENHO.md com evidências
+brutas, versões e origem. Não comparar percentuais entre sistemas diferentes.
+A referência antes/depois no Windows usa checkout separado da mesma revisão
+18592c2, com o mesmo medidor, sem modificar a base estável.
+O ensaio é curto: não certifica ausência de vazamento, latência de rede real,
+DPI real, leitor de tela ou pacote Windows. Não haverá release nesta etapa.
+Após medir/verificar o conjunto, seguir a Etapa 6 original: equivalência,
+integrações reais controladas, interação/escala/acessibilidade, pacote e ensaio
+de atualização, com aprovação antes da publicação da versão 2.0.

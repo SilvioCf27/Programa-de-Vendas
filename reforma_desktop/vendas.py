@@ -84,8 +84,11 @@ class ServicoVendas:
         anterior = periodo_anterior(consulta.tipo, inicio, fim)
         anteriores = calcular_indicadores(banco.listar_vendas(*anterior, consulta.dias)) if anterior else calcular_indicadores([])
         comparacao = descrever_comparacao(indicadores, anteriores, anterior)
+        # Sem recorte, a consulta já contém a base inteira: não repete I/O.
+        # Não há cache de banco entre comandos, inclusive após sincronização.
+        todas = linhas if not (inicio or fim or consulta.dias) else banco.listar_vendas()
         return dict(linhas=linhas, indicadores=indicadores, comparacao=comparacao,
-                    semana=semana_atual(banco.listar_vendas(), self.hoje()),
+                    semana=semana_atual(todas, self.hoje()),
                     relatorio=montar_relatorio(linhas, consulta.descricao(), comparacao))
 
     def salvar(self, data, dinheiro, pix, cartao, esperado=None):

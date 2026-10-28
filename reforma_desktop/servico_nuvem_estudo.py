@@ -65,10 +65,23 @@ class ClienteEstudo(nuvem.ClienteNuvem):
             return token == 'acesso-ficticio'
         if token != 'acesso-ficticio':
             raise nuvem.SessaoExpirada('Reconecte a sessão fictícia do estudo.')
-        if caminho == '/rest/v1/rpc/consultar_fechamentos':
-            return dict(versao=0, historico=[])
         with self.lock:
             estado = self.ler()
+            if caminho == '/rest/v1/rpc/consultar_fechamentos':
+                from ProgramFeira.fechamento import validar
+                return validar(estado.get('fechamento', dict(versao=0, historico=[])))
+            if caminho == '/rest/v1/rpc/salvar_fechamento':
+                from ProgramFeira import fechamento
+                atual = fechamento.validar(estado.get('fechamento', dict(versao=0, historico=[])))
+                if type(dados['versao_esperada']) is not int or dados['versao_esperada'] != atual['versao']:
+                    raise nuvem.ErroNuvem('O fechamento mudou no serviço fictício. Consulte novamente antes de salvar.')
+                try:
+                    novo = fechamento.propor(atual, dados['vigencia'], dados['dia'])
+                except ValueError as erro:
+                    raise nuvem.ErroNuvem(str(erro)) from None
+                estado['fechamento'] = novo
+                self.gravar(estado)
+                return copy.deepcopy(novo)
             if caminho == '/rest/v1/rpc/migrar_desktop_v2':
                 resposta = self.migrar_local(estado, dados['dados'], dados['aplicar'])
             elif caminho == '/rest/v1/rpc/sincronizar_desktop_v2':

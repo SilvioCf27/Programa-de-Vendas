@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 12 — Etapa 4, sessão/sincronização Qt em 27/10/2026.
+Versão do plano: 13 — Etapa 4, fechamento por vigência Qt em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -343,14 +343,12 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-Esta entrega liga sessão, transferência inicial, automação e revisão de
-conflitos Qt ao núcleo, com serviço fictício local. Conexão real permanece
-bloqueada no estudo: nenhuma credencial da conta pessoal é solicitada.
-Próxima atividade: edição do fechamento por vigência; depois, atualizador.
-Revisão conjunta e Etapas 5/6 vêm após a equivalência. A versão principal
-continua 1.7.1; a publicação futura aprovada será 2.0, após as validações do
-plano e o ensaio de atualização preservando banco/configurações/sessão/Drive.
-PWA e dados pessoais permanecem preservados.
+Esta entrega liga a edição de fechamento por vigência ao núcleo e ao serviço
+fictício do estudo. Histórico, parcelas e versão funcional são preservados.
+Próxima atividade: atualizador Qt na entrada isolada. Depois, revisão conjunta
+e Etapas 5/6 de desempenho, equivalência, integração real, empacotamento e
+atualização 1.7.1 → 2.0, antes da publicação aprovada. A entrada de produção
+continua sem alterações. PWA e dados pessoais permanecem preservados.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -913,3 +911,49 @@ comprova o serviço real. Também seguem pendentes DPI/acessibilidade manuais,
 empacotamento e atualização 1.7.1 → 2.0 nas Etapas 5/6 originais.
 Etapa 4 não está concluída. Próximo item: edição de fechamento por vigência,
 seguida do atualizador; não antecipar PWA ou novas funções da Etapa 7.
+
+25. ETAPA 4 — EDIÇÃO DO FECHAMENTO POR VIGÊNCIA QT — 27/10/2026
+
+CONTINUIDADE
+O usuário confirmou a entrega anterior e autorizou o próximo item. A versão
+v12 foi arquivada antes desta revisão. Mantém-se a ordem original da Etapa 4;
+não há publicação, alteração da entrada funcional ou antecipação de PWA.
+
+ENTREGA
+Uma mesma janela em Configurações e Finanças permite ler o histórico local
+sem sessão e editar após conectar a conta fictícia e consultar a regra.
+Dia, mês da primeira fatura e ano compõem a prévia de dois períodos. A regra
+usa fechamento.propor/periodo/dia_no_mes existentes: só aceita vigência futura,
+proíbe inserir antes da regra mais recente e permite revisar a última regra
+futura. Dia inexistente usa o último dia do mês. O histórico já encerrado é
+preservado; o período aberto pode encurtar/alongar. Não altera valores nem
+recalcula/move parcelas já cadastradas; confira as faturas futuras.
+
+Salvar exige confirmação e a versão consultada. O cliente existente usa os
+mesmos RPCs de fechamento, atendidos somente pelo serviço fictício local.
+O serviço compara a versão antes de gravar e persiste o histórico, inclusive
+em pastas de estudo criadas na entrega anterior. O núcleo guarda o cache
+SQLite com backup anterior e verificação do vínculo de conta/projeto.
+Dados de vendas e finanças não são transferidos por esta ação.
+Se a regra mudou após a consulta, é recusada e exige consultar novamente.
+Se o serviço confirmou mas a cópia local falhou, isso é informado sem dizer
+que o salvamento foi desfeito; nova consulta permite reconciliar o cache.
+As seleções do formulário são preservadas nas falhas e ao consultar novamente.
+
+O recebimento de regra externa pelo sincronizador atualiza as áreas e o
+cache sem aplicar filtros pendentes. A mensagem distingue mudança da regra
+de consulta sem alterações, incluindo a cópia anterior preservada pelo núcleo.
+Operações de I/O usam os trabalhadores Qt existentes, com edição/fechamento
+bloqueados durante a aplicação. Nenhum widget Tk foi importado.
+
+VALIDAÇÃO E CONTINUIDADE
+Evidências e roteiro: reforma_desktop/FECHAMENTO.md. Nove cenários novos cobrem
+prévia, transição/fim de mês, parcelas/histórico preservados, confirmação,
+entradas incompletas, concorrência, revisão futura, falha de backup e serviço,
+persistência e recebimento por sincronização. O teste anterior de leitura foi
+adaptado à nova janela, mantendo a exigência de edição desabilitada sem sessão.
+Resultados finais Linux/Windows serão registrados após a execução completa.
+Conexão real, DPI/acessibilidade manuais e pacote/atualização continuam
+pendentes; o simulador não comprova o Supabase real. Etapa 4 não concluída.
+Próximo item: atualizador Qt isolado; depois, revisão conjunta e Etapas 5/6.
+Versão principal 1.7.1, banco pessoal, Drive/sessão reais e PWA intactos.

@@ -62,4 +62,4 @@ Os cenários incluem transferência, duas direções, finanças/parcelas, filtro
 
 A validação do simulador **não comprova RLS, permissões, autenticação ou concorrência do Supabase real**. Também não substitui testes com projeto separado e dois dispositivos, interação manual, DPI, leitor de tela, instalador ou atualização. A conexão real permanece bloqueada nesta entrada de estudo e será validada antes da publicação da 2.0. A entrada de produção deverá usar o cliente real e remover os controles de simulação; essa liberação ainda não foi feita.
 
-**Próxima atividade:** edição do fechamento por vigência; depois, atualizador. A revisão conjunta e as Etapas 5 e 6 continuam no plano original.
+Continuidade entregue: [edição do fechamento por vigência](FECHAMENTO.md). **Próxima atividade:** atualizador Qt. A revisão conjunta e as Etapas 5 e 6 continuam no plano original.

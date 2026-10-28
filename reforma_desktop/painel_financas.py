@@ -191,7 +191,7 @@ class PainelFinancas(W.QScrollArea):
         ll.addWidget(texto('Editar abre a compra inteira. Excluir remove somente os lançamentos escolhidos.', 9, C['muted']))
         self.layout.addWidget(lista, 1)
         links = LinhaResponsiva(950)
-        for nome, subtitulo, image, acao in [('Despesas por semana', 'Despesas agrupadas por semana.', 'calendar-days', self.despesas_semanas), ('Histórico de taxas', 'Totais confirmados ou estimados.', 'percent', self.historico_taxas), ('Regra de fechamento', 'Histórico por vigência, somente leitura.', 'receipt', self.regra_fechamento)]:
+        for nome, subtitulo, image, acao in [('Despesas por semana', 'Despesas agrupadas por semana.', 'calendar-days', self.despesas_semanas), ('Histórico de taxas', 'Totais confirmados ou estimados.', 'percent', self.historico_taxas), ('Regra de fechamento', 'Histórico e edição de uma regra futura.', 'receipt', self.regra_fechamento)]:
             links.addWidget(acesso(nome, subtitulo, image, C['yellow'] if image == 'percent' else C['blue'], acao), 1)
         self.layout.addLayout(links)
 
@@ -321,11 +321,4 @@ class PainelFinancas(W.QScrollArea):
         return self.abrir(HistoricoTaxas(self))
 
     def regra_fechamento(self):
-        config = fechamento.estado()
-        d = JanelaDetalhe(self, 'Regra de fechamento', 'Histórico do banco de estudo · somente leitura', 'receipt', explicacao='A regra é usada por vigência, preservando períodos antigos. A edição será integrada com configurações e nuvem na sequência do plano; não há configuração de conta nesta entrada.')
-        d.resumo([('Dia vigente neste mês', fechamento.dia_no_mes(self.hoje().year, self.hoje().month)), ('Regra inicial', 'dia 09')])
-        if config['historico']:
-            d.adicionar_tabela([Coluna('Vigência', 'data', True), Coluna('Dia de fechamento', 'numero')], [(date.fromisoformat(r['vigencia']), r['dia']) for r in config['historico']])
-        else:
-            d.vazio('Regra inicial: dia 09', 'Sem alterações por vigência neste banco. O fechamento de Outubro corresponde a 10/10 a 09/11. Compras no dia 09 entram na fatura seguinte.')
-        return self.abrir(d)
+        return self.controlador.configurar_fechamento()

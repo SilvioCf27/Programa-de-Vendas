@@ -499,6 +499,13 @@ class Janela(W.QWidget):
         janela.open()
         return janela
 
+    def configurar_fechamento(self):
+        from reforma_desktop.configuracao_fechamento import ConfiguracaoFechamento
+        janela = ConfiguracaoFechamento(self)
+        janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        janela.open()
+        return janela
+
     def temas(self):
         return self.configuracoes()
 

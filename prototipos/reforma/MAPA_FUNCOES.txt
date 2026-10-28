@@ -180,3 +180,13 @@ G05: conferência/transferência inicial com backup e rechecagem do núcleo.
 F09 edição: próximo item; G06 atualizador depois. Etapas 5/6 não concluídas.
 Destino futuro confirmado pelo usuário: versão 2.0, sem release nesta etapa.
 Relatório e limites: reforma_desktop/NUVEM.md.
+
+CONTINUIDADE DA ETAPA 4 — FECHAMENTO POR VIGÊNCIA, 27/10/2026
+F09: edição Qt com prévia/consulta/versão esperada/confirmação e histórico.
+     Reutiliza fechamento.py e RPCs do ClienteNuvem; serviço SOMENTE fictício.
+     Cache e backup guardados pelo núcleo. Parcelas existentes preservadas;
+     mudanças concorrentes e falha local após confirmação exigem nova consulta.
+     Acesso comum por Configurações e Finanças; leitura sem sessão mantida.
+G04: recebimento de regra atualiza áreas e mensagem da cópia preservada.
+G06: próximo item (atualizador); validação real e Etapas 5/6 seguem pendentes.
+Relatório: reforma_desktop/FECHAMENTO.md. Sem release ou mudança na 1.7.1.

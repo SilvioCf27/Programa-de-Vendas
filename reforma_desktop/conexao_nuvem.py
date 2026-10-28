@@ -207,7 +207,7 @@ class Conexao(Q.QObject):
     def concluida(self, resposta, automatico=False):
         self.sessao, r = resposta
         self.revisao = None
-        self.informar(f"Sincronização fictícia concluída. Enviadas: {r['enviadas']}; recebidas: {r['recebidas']}.\n" + (f"Backup: {r['backup']}" if r['backup'] else 'Sem alterações; não foi necessário novo backup.') + self.aviso_sessao,
+        self.informar(f"Sincronização fictícia concluída. Enviadas: {r['enviadas']}; recebidas: {r['recebidas']}.\n" + (f"Backup: {r['backup']}" if r['backup'] else 'Regra de fechamento recebida; cópia local anterior preservada.' if r.get('fechamento_alterado') else 'Sem alterações; não foi necessário novo backup.') + self.aviso_sessao,
             'Nuvem simulada · atualizada' + (' · automática ativa' if self.automatico else ' · modo manual'))
         try:
             if r['recebidas'] or r.get('fechamento_alterado') or not automatico:
@@ -259,6 +259,57 @@ class Conexao(Q.QObject):
                 self.informar('Nenhum conflito encontrado.')
                 self.agendador.ativar()
         self.rodar(lambda: self.executar_autenticado(lambda s: sincronizacao.conferir_conflitos(self.banco, self.cliente, s)), concluir, 'Conferindo as duas versões fictícias…')
+
+    def atualizar_fechamento(self):
+        self.preparacao = self.revisao = None
+        try:
+            self.recebendo = True
+            self.janela.atualizar()
+            if self.janela.area == 'Finanças':
+                self.janela.financas.atualizar()
+            elif self.janela.area == 'Análises':
+                self.janela.analises.atualizar()
+        finally:
+            self.recebendo = False
+
+    def consultar_fechamento(self, concluir):
+        if self.ocupado or not self.sessao:
+            return
+        self.agendador.parar()
+        from ProgramFeira import fechamento
+        def ler(sessao):
+            config = self.cliente.fechamentos(sessao)
+            mudou = fechamento.guardar(self.banco, config, self.cliente.url, sessao.usuario_id)
+            return config, mudou
+        def pronto(resposta):
+            self.sessao, (config, mudou) = resposta
+            if mudou:
+                self.atualizar_fechamento()
+            concluir(config)
+            self.informar('Histórico de fechamento consultado no serviço fictício. Nenhuma venda ou parcela foi movida.')
+            self.agendador.agendar(self.agendador.INTERVALO)
+        self.rodar(lambda: self.executar_autenticado(ler), pronto, 'Consultando o histórico de fechamento fictício…')
+
+    def salvar_fechamento(self, versao, vigencia, dia, concluir):
+        if self.ocupado or not self.sessao:
+            return
+        self.agendador.parar()
+        from ProgramFeira import fechamento
+        def gravar(sessao):
+            config = self.cliente.salvar_fechamento(sessao, versao, vigencia, dia)
+            import sqlite3
+            try:
+                fechamento.guardar(self.banco, config, self.cliente.url, sessao.usuario_id)
+            except (OSError, ValueError, sqlite3.Error) as erro:
+                raise nuvem.ErroNuvem('O serviço fictício confirmou a regra, mas a cópia local não foi atualizada. Confira o armazenamento e consulte novamente antes de editar.') from erro
+            return config
+        def pronto(resposta):
+            self.sessao, config = resposta
+            self.atualizar_fechamento()
+            concluir(config)
+            self.informar('Nova regra fictícia salva por vigência. Valores e parcelas existentes foram preservados.')
+            self.agendador.agendar(self.agendador.INTERVALO)
+        self.rodar(lambda: self.executar_autenticado(gravar), pronto, 'Salvando a regra futura no serviço fictício e preservando a cópia local…')
 
     def alterar_automatico(self, valor):
         if self.ocupado:

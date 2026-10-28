@@ -102,7 +102,17 @@ class PainelNuvem(W.QDialog):
         real = self.conexao.validacao_real
         self.setWindowTitle('Conexão — projeto de validação' if real else 'Nuvem simulada — estudo Qt')
         self.resize(720, 650)
-        l = W.QVBoxLayout(self)
+        root = W.QVBoxLayout(self)
+        if real:
+            scroll = W.QScrollArea()
+            scroll.setWidgetResizable(True)
+            scroll.setHorizontalScrollBarPolicy(Q.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            corpo = W.QWidget()
+            l = W.QVBoxLayout(corpo)
+            scroll.setWidget(corpo)
+            root.addWidget(scroll)
+        else:
+            l = root
         l.addWidget(texto('Conexão de validação' if real else 'Sessão e sincronização — estudo', 20, bold=True))
         aviso = texto('Conecta ao projeto identificado abaixo. Use apenas exemplos de teste. Login não envia registros; a transferência inicial exige conferência e confirmação.' if real else 'Serviço fictício local. Não acessa sua conta, não envia dados ao Supabase e não pede senha. A conexão real será validada antes da versão 2.0.', 11, C['muted'])
         aviso.setWordWrap(True)
@@ -155,7 +165,7 @@ class PainelNuvem(W.QDialog):
         if real:
             self.automatico.hide()
             l.addWidget(texto('Sincronização manual nesta validação. Nenhum envio ao abrir ou salvar.', 10, C['muted']))
-        l.addWidget(botao('Fechar', self.reject))
+        (root if real else l).addWidget(botao('Fechar', self.reject))
         self.conexao.mudou.connect(self.atualizar)
         self.atualizar()
 

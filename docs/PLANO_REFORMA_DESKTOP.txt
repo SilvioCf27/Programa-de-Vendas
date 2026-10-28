@@ -1346,3 +1346,11 @@ SQL ou PWA. Próxima atividade: ensaio online autorizado em projeto Supabase
 separado, com SQL/políticas conferidos e dados fictícios. Depois continuar
 interação/DPI/acessibilidade, pacote/recibo/atualização/recuperação e aprovação.
 Relatório e guia: reforma_desktop/VALIDACAO_ONLINE.md.
+
+ATUALIZAÇÃO DO USUÁRIO — PROJETO DE TESTE
+Em 28/10/2026 o usuário informou ter criado um projeto Supabase separado.
+Guia de usuário, roteiros ordenados, autorização sem trocar proprietário e
+conferência somente leitura estão em VALIDACAO_ONLINE.md. Nenhum desses
+roteiros foi executado pelo agente em conta externa. Ainda falta conferir
+Auth/SQL/RLS e a conexão nesse projeto; não usar nem reconfigurar a produção.
+A tela de conexão tem rolagem em alturas menores, com Fechar fixo no rodapé.

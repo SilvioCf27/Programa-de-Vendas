@@ -39,3 +39,35 @@ Resultados finais Linux/Windows serão registrados após a regressão. O TLS loc
 ## Próxima atividade
 
 Conferência online com o usuário em projeto separado: instalar/auditar os roteiros adequados, verificar login, migração, duas direções, conflitos/recibos e datas de compras/fechamentos. Depois permanecem conferências Windows/DPI/acessibilidade, pacote Qt e ensaio da atualização 1.7.1 → 2.0 com recuperação, antes da aprovação/publicação. PWA segue na Etapa 7.
+
+## Projeto de teste recém-criado — preparação guiada
+
+O usuário informou em 28/10/2026 que criou um projeto separado. A conferência externa ainda não foi executada pelo agente. No dashboard, confirme o **projeto de teste** antes de cada operação:
+
+1. Em **Authentication → Users → Add user → Create new user**, crie o usuário do aplicativo de teste e confirme o e-mail nessa tela, se a opção estiver disponível. Pode usar o mesmo e-mail em projetos diferentes; a senha é a definida neste projeto. Não envie senhas.
+2. No **SQL Editor desse projeto**, execute separadamente, na ordem, os arquivos `001_vendas.sql` a `006_datas_compras.sql` de [supabase/migrations](../supabase/migrations). Aguarde sucesso de cada arquivo. Se houver erro, interrompa e envie a mensagem antes de continuar. Não execute no projeto em uso pelo programa 1.7.1.
+3. Autorize somente o usuário de teste. No bloco abaixo, troque `SEU_EMAIL_DE_TESTE` pelo e-mail criado. O bloco recusa trocar um proprietário já configurado; não desativa RLS ou altera vendas.
+
+```sql
+do $$
+declare
+    usuario uuid;
+begin
+    select id into strict usuario
+    from auth.users
+    where lower(email) = lower('SEU_EMAIL_DE_TESTE');
+
+    if exists (select 1 from private.app_config where singleton and owner_id <> usuario) then
+        raise exception 'Já existe outro proprietário. Nada foi alterado.';
+    end if;
+
+    insert into private.app_config(singleton, owner_id)
+    values (true, usuario)
+    on conflict (singleton) do nothing;
+end $$;
+```
+
+4. Execute os blocos de [auditoria somente leitura](../supabase/auditoria_somente_leitura.sql) nesse mesmo projeto. Envie apenas os resultados de permissões/políticas, sem senhas, tokens ou chaves. A validação precisa conferir o servidor real antes de considerar RLS aprovada.
+5. A URL HTTPS e a chave **Publishable/anon** desse projeto são usadas localmente no preparador de perfil; não use secret/service_role. Após preparar e abrir a entrada separada, valide primeiro o login, sem vendas reais. Os exemplos e envios serão conferidos na sequência.
+
+Criar o projeto não atualiza o PWA nem muda o projeto de produção. A conferência PC/PWA exigirá posteriormente uma instância web de testes configurada para esse projeto; não trocar a configuração do site em uso.

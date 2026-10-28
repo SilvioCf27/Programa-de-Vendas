@@ -14,6 +14,7 @@ from reforma_desktop.temas import NOMES
 class Configuracoes(W.QDialog):
     def __init__(self, controlador):
         super().__init__(controlador)
+        self.permite_atualizacao = True
         self.controlador = controlador
         self.pasta = Path(controlador.pasta)
         self.operacao = None
@@ -79,7 +80,8 @@ class Configuracoes(W.QDialog):
         self.mostrar_drive()
         l.addWidget(botao('Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
         l.addWidget(botao('Regra de fechamento por vigência…', controlador.configurar_fechamento, 'calendar-days'))
-        pendentes = texto('Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt segue na sequência do plano. A versão estável não foi alterada.', 9, C['muted'])
+        l.addWidget(botao('Atualizações — ensaio isolado…', controlador.atualizacoes, 'download'))
+        pendentes = texto('Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt usa pacotes e processos fictícios no ensaio isolado. A versão estável não foi alterada.', 9, C['muted'])
         pendentes.setWordWrap(True)
         layout.addWidget(pendentes)
         scroll.setWidget(corpo)

@@ -49,4 +49,4 @@ Os novos cenários cobrem prévia e transição, fevereiro bissexto, compra no f
 
 Todos usam dados fictícios, sem rede ou conta real. Isso não comprova o Supabase real, interação manual, DPI, leitor de tela, instalador ou atualização. Não houve alteração dos módulos funcionais ou scripts SQL de produção, nem publicação de um novo executável.
 
-**Próxima atividade:** atualizador Qt na entrada isolada. Depois seguem a revisão conjunta e as Etapas 5 e 6 do plano, incluindo a validação real e o ensaio de atualização 1.7.1 → 2.0 antes da publicação.
+Continuidade entregue: [atualizador Qt em ensaio isolado](ATUALIZACOES.md). **Próxima atividade:** revisão conjunta da Etapa 4 e conferência do inventário. Depois seguem a revisão conjunta e as Etapas 5 e 6 do plano, incluindo a validação real e o ensaio de atualização 1.7.1 → 2.0 antes da publicação.

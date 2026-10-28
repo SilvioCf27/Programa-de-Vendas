@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 13 — Etapa 4, fechamento por vigência Qt em 27/10/2026.
+Versão do plano: 14 — Etapa 4, atualizador Qt em ensaio em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -343,12 +343,12 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-Esta entrega liga a edição de fechamento por vigência ao núcleo e ao serviço
-fictício do estudo. Histórico, parcelas e versão funcional são preservados.
-Próxima atividade: atualizador Qt na entrada isolada. Depois, revisão conjunta
-e Etapas 5/6 de desempenho, equivalência, integração real, empacotamento e
-atualização 1.7.1 → 2.0, antes da publicação aprovada. A entrada de produção
-continua sem alterações. PWA e dados pessoais permanecem preservados.
+Esta entrega inclui a interface Qt do atualizador em ensaio local isolado.
+Próxima atividade: revisão conjunta da Etapa 4 e conferência do inventário,
+registrando qualquer lacuna antes de declarar equivalência ou concluir a etapa.
+Depois seguem Etapas 5/6: desempenho, integração real, pacote, instalação,
+recuperação e atualização 1.7.1 → 2.0, antes da publicação aprovada. A versão
+funcional, o banco pessoal, as contas e a PWA permanecem preservados.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -961,3 +961,60 @@ Conexão real, DPI/acessibilidade manuais e pacote/atualização continuam
 pendentes; o simulador não comprova o Supabase real. Etapa 4 não concluída.
 Próximo item: atualizador Qt isolado; depois, revisão conjunta e Etapas 5/6.
 Versão principal 1.7.1, banco pessoal, Drive/sessão reais e PWA intactos.
+
+26. ETAPA 4 — ATUALIZADOR QT EM ENSAIO ISOLADO — 27/10/2026
+
+CONTINUIDADE
+O usuário autorizou o próximo item após fechamento por vigência. A versão
+v13 foi arquivada antes desta revisão. A entrada funcional e a versão 1.7.1
+não foram alteradas. Não há release, merge em main ou atualização instalada.
+
+ENTREGA
+Configurações abre a janela Qt Atualizações — ensaio isolado. Mostra a base
+1.7.1, cenários de teste, consulta, preparação e ensaio confirmado da troca.
+A indicação v2.0.0 é fictícia; não afirma publicação ou instalação real.
+Consulta automática é opt-in no estudo, uma vez após 12 segundos ao abrir;
+aguarda 30 segundos se houver edição/operação. Nunca prepara ou instala sem
+ação explícita. Preferência preserva o formato consultar em atualizacoes.json,
+com gravação atômica e conservação do valor anterior se a gravação falhar.
+O padrão da versão funcional não foi alterado; compatibilidade/default final
+serão conferidos ao integrar o executável real.
+
+REUTILIZAÇÃO E ISOLAMENTO
+O ensaio reutiliza consultar/preparar/instalar de ProgramFeira.atualizador,
+com dependências privadas para dados e processos fictícios. Não modifica os
+globais do núcleo nem lê/avalia código-fonte de arquivos em tempo de execução.
+Metadados e ZIP são locais; o exe é texto fictício. SHA-256, validação de
+release, caminhos ZIP e snapshot/backup são executados pelo núcleo. O teste
+da candidata e o início do helper são simulados: nenhum processo/PowerShell
+é executado, pasta de programa trocada ou aplicativo reiniciado.
+
+A preparação copia o banco de estudo para dados temporários separados de uma
+instalação também fictícia. Não copia configurações de Drive ou sessão. O
+backup do ensaio é da cópia temporária, não um backup destinado ao uso diário.
+Banco/configurações do estudo, instalação 1.7.1 e pastas do Drive não são
+modificados pelo ensaio. Temporários são removidos ao encerrar/recomeçar.
+
+A janela é modal para toda a aplicação. Trabalhadores mantêm o loop gráfico
+responsivo, bloqueando edição/fechamento durante trabalho. Operações de nuvem,
+backup e formulários abertos impedem iniciar o ensaio. Captura técnica cancela
+a consulta programada. Falhas invalidam preparação e permitem nova tentativa;
+o resultado nunca diz que o programa foi atualizado. Cenários: sem versão
+nova, publicação incompleta, hash incorreto, candidata reprovada e falha na
+troca, além do caminho confirmado sem instalação.
+
+VALIDAÇÃO E CONTINUIDADE
+Evidências e roteiro: reforma_desktop/ATUALIZACOES.md. Dez cenários novos
+conferem isolamento (sem downloads/processos/Drive reais), integridade do
+backup temporário com vendas/finanças/ajustes, preservação do banco e arquivos,
+recusas, confirmação, preferência, agendamento e bloqueios/resposta da UI.
+Resultados finais Linux/Windows serão registrados após a rodada completa.
+A troca/recuperação do helper original é coberta pela suíte existente no
+Windows, mas isso NÃO comprova o pacote Qt ou atualização 1.7.1 → 2.0.
+
+Próximo item: revisão conjunta e rastreamento do inventário da Etapa 4,
+incluindo diagnósticos e demais caminhos pendentes de equivalência. Não
+considerar Etapa 4 concluída apenas pela existência das janelas. Integração
+real de nuvem/Drive/atualizador, DPI/acessibilidade, desempenho e pacote/
+instalação/recuperação continuam pendentes nas verificações do plano.
+A versão 2.0 só será publicada após concluir as validações e aprovação final.

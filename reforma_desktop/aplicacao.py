@@ -171,6 +171,8 @@ class Janela(W.QWidget):
         self.relogio.start()
         from reforma_desktop.conexao_nuvem import Conexao
         self.nuvem = Conexao(self)
+        from reforma_desktop.atualizacoes import Atualizacoes
+        self.atualizador = Atualizacoes(self)
         self.nuvem.mudou.connect(lambda: self.status_nuvem.setText(self.nuvem.resumo))
         self.status_nuvem.setText(self.nuvem.resumo)
 
@@ -472,13 +474,15 @@ class Janela(W.QWidget):
             self.atualizar()
 
     def closeEvent(self, evento):
-        if self.nuvem.ocupado:
+        if self.nuvem.ocupado or self.atualizador.ocupado:
             evento.ignore()
             return
         from reforma_desktop.operacoes_backup import fechar_com_backup
         fechar_com_backup(self, evento)
         if evento.isAccepted():
             self.nuvem.agendador.parar()
+            self.atualizador.parar()
+            self.atualizador.servico.limpar()
 
     def configuracoes(self):
         from reforma_desktop.configuracoes import Configuracoes
@@ -504,6 +508,14 @@ class Janela(W.QWidget):
         janela = ConfiguracaoFechamento(self)
         janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
         janela.open()
+        return janela
+
+    def atualizacoes(self):
+        from reforma_desktop.painel_atualizacao import PainelAtualizacao
+        janela = PainelAtualizacao(self)
+        janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        janela.setWindowModality(Q.Qt.WindowModality.ApplicationModal)
+        janela.show()
         return janela
 
     def temas(self):
@@ -540,6 +552,7 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
     janela = Janela(servico, pasta)
     if captura:
         janela.nuvem.agendador.parar()
+        janela.atualizador.parar()
     janela.mostrar(pagina)
     janela.show()
     if captura:

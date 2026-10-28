@@ -190,3 +190,14 @@ F09: edição Qt com prévia/consulta/versão esperada/confirmação e históric
 G04: recebimento de regra atualiza áreas e mensagem da cópia preservada.
 G06: próximo item (atualizador); validação real e Etapas 5/6 seguem pendentes.
 Relatório: reforma_desktop/FECHAMENTO.md. Sem release ou mudança na 1.7.1.
+
+CONTINUIDADE DA ETAPA 4 — ATUALIZADOR QT, 27/10/2026
+G06: interface Qt com consulta/preparação/ensaio confirmado usando o núcleo.
+     Dependências privadas fictícias; SHA-256/extrator/backup reais em pasta
+     temporária. Nenhum download/processo/instalação/troca real nesta entrada.
+     Preferência/agendamento, recusas, bloqueios e recuperação de erro testados.
+     Pacote Qt e atualização efetiva 1.7.1 → 2.0/rollback seguem pendentes.
+Próximo item: revisão conjunta e rastreamento de TODOS os itens V/A/F/G,
+inclusive G02 diagnósticos, sem declarar equivalência apenas por ter telas.
+Etapas 5/6 e publicação dependem das validações/aprovação. PWA preservada.
+Relatório: reforma_desktop/ATUALIZACOES.md.

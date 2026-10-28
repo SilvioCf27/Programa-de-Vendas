@@ -17,7 +17,7 @@ A revisão percorreu os **30 itens** do inventário e reproduziu **seis lacunas*
 
 R01/R02 foram reproduzidos mantendo o campo com foco, digitando um ano parcial com eventos Qt e chamando o comando da interface. Isso comprova a falta de validação no comando; **não afirma que todo clique ou Enter nativo no Windows terá o mesmo comportamento**, pois o editor pode corrigir o texto ao perder foco. A tentativa de inserir `31/02` foi normalizada pelo próprio Qt e não foi classificada como falha.
 
-R05 foi reproduzido por chamada direta de fechamento; a janela do backup permaneceu visível. **Não foi observado nem alegado um travamento ou perda de dados.** As rotas nativas do gerenciador de janelas ainda precisam ser verificadas no Windows interativo.
+R05 usa uma tarefa controlada de espera iniciada por `Configuracoes.executar`, para observar o bloqueio de encerramento; não faz I/O de backup nesse cenário. Foi reproduzido por chamada direta de fechamento; a janela do backup permaneceu visível. **Não foi observado nem alegado um travamento ou perda de dados.** As rotas nativas do gerenciador de janelas ainda precisam ser verificadas no Windows interativo.
 
 Os dados dessas reproduções existem apenas em pastas temporárias. Não foi tentada restauração, instalação ou conexão sobre seus dados reais.
 
@@ -81,7 +81,11 @@ As quatro integrações marcadas S usam simulação para manter os dados fictíc
 
 ## Evidências e reprodução
 
-A regressão existente e a coleta direcionada são resultados diferentes. Os números finais serão registrados após a rodada desta revisão. Passar nos cenários já cobertos não comprova os seis casos novos.
+A regressão existente e a coleta direcionada são resultados diferentes. Linux: **107/107 testes Qt**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**. As **seis checagens direcionadas não ficaram conformes**, com retorno 1 esperado do verificador. [JSONs locais](resultados/linux-revisao). **Windows:** regressão **107/107 Qt, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas/erros/ignorados nessas três suítes. A coleta direcionada reproduziu **seis casos não conformes**, iguais aos observados no Linux. [Evidências da execução 40623364256](resultados/windows-40623364256), base `2c71975`. A resolução da VM foi restaurada.
+
+A verificação específica da revisão retorna 1, por isso essa execução fica reprovada nessa etapa. Nenhum executável foi gerado. As reproduções usam Qt offscreen no Windows nativo; a interação com o gerenciador de janelas, foco/perda de foco reais e DPI permanecem verificações manuais.
+
+Passar nos cenários já cobertos não comprova os seis casos novos.
 
 ```powershell
 .\.venv-estudo\Scripts\python.exe reforma_desktop/avaliacao/revisar_etapa4.py --saida revisao-etapa4.json --exigir-conformidade

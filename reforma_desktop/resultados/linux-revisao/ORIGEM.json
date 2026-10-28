@@ -1,0 +1,4 @@
+{
+  "commit_base": "2c71975d822ffc938384284c7015d0da6f5b3f78",
+  "observacao": "Revisão de equivalência: regressão conhecida aprovada, seis casos direcionados não conformes. Código funcional Qt e produção inalterados desde 2fdce15. Sem dados pessoais, contas ou rede."
+}

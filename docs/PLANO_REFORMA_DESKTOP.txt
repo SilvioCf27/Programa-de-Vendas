@@ -1060,7 +1060,14 @@ caso e sem contas/rede/dados pessoais. --exigir-conformidade retorna 1 enquanto
 houver caso não conforme; o workflow coleta a evidência e bloqueia a revisão,
 mesmo que a regressão conhecida esteja aprovada. Essa falha não é build ou
 publicação de executável; a tarefa é revisão e não corrige/oculta as lacunas.
-Resultados finais Linux/Windows serão registrados após a rodada completa.
+Regressão desta revisão: Linux, Qt 107/107, aplicação 200 aprovados e dois
+ignorados por exigirem Windows, protótipos 31/31. Windows, Qt 107/107,
+aplicação 202/202 e protótipos 31/31. A coleta nova R01–R06 reproduziu seis
+casos NÃO CONFORMES nos dois sistemas e retorna 1. A execução fica reprovada
+na verificação de revisão, com evidências preservadas; não é build de release.
+Execução Windows 40623364256, base 2c71975; resolução da VM restaurada.
+Qt offscreen não substitui testes interativos de foco/gerenciador de janelas,
+DPI e acessibilidade. Não houve nova medição de desempenho nesta entrega.
 
 PRÓXIMA ATIVIDADE
 Fechar as lacunas em partes pequenas e testadas: diagnóstico seguro, validação

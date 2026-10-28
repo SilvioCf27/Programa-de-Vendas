@@ -20,10 +20,10 @@ class ConfiguracaoFechamento(W.QDialog):
         self.resize(720, 560)
         root = W.QVBoxLayout(self)
         root.addWidget(texto('Regra dos próximos fechamentos', 20, bold=True))
-        aviso = texto('Serviço fictício local. A regra só começa em um mês futuro e preserva o histórico. Fechamento é diferente do prazo para pagar a fatura.', 11, C['muted'])
+        aviso = texto(('Projeto de validação: ' + self.nuvem.cliente.url + '. A regra preserva o histórico.') if self.nuvem.validacao_real else 'Serviço fictício local. A regra só começa em um mês futuro e preserva o histórico. Fechamento é diferente do prazo para pagar a fatura.', 11, C['muted'])
         aviso.setWordWrap(True)
         root.addWidget(aviso)
-        self.consultar = botao('Consultar regra do serviço simulado', self.carregar, 'rotate-ccw')
+        self.consultar = botao('Consultar regra do projeto de validação' if self.nuvem.validacao_real else 'Consultar regra do serviço simulado', self.carregar, 'rotate-ccw')
         root.addWidget(self.consultar)
         box, l = caixa()
         linha = W.QHBoxLayout()
@@ -109,7 +109,7 @@ class ConfiguracaoFechamento(W.QDialog):
         for campo in (self.dia, self.ano, self.mes):
             campo.setEnabled(self.conferida and conectado and not ocupado)
         self.salvar.setEnabled(self.conferida and conectado and not ocupado and self.proposta is not None)
-        self.status.setText(self.nuvem.status if conectado else 'Histórico local em leitura. Conecte a conta fictícia em Configurações → Sessão e sincronização e consulte a regra antes de editar.')
+        self.status.setText(self.nuvem.status if conectado else 'Histórico local em leitura. Verifique o acesso em Configurações → Conexão e consulte a regra antes de editar.')
 
     def receber(self, config):
         self.config = fechamento.validar(config)
@@ -130,7 +130,8 @@ class ConfiguracaoFechamento(W.QDialog):
         if self.proposta is None:
             return
         vigencia, dia = self.parametros()
-        if W.QMessageBox.question(self, 'Salvar fechamento futuro', f'Usar o dia {dia:02d} a partir da fatura de {date.fromisoformat(vigencia):%m/%Y}?\nO período ainda aberto pode mudar. Valores e parcelas existentes não serão movidos. A regra será salva somente no estudo.', W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No) != W.QMessageBox.StandardButton.Yes:
+        destino = ('A regra será salva em ' + self.nuvem.cliente.url + '.') if self.nuvem.validacao_real else 'A regra será salva somente no estudo.'
+        if W.QMessageBox.question(self, 'Salvar fechamento futuro', f'Usar o dia {dia:02d} a partir da fatura de {date.fromisoformat(vigencia):%m/%Y}?\nO período ainda aberto pode mudar. Valores e parcelas existentes não serão movidos. {destino}', W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No) != W.QMessageBox.StandardButton.Yes:
             return
         self.conferida = False
         self.nuvem.salvar_fechamento(self.config['versao'], vigencia, dia, self.receber)

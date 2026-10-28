@@ -80,8 +80,11 @@ class FormularioVenda(W.QDialog):
 
 
 class Janela(W.QWidget):
-    def __init__(self, servico, pasta, *, cliente_nuvem=None):
+    def __init__(self, servico, pasta, *, cliente_nuvem=None, validacao_real=False):
         super().__init__()
+        if validacao_real and cliente_nuvem is None:
+            raise ValueError('O modo de validação exige um cliente explícito.')
+        self.validacao_real = validacao_real
         self.servico, self.pasta = servico, Path(pasta)
         self.setWindowTitle('Gestão da Feira — Etapa 4 · banco de estudo')
         self.resize(1536, 1024)
@@ -115,8 +118,8 @@ class Janela(W.QWidget):
             self.nav[nome] = b
             sl.addWidget(b)
         sl.addStretch()
-        sl.addWidget(texto('IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
-        aviso = texto('Banco separado · serviço local simulado\nNão substitui a versão 1.7.1.', 9, C['muted'])
+        sl.addWidget(texto('VALIDAÇÃO ONLINE' if validacao_real else 'IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
+        aviso = texto(('Banco de validação · envio manual\n' + cliente_nuvem.url) if validacao_real else 'Banco separado · serviço local simulado\nNão substitui a versão 1.7.1.', 9, C['muted'])
         aviso.setWordWrap(True)
         sl.addWidget(aviso)
         self.status_nuvem = texto('Nuvem simulada · desconectada', 9, C['muted'])
@@ -184,9 +187,12 @@ class Janela(W.QWidget):
         self.relogio.start()
         from reforma_desktop.conexao_nuvem import Conexao
         # Ponto de adaptação para contratos isolados; a entrada usa a simulação.
-        self.nuvem = Conexao(self, cliente=cliente_nuvem)
+        self.nuvem = Conexao(self, cliente=cliente_nuvem, validacao_real=validacao_real)
         from reforma_desktop.atualizacoes import Atualizacoes
         self.atualizador = Atualizacoes(self)
+        if validacao_real:
+            self.setWindowTitle('Gestão da Feira — validação online · ' + cliente_nuvem.url)
+            self.atualizador.parar()
         self.nuvem.mudou.connect(lambda: self.status_nuvem.setText(self.nuvem.resumo))
         self.status_nuvem.setText(self.nuvem.resumo)
 
@@ -553,6 +559,9 @@ class Janela(W.QWidget):
         return janela
 
     def atualizacoes(self):
+        if self.validacao_real:
+            W.QMessageBox.information(self, 'Validação online', 'O pacote e o atualizador real ainda serão validados. Nenhum ensaio fictício será aberto nesta entrada.')
+            return
         from reforma_desktop.painel_atualizacao import PainelAtualizacao
         janela = PainelAtualizacao(self)
         janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -577,7 +586,7 @@ def preparar_interface(tema='escuro'):
     return app
 
 
-def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
+def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas', *, cliente_nuvem=None, validacao_real=False):
     app = preparar_interface(carregar_tema(pasta))
     servico = ServicoVendas()
     if exemplo and not banco.listar_vendas():
@@ -591,12 +600,14 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
             compra = hoje.replace(day=9).isoformat()
             financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
             financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
-    janela = Janela(servico, pasta)
+    janela = Janela(servico, pasta, cliente_nuvem=cliente_nuvem, validacao_real=validacao_real)
     if captura:
         janela.nuvem.agendador.parar()
         janela.atualizador.parar()
     janela.mostrar(pagina)
     janela.show()
+    if validacao_real and not captura:
+        Q.QTimer.singleShot(0, janela.conexao_nuvem)
     if captura:
         for _ in range(6):
             app.processEvents()

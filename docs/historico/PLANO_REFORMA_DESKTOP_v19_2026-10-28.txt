@@ -1,0 +1,1311 @@
+GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
+Versão do plano: 19 — Etapa 6, preservação offline em 28/10/2026.
+Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
+Etapa 6 iniciada: contratos de integração e preparação da validação real.
+Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
+
+REFERÊNCIA PRINCIPAL E HISTÓRICO
+Este é o plano principal em revisão rastreável, não um roteiro independente.
+A versão 1 de 26/10/2026 foi preservada byte a byte em:
+docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
+Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
+SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
+As seções numeradas registram o histórico das entregas, com seus estados da
+época. A seção 31 registra a preparação offline ATUAL da Etapa 6. A orientação de continuidade do
+usuário está preservada em
+docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
+Nenhum complemento revoga o inventário funcional ou autoriza migração sem
+a decisão técnica e aprovação previstas na Etapa 3.
+
+1. OBJETIVO E DIREÇÃO
+
+O programa já funciona e atende ao uso diário. Esta reforma deve tornar a
+leitura, a navegação e as ações mais claras, com melhor aproveitamento do
+espaço. Não se trata apenas de trocar cores, fontes ou contornos.
+
+A prioridade é corrigir a hierarquia: informações essenciais em destaque,
+ações fáceis de encontrar, tabelas com área útil e detalhes secundários
+acessíveis sem ocupar permanentemente a tela.
+
+O desktop continua em Python. A escolha entre Tkinter e PySide6 será feita
+após comparar protótipos e medir resultados. Python não precisa ser trocado
+para reorganizar a interface.
+
+Esta primeira etapa é exclusiva do desktop. A adaptação da PWA ficará para
+depois da aprovação do layout definitivo. Os dados e a sincronização entre
+as duas versões devem continuar compatíveis durante todo o processo.
+
+2. DECISÕES JÁ ALINHADAS
+
+- Preservar a aparência, a ordem e a leitura dos blocos superiores aprovados
+  na tela inicial, incluindo os indicadores de vendas e o resumo semanal.
+- A tela inicial reúne esses blocos, o histórico de vendas e seus filtros.
+- Análises e Finanças devem ter telas próprias, com espaço para seu conteúdo.
+  Elas mantêm a primeira linha comum do aplicativo e a navegação principal,
+  sem repetir os indicadores de vendas da tela inicial.
+- Dar identidade e separação claras a Vendas, Análises e Finanças. A forma
+  definitiva de representar essa navegação será avaliada nos protótipos.
+- Evitar abas dentro de abas. Trocar essa organização por seções, ações de
+  contexto ou áreas de detalhe, sem perder o acesso às funções atuais.
+- Em Análises, priorizar resultados por semana e comparação A/B.
+- Reorganizar o resumo do período, preservando seus dados e cálculos.
+- Em Finanças, dar espaço real aos lançamentos. Os resumos devem apoiar a
+  leitura, sem comprimir a lista nem gerar grandes áreas vazias.
+- Remover o menu Exportar da barra superior da janela. Manter as exportações
+  CSV e Excel no botão já existente ao lado de Nova venda.
+- Usar espaçamento, alinhamento, tipografia e contraste de forma consistente.
+- Reduzir explicações permanentes e usar ajudas contextuais quando adequado.
+- Novas funcionalidades ficam para a última etapa, salvo a aprovação explícita
+  de seleção múltipla, exclusão em lote e paginação registrada na seção 12.
+
+3. COMO TRATAR TEXTOS E AJUDAS
+
+Rótulos e ações precisam fazer sentido sem exigir que o usuário abra uma
+explicação. O ponto de interrogação complementa a leitura; não deve compensar
+um nome ambíguo ou esconder uma informação necessária para decidir.
+
+Explicações de fórmulas, médias, períodos e exemplos podem ir para ajudas
+curtas ao passar o mouse. As mesmas ajudas devem poder ser abertas por clique
+e pelo teclado. Uma ajuda não pode desaparecer antes de permitir a leitura.
+
+Devem continuar visíveis quando relevantes: período consultado, filtros ainda
+não aplicados, campos inválidos, operação em andamento, ausência de conexão,
+conflitos, saldo provisório ou estimado e confirmação de ação destrutiva.
+
+Valores brutos, taxas, despesas e saldo não podem ser apresentados de forma
+que sugira um cálculo diferente. Saldo não será renomeado para lucro sem uma
+mudança de regra discutida separadamente.
+
+4. INVENTÁRIO DAS FUNÇÕES A PRESERVAR
+
+A lista abaixo parte do código atual. Na etapa de levantamento, cada item
+receberá o caminho atual, o destino proposto e a forma de conferir o resultado.
+Funções adicionais encontradas no levantamento também devem entrar na lista.
+
+V01 — Cadastro, edição e exclusão de vendas, com confirmação e validação.
+V02 — Uma venda por data, mantendo o tratamento correto de duplicidade e a
+      capacidade de gravar normalmente depois de uma tentativa recusada.
+V03 — Histórico, ordenação, seleção, edição por duplo clique e navegação por
+      teclado; valores monetários e datas formatados corretamente.
+V04 — Filtros de ano, mês, fechamento e dias da semana; aplicar, limpar e
+      distinguir campos em preparação da consulta efetivamente aplicada.
+V05 — Totais, dinheiro, Pix, cartão, participação, dias de feira, média e
+      comparação com o período anterior.
+V06 — Semana atual independente dos filtros: segunda-feira até hoje, sem
+      incluir registros futuros; atualização ao gravar, sincronizar e virar
+      o dia, sem alterar formulários ou filtros em preparação.
+V07 — Preferência de abertura: fechamento atual, mês atual, ano atual ou todas
+      as vendas, com persistência local e respeito ao histórico de regras.
+V09 — Seleção múltipla, exclusão em lote e paginação do histórico, conforme
+      aprovação específica da seção 12. Conferir consultas e totais globais.
+V08 — CSV e Excel da seleção aplicada. Remover apenas o acesso duplicado do
+      menu, preservando o botão, os formatos e o conteúdo dos arquivos.
+
+A01 — Histórico semanal com totais, dias registrados e médias; semanas
+      parciais e ausência de registros claramente identificadas.
+A02 — Comparação A/B por data, mês, fechamento e intervalo, independente dos
+      filtros de Vendas conforme a regra atual desse comparador.
+A03 — Resumo do período, comparação anterior, formas de pagamento, resultados
+      por dia da semana e evolução mensal ou por fechamento.
+A04 — A consulta geral de Análises continua usando a seleção aplicada em
+      Vendas, como no desktop atual. Ter uma tela própria não muda esse
+      contrato. Mostrar o período e oferecer um caminho claro aos filtros.
+      Tornar essa consulta independente seria outra mudança, a alinhar antes.
+
+F01 — Consulta própria de Finanças por semana, mês, fechamento e ano, com
+      seletores adaptados ao período escolhido.
+F02 — Vendas brutas, taxas, vendas menos taxas, despesas/meta, falta cobrir e
+      saldo após despesas, preservando os significados e avisos atuais.
+F03 — Cadastro, edição e exclusão de despesas e lançamentos de taxas; meios
+      de pagamento, categorias, descrições e visualização por semana.
+F04 — Compras parceladas: valor total, divisão exata em centavos e edição da
+      compra inteira a partir de qualquer parcela, com as proteções atuais.
+F05 — Data da compra e data da fatura separadas. Compra no dia do fechamento
+      entra na fatura seguinte; registros antigos preservam a data conhecida.
+F06 — Taxas da maquininha por semana e dia, incluindo vários dias de uma vez.
+F07 — Ajustes anuais históricos confirmados ou estimados, cobertura de datas,
+      impedimento de sobreposição e ausência de rateio indevido.
+F08 — Despesas agrupadas por semana e histórico de taxas anuais. Podem mudar
+      de lugar, mas precisam continuar acessíveis sem abas aninhadas confusas.
+F09 — Configuração de fechamento por vigência, preservando o histórico e as
+      regras das consultas já existentes.
+F10 — Seleção múltipla, exclusão em lote e paginação dos lançamentos, conforme
+      seção 12, sem transformar a exclusão de parcelas em exclusão de compras.
+
+G01 — Os cinco temas atuais, fontes, ícones, legibilidade e preferências.
+      A nova interface precisa demonstrar equivalência visual antes da troca.
+G02 — Acesso às configurações, local dos dados, versão e diagnósticos.
+G03 — Backup local, restauração, verificação de integridade e backup na pasta
+      do Drive, com as verificações de segurança e retenção existentes.
+G04 — Login, sessão protegida no Windows, desconexão e sincronização manual
+      e automática, incluindo retomada de operações e revisão de conflitos.
+G05 — Conferência e transferência inicial para a nuvem, sem duplicação.
+G06 — Atualizador do executável, verificação do pacote, backup antes da troca
+      e recuperação dos arquivos da versão anterior quando necessária.
+G07 — Uso local sem internet e indicações honestas do estado da nuvem.
+
+Continuam valendo em todos os lugares: dias registrados com zero contam como
+feiras; ausência de registro não conta. Cada consulta preserva sua regra atual
+para registros futuros. A reforma não reclassifica compras, não recalcula
+histórico e não altera protocolos, permissões ou regras do banco.
+
+5. PROPOSTA INICIAL DE ORGANIZAÇÃO — A VALIDAR NO PROTÓTIPO
+
+VENDAS / TELA INICIAL
+Manter os blocos superiores aprovados. Reconstruir a área inferior com
+histórico predominante, filtros próximos e compactos, colunas proporcionais
+e ações alinhadas. A redução da janela não pode inutilizar a tabela.
+
+ANÁLISES
+Usar o espaço da tela para resultados semanais como principal ponto de entrada.
+Disponibilizar Comparar A/B com uma ação clara e campos organizados. Os detalhes
+do período ficam em uma seção própria, com acesso visível e menor destaque.
+Não repetir a tela inicial completa e não esconder funções para simplificar
+apenas a aparência. A composição exata será mostrada antes de implementar.
+
+FINANÇAS
+Priorizar a leitura do período e a lista de lançamentos. Organizar os mesmos
+indicadores em níveis de importância, sem remover os secundários. Aproximar
+as ações da lista e dar largura útil à descrição, às datas e aos valores.
+Despesas por semana e ajustes históricos terão acesso secundário explícito,
+sem competir permanentemente com o espaço dos lançamentos.
+
+Em todas as telas, manter o estado ao navegar: consulta aplicada, seleção,
+rolagem e campos em preparação, quando fizer sentido. Um formulário aberto
+não pode ser perdido por uma atualização ou mudança de área. Se houver um
+impedimento para navegar, explicá-lo e permitir concluir ou cancelar a edição.
+
+6. ETAPAS E ENTREGAS
+
+ETAPA 0 — APROVAR ESTE PLANO
+Entrega: este TXT e a confirmação do escopo pelo usuário.
+Estado: aprovado pelo usuário nesta conversa. A versão estável foi preservada.
+Registrar neste mesmo documento eventuais ajustes de direção.
+
+ETAPA 1 — LEVANTAR A INTERFACE E MEDIR A BASE ATUAL
+Mapear o inventário, as telas, as ações e os estados de navegação. Registrar
+onde há informação repetida, espaço ocioso, desalinhamento ou conteúdo cortado.
+Medir abertura e primeira visita e retorno a cada área, distinguindo consulta
+ao banco, cálculos, construção de widgets e espera de rede.
+Usar dados fictícios representativos e um conjunto ampliado. Registrar máquina,
+versões, quantidade de registros e repetições para comparar depois.
+Entrega: mapa de funções e medições, com hipóteses separadas de causas provadas.
+
+Pontos já observados no código, ainda sem diagnóstico de causa do lag:
+atualizar Vendas também reconstrói Análises; entrar em Finanças consulta os
+dados e preenche tabelas. Esses caminhos serão medidos antes de otimizar.
+
+ETAPA 2 — COMPARAR DOIS PROTÓTIPOS
+Construir primeiro uma representação de Finanças em Tkinter refinado e outra
+em PySide6, com o mesmo conteúdo, dados, dimensões e operações demonstradas.
+Finanças é a referência inicial porque concentra o problema de hierarquia,
+a lista espremida e a disputa de espaço entre blocos.
+Mostrar também a navegação e a organização prevista de Vendas e Análises para
+avaliar o conjunto. Não reconstruir o programa completo duas vezes.
+Os protótipos usam processos e pastas isolados, somente dados fictícios e sem
+acesso à conta, ao banco pessoal, ao Drive ou à sincronização de produção.
+Distinguir ações demonstradas de ações já conectadas à lógica real.
+Entrega: imagens comparáveis e uma demonstração interativa quando útil. Se
+as imagens do chat não abrirem, disponibilizar uma prévia acessível no GitHub.
+A publicação da prévia não implica aprovação da interface nem nova release.
+
+ETAPA 2A — TESTAR LOCALMENTE E DEFINIR A IDENTIDADE VISUAL
+Etapa acrescentada após avaliar os primeiros protótipos. As duas ferramentas
+pareceram visualmente equivalentes ao usuário; a composição inicial ainda
+precisa de refinamento. Isso não aprova nenhuma delas nem o layout mostrado.
+Preparar capturas de Vendas, Análises e Finanças e explicar o objetivo, os
+indicadores, as ações e as limitações de cada esboço. Incluir referências de
+comparação e formulário para orientar o desenho dos detalhes.
+Disponibilizar instruções para executar as demos no VS Code, em cópia separada,
+para acompanhar cada ajuste sem tocar no programa e nos dados em uso.
+O usuário levará esse material a outra IA para obter propostas de identidade
+visual e devolverá as imagens para nossa avaliação e implementação.
+Priorizar proporções, bordas, alinhamento, largura útil das colunas e densidade
+coerente com o conteúdo. Não esticar cartões para preencher a janela nem usar
+grandes retângulos vazios. Manter área de rolagem útil para listas extensas.
+Preservar as funções e os blocos superiores já aprovados da tela inicial.
+Não acrescentar dados ou recursos só para preencher espaço. Sugestões que mudem
+acessos ou fluxos deverão ser discutidas, não aplicadas como simples decoração.
+Entrega: guia para a outra IA, galeria comentada, execução local e imagens
+retornadas pelo usuário. A referência escolhida será traduzida em protótipo
+interativo e revisada antes de substituir a interface real.
+Material: prototipos/reforma/REFERENCIA_VISUAL.md,
+prototipos/reforma/BRIEFING_IDENTIDADE_VISUAL.txt e GUIA_VSCODE.md.
+
+ETAPA 3 — ESCOLHER A FERRAMENTA E APROVAR O LAYOUT
+Comparar clareza, espaço da tabela, alinhamento, navegação, ajudas, teclado,
+fontes, temas e adaptação a diferentes tamanhos e escalas do Windows.
+Comparar também tempo de abertura, resposta, memória, tamanho do pacote,
+dependências, manutenção e condições de distribuição.
+Tkinter tem menor custo de troca e pode continuar se atender ao resultado.
+PySide6 amplia os recursos de interface, mas exige revisar integração, tarefas
+em segundo plano, temas, empacotamento e testes. Não é automaticamente mais
+rápido. As primeiras medições de um protótipo leve não representam sozinhas
+a velocidade do programa completo.
+Entrega: recomendação fundamentada e aprovação do usuário para a ferramenta
+e para o layout. A escolha visual e a escolha técnica devem ficar registradas.
+
+ETAPA 4 — IMPLEMENTAR POR PARTES
+Preparar a navegação e a separação entre interface e regras apenas no necessário.
+Se houver regra misturada a uma tela, preservá-la e verificar a equivalência
+ao extraí-la; não reescrever cálculos junto com o visual.
+Sequência inicial: navegação e Vendas; Análises; Finanças; configurações e
+formulários; revisão conjunta. Ajustar a sequência se os protótipos justificarem.
+A cada entrega, mostrar o resultado, atualizar o mapa de funções e conferir
+que os caminhos antigos têm um equivalente acessível no novo desenho.
+Não misturar os dois sistemas de interface dentro de uma mesma janela. Se a
+escolha for PySide6, integrar por etapas isoladas e substituir a entrada do
+aplicativo somente depois de verificar a equivalência.
+
+ETAPA 5 — REFINAR A FLUIDEZ E VALIDAR O CONJUNTO
+Comparar os mesmos cenários da base atual. Evitar consultas, cálculos e
+reconstruções visuais desnecessárias de telas não visíveis. Carregar detalhes
+quando forem usados e invalidar resultados guardados ao mudar os dados.
+Nenhuma otimização pode mostrar dados antigos como se estivessem atualizados.
+Rede e tarefas demoradas não devem bloquear a interação. Widgets continuam
+sendo manipulados pela thread da interface, respeitando a ferramenta escolhida.
+A troca de tela não pode duplicar agendadores, sincronizações ou eventos.
+Sem animações artificiais, atrasos de propósito ou efeitos que prejudiquem
+leitura. Medir antes e depois; escolher metas de melhoria a partir da base,
+sem prometer números antes de obter medições comparáveis.
+
+ETAPA 6 — REVISAR, APROVAR E PUBLICAR
+Validar cada item do inventário, com atenção a parcelas, datas, dinheiro,
+conflitos, backups, atualização e formulários em preparação.
+Executar os testes adequados à mudança, adaptando os testes gráficos à nova
+estrutura sem retirar as verificações de negócio e de proteção dos dados.
+Conferir janelas menores, tela cheia, escalas do Windows de 100%, 125% e 150%,
+quando disponíveis, os temas, o teclado e os textos. Informar o que não puder
+ser verificado e como essa pendência será resolvida antes da publicação.
+Gerar e testar o executável no Windows com banco fictício. Ensaiar a atualização
+a partir da versão estável, incluindo dados, sessão, configurações e recuperação.
+Compatibilidade do banco não será presumida só porque o arquivo abre.
+Entrega: revisão visual do usuário, relatório dos testes, notas da versão e
+publicação aprovada. Os protótipos não substituem o executável em uso.
+
+ETAPA 7 — ADAPTAR A PWA E AVALIAR NOVAS FUNCIONALIDADES
+Somente após aprovar e estabilizar o layout do desktop, planejar a adaptação
+do PWA, respeitando interação por toque e o espaço do celular.
+Depois, avaliar novas funções e bibliotecas em uma lista separada, com problema
+concreto, benefício, manutenção e impacto sobre a interface aprovada.
+Ferramentas essenciais ao protótipo, à interface escolhida e aos testes podem
+ser avaliadas antes. Isso não autoriza acrescentar recursos de negócio durante
+a reforma. Bibliotecas de gráficos, automações ou recursos adicionais esperam
+esta última etapa, salvo uma necessidade indispensável alinhada com o usuário.
+
+7. CONTROLE DE MUDANÇAS E COMUNICAÇÃO
+
+Antes de cada etapa: explicar objetivo, áreas afetadas, resultado esperado e
+como ele será verificado. Ao concluir: mostrar o que mudou, o que foi testado,
+limitações encontradas e a próxima etapa.
+
+Se surgir dúvida que altere regra, comportamento, acesso a uma função, conteúdo
+dos dados ou escopo aprovado, apresentar o caso e aguardar a resposta antes de
+seguir com essa parte. Outras atividades independentes podem continuar.
+Escolhas de acabamento coerentes com o desenho aprovado não precisam gerar
+uma pergunta a cada ajuste. Mudanças de direção devem atualizar este plano.
+
+Manter alterações pequenas e revisáveis. Commits de planejamento e protótipos
+podem ser identificados como tais, mas uma nova interface não será lançada como
+versão estável antes da aprovação visual e das verificações previstas.
+Usar uma frente de desenvolvimento separada da versão em uso para implementar
+a reforma; correções urgentes da versão estável permanecem distinguíveis.
+
+Nenhum dado pessoal será incluído no repositório ou nas prévias. Não restaurar,
+substituir ou migrar o banco pessoal para testar layout. Alterações de estrutura
+ou protocolo que se tornem necessárias exigem justificativa, plano de backup,
+compatibilidade e alinhamento específico antes de execução.
+Preservar o banco em %LOCALAPPDATA%\ProgramFeira\vendas.db, o caminho
+customizado PROGRAMFEIRA_DATA_DIR quando existente, as preferências locais e
+a sessão protegida. Mudar de ferramenta visual não exige trocar o banco nem
+o mecanismo de sincronização. Uma alteração disso precisa de alinhamento
+específico e não faz parte desta aprovação visual.
+A aprovação de uma aparência não autoriza alterar cálculos ou remover funções.
+
+8. CRITÉRIOS PARA CONCLUIR A ENTREGA DO DESKTOP
+
+[ ] Cada função do inventário tem destino e acesso conferidos.
+[ ] Os blocos superiores aprovados foram preservados na tela inicial.
+[ ] Análises e Finanças têm telas próprias e hierarquia clara.
+[ ] O histórico semanal e a comparação A/B são fáceis de encontrar.
+[ ] Os lançamentos financeiros têm espaço útil e ações próximas.
+[ ] A navegação evita abas aninhadas e preserva o contexto do usuário.
+[ ] O menu duplicado Exportar saiu; CSV e Excel continuam pelo botão existente.
+[ ] Textos e ajudas foram revisados sem esconder avisos essenciais.
+[ ] Temas, teclado, dimensões e escalas foram conferidos, com pendências claras.
+[ ] As medições de fluidez são comparáveis e sem regressões inexplicadas.
+[ ] Regras, dados, backup, sessão, sincronização e atualizador foram validados.
+[ ] O usuário aprovou o layout definitivo.
+[ ] O pacote Windows e o ensaio de atualização foram aprovados.
+[ ] A adaptação da PWA e as novas funções estão separadas desta entrega, com
+    seus próximos passos registrados para depois da aprovação do desktop.
+
+9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
+
+A Etapa 5 foi medida e verificada no Linux e no Windows. O usuário autorizou
+prosseguir. A Etapa 6 começa pelos contratos do cliente HTTP existente com
+Qt, usando TLS local e bases fictícias, e mantém rastreáveis as validações
+reais ainda necessárias. As quatro integrações S não passam automaticamente
+a I por esse ensaio. A preservação offline de configurações/sessão foi verificada na seção 31.
+O próximo item é a entrada gráfica de validação separada com login real,
+antes de habilitar uso online controlado. Escalas/acessibilidade, pacote, recuperação e atualização
+1.7.1 → 2.0 continuam necessários antes da publicação aprovada.
+Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
+
+10. REGISTRO DO INÍCIO DO ESTUDO
+
+Frente separada: reforma/estudo-interface. Não há nova release do executável.
+Mapa inicial: prototipos/reforma/MAPA_FUNCOES.txt.
+Medições e limites: prototipos/reforma/MEDICOES.md e arquivos JSON ao lado.
+Prévias reais Tkinter e PySide6: prototipos/reforma/README.md.
+
+O levantamento inicial e os dois protótipos foram preparados com dados
+fictícios. A comparação Windows, as escalas e o pacote Qt continuam pendentes.
+A ferramenta, os formulários definitivos e o layout final ainda não foram
+aprovados. Não iniciar a substituição do aplicativo a partir desta prévia.
+
+11. DEVOLUTIVA DOS PRIMEIROS PROTÓTIPOS
+
+O usuário não identificou diferença visual relevante entre Tkinter e PySide6.
+Solicitou executar as demos no VS Code e acrescentar uma etapa com outra IA
+para construir a identidade visual a partir das funções de cada tela.
+Destacou o espaço vazio desproporcional em retângulos informativos de Finanças.
+A organização inicial não está aprovada: é material de referência funcional.
+Não iniciar migração nem nova release enquanto essa avaliação estiver aberta.
+
+12. APROVAÇÃO DOS CONTROLES DAS REFERÊNCIAS VISUAIS
+
+O usuário disponibilizou três imagens em docs/imagens na frente main:
+- Painel de Vendas em Modo Noturno.png
+- Painel de Análises da Feira.png
+- Painel Financeiro da Gestão da Feira.png
+
+As imagens orientam a composição e a identidade. Textos, datas, números e
+seletores devem seguir o comportamento correto do programa, não eventuais
+erros do desenho. Em Finanças, Falta cobrir representa as despesas ainda
+não cobertas pelas vendas após taxas, não parcelas pendentes de recebimento.
+O usuário autorizou adaptar os filtros desenhados aos seletores reais e
+substituir os números e datas por exemplos fictícios coerentes.
+
+Seleção múltipla, exclusão em lote e paginação foram explicitamente aprovadas
+pelo usuário para esta reforma do desktop. São exceções à postergação geral
+de novas funcionalidades. Devem ser implementadas, verificadas e comitadas
+na frente da reforma; não são apenas decoração nem estão concluídas por
+registrar a aprovação neste documento. Não há nova release nesta etapa.
+
+Critérios para implementar e conferir esses controles:
+- Paginar a apresentação sem limitar os totais, as análises ou a exportação
+  à página visível. Cada recurso continua usando sua consulta aplicada.
+- Identificar a quantidade selecionada e o alcance da ação. Selecionar todos
+  não pode incluir registros ocultos sem explicitar esse alcance ao usuário.
+- Exigir confirmação clara antes da exclusão em lote; cancelar não altera
+  dados. Verificar transação e sincronização, sem exclusões parciais silenciosas.
+- Preservar a diferença entre editar a compra inteira e excluir parcelas
+  selecionadas. Não ampliar a exclusão automaticamente para o grupo inteiro.
+- Conferir mudança de página, filtro, atualização e sincronização para evitar
+  seleção oculta ou aplicada a registros diferentes dos escolhidos.
+- Conferir totais, página vazia após exclusão, quantidade de registros e
+  proteções já existentes para grupos de parcelas incompletos.
+
+Os detalhes visuais adicionais serão enviados pelo usuário. Até recebê-los,
+não presumir fontes, arquivos de fundo ou logotipo exatos. Seguir pelo
+protótipo e pela revisão visual antes de integrar ao programa estável.
+
+13. IDENTIDADE E RECURSOS CONFIRMADOS
+
+O usuário confirmou a paleta Paleta oficial proposta — Tema Noturno, com fundo
+#071525. Confirmou Inter 400/500/600/700, com Segoe UI como alternativa, fundos
+decorativos individuais e logotipo independente. Lucide é a referência para
+um conjunto único de ícones. Os recursos recebidos foram conferidos quanto a
+formato, resolução, transparência e estrutura do SVG. Especificação e limites:
+prototipos/reforma/IDENTIDADE_VISUAL.txt. Não é necessário novo pedido de
+descrição à outra IA para iniciar a próxima revisão da demo.
+
+14. REVISÃO NOTURNO PARA AVALIAÇÃO
+
+A identidade consolidada foi aplicada a uma nova demo isolada em PySide6,
+com navegação lateral e Vendas, Análises e Finanças. A escolha serve para
+avaliar a execução do desenho e ainda não decide a ferramenta de produção.
+As primeiras demos Tkinter e Qt permanecem disponíveis para comparação.
+Seleção múltipla, exclusão em lote com confirmação e paginação são operacionais
+apenas no estado fictício em memória, sem SQLite, rede ou sincronização.
+Formulários reais, banco e integração com as regras históricas não foram
+substituídos. Não há migração nem nova versão do executável.
+A revisão visual do usuário e os ensaios no Windows continuam pendentes.
+Capturas, execução e relatório desta entrega: prototipos/reforma/NOTURNO.md.
+
+15. SEGUNDA RODADA DE FIDELIDADE E EXECUÇÃO LOCAL
+
+Após nova comparação com as referências do usuário, foram refinados cartões,
+participação, fotografia da semana, painéis separados de comparação anterior
+e participação, contraste, ícones, ações por linha, filtros e acessos de
+Finanças. Diferenças e adaptações estão em COMPARACAO_VISUAL.md, na pasta
+prototipos/reforma. Capturas atualizadas na mesma pasta de imagens da demo.
+Foi esclarecido que atualizar o Git ou ativar o ambiente virtual não instala
+PySide6. O guia inclui instalação no mesmo Python usado para abrir a demo,
+e a entrada fornece orientação quando a dependência não está instalada.
+Os 16 testes da revisão passaram no Linux. A conferência Windows continua
+pendente; não houve alteração no aplicativo estável, na PWA ou nos dados reais.
+
+16. REFINAMENTO ORIENTADO PELO READ.TXT COMPLETO
+
+O documento enviado pelo usuário foi preservado em
+docs/REFINAMENTO_VISUAL_DESKTOP.txt. A inspeção confirmou o aplicativo estável
+em Tkinter e a demo isolada em PySide6; não houve troca de biblioteca de produção.
+Foram refinados os componentes compartilhados e as três telas existentes da
+demo, com registro por seção em prototipos/reforma/RELATORIO_READ.md.
+Os cinco temas, funções e regras do programa estável não foram alterados.
+A demo continua somente Noturno, sem conexão com os dados reais; a equivalência
+integrada e a validação Windows continuam pendentes. O documento não transforma
+as prévias dos formulários em implementações funcionais nem autoriza removê-las.
+
+17. ANDAMENTO CONSOLIDADO — 27/10/2026
+
+A referência de trajetória continua sendo a versão 1 deste plano. O usuário
+confirmou que as telas principais da demo estão aprovadas visualmente, com
+pequenos ajustes e validação final pendentes. Este complemento autoriza apenas
+o refinamento das janelas secundárias, validação e conferência do andamento.
+Não autoriza migrar funcionalidades, alterar o banco/PWA ou publicar release.
+
+ETAPA 0 — CONCLUÍDA
+Entrega: TXT original e autorização do usuário para iniciar o estudo.
+Evidência: versão 1 do commit 2a42f43 preservada no histórico; aprovação
+registrada nesta conversa e na seção 6.
+Pendência: nenhuma para iniciar a prototipação. A aprovação é do plano, não
+da ferramenta nem da substituição da interface funcional.
+
+ETAPA 1 — EM ANDAMENTO (levantamento e base Linux executados)
+Entregas: MAPA_FUNCOES.txt, MEDICOES.md, BASE_MEDICOES.json.
+Evidência: três processos novos por volume, 224 e 5.000 vendas fictícias,
+com 75 e 1.667 lançamentos; abertura, visitas às áreas e atualização geral.
+O ensaio instrumentou leitura, inserção, Análises, relatório e dimensionamento
+de colunas; este último dominou a atualização no ambiente medido.
+Pendências: cobertura completa dos estados/atalhos/formulários do inventário,
+base comparável no Windows e caracterização da espera de rede real. Os ensaios
+Linux não incluíram sessão autenticada, sincronização real ou Drive.
+Não confundir o mapa de funções com prova de equivalência implementada.
+
+ETAPA 2 / COMPLEMENTO 2A — EM ANDAMENTO
+Entregas: protótipos iniciais Tkinter e PySide6 comparáveis; referências
+visuais e recursos aprovados; demo Noturno; janelas secundárias refinadas.
+Evidências: Finanças inicial com os mesmos 12 lançamentos e 1.440 x 960 nas
+duas ferramentas; testes de navegação; capturas; refinamento da demo atual.
+Decisão do usuário: identidade e três telas principais aprovadas visualmente
+com ressalvas; janelas auxiliares recebem a revisão desta execução.
+Pendências: avaliação visual das janelas auxiliares pelo usuário e validação
+final, incluindo Windows. A versão Noturno mais rica só existe em PySide6:
+não é uma nova comparação equivalente contra o Tkinter inicial.
+O refinamento pontual pertence a estas etapas, não reinicia a reforma.
+
+ETAPA 3 — EM ANDAMENTO (análise técnica parcial, decisão não aprovada)
+Comparação efetivamente disponível:
+- Abertura e RSS: três repetições dos protótipos iniciais equivalentes no Linux.
+  Medianas: Tkinter 101,2 ms / 24,4 MiB; PySide6 175,3 ms / 64,4 MiB.
+  Medição antes dos testes/capturas; não é pico de memória nem tamanho instalado.
+- Dependências: Tkinter usa biblioteca padrão mais recursos já existentes;
+  PySide6 Essentials 6.10.2 está isolado nos requisitos do estudo.
+- Manutenção: a aplicação atual tem interface e algumas ações juntas em main;
+  uma escolha por Qt exigirá adaptar apenas as fronteiras necessárias,
+  preservando serviços, regras, banco, sessão e protocolos atuais.
+- Teclado/acessibilidade: há nomes acessíveis, controles nativos e ensaios
+  parciais de Tab, Escape e navegação de tabela; não é auditoria completa.
+- Escalas: renderização Linux/Qt em 1, 1,25 e 1,5 e três tamanhos de janela.
+  Não equivale a DPI do Windows.
+
+Critérios ainda sem comparação equivalente concluída:
+- Resposta de navegação/consultas com trabalho e volumes equivalentes nas
+  duas alternativas; os tempos do programa inteiro e de demos não se comparam
+  como se representassem ganho ou perda da migração.
+- Memória máxima e crescimento após uso repetido equivalente; os números
+  atuais são RSS antes da interação dos protótipos iniciais.
+- Empacotamento Windows das duas alternativas, tamanho instalado, plugins Qt,
+  execução em máquina sem dependências e ensaio com atualizador/recuperação.
+- Condições de distribuição de todas as dependências Qt e avisos aplicáveis.
+  Fontes e ícones têm licenças locais; isso não conclui o exame do pacote Qt.
+- Cinco temas equivalentes, teclado completo, leitor de tela e contraste
+  nas duas alternativas, em Windows 100%, 125% e 150%.
+- Recomendação técnica consolidada e aprovação explícita da ferramenta.
+
+Não há autorização implícita para a migração por preferência visual. A próxima
+atividade técnica é completar estes critérios e apresentar uma decisão
+fundamentada; não pedir aprovação de uma migração ainda sem essas evidências.
+
+ETAPA 4 — BLOQUEADA PELA ETAPA 3; NÃO INICIADA
+Aguardam-se decisão técnica e aprovação. Mantém-se a sequência original:
+navegação/Vendas, Análises, Finanças, configurações/formulários, revisão.
+Não houve extração de regras, mudança da entrada ou mistura de toolkits.
+
+ETAPA 5 — PENDENTE
+A base foi medida, mas não há otimização integrada nem comparação equivalente
+do aplicativo reformado. Não declarar esta etapa concluída pelas demos.
+
+ETAPA 6 — PENDENTE
+Testes de demo não substituem equivalência funcional, pacote Windows, ensaio
+de atualização, dados/sessão/configurações e aprovação final. Sem nova release.
+
+ETAPA 7 — PENDENTE
+PWA e novas funcionalidades permanecem para a etapa prevista. As exceções já
+autorizadas de seleção múltipla, exclusão em lote e paginação da seção 12
+continuam registradas; esta rodada não acrescenta recursos de negócio.
+
+REGISTRO DESTA INTERVENÇÃO PONTUAL
+Escopo: janelas Vendas da consulta completa, Resultados por dia da semana,
+Despesas por semana e Semana atual; acabamento equivalente em informações,
+pagamentos e evolução. Componentes compartilhados com a demo; sem redesenhar
+as três telas principais. Capturas principais foram renderizadas novamente
+e comparadas com a entrega anterior: pixels idênticos neste ambiente.
+Dados: somente estado fictício em memória, sem banco, conta ou nuvem.
+Validação: 31 testes automatizados aprovados (19 da demo, 8 de janelas,
+4 dos estudos iniciais); 63 cenários de renderização aprovados, sendo 27 das
+telas e 36 das janelas, em Linux/Qt com fatores 1, 1,25 e 1,5. Incluídos
+5.000 registros, valores altos, estados vazios, ordenação, Tab e Escape.
+Não houve validação Windows real, leitor de tela, pacote ou atualização.
+Resultado visual e limites: prototipos/reforma/JANELAS_SECUNDARIAS.md.
+Após revisar esta entrega, retomar a Etapa 3 a partir das pendências acima.
+
+18. APROVAÇÃO ESTÉTICA E RETOMADA DA AVALIAÇÃO TÉCNICA — 27/10/2026
+
+O usuário aprovou visualmente as quatro janelas secundárias e a direção das
+três telas principais. Está concluída a revisão estética desta entrega,
+permitindo correções pontuais de legibilidade/comportamento durante os testes
+Windows. A aprovação NÃO autoriza migração funcional nem a Etapa 4.
+A versão 1 permanece intacta no histórico. A revisão anterior (v5) também
+foi preservada antes desta atualização. Não há novo roteiro de projeto.
+
+Foram autorizados cenários equivalentes, medições, testes e empacotamento
+experimental para concluir a avaliação das Etapas 1 e 3. A decisão técnica
+será apresentada com resultados e limitações no relatório vinculado abaixo.
+O estudo não modifica ProgramFeira, banco pessoal, sincronização ou PWA;
+seus executáveis têm nomes próprios e não são publicados como release.
+
+RESULTADO DA AVALIAÇÃO TÉCNICA
+Relatório: prototipos/reforma/avaliacao/DECISAO_TECNICA.md.
+Reprodução: prototipos/reforma/avaliacao/README.md.
+Recomendação: PySide6, sujeita à aprovação explícita; não foi adotada ainda.
+Cenários iguais: 224/5.000 vendas fictícias, mesmas consultas e totais,
+50 linhas por página, cinco processos por ferramenta/volume e 40 ciclos.
+Windows nativo em VM Full HD: 202/202 testes da aplicação e 31/31 dos estudos
+aprovados. Dois executáveis de ensaio empacotados e aprovados, sem release.
+Tk abriu mais rápido e usou menos memória; Qt respondeu melhor à navegação
+medida e expôs mais elementos nomeados à UI Automation. O relatório registra
+medianas, extremos, picos de memória, tamanhos e dependências/licenças.
+
+ANDAMENTO ATUAL (substitui os estados históricos da seção 17)
+- Etapa 0: plano aprovado, sem alteração da sequência original.
+- Etapa 1: inventário e base controlada levantados; perfil da aplicação
+  preservado e comparação ampliada Linux/Windows entregue. Não medidos:
+  espera real de rede/Drive e cobertura manual completa dos estados.
+  Essas limitações estão documentadas; não declarar medição de conta real.
+- Etapas 2/2A: revisão estética desta entrega CONCLUÍDA por aprovação do
+  usuário: três telas e quatro janelas. Ajustes pontuais Windows permitidos.
+- Etapa 3: avaliação técnica e recomendação ENTREGUES; aguarda aprovação
+  explícita da ferramenta. DPI real, leitor de tela completo e equivalência
+  dos cinco temas finais ainda exigem verificação; não foram simulados como
+  concluídos. Fatores de aplicação/paletas e UIA foram ensaiados nas duas.
+- Etapa 4: NÃO INICIADA; bloqueada até aprovação da escolha tecnológica.
+- Etapas 5, 6 e 7: pendentes na sequência original. Pacotes de estudo não
+  substituem teste de atualização/recuperação da futura release completa.
+
+PRESERVAÇÃO E LIMITES
+ProgramFeira, executar.py, banco inicial, banco pessoal, sincronização,
+PWA e mecanismos da versão funcional 1.7.1 não foram alterados. Somente
+estudo, testes de protótipos, automação isolada e documentação foram editados.
+Não houve otimização integrada nem migração funcional nesta avaliação.
+O histórico v1 permanece byte a byte; v5 foi arquivada antes desta revisão.
+
+19. ESCOLHA TECNOLÓGICA APROVADA E INÍCIO DA ETAPA 4 — 27/10/2026
+
+APROVAÇÃO EXPLÍCITA DO USUÁRIO
+“Li o relatorio completo, pode dar continuidade com o PySide6, e dar inicio
+a próxima etapa.”
+A escolha tecnológica é PySide6; a aprovação estética permanece válida.
+Etapa 3: decisão aprovada. Limitações manuais/DPI/acessibilidade/distribuição
+continuam rastreadas; não foram apagadas nem declaradas testadas.
+Etapa 4: INICIADA por navegação e Vendas, sem mudar a sequência do plano.
+Versão v6 preservada no histórico; versão v1 original permanece intacta.
+
+PRIMEIRA FATIA FUNCIONAL
+Entrada independente: executar_reforma.py; código em reforma_desktop/.
+Dados: SQLite temporário por padrão, descartado ao fechar, ou pasta vazia
+explicitamente destinada ao estudo para conservar testes entre execuções.
+Não se permite abrir a pasta pessoal ou um banco preexistente sem marcador.
+Não há importação automática do banco pessoal, login, rede ou Drive.
+
+Integração: mesmos módulos de persistência, backup verificado, histórico de
+fechamento, indicadores, semanas e exportações usados pela versão estável.
+Vendas inclui cadastro, edição por ID, cancelamento, duplicidade sem bloquear
+a próxima gravação, consulta ano/mês/fechamento/dias, filtros pendentes,
+resumos da consulta completa, semana independente e virada de data, ordenação,
+busca somente na tabela, paginação e exclusão em lote transacional confirmada.
+Exportações usam a consulta aplicada, sem limitar pela página ou pela busca.
+Falha de backup impede gravar/excluir. A lista é atualizada após gravações
+sem aplicar seletores pendentes. A navegação conserva a tela e um único timer.
+
+LIMITES DESTA FATIA
+Análises e Finanças estão identificadas como integração pendente; não mostram
+números de demonstração como se fossem dados integrados. Configurações, cinco
+temas, sessão/sincronização, Drive, restauração e atualizador Qt permanecem
+pendentes, acessíveis na versão estável. Preferência de abertura é lida da
+pasta de estudo; seu editor Qt ainda não foi integrado. Os recursos visuais
+são compartilhados com a demo aprovada; não houve nova decisão estética.
+A lista detalhada de cobertura/pendências está no MAPA_FUNCOES.txt.
+
+VALIDAÇÃO E CONTINUIDADE
+Relatório, comandos e resultados: reforma_desktop/README.md.
+Windows: 18/18 testes da integração, 202/202 da aplicação estável e 31/31 dos
+protótipos aprovados; execução 40551429100, commit-base 8647882.
+Linux: 18/18 e 31/31 aprovados; aplicação 200 aprovados e 2 ignorados por
+requererem Windows. Sem falhas/erros finais. Backend Qt offscreen nos testes;
+inspeção interativa Windows/DPI real ainda pendente. Resolução da VM restaurada.
+A captura foi inspecionada; a entrada foi reaberta sem duplicar exemplos.
+Histórico da falha inicial por resolução da VM e repetições no README citado.
+Testes cobrem regras compartilhadas e operações gráficas em bancos fictícios;
+esta integração não constitui release nem equivalência do programa completo.
+Etapas 5 e 6 ainda pendentes: desempenho integrado, ensaios de uso Windows,
+DPI real, acessibilidade, empacotamento/atualização/recuperação e revisão final.
+Etapa 7/PWA e novos recursos permanecem no fim da cronologia original.
+ProgramFeira, executar.py, banco pessoal, sincronização, PWA e release 1.7.1
+permanecem sem alteração nesta entrega.
+
+20. ETAPA 4 — INTEGRAÇÃO FUNCIONAL DE ANÁLISES — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+Após a entrega de navegação/Vendas, o usuário autorizou prosseguir. Esta rodada
+implementa Análises, próximo item da Etapa 4 original; não cria outro plano.
+A versão v7 foi arquivada antes desta atualização. A escolha PySide6 e as
+aprovações visuais permanecem válidas, sem nova revisão estética.
+
+ENTREGA
+Análises passa a ser uma tela própria funcional, criada na primeira visita.
+Resultado por semana, resumo, pagamentos e detalhes usam o snapshot completo
+da consulta aplicada em Vendas, incluindo dias zerados, sem limitar pela busca
+ou paginação. Filtros pendentes são avisados e não aplicados implicitamente.
+Gráfico semanal mostra até 12 semanas recentes; a tabela mantém TODAS.
+Semana parcial identifica corte nas bordas ou nos dias selecionados; não indica
+necessariamente falta de cadastro. Médias por dia usam o núcleo existente.
+
+Comparar A/B tem seletores reais de Data, Mês, Fechamento e Intervalo; mês/ano
+ou calendários aparecem conforme a escolha. Os períodos são independentes de
+Vendas. Os dois intervalos são validados antes de consultar; uma seleção
+inválida preserva o resultado aplicado com aviso. Diferença e percentual seguem
+o programa funcional: B menos A e variação de B em relação a A. A referência
+visual não substitui essa regra. Zero e ausência de registros são distintos.
+Indicadores lado a lado preservam contagem, média e três meios de pagamento.
+
+Detalhes preservam as janelas aprovadas para vendas completas, dias da semana
+e pagamentos. Evolução mensal/fechamento usa tendencias.evolucao, com até 12
+períodos consecutivos e regra por vigência, distinguindo ausência e feira
+zerada. O total exibido nos últimos 12 é separado do total de toda a seleção.
+As janelas são de leitura e não alteram a consulta nem o banco.
+
+FLUIDEZ E INTEGRAÇÃO
+Sem nova consulta ao navegar de volta a uma análise inalterada. Uma gravação
+invalida o snapshot; a tela oculta é atualizada ao retornar. A/B aplicado é
+recalculado após mudança dos dados sem aplicar seletores pendentes. Um único
+timer continua no controlador. Finanças segue identificada como pendente.
+Não houve extração nem alteração de regras do programa estável. As funções
+puras comparacao, resumos, semanas e tendencias são reutilizadas; a agregação
+por dia usa os mesmos indicadores sem importar o painel Tkinter.
+
+VALIDAÇÃO E LIMITES
+Relatório e evidências desta rodada: reforma_desktop/ANALISES.md.
+32 testes locais da integração aprovados (18 de Vendas e 14 de Análises).
+Windows: 32/32 da integração, 202/202 da aplicação e 31/31 dos protótipos
+aprovados, sem falhas/erros/ignorados. Execução 40554510830; base 2f3c424.
+Linux: 32/32 e 31/31 aprovados; aplicação 200 aprovados e 2 ignorados por
+requererem Windows (aprovados na VM Windows). Captura gerada e inspecionada.
+Evidências preservadas no relatório. Resolução da VM restaurada ao final.
+Qt offscreen não valida
+DPI real, leitor de tela completo ou interação no computador do usuário.
+Banco pessoal, versão 1.7.1, entrada estável, backups/sincronização e PWA
+permanecem sem alteração. Etapas 5/6/7 permanecem pendentes na ordem original.
+
+21. ETAPA 4 — INTEGRAÇÃO FUNCIONAL DE FINANÇAS — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+O usuário autorizou o próximo passo após Análises. A integração de Finanças
+segue a ordem original da Etapa 4 e a direção visual aprovada. A versão v8
+foi arquivada antes desta atualização; a versão v1 original permanece intacta.
+
+ENTREGA
+Finanças é criada na primeira visita e consulta Semana/Mês/Fechamento/Ano,
+com ano/mês/semana adaptativos, sem aplicar seletores pendentes ao gravar.
+Saldo, despesas, falta cobrir, bruto, taxas e vendas menos taxas usam o núcleo
+financeiro existente. Recortes da lista/páginas não reduzem os resumos.
+Ausência de taxa não é isenção; históricos parciais não são rateados e geram
+aviso de saldo provisório. Estimativas ficam identificadas.
+
+Despesas têm data explícita, valor TOTAL da compra, meio/categoria e parcelas.
+No crédito, a primeira fatura vem da data original: compras no dia 09 entram
+no próximo fechamento. A prévia mostra faturas e valores; centavos somam o
+total. Editar qualquer parcela abre/atualiza a compra inteira com confirmação,
+incluindo meses anteriores. Registros antigos preservam faturas até informar
+explicitamente a compra original. Histórico incompleto ou alterado é recusado.
+Exclusão individual/em lote remove somente os lançamentos selecionados, com
+confirmação, backup verificado e transação; outras parcelas ficam preservadas.
+Uma exclusão parcial pode impedir editar a compra incompleta, como no núcleo.
+
+Taxas da maquininha são lançadas em reais por data de venda, agrupadas em um
+formulário semanal. A semana inicial é a da referência, não a primeira opção
+da lista. Trocar a seleção exige Carregar; campos não mudam de data em silêncio.
+Descartar taxas ainda digitadas exige confirmação. Campos vazios mantêm taxas;
+remover usa Excluir. Datas cobertas por histórico anual não são duplicadas.
+
+Histórico de taxas permite criar, editar/excluir por ano e natureza Confirmada
+ou Estimada. O ano é protegido na edição; criar não sobrescreve outro registro
+existente. Cobertura, observação e total acumulado seguem o núcleo, sem rateio.
+Despesas por semana reutiliza a janela aprovada e considera a consulta inteira,
+sem taxas, agrupando crédito pela fatura e outros meios pelo pagamento.
+
+INTEGRAÇÃO E LIMITES
+Regras, banco, backup e transações usam financeiro.py e módulos existentes;
+não houve edição do código de ProgramFeira. A lista tem paginação e seleção
+por página. Navegação conserva telas e um timer. Alterações invalidam snapshots
+sem aplicar consultas pendentes. Exportar no cabeçalho de Finanças continua
+exportando VENDAS e é nomeado assim; exportação financeira não foi adicionada.
+
+A regra de fechamento é usada por vigência e seu histórico é de leitura nesta
+entrega. Edição/sincronização virão com configurações/nuvem: não foi inventada
+conta local para contornar vínculos/proteções do núcleo. Temas completos,
+configurações, restauração/Drive, sessão/nuvem e atualizador Qt seguem pendentes.
+O lançamento --exemplo cria vendas fictícias quando a lista de vendas está
+vazia. Só acrescenta finanças fictícias se não houver lançamentos/históricos;
+não duplica finanças ao reabrir nem quando as vendas de teste forem apagadas.
+
+VALIDAÇÃO E CONTINUIDADE
+56/56 testes da integração aprovados no Linux e Windows, incluindo 24 de
+Finanças. Windows: aplicação 202/202 e protótipos 31/31 aprovados, sem falhas,
+erros ou ignorados. Execução 40561114351, base dc2555a; resolução restaurada.
+Linux: aplicação 200 aprovados e 2 ignorados por requererem Windows;
+protótipos 31/31 aprovados. Capturas inspecionadas e reabertura verificada.
+Evidências e limitações: reforma_desktop/FINANCAS.md. Falha preliminar na semana inicial foi corrigida
+com comparação de datas em Python, em vez de comparação QVariant por identidade.
+Qt offscreen não substitui interação manual, DPI real ou leitor de tela.
+Nenhum executável novo foi publicado; versão 1.7.1, dados pessoais, mecanismos
+existentes e PWA permanecem preservados. Próximo item: configurações e demais
+mecanismos da Etapa 4; Etapas 5, 6 e 7 continuam pendentes na ordem original.
+
+22. ETAPA 4 — CONFIGURAÇÕES, PREFERÊNCIAS E BACKUP LOCAL — 27/10/2026
+
+CONTINUIDADE AUTORIZADA
+O usuário autorizou o próximo passo e perguntou sobre o encerramento anterior.
+Finanças foi finalizada, testada e enviada, sem arquivos pendentes. A limitação
+de tokens não interrompeu aquela entrega; limites manuais permanecem registrados.
+Esta parte continua configurações na ordem original, sem declarar toda a
+Etapa 4 concluída. A versão v9 foi arquivada antes desta revisão.
+
+ENTREGA
+Configurações Qt permite salvar o período inicial de Vendas usando o módulo
+preferencias existente. O período vale na próxima abertura; salvar não aplica
+filtros pendentes, não limpa seleção e não altera o banco. Tema tem gravação
+independente, sem prometer transação conjunta entre arquivos de preferências.
+
+Noite, Claro, Grafite, Areia e Aurora preservam os identificadores existentes.
+Noite conserva a identidade Noturno aprovada. Os outros temas adaptam as paletas
+do núcleo; espelho de dados é verificado por teste sem importar Tk nem depender
+de arquivo-fonte ao executar. Fontes, ícones e organização foram preservados.
+Aplicação do tema somente na próxima abertura é explícita: não há reconstrução
+das telas ou descarte de formulário. Claro usa fundos sólidos para legibilidade;
+temas escuros conservam os recursos noturnos. Tonalidades de ação recebem apenas
+correção de contraste (texto/ícone pelo menos 4,5:1 nos pares verificados).
+Isso não é certificação de acessibilidade de todos os widgets ou dos temas.
+
+Criar backup local agora usa banco.criar_backup, incluindo vendas, finanças e
+históricos, com verificação existente e retorno do caminho. Não substitui o
+banco nem envia ao Drive. Falha é apresentada sem informar sucesso.
+
+VALIDAÇÃO E LIMITES
+64 testes locais da integração aprovados, incluindo oito de configurações.
+Os cinco temas abrem as três áreas em processos separados (15 cenários), com
+contagens e integridade SQLite preservadas. Persistência, falhas, seleção e
+backup com conteúdo financeiro/histórico foram conferidos.
+Windows: integração 64/64, aplicação 202/202 e protótipos 31/31 aprovados,
+sem falhas/erros/ignorados. Execução 40583007189; base aa4f785.
+Linux: integração 64/64, protótipos 31/31; aplicação 200 aprovados e 2 ignorados
+por requererem Windows. Resolução da VM restaurada; capturas inspecionadas.
+Evidências, imagens e limites: reforma_desktop/CONFIGURACOES.md.
+Continuam pendentes restauração/verificação externa, Drive, sessão/nuvem,
+edição do fechamento e atualizador Qt. Etapas 5, 6 e 7 não foram antecipadas.
+Versão 1.7.1, dados pessoais, código funcional e PWA permanecem preservados.
+
+23. ETAPA 4 — VERIFICAÇÃO, RESTAURAÇÃO E DRIVE — 27/10/2026
+
+A versão v10 foi arquivada sem reescrever o histórico. Continuidade autorizada
+pelo usuário. O estudo Qt reutiliza recuperacao.testar_recuperacao e
+banco.restaurar_backup, mantendo a validação defensiva de arquivos externos.
+Verificar apenas ensaia a restauração em diretório temporário. Restaurar pede
+confirmação (Não por padrão), cria cópia anterior antes da substituição e
+exige encerrar/reabrir o estudo; não reutiliza snapshots ou regras em memória.
+Falha não informa sucesso; o relógio da interface fica suspenso na operação.
+
+Operações externas rodam em QThread com retorno por sinais, sem executar
+widgets no trabalhador. Fechamento da janela é impedido durante a operação.
+Drive usa backup_drive existente: snapshot e análise SQLite somente locais,
+transporte com SHA-256 e publicação/retenção existentes. A configuração só
+aceita o conjunto Gestao-da-Feira-Estudo-Qt-Backups, com subpasta do núcleo,
+para não substituir/remover as cópias reais da versão funcional.
+O resultado confirma gravação local na pasta, não sincronização remota,
+autoria da cópia, permissões Google ou proteção contra malware no Windows.
+Cópia manual e ao fechar estão integradas. Falha ao fechar permite continuar
+ou confirmar saída sem cópia; Não é a opção padrão. Progresso impede fechar
+durante o trabalho. O envio remoto continua a cargo do cliente do Drive.
+
+Validação: Linux 73/73 da integração, 200 da aplicação aprovados e dois
+ignorados por exigirem Windows, 31/31 dos protótipos. Windows 73/73, 202/202 e
+31/31, sem falhas/erros/ignorados. Execução 40604664397, base fc1cd9b; resolução
+da VM restaurada. A captura técnica sai sem iniciar backup assíncrono, com
+teste específico. Evidências: reforma_desktop/RECUPERACAO.md.
+Não foram acessados Drive real, dados pessoais ou contas; renderização
+offscreen não substitui interação manual, DPI, leitor de tela ou empacotamento.
+Etapa 4 segue em andamento. Não há migração do banco pessoal, conexão real,
+release, alteração da versão funcional, PWA ou antecipação das Etapas 5/6/7.
+
+24. ETAPA 4 — SESSÃO, TRANSFERÊNCIA E SINCRONIZAÇÃO QT — 27/10/2026
+
+CONTINUIDADE E DESTINO DA REFORMA
+O usuário confirmou o isolamento do estudo e a intenção de publicar a futura
+reforma como versão 2.0, usando o atualizador após validação. Não há release
+nesta entrega, troca do executar.py ou alteração da base funcional 1.7.1.
+A versão v11 foi arquivada antes desta revisão; a cronologia é preservada.
+
+INTEGRAÇÃO EM AMBIENTE ISOLADO
+A interface Qt usa ClienteNuvem (sessão e renovação), sessao_windows (DPAPI),
+migracao_nuvem, sincronizacao e automacao_nuvem.Agendador existentes.
+Um adaptador de relógio usa QTimer, sem importar interfaces Tk. Transferência
+inicial exige conferência, backup e confirmação. O vínculo continua explícito.
+Conflitos mostram as duas versões, exigem escolha e confirmação; revisões
+antigas são recusadas e descartadas para permitir nova conferência.
+
+O transporte é um serviço fictício local, com conta fixa identificada na
+interface e sem campo para senha ou URL de produção. Sobrescreve _post sem
+encaminhamento HTTP. Não é Supabase, PWA/celular, servidor multiusuário nem
+prova de RLS. Os mecanismos reais são exercitados contra dados fictícios.
+O serviço persiste em servico-nuvem-estudo.json na pasta separada. A sessão
+renovável fictícia usa DPAPI no Windows, sem senha ou token de acesso em
+arquivo. Fora do Windows, a limitação de persistência é informada.
+
+AUTOMAÇÃO E SEGURANÇA DO ESTADO
+Agenda inicial/envio local de dois segundos e consultas de um minuto usam o
+agendador existente. Erros temporários têm espera progressiva até cinco
+minutos; erros definitivos e conflitos pausam. Formulários/configurações
+abertos adiam a aplicação por cinco segundos. A consulta pode ocorrer fora
+da thread gráfica, mas só aplica quando a interface está livre, usando a
+assinatura da base. Filtros pendentes não são aplicados ou bloqueiam consultas.
+Receber dados invalida/atualiza telas sem agendar outro envio artificial.
+Operações que escrevem bloqueiam edições e fechamento até terminar. Backup
+Drive e restauração permanecem protegidos; restauração salva modo manual
+antes da substituição e exige reabertura. Se não puder salvar a pausa, é
+cancelada. Reativação requer ação explícita após a conferência. Arquivo do
+serviço simulado ausente após vínculo é erro, não exclusão de todos os dados. Captura técnica desativa o agendador e não inicia backup.
+
+VALIDAÇÃO E LIMITES
+Evidências e roteiro: reforma_desktop/NUVEM.md. Testes não usam conta real nem
+rede. Linux: integração 88/88; aplicação 200 aprovados e dois ignorados por exigirem
+Windows; protótipos 31/31. Windows: integração 88/88, aplicação 202/202 e
+protótipos 31/31, sem falhas/erros/ignorados. Execução 40607047474, base
+c318963; DPAPI exercitado nativamente com sessão fictícia e resolução da VM
+restaurada. Uma falha de renderização não cancela a próxima consulta. Primeira rodada
+identificou referência a ícone inexistente, corrigida para recurso já incluído.
+A entrada de produção deverá usar o cliente real, sem controles de simulação.
+A conexão real e os cenários com projeto separado/duas instâncias continuam
+pendentes para a revisão de integração anterior à publicação; o simulador não
+comprova o serviço real. Também seguem pendentes DPI/acessibilidade manuais,
+empacotamento e atualização 1.7.1 → 2.0 nas Etapas 5/6 originais.
+Etapa 4 não está concluída. Próximo item: edição de fechamento por vigência,
+seguida do atualizador; não antecipar PWA ou novas funções da Etapa 7.
+
+25. ETAPA 4 — EDIÇÃO DO FECHAMENTO POR VIGÊNCIA QT — 27/10/2026
+
+CONTINUIDADE
+O usuário confirmou a entrega anterior e autorizou o próximo item. A versão
+v12 foi arquivada antes desta revisão. Mantém-se a ordem original da Etapa 4;
+não há publicação, alteração da entrada funcional ou antecipação de PWA.
+
+ENTREGA
+Uma mesma janela em Configurações e Finanças permite ler o histórico local
+sem sessão e editar após conectar a conta fictícia e consultar a regra.
+Dia, mês da primeira fatura e ano compõem a prévia de dois períodos. A regra
+usa fechamento.propor/periodo/dia_no_mes existentes: só aceita vigência futura,
+proíbe inserir antes da regra mais recente e permite revisar a última regra
+futura. Dia inexistente usa o último dia do mês. O histórico já encerrado é
+preservado; o período aberto pode encurtar/alongar. Não altera valores nem
+recalcula/move parcelas já cadastradas; confira as faturas futuras.
+
+Salvar exige confirmação e a versão consultada. O cliente existente usa os
+mesmos RPCs de fechamento, atendidos somente pelo serviço fictício local.
+O serviço compara a versão antes de gravar e persiste o histórico, inclusive
+em pastas de estudo criadas na entrega anterior. O núcleo guarda o cache
+SQLite com backup anterior e verificação do vínculo de conta/projeto.
+Dados de vendas e finanças não são transferidos por esta ação.
+Se a regra mudou após a consulta, é recusada e exige consultar novamente.
+Se o serviço confirmou mas a cópia local falhou, isso é informado sem dizer
+que o salvamento foi desfeito; nova consulta permite reconciliar o cache.
+As seleções do formulário são preservadas nas falhas e ao consultar novamente.
+
+O recebimento de regra externa pelo sincronizador atualiza as áreas e o
+cache sem aplicar filtros pendentes. A mensagem distingue mudança da regra
+de consulta sem alterações, incluindo a cópia anterior preservada pelo núcleo.
+Operações de I/O usam os trabalhadores Qt existentes, com edição/fechamento
+bloqueados durante a aplicação. Nenhum widget Tk foi importado.
+
+VALIDAÇÃO E CONTINUIDADE
+Evidências e roteiro: reforma_desktop/FECHAMENTO.md. Nove cenários novos cobrem
+prévia, transição/fim de mês, parcelas/histórico preservados, confirmação,
+entradas incompletas, concorrência, revisão futura, falha de backup e serviço,
+persistência e recebimento por sincronização. O teste anterior de leitura foi
+adaptado à nova janela, mantendo a exigência de edição desabilitada sem sessão.
+Resultados finais: Linux, integração 97/97, aplicação 200 aprovados e dois
+ignorados por exigirem Windows, protótipos 31/31. Windows, integração 97/97,
+aplicação 202/202 e protótipos 31/31, sem falhas/erros/ignorados. Execução
+40608994527, base 8f2dc89; resolução da VM restaurada. Renderização offscreen
+não substitui interação manual ou conferência de DPI no Windows.
+Conexão real, DPI/acessibilidade manuais e pacote/atualização continuam
+pendentes; o simulador não comprova o Supabase real. Etapa 4 não concluída.
+Próximo item: atualizador Qt isolado; depois, revisão conjunta e Etapas 5/6.
+Versão principal 1.7.1, banco pessoal, Drive/sessão reais e PWA intactos.
+
+26. ETAPA 4 — ATUALIZADOR QT EM ENSAIO ISOLADO — 27/10/2026
+
+CONTINUIDADE
+O usuário autorizou o próximo item após fechamento por vigência. A versão
+v13 foi arquivada antes desta revisão. A entrada funcional e a versão 1.7.1
+não foram alteradas. Não há release, merge em main ou atualização instalada.
+
+ENTREGA
+Configurações abre a janela Qt Atualizações — ensaio isolado. Mostra a base
+1.7.1, cenários de teste, consulta, preparação e ensaio confirmado da troca.
+A indicação v2.0.0 é fictícia; não afirma publicação ou instalação real.
+Consulta automática é opt-in no estudo, uma vez após 12 segundos ao abrir;
+aguarda 30 segundos se houver edição/operação. Nunca prepara ou instala sem
+ação explícita. Preferência preserva o formato consultar em atualizacoes.json,
+com gravação atômica e conservação do valor anterior se a gravação falhar.
+O padrão da versão funcional não foi alterado; compatibilidade/default final
+serão conferidos ao integrar o executável real.
+
+REUTILIZAÇÃO E ISOLAMENTO
+O ensaio reutiliza consultar/preparar/instalar de ProgramFeira.atualizador,
+com dependências privadas para dados e processos fictícios. Não modifica os
+globais do núcleo nem lê/avalia código-fonte de arquivos em tempo de execução.
+Metadados e ZIP são locais; o exe é texto fictício. SHA-256, validação de
+release, caminhos ZIP e snapshot/backup são executados pelo núcleo. O teste
+da candidata e o início do helper são simulados: nenhum processo/PowerShell
+é executado, pasta de programa trocada ou aplicativo reiniciado.
+
+A preparação copia o banco de estudo para dados temporários separados de uma
+instalação também fictícia. Não copia configurações de Drive ou sessão. O
+backup do ensaio é da cópia temporária, não um backup destinado ao uso diário.
+Banco/configurações do estudo, instalação 1.7.1 e pastas do Drive não são
+modificados pelo ensaio. Temporários são removidos ao encerrar/recomeçar.
+
+A janela é modal para toda a aplicação. Trabalhadores mantêm o loop gráfico
+responsivo, bloqueando edição/fechamento durante trabalho. Operações de nuvem,
+backup e formulários abertos impedem iniciar o ensaio. Captura técnica cancela
+a consulta programada. Falhas invalidam preparação e permitem nova tentativa;
+o resultado nunca diz que o programa foi atualizado. Cenários: sem versão
+nova, publicação incompleta, hash incorreto, candidata reprovada e falha na
+troca, além do caminho confirmado sem instalação.
+
+VALIDAÇÃO E CONTINUIDADE
+Evidências e roteiro: reforma_desktop/ATUALIZACOES.md. Dez cenários novos
+conferem isolamento (sem downloads/processos/Drive reais), integridade do
+backup temporário com vendas/finanças/ajustes, preservação do banco e arquivos,
+recusas, confirmação, preferência, agendamento e bloqueios/resposta da UI.
+Resultados finais: Linux, Qt 107/107, aplicação 200 aprovados e dois ignorados
+por exigirem Windows, protótipos 31/31. Windows, Qt 107/107, aplicação 202/202 e
+protótipos 31/31, sem falhas/erros/ignorados. Execução 40615267278, base b963427;
+resolução da VM restaurada. Renderização Qt offscreen não comprova interação
+manual, DPI ou instalação real da nova interface.
+A troca/recuperação do helper original é coberta pela suíte existente no
+Windows, mas isso NÃO comprova o pacote Qt ou atualização 1.7.1 → 2.0.
+
+Próximo item: revisão conjunta e rastreamento do inventário da Etapa 4,
+incluindo diagnósticos e demais caminhos pendentes de equivalência. Não
+considerar Etapa 4 concluída apenas pela existência das janelas. Integração
+real de nuvem/Drive/atualizador, DPI/acessibilidade, desempenho e pacote/
+instalação/recuperação continuam pendentes nas verificações do plano.
+A versão 2.0 só será publicada após concluir as validações e aprovação final.
+
+27. ETAPA 4 — REVISÃO CONJUNTA DO INVENTÁRIO — 27/10/2026
+
+CONFIRMAÇÃO E ESCOPO
+O usuário informou “Testei e confirmo” sobre o ensaio do atualizador e autorizou
+a revisão seguinte. A confirmação é do ensaio; não autoriza publicar a 2.0,
+usar o banco pessoal ou considerar todas as funções/integrações aprovadas.
+A versão v14 foi preservada antes desta revisão. O plano original e suas
+etapas continuam válidos; não houve mudança de direção ou implementação.
+
+RESULTADO DO RASTREAMENTO
+Os 30 IDs V01–V09/A01–A04/F01–F10/G01–G07 foram localizados em código, acessos
+e testes: 20 com implementação coberta por testes controlados (I), seis com
+lacunas reproduzidas (P), quatro com integração simulada (S). Esses estados
+não são certificação de equivalência/produção. Matriz e critérios completos:
+reforma_desktop/REVISAO_ETAPA4.md. Registros anteriores do mapa foram mantidos,
+com ponteiro para o estado atual; guias com informações antigas foram corrigidos.
+
+SEIS LACUNAS
+R01/V01: Salvar com data parcialmente digitada aceita a última data válida.
+R02/A02: Comparar A/B com data parcial anuncia comparação aplicada.
+R03/V03: Enter não abre edição, embora duplo clique continue abrindo uma vez.
+R04/G02: trabalhador sanitiza erro inesperado, mas não registra diagnóstico;
+         ligação do Qt ao registro seguro de entrada/callbacks ainda ausente.
+R05/G03: fechamento direto da janela principal é aceito com backup ativo;
+         a janela do backup permanece visível. Sem alegação de perda/crash.
+R06/V06: falha transitória na virada marca o dia antes de atualizar e impede
+         nova tentativa no próximo disparo para o mesmo dia.
+Datas foram testadas com foco e ano parcial; comportamento nativo de clique/
+Enter/perda de foco ainda requer conferência interativa. Uma data impossível
+normalizada pelo próprio Qt não foi classificada como bug.
+
+VERIFICAÇÃO E BLOQUEIO DE AVANÇO
+Ferramenta isolada: reforma_desktop/avaliacao/revisar_etapa4.py, com JSON por
+caso e sem contas/rede/dados pessoais. --exigir-conformidade retorna 1 enquanto
+houver caso não conforme; o workflow coleta a evidência e bloqueia a revisão,
+mesmo que a regressão conhecida esteja aprovada. Essa falha não é build ou
+publicação de executável; a tarefa é revisão e não corrige/oculta as lacunas.
+Regressão desta revisão: Linux, Qt 107/107, aplicação 200 aprovados e dois
+ignorados por exigirem Windows, protótipos 31/31. Windows, Qt 107/107,
+aplicação 202/202 e protótipos 31/31. A coleta nova R01–R06 reproduziu seis
+casos NÃO CONFORMES nos dois sistemas e retorna 1. A execução fica reprovada
+na verificação de revisão, com evidências preservadas; não é build de release.
+Execução Windows 40623364256, base 2c71975; resolução da VM restaurada.
+Qt offscreen não substitui testes interativos de foco/gerenciador de janelas,
+DPI e acessibilidade. Não houve nova medição de desempenho nesta entrega.
+
+PRÓXIMA ATIVIDADE
+Fechar as lacunas em partes pequenas e testadas: diagnóstico seguro, validação
+de datas e caminhos dependentes, guarda de encerramento, retomada na virada e
+teclado sem duplicidade. Repetir coleta/matriz e revisão antes de encerrar a
+Etapa 4. Não iniciar Etapa 5 nesta entrega nem novas funções da Etapa 7.
+Integrações reais e pacote/recibo de inicialização/atualização Qt ainda exigem
+validação antes de publicar; executar.py e o spec continuam da versão estável.
+A proteção de coleta específica de Tcl não precisa ser copiada para Qt;
+o ciclo de vida de QObject/QThread precisa ser conferido por comportamento.
+Versão 1.7.1, dados reais, sessão/Drive pessoais e PWA permanecem intactos.
+
+28. ETAPA 4 — CORREÇÕES R01–R06 E REVISÃO REPETIDA — 28/10/2026
+
+AUTORIZAÇÃO E PRESERVAÇÃO
+O usuário autorizou corrigir as lacunas e repetir a revisão. A versão v15
+foi arquivada antes desta revisão. A aprovação visual anterior foi mantida.
+Somente a entrada de estudo/Qt foi corrigida; nenhum módulo de ProgramFeira,
+script SQL, executar.py ou PWA foi modificado. Não houve release ou uso de
+conta/banco pessoal. As reproduções anteriores permanecem como histórico.
+
+CORREÇÕES
+R01/R02: leitura de datas valida o editor antes de obter o ISO. O campo Qt
+mantém uma marca de entrada incompleta quando o próprio Qt restaura o último
+valor ao perder foco/pressionar Enter. Só digitação completa, calendário ou
+ajuste válido explícito liberam a data. A mesma proteção é usada em Vendas,
+A/B e campos financeiros existentes, sem mudar cálculos ou datas gravadas.
+Mês/Fechamento não são bloqueados por campos de data ocultos. Mudanças dos
+dados refazem a comparação aplicada mesmo com uma nova seleção incompleta,
+mostrando aviso sem aplicar o período inválido. Enter no formulário de Vendas
+aciona Salvar/validar, sem assumir Cancelar como botão padrão.
+
+R03: Return e Enter numérico, com foco na tabela de Vendas, editam a linha/ID
+da página visível uma vez. Duplo clique continua funcionando; Enter em outro
+controle não abre a edição. Não houve alteração do componente da demo.
+
+R04: adaptação Qt reutiliza diagnostico.registrar, com data/versão/tipo e
+posições dos frames, sem mensagens/valores/variáveis. Há cobertura da entrada,
+callbacks Qt e dos três tipos de trabalhador. O caminho é resolvido na thread
+criadora e apenas Path é levado ao worker. Avisos gráficos ficam na thread
+principal. O hook é restaurado ao sair; falha do log não esconde o resultado
+original. Erros inesperados de inicialização têm mensagem genérica e registro
+na pasta isolada; sem fallback para o perfil pessoal. Sem Tcl/Tk na interface.
+
+R05: fechamento principal aguarda operações de configurações e qualquer
+QThread filha ainda ativa, além dos estados existentes de nuvem/atualizador.
+As conclusões dos trabalhos aguardam o término nativo antes de liberar a UI,
+limpar recursos ou iniciar o fechamento após backup. A tarefa em andamento
+continua e é possível fechar normalmente depois que termina.
+
+R06: a virada só confirma o novo dia após atualizar com sucesso. Erro de
+armazenamento é registrado, o resumo fica identificado como não confirmado
+e o próximo disparo pode tentar novamente. O aviso é removido após sucesso,
+sem apagar uma mensagem mais recente, como a conclusão de uma exportação.
+
+REVISÃO E CONTINUIDADE
+Quinze testes novos verificam os caminhos diretos e os cliques/Enter, quatro
+datas A/B, campos ocultos, comparação pendente, página/foco, logs sem dados,
+entrada/callbacks/workers, falha do registro, término de threads e retomada.
+R01–R06 foram repetidas com o MESMO roteiro, sem relaxar critérios: seis
+conformes no Linux e no Windows, gate com retorno 0 em ambos.
+Linux: Qt 122/122; aplicação 200 aprovados e dois ignorados por exigirem
+Windows; protótipos 31/31, sem falhas/erros. Windows nativo: Qt 122/122,
+aplicação 202/202 e protótipos 31/31, sem falhas/erros/ignorados.
+Execução Windows 40627516716, base 12152ae; resolução da VM restaurada.
+Evidências em reforma_desktop/resultados/linux-correcao-revisao e
+reforma_desktop/resultados/windows-40627516716.
+O JSON mantém aprovacao_etapa4=false por desenho: um coletor não substitui a
+revisão conjunta/decisão do plano. O gate automático usa casos_conformes.
+
+A matriz atual tem 26 I e quatro S; não restam P referentes às seis lacunas.
+Integrações reais e pacote/atualização continuam pendentes, sem alegação de
+equivalência de produção. Com o gate R01–R06 e a regressão confirmados,
+próxima atividade é a Etapa 5: medir abertura,
+navegação, consultas e memória em cenários equivalentes à base. Não publicar
+2.0 ou migrar dados antes das verificações/aprovação das Etapas 5/6.
+Relatório: reforma_desktop/REVISAO_ETAPA4.md.
+
+29. ETAPA 5 — MEDIÇÕES DO CONJUNTO E FLUIDEZ — 28/10/2026
+
+O usuário autorizou prosseguir. A versão v16 foi arquivada byte a byte.
+A referência do estudo antes desta etapa é 18592c2. A versão 1.7.1,
+ProgramFeira, executar.py, banco pessoal, contas, SQL e PWA ficam preservados.
+
+MÉTODO
+Comparar os aplicativos reais Tk e Qt, não as demos técnicas da Etapa 3.
+Mesmo gerador de 224/5.000 vendas e 75/1.667 despesas fictícias; fontes e
+componentes próprios de cada aplicação, tema Grafite, preferência Mês atual,
+área solicitada 1536x960. Qt preserva paginação; Tk preserva tabela integral.
+Três processos novos por ferramenta/volume, ordem alternada. Registrar
+primeira visita, dez retornos sem mudança, Mês, todas, repetir consulta,
+atualização após escrita controlada, Finanças/Ano, SQL e memória. Conferir
+hash dos dados, contagem, valores e invalidação. Abertura exclui preparação
+da fixture/início do interpretador, inclui imports gráficos e primeira exibição.
+Sem sessão, rede, Drive ou banco pessoal. Intervalos entre pulsos de eventos
+são indicadores do ensaio, não garantia de ausência de travamentos.
+
+CORREÇÕES ORIENTADAS PELO PILOTO
+A consulta completa Qt lia a mesma base duas vezes, inclusive para a semana.
+Agora reutiliza a leitura dentro do mesmo comando, sem cache de banco entre
+comandos. Consultas recortadas mantêm a semana independente, sem mudar regra.
+A tabela repetia conversão/formatação de todas as linhas em busca/ordenação
+e reconsulta. Guarda somente a apresentação do snapshot atual, pela tupla
+inteira, não pelo ID. Alterados são reformatados; excluídos/fora da consulta
+não são retidos. Aplicar/atualizar continuam consultando o banco.
+Cinco regressões específicas verificam frescor, recorte, busca, ordenação,
+mesmo ID alterado e liberação do cache. Regressões existentes permanecem.
+
+RESULTADOS E LIMITES
+Coletas completas Linux e Windows e regressão concluídas, registradas em
+reforma_desktop/DESEMPENHO.md com JSONs brutos, versões, método e limites.
+Foram 24 processos por sistema no antes/depois, três repetições por cenário.
+Windows 40630217026: repetir consulta completa com 5.000 vendas passou de
+425,34 para 211,10 ms; após mudança, de 434,50 para 215,77 ms. O RSS final
+cresceu cerca de 4 MiB pelo cache de apresentação. Retornos sem alteração
+não repetiram leituras. Linux: repetir 331,13 → 161,64 ms, cerca de +3 MiB
+no RSS final dessa carga. Não misturar números dos sistemas em uma média.
+
+Uma variação de abertura com 224 na primeira VM (731,32 → 935,30 ms) motivou
+contraprova 40631254061: sete pares de revisões alternadas, mesmas bases,
+fases e CPU separadas. Medianas 700,16 → 684,50 ms, sem repetir aumento
+sistemático. As duas coletas foram mantidas; não se presume a causa da
+variação inicial nem se promete ganho de abertura. Aplicação atual igual à
+7cccfb1; c758072 acrescentou somente o instrumento dessa investigação.
+
+Regressão Windows 40630216953: Qt 127/127, estável 202/202, protótipos 31/31;
+seis checagens de revisão conformes, sem falhas/erros/ignorados. Linux:
+127/127 Qt, 200 estável aprovados e dois nativos ignorados, 31/31 protótipos;
+seis checagens conformes. Resolução das VMs restaurada. Sem nova release.
+A referência antes/depois no Windows usa checkout separado da mesma revisão
+18592c2, com o mesmo medidor, sem modificar a base estável.
+O ensaio é curto: não certifica ausência de vazamento, latência de rede real,
+DPI real, leitor de tela ou pacote Windows. Não haverá release nesta etapa.
+Etapa 5 concluída no escopo controlado descrito. Próxima atividade: Etapa 6 original: equivalência,
+integrações reais controladas, interação/escala/acessibilidade, pacote e ensaio
+de atualização, com aprovação antes da publicação da versão 2.0.
+
+30. ETAPA 6 — CONTRATOS HTTPS E FRONTEIRAS DE INTEGRAÇÃO — 28/10/2026
+
+AUTORIZAÇÃO E ESCOPO
+O usuário autorizou a próxima etapa após as medições. A versão v17 foi
+arquivada byte a byte. A Etapa 6 foi iniciada, não concluída. Base: 001ad41.
+Nenhuma release, conta externa, banco pessoal, PWA, SQL ou módulo estável
+foi alterado. O protocolo do cliente HTTP existente permanece preservado.
+
+CLIENTE E SESSÃO
+Janela/Conexao permitem fornecer explicitamente um cliente pelo construtor,
+para validar a fronteira sem substituir o cliente de produção. A entrada
+executar_reforma.py continua criando o serviço fictício, sem nova flag ou
+formulário de acesso real. A seleção não lê a configuração pessoal.
+Foi removido o acoplamento da persistência de sessão à URL fixa do serviço
+fictício: salvar/carregar agora usa cliente.url. DPAPI e formato permanecem
+os mesmos, somente na pasta isolada; sem persistir senha ou token de acesso.
+
+ENSAIO DE CONTRATO
+Quinze testes novos usam ClienteNuvem sem sobrescrever _post e um servidor
+HTTPS em 127.0.0.1, porta aleatória. O socket do hostname fictício é roteado
+somente para esse servidor; qualquer outra saída falha. O opener do teste
+mantém verificação de certificado/hostname e proibição de redirecionamento.
+Certificado/chave são públicos e exclusivos da suíte, confiados somente no
+contexto do teste. Não são instalados no Windows/aplicativo. A contraprova
+sem confiança recusa o certificado antes de enviar credenciais HTTP.
+O estado de servidor ainda é fictício: não é Postgres, RLS ou Supabase real.
+
+COBERTURA
+Login/autorização e cabeçalhos; duas direções e filtros pendentes; renovação
+pela URL correta; reabertura DPAPI sem outro login no Windows; recibo após
+resposta perdida; 401/503/JSON inválido/redirect/PFS01; conflito, revisão
+antiga recusada e escolha explícita; SQL006 ausente sem descartar data da
+compra; fechamento concorrente com parcelas preservadas; interface responsiva
+durante espera e aplicação adiada durante formulário. A entrada padrão segue
+em simulação. Primeira execução do instrumento corrigiu duas premissas do
+teste (sessão nova já em memória e consulta prévia de fechamento), sem mudar
+as regras do núcleo para acomodá-las.
+
+ESTADO E CONTINUIDADE
+Regressão final: Windows 40686915587, base f964cdb: Qt 142/142, estável
+202/202 e protótipos 31/31, sem falhas/erros/ignorados. Os 15 contratos novos
+passaram, inclusive DPAPI real. Linux: Qt 142 executados, 141 aprovados e
+um DPAPI ignorado; estável 200 aprovados e dois nativos ignorados; protótipos
+31/31; sem falhas/erros. R01–R06 continuam conformes nos dois sistemas.
+Resolução da VM restaurada. Evidências locais em resultados/etapa6-linux e
+nativas em resultados/windows-40686915587, dentro de reforma_desktop.
+Primeira regressão nativa e3a6005 também passou (141/202/31); rodada final
+acrescentou somente controle negativo do transporte e documentação.
+Matriz: 26 I e quatro S (F09/G04/G05/G06), com cobertura de contrato acrescida
+para os três primeiros. Ainda não validar como reais RLS, transações SQL,
+identidade/autorização de conta, concorrência PC/PWA, Drive, pacote, atualização
+ou acessibilidade completa. Não há credenciais ou sessão externa disponíveis.
+Próxima atividade: preparar preservação de preferências/sessão e configuração
+dos adaptadores reais em entrada de validação, com guardas de projeto/pasta;
+depois ensaio online autorizado e conferências previstas na Etapa 6 original.
+Relatório e pendências: reforma_desktop/ETAPA6.md.
+
+31. ETAPA 6 — PRESERVAÇÃO OFFLINE E PREPARAÇÃO DO PERFIL — 28/10/2026
+
+Autorizada a continuidade. Versão v18 arquivada byte a byte; base 963e75c.
+Continua faltando concluir a Etapa 6 para lançar o desktop 2.0. Etapa 7/PWA
+não bloqueia esse lançamento. Não há prazo prometido nem release nesta entrega.
+
+preparar_validacao.py prepara somente uma pasta de estudo marcada, em destino
+novo e independente. Recusa pasta pessoal, sobreposição, links e projeto de
+teste igual ao configurado na origem ou ao vínculo no banco. Configurações
+são validadas, limitadas a uma lista conhecida e copiadas byte a byte para
+preservados, inclusive DPAPI opaca. Nenhum arquivo pessoal é buscado/copiado
+automaticamente. Nenhuma credencial é decifrada pela preparação.
+
+Snapshot SQLite inclui WAL confirmado, usa o backup verificado existente e
+passa pelo ensaio de recuperação. Só a cópia tem journal finalizado em DELETE,
+para não depender de auxiliares de um banco aberto. Conteúdo lógico de todas
+as tabelas é conferido; mudanças na origem durante o processo interrompem.
+
+A aplicação de validação começa SEM banco e SEM sessão ativa. Tema/período
+são preservados; nuvem tem só URL/chave pública de projeto diferente. Sync,
+atualizador e Drive começam desativados. O arquivo original de cada preferência
+permanece em preservados. Manifesto SHA-256 e marcador de conclusão conferem
+arquivos antes de construir o cliente real. O manifesto detecta alterações
+acidentais; não é criptografia ou assinatura contra malware local.
+
+A fábrica de ClienteNuvem existente não autentica nem faz requisição. A entrada
+GUI online ainda não foi habilitada: não usar o perfil como conexão real pronta.
+Esta entrega prepara sua fronteira e compatibilidade; não altera executar.py,
+executar_reforma.py, ProgramFeira, SQL, dados pessoais ou PWA. Não substitui
+configuração da instalação 1.7.1 e não muda o plano original.
+
+Doze testes novos cobrem cópia, WAL, DPAPI nativa, ausência de automações,
+recusas de caminhos/projetos, adulteração e mudança durante preparação.
+Windows 40706061854, base ee5600e: Qt 154/154, estável 202/202 e protótipos
+31/31 aprovados, sem falhas/erros/ignorados; R01–R06 conformes. Resolução
+restaurada. Linux: Qt 154 executados, 152 aprovados/dois DPAPI ignorados;
+estável 200 aprovados/dois nativos ignorados; protótipos 31/31; sem falhas/erros.
+CLI verificada: preparação concluída, repetição no destino existente recusada,
+origem/perfil preservados. Evidências em reforma_desktop/resultados/perfil-linux
+e reforma_desktop/resultados/windows-40706061854.
+Próxima atividade: entrada GUI de validação com configuração/login reais,
+sem controles de simulação, em perfil/projeto separado e com envio explícito.
+Ainda faltam ensaio online/RLS/PC-PWA/Drive, interação/DPI/acessibilidade,
+pacote/recibo/atualização/recuperação e aprovação antes da publicação 2.0.
+Relatório: reforma_desktop/PREPARACAO_VALIDACAO.md.

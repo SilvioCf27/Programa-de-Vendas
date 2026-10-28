@@ -38,7 +38,7 @@ Exemplo com dados fictícios e um projeto separado; substitua os caminhos e a co
 
 Não use senha, chave secreta ou service_role. A ferramenta não autentica nem envia registros. Requer Python com SQLite compatível com as proteções existentes. O destino não pode existir. A origem deve ter sido criada pelo estudo; não copie seu banco pessoal para contornar essa proteção.
 
-`cliente_preparado()` constrói o cliente existente somente após conferir o perfil. Construir não faz HTTP ou restaura sessão. **A entrada gráfica online ainda será implementada e validada**: este comando prepara o perfil, não abre uma conexão real pronta. `executar_reforma.py` continua usando simulação.
+`cliente_preparado()` constrói o cliente existente somente após conferir o perfil. Construir não faz HTTP ou restaura sessão. **A [entrada gráfica online](VALIDACAO_ONLINE.md) agora usa uma pasta de execução separada**: este comando continua preparando somente o perfil, sem login ou envio. `executar_reforma.py` continua usando simulação.
 
 ## Verificação
 
@@ -46,4 +46,4 @@ Não use senha, chave secreta ou service_role. A ferramenta não autentica nem e
 
 ## Próxima atividade
 
-Implementar a entrada gráfica de validação com login/configuração reais e identificação clara do projeto, sem controles fictícios. Depois, testar em projeto separado autorizado: RLS, migração, sincronização/concorrência e PC/PWA. Continuam pendentes Drive, interação/escalas/leitor de tela, pacote Qt, atualização 1.7.1 → 2.0 e recuperação após falha. Publicar depende dessas conferências e da aprovação final.
+A entrada gráfica está implementada; próxima atividade é testar em projeto separado autorizado: RLS, migração, sincronização/concorrência e PC/PWA. Continuam pendentes Drive, interação/escalas/leitor de tela, pacote Qt, atualização 1.7.1 → 2.0 e recuperação após falha. Publicar depende dessas conferências e da aprovação final.

@@ -78,10 +78,11 @@ class Configuracoes(W.QDialog):
         self.destino_drive.setWordWrap(True)
         l.addWidget(self.destino_drive)
         self.mostrar_drive()
-        l.addWidget(botao('Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
+        l.addWidget(botao('Conexão com o projeto de validação…' if controlador.validacao_real else 'Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
         l.addWidget(botao('Regra de fechamento por vigência…', controlador.configurar_fechamento, 'calendar-days'))
-        l.addWidget(botao('Atualizações — ensaio isolado…', controlador.atualizacoes, 'download'))
-        pendentes = texto('Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt usa pacotes e processos fictícios no ensaio isolado. A versão estável não foi alterada.', 9, C['muted'])
+        if not controlador.validacao_real:
+            l.addWidget(botao('Atualizações — ensaio isolado…', controlador.atualizacoes, 'download'))
+        pendentes = texto('Projeto de validação: ' + controlador.nuvem.cliente.url + '. Sincronização manual; atualização real ainda pendente.' if controlador.validacao_real else 'Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt usa pacotes e processos fictícios no ensaio isolado. A versão estável não foi alterada.', 9, C['muted'])
         pendentes.setWordWrap(True)
         layout.addWidget(pendentes)
         scroll.setWidget(corpo)
@@ -166,6 +167,9 @@ class Configuracoes(W.QDialog):
                 lambda r: self.status.setText('Recuperação verificada em pasta temporária. Banco em uso preservado.\nRegistros por tabela: ' + str(r['tabelas'])))
 
     def restaurar(self):
+        if self.controlador.validacao_real:
+            self.status.setText('Esta entrada começa vazia. Não importa bancos; cadastre somente exemplos para a validação online.')
+            return
         arquivo = self.arquivo_backup()
         if not arquivo:
             return

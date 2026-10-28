@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 19 — Etapa 6, preservação offline em 28/10/2026.
+Versão do plano: 20 — Etapa 6, entrada gráfica de validação em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 6 iniciada: contratos de integração e preparação da validação real.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -11,7 +11,7 @@ docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
 As seções numeradas registram o histórico das entregas, com seus estados da
-época. A seção 31 registra a preparação offline ATUAL da Etapa 6. A orientação de continuidade do
+época. A seção 32 registra a entrada gráfica ATUAL da Etapa 6. A orientação de continuidade do
 usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -1309,3 +1309,40 @@ sem controles de simulação, em perfil/projeto separado e com envio explícito.
 Ainda faltam ensaio online/RLS/PC-PWA/Drive, interação/DPI/acessibilidade,
 pacote/recibo/atualização/recuperação e aprovação antes da publicação 2.0.
 Relatório: reforma_desktop/PREPARACAO_VALIDACAO.md.
+
+32. ETAPA 6 — ENTRADA GRÁFICA DE VALIDAÇÃO ONLINE — 28/10/2026
+Autorizada a continuidade. Versão v19 arquivada byte a byte. Base b7c1484.
+executar_validacao.py usa perfil imutável conferido e pasta de execução nova,
+independente. Copia somente preferências/configuração, nunca banco/sessão do
+arquivo preservado. Banco começa vazio; pasta pode ser reaberta pelo mesmo
+perfil. Marca vincula caminho/hash do manifesto e projeto/chave; configuração
+alterada, banco de outro projeto, links e pasta sem marca são recusados.
+
+Modo online é explícito e requer cliente. A entrada do estudo e a versão
+1.7.1 ficam inalteradas. Login mostra URL do projeto, e-mail e campo de senha
+mascarado; limpa o campo ao enviar. Não transfere dados. A sessão renovável
+usa DPAPI na execução; reabrir não faz HTTP. Retomar sessão verifica renovação
+e autorização explicitamente, sem enviar registros. Falha em novo login não
+ativa a sessão antiga: ela fica visível como pendente de verificação.
+
+Sincronização automática é bloqueada nesta validação. Salvar não envia dados.
+Primeiro conferir; depois confirmar transferência para a URL exibida; então
+Sincronizar estabelece o vínculo. Conflitos continuam por escolha explícita.
+Não há botão de simular alteração externa nem atualizador fictício nessa
+entrada. Restauração/importação de banco bloqueada no modo online: inserir
+somente exemplos manualmente. O fechamento identifica o projeto ao salvar.
+O perfil de preparação e os arquivos preservados permanecem imutáveis.
+
+Doze testes novos de GUI/HTTPS local e subprocesso cobrem abertura sem HTTP,
+login/senha, confirmação/cancelamento, envio manual, retomada/autorização,
+falha de login, identidade do perfil/projeto, reabertura, restauração e ausência
+de controles fictícios. Contratos anteriores preservados. Regressoes finais
+Linux/Windows serão registradas após a rodada completa.
+
+Esta entrega NÃO testa contas externas, Postgres/RLS, PC/PWA ou Google Drive.
+A conexão real usa ClienteNuvem/HTTPS padrão; testes automáticos roteiam só
+para TLS loopback. Ainda não houve release, troca de 1.7.1, banco pessoal,
+SQL ou PWA. Próxima atividade: ensaio online autorizado em projeto Supabase
+separado, com SQL/políticas conferidos e dados fictícios. Depois continuar
+interação/DPI/acessibilidade, pacote/recibo/atualização/recuperação e aprovação.
+Relatório e guia: reforma_desktop/VALIDACAO_ONLINE.md.

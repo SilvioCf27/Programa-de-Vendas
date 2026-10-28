@@ -57,8 +57,11 @@ class Tarefa(Q.QThread):
 class Conexao(Q.QObject):
     mudou = Q.Signal()
 
-    def __init__(self, janela, *, cliente=None):
+    def __init__(self, janela, *, cliente=None, validacao_real=False):
         super().__init__(janela)
+        self.validacao_real = validacao_real
+        self.sessao_verificada = False
+        self.transferencia_confirmada = False
         self.janela = janela
         self.pasta = Path(janela.pasta)
         self.banco = self.pasta / 'vendas.db'
@@ -69,9 +72,12 @@ class Conexao(Q.QObject):
         self.tarefa = None
         self.ocupado = False
         self.recebendo = False
-        self.automatico = automacao_nuvem.carregar_preferencia(self.pasta)
+        self.automatico = False if validacao_real else automacao_nuvem.carregar_preferencia(self.pasta)
         self.status = 'Somente estudo: serviço local simulado, sem acesso ao Supabase ou à sua conta.'
         self.resumo = 'Nuvem simulada · desconectada'
+        if validacao_real:
+            self.status = 'Projeto de validação: ' + self.cliente.url + '. Login não envia registros; sincronização somente manual.'
+            self.resumo = 'Validação online · desconectada'
         self.aviso_sessao = ''
         self.relogio = RelogioQt(self)
         self.agendador = automacao_nuvem.Agendador(self.relogio, self.ativo, self.livre, self.automaticamente)
@@ -91,7 +97,7 @@ class Conexao(Q.QObject):
     def informar(self, mensagem, resumo=None):
         self.status = mensagem
         if resumo is not None:
-            self.resumo = resumo
+            self.resumo = resumo.replace('Nuvem simulada', 'Validação online', 1) if self.validacao_real else resumo
         self.mudou.emit()
 
     def persistir(self, sessao):
@@ -109,8 +115,9 @@ class Conexao(Q.QObject):
             self.informar(str(erro))
             return
         if self.sessao:
-            self.informar('Sessão fictícia recuperada do Windows; será renovada antes da consulta.', 'Nuvem simulada · sessão recuperada')
-            self.agendador.ativar()
+            self.informar('Sessão recuperada. Clique em Retomar sessão para verificar o acesso; nenhum registro foi enviado.' if self.validacao_real else 'Sessão fictícia recuperada do Windows; será renovada antes da consulta.', 'Nuvem simulada · sessão recuperada')
+            if not self.validacao_real:
+                self.agendador.ativar()
 
     def rodar(self, funcao, concluir, mensagem, travar=True):
         if self.ocupado:
@@ -147,22 +154,47 @@ class Conexao(Q.QObject):
         tarefa.start()
 
     def falhou(self, erro):
+        if self.validacao_real and isinstance(erro, nuvem.SessaoExpirada):
+            self.sessao_verificada = False
         self.preparacao = self.revisao = None
         self.agendador.concluir(erro=erro)
         texto = 'Nuvem simulada · temporariamente indisponível' if isinstance(erro, nuvem.ErroTemporario) else 'Nuvem simulada · sincronização pausada'
         self.informar(str(erro) + self.aviso_sessao, texto)
 
-    def conectar(self):
+    def conectar(self, email=None, senha=None):
         if self.ocupado:
             return
+        if self.validacao_real and (not email or not senha):
+            self.informar('Informe o e-mail e a senha do aplicativo no projeto de validação.')
+            return
         self.agendador.parar()
-        self.preparacao = self.revisao = self.sessao = None
+        self.sessao_verificada = False
+        self.transferencia_confirmada = False
+        self.preparacao = self.revisao = None
+        if not self.validacao_real:
+            self.sessao = None
         def concluir(sessao):
             self.sessao = sessao
+            self.sessao_verificada = True
             self.persistir(sessao)
-            self.informar('Conta fictícia conectada. Nenhum registro foi transferido.' + self.aviso_sessao, 'Nuvem simulada · conectada')
+            self.informar(('Conta de validação conectada. Nenhum registro foi transferido.' if self.validacao_real else 'Conta fictícia conectada. Nenhum registro foi transferido.') + self.aviso_sessao, 'Nuvem simulada · conectada')
             self.agendador.ativar()
-        self.rodar(lambda: self.cliente.entrar('estudo@example.invalid', 'somente-estudo'), concluir, 'Conectando somente ao serviço fictício local…')
+        self.rodar(lambda: self.cliente.entrar(email, senha) if self.validacao_real else self.cliente.entrar('estudo@example.invalid', 'somente-estudo'), concluir, ('Verificando acesso ao projeto de validação…' if self.validacao_real else 'Conectando somente ao serviço fictício local…'))
+
+    def retomar(self):
+        if not self.validacao_real or self.ocupado or not self.sessao:
+            return
+        self.sessao_verificada = False
+        def verificar():
+            s = self.cliente.garantir_sessao(self.sessao)
+            if self.cliente._post('/rest/v1/rpc/usuario_autorizado', {}, s.token) is not True:
+                raise nuvem.ErroNuvem('Esta conta não está autorizada no projeto de validação.')
+            return s
+        def pronto(s):
+            self.sessao = s
+            self.sessao_verificada = True
+            self.informar('Acesso verificado. Nenhum registro foi transferido.', 'Validação online · conectada')
+        self.rodar(verificar, pronto, 'Verificando a sessão do projeto de validação…')
 
     def desconectar(self):
         if self.ocupado:
@@ -173,13 +205,15 @@ class Conexao(Q.QObject):
             self.informar('Não foi possível remover a sessão protegida. Tente novamente.')
             return
         self.agendador.parar()
+        self.sessao_verificada = False
+        self.transferencia_confirmada = False
         self.sessao = self.preparacao = self.revisao = None
         self.cliente._ultima_sessao = None
-        self.informar('Sessão fictícia removida. Dados e cópias preservados.', 'Nuvem simulada · desconectada')
+        self.informar(('Sessão removida da validação. Dados e cópias preservados.' if self.validacao_real else 'Sessão fictícia removida. Dados e cópias preservados.'), 'Nuvem simulada · desconectada')
 
     def executar_autenticado(self, funcao):
-        if not self.sessao:
-            raise nuvem.ErroNuvem('Conecte a conta fictícia antes de continuar.')
+        if not self.sessao or (self.validacao_real and not self.sessao_verificada):
+            raise nuvem.ErroNuvem(('Verifique o acesso à conta de validação antes de continuar.' if self.validacao_real else 'Conecte a conta fictícia antes de continuar.'))
         nova = self.cliente.garantir_sessao(self.sessao)
         return nova, funcao(nova)
 
@@ -195,7 +229,7 @@ class Conexao(Q.QObject):
             self.sessao, self.preparacao = resposta
             r = self.preparacao['relatorio']
             self.informar('Conferência concluída sem transferência. Registros: ' + str(r['resumo']['registros']) + '\nNovos: ' + str(sum(r['novos'].values())) + '\nBackup: ' + r['backup'] + '\nRelatório: ' + str(self.preparacao['caminho']))
-        self.rodar(lambda: self.executar_autenticado(preparar), concluir, 'Preservando cópia e conferindo os registros fictícios…')
+        self.rodar(lambda: self.executar_autenticado(preparar), concluir, ('Preservando cópia e conferindo os registros de validação…' if self.validacao_real else 'Preservando cópia e conferindo os registros fictícios…'))
 
     def transferir(self):
         if not self.preparacao or self.ocupado:
@@ -207,13 +241,14 @@ class Conexao(Q.QObject):
             return migracao_nuvem.transferir(p)
         def concluir(resposta):
             self.sessao, r = resposta
-            self.informar('Transferência fictícia validada. Registros inseridos: ' + str(sum(r['inseridos'].values())) + '. Clique em Sincronizar agora para estabelecer o vínculo.')
-        self.rodar(lambda: self.executar_autenticado(enviar), concluir, 'Transferindo somente para o arquivo do serviço local simulado…')
+            self.transferencia_confirmada = True
+            self.informar(('Transferência no projeto de validação concluída. Registros inseridos: ' if self.validacao_real else 'Transferência fictícia validada. Registros inseridos: ') + str(sum(r['inseridos'].values())) + '. Clique em Sincronizar agora para estabelecer o vínculo.')
+        self.rodar(lambda: self.executar_autenticado(enviar), concluir, ('Transferindo para o projeto de validação identificado na tela…' if self.validacao_real else 'Transferindo somente para o arquivo do serviço local simulado…'))
 
     def concluida(self, resposta, automatico=False):
         self.sessao, r = resposta
         self.revisao = None
-        self.informar(f"Sincronização fictícia concluída. Enviadas: {r['enviadas']}; recebidas: {r['recebidas']}.\n" + (f"Backup: {r['backup']}" if r['backup'] else 'Regra de fechamento recebida; cópia local anterior preservada.' if r.get('fechamento_alterado') else 'Sem alterações; não foi necessário novo backup.') + self.aviso_sessao,
+        self.informar(f"Sincronização{' de validação' if self.validacao_real else ' fictícia'} concluída. Enviadas: {r['enviadas']}; recebidas: {r['recebidas']}.\n" + (f"Backup: {r['backup']}" if r['backup'] else 'Regra de fechamento recebida; cópia local anterior preservada.' if r.get('fechamento_alterado') else 'Sem alterações; não foi necessário novo backup.') + self.aviso_sessao,
             'Nuvem simulada · atualizada' + (' · automática ativa' if self.automatico else ' · modo manual'))
         try:
             if r['recebidas'] or r.get('fechamento_alterado') or not automatico:
@@ -225,7 +260,7 @@ class Conexao(Q.QObject):
                     self.janela.analises.atualizar()
         except Exception as erro:
             registrar_seguro(erro, self.pasta)
-            self.informar('Dados fictícios sincronizados; a atualização da tela falhou. Reabra o estudo para conferir. ' + ('A consulta automática continua agendada.' if self.automatico else 'O modo manual foi preservado.'), self.resumo)
+            self.informar(('Dados de validação sincronizados; a atualização da tela falhou. Reabra a validação para conferir. ' if self.validacao_real else 'Dados fictícios sincronizados; a atualização da tela falhou. Reabra o estudo para conferir. ') + ('A consulta automática continua agendada.' if self.automatico else 'O modo manual foi preservado.'), self.resumo)
         finally:
             self.recebendo = False
             if automatico:
@@ -234,13 +269,18 @@ class Conexao(Q.QObject):
                 self.agendador.ativar()
 
     def sincronizar(self, revisao=None, escolhas=None):
+        if self.validacao_real and not self.vinculado and not self.transferencia_confirmada:
+            self.informar('Confira e confirme a transferência inicial antes de estabelecer o vínculo.')
+            return
         if not self.sessao or self.ocupado:
             return
         self.agendador.parar()
         self.preparacao = None
-        self.rodar(lambda: self.executar_autenticado(lambda s: sincronizacao.sincronizar(self.banco, self.cliente, s, revisao=revisao, escolhas=escolhas)), self.concluida, 'Comparando versões e sincronizando os dados fictícios…')
+        self.rodar(lambda: self.executar_autenticado(lambda s: sincronizacao.sincronizar(self.banco, self.cliente, s, revisao=revisao, escolhas=escolhas)), self.concluida, ('Comparando versões e sincronizando o projeto de validação…' if self.validacao_real else 'Comparando versões e sincronizando os dados fictícios…'))
 
     def automaticamente(self):
+        if self.validacao_real:
+            return
         def consultar(sessao):
             base = sincronizacao.assinatura_base(self.banco)
             return self.cliente.sincronizar(sessao), base
@@ -265,7 +305,7 @@ class Conexao(Q.QObject):
             else:
                 self.informar('Nenhum conflito encontrado.')
                 self.agendador.ativar()
-        self.rodar(lambda: self.executar_autenticado(lambda s: sincronizacao.conferir_conflitos(self.banco, self.cliente, s)), concluir, 'Conferindo as duas versões fictícias…')
+        self.rodar(lambda: self.executar_autenticado(lambda s: sincronizacao.conferir_conflitos(self.banco, self.cliente, s)), concluir, ('Conferindo as duas versões do projeto de validação…' if self.validacao_real else 'Conferindo as duas versões fictícias…'))
 
     def atualizar_fechamento(self):
         self.preparacao = self.revisao = None
@@ -293,9 +333,9 @@ class Conexao(Q.QObject):
             if mudou:
                 self.atualizar_fechamento()
             concluir(config)
-            self.informar('Histórico de fechamento consultado no serviço fictício. Nenhuma venda ou parcela foi movida.')
+            self.informar(('Histórico consultado no projeto de validação. Nenhuma venda ou parcela foi movida.' if self.validacao_real else 'Histórico de fechamento consultado no serviço fictício. Nenhuma venda ou parcela foi movida.'))
             self.agendador.agendar(self.agendador.INTERVALO)
-        self.rodar(lambda: self.executar_autenticado(ler), pronto, 'Consultando o histórico de fechamento fictício…')
+        self.rodar(lambda: self.executar_autenticado(ler), pronto, ('Consultando o histórico do projeto de validação…' if self.validacao_real else 'Consultando o histórico de fechamento fictício…'))
 
     def salvar_fechamento(self, versao, vigencia, dia, concluir):
         if self.ocupado or not self.sessao:
@@ -308,17 +348,20 @@ class Conexao(Q.QObject):
             try:
                 fechamento.guardar(self.banco, config, self.cliente.url, sessao.usuario_id)
             except (OSError, ValueError, sqlite3.Error) as erro:
-                raise nuvem.ErroNuvem('O serviço fictício confirmou a regra, mas a cópia local não foi atualizada. Confira o armazenamento e consulte novamente antes de editar.') from erro
+                raise nuvem.ErroNuvem(('O projeto de validação confirmou a regra, mas a cópia local não foi atualizada. Confira o armazenamento e consulte novamente antes de editar.' if self.validacao_real else 'O serviço fictício confirmou a regra, mas a cópia local não foi atualizada. Confira o armazenamento e consulte novamente antes de editar.')) from erro
             return config
         def pronto(resposta):
             self.sessao, config = resposta
             self.atualizar_fechamento()
             concluir(config)
-            self.informar('Nova regra fictícia salva por vigência. Valores e parcelas existentes foram preservados.')
+            self.informar(('Nova regra salva no projeto de validação. Valores e parcelas existentes foram preservados.' if self.validacao_real else 'Nova regra fictícia salva por vigência. Valores e parcelas existentes foram preservados.'))
             self.agendador.agendar(self.agendador.INTERVALO)
-        self.rodar(lambda: self.executar_autenticado(gravar), pronto, 'Salvando a regra futura no serviço fictício e preservando a cópia local…')
+        self.rodar(lambda: self.executar_autenticado(gravar), pronto, ('Salvando a regra futura no projeto de validação e preservando a cópia local…' if self.validacao_real else 'Salvando a regra futura no serviço fictício e preservando a cópia local…'))
 
     def alterar_automatico(self, valor):
+        if self.validacao_real:
+            self.informar('Esta entrada de validação usa sincronização manual.')
+            return False
         if self.ocupado:
             return False
         try:

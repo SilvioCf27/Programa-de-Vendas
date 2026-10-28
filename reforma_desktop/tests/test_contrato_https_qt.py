@@ -239,3 +239,15 @@ class ContratoHttpsTests(unittest.TestCase):
         self.assertEqual(self.servidor.requisicoes,[])
         self.assertEqual(self.servidor.conexoes,[(HOST,443)])
         self.assertIn('Não foi possível conectar',j.nuvem.status)
+
+    def test_guarda_de_saida_detecta_redirect_se_handler_for_removido(self):
+        # Controle negativo: o teste normal deve falhar se o bloqueio do
+        # cliente desaparecer; a guarda não pode esconder essa tentativa.
+        from urllib import request
+        cliente=self.servidor.cliente()
+        cliente._abrir=request.build_opener(request.ProxyHandler({}),request.HTTPSHandler(context=self.servidor.contexto_cliente)).open
+        self.servidor.falhar(RPC+'sincronizar_desktop_v2',302,{}, {'Location':'https://destino-proibido.invalid/roubo'})
+        with self.assertRaisesRegex(AssertionError,'Saída externa proibida'):
+            cliente._post(RPC+'sincronizar_desktop_v2',{},'acesso-ficticio')
+        self.assertEqual(self.servidor.conexoes,[(HOST,443),('destino-proibido.invalid',443)])
+        self.assertEqual(len(self.servidor.requisicoes),1)

@@ -10,9 +10,9 @@ A sessão estava vinculada à URL fixa do serviço simulado. Salvar e recuperar 
 
 ## Contrato HTTPS exercitado
 
-[Quatorze testes](tests/test_contrato_https_qt.py) instanciam `ProgramFeira.nuvem.ClienteNuvem` sem sobrescrever `_post`. Chamadas passam por JSON, urllib, cabeçalhos, TLS, tratamento de erros e trabalhadores Qt até um [servidor de teste](tests/servidor_https.py). O estado remoto é fictício; não é implementação do Supabase nem substitui validação do SQL.
+[Quinze testes](tests/test_contrato_https_qt.py) instanciam `ProgramFeira.nuvem.ClienteNuvem` sem sobrescrever `_post`. Chamadas passam por JSON, urllib, cabeçalhos, TLS, tratamento de erros e trabalhadores Qt até um [servidor de teste](tests/servidor_https.py). O estado remoto é fictício; não é implementação do Supabase nem substitui validação do SQL.
 
-O servidor escuta somente `127.0.0.1` em porta aleatória. O socket do hostname fictício é roteado para ele e qualquer outra saída falha. Certificado e hostname são verificados; redirecionamentos continuam bloqueados pelo handler do núcleo. O certificado/chave publicados são [recursos exclusivos dos testes](tests/recursos/README.md), confiados somente pelo opener do ensaio. Há contraprova sem essa confiança: TLS falha antes de enviar credenciais HTTP. Nada é instalado na confiança do Windows ou do aplicativo.
+O servidor escuta somente `127.0.0.1` em porta aleatória. O socket do hostname fictício é roteado para ele e qualquer outra saída falha. Certificado e hostname são verificados; redirecionamentos continuam bloqueados pelo handler do núcleo. O certificado/chave publicados são [recursos exclusivos dos testes](tests/recursos/README.md), confiados somente pelo opener do ensaio. Há contraprova sem essa confiança: TLS falha antes de enviar credenciais HTTP. Um controle negativo remove deliberadamente o handler de redirect apenas num cliente do teste: a tentativa proibida é detectada e recusada pela guarda de saída. Isso impede que a guarda esconda uma eventual regressão do bloqueio de redirects. Nada é instalado na confiança do Windows ou do aplicativo.
 
 | Cenário | Resultado exigido |
 | --- | --- |
@@ -32,7 +32,7 @@ Na primeira rodada do instrumento, duas expectativas dos testes precisaram de co
 
 ## Resultados
 
-As 14 verificações dirigidas passaram no Linux, com a de DPAPI nativa ignorada por exigir Windows. Regressões completas e validação Windows em andamento; os resultados finais serão registrados aqui.
+As 15 verificações dirigidas passaram no Linux, com a de DPAPI nativa ignorada por exigir Windows. Regressões completas e validação Windows em andamento; os resultados finais serão registrados aqui.
 
 Para reproduzir, com as dependências do estudo e SQLite compatível:
 

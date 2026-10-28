@@ -85,8 +85,8 @@ class ServidorContrato:
         # para qualquer outro endereço causam falha, nunca tráfego externo.
         conectar=socket.create_connection
         def local(endereco,*args,**kwargs):
+            self.conexoes.append(endereco)  # Inclui tentativas recusadas.
             if endereco!=(HOST,443):raise AssertionError('Saída externa proibida no contrato TLS')
-            self.conexoes.append(endereco)
             return conectar(self.http.server_address,*args,**kwargs)
         return patch('socket.create_connection',local)
 

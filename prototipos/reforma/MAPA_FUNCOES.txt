@@ -261,7 +261,7 @@ ETAPA 6 — CONTRATOS HTTPS — 28/10/2026
 Autorizada após a Etapa 5. Cliente existente com _post preservado, Qt e TLS
 local real; servidor/modelo e dados fictícios. URL da sessão desacoplada da
 constante do serviço fictício; nenhum acesso real é habilitado pela entrada.
-14 novos testes cobrem renovação/DPAPI, autorização, transferências/recibos,
+15 novos testes cobrem renovação/DPAPI, autorização, transferências/recibos,
 erros/redirect, conflitos, fechamento e datas de compras, com UI responsiva.
 Matriz continua 26 I e quatro S: F09/G04/G05 têm contrato TLS acrescido,
 sem comprovação de Supabase/RLS/contas reais; G06 segue ensaio isolado.

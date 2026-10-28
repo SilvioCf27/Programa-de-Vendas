@@ -1225,7 +1225,7 @@ fictício: salvar/carregar agora usa cliente.url. DPAPI e formato permanecem
 os mesmos, somente na pasta isolada; sem persistir senha ou token de acesso.
 
 ENSAIO DE CONTRATO
-Quatorze testes novos usam ClienteNuvem sem sobrescrever _post e um servidor
+Quinze testes novos usam ClienteNuvem sem sobrescrever _post e um servidor
 HTTPS em 127.0.0.1, porta aleatória. O socket do hostname fictício é roteado
 somente para esse servidor; qualquer outra saída falha. O opener do teste
 mantém verificação de certificado/hostname e proibição de redirecionamento.

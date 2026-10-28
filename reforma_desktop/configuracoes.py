@@ -166,9 +166,12 @@ class Configuracoes(W.QDialog):
         if not arquivo:
             return
         resposta = W.QMessageBox.question(self, 'Restaurar banco de estudo',
-            'Substituir os dados deste estudo pelo backup? Uma cópia anterior será preservada. Feche outras instâncias. Ao concluir, esta sessão será encerrada: abra novamente o estudo. Preferências e sessão de conta não fazem parte do backup.',
+            'Substituir os dados deste estudo pelo backup? Uma cópia anterior será preservada. Feche outras instâncias. Ao concluir, esta sessão será encerrada: abra novamente o estudo. A sincronização automática ficará desativada até você conferir e reativar. Preferências e sessão de conta não fazem parte do backup.',
             W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No)
         if resposta != W.QMessageBox.StandardButton.Yes:
+            return
+        if not self.controlador.nuvem.alterar_automatico(False):
+            self.status.setText('Restauração cancelada: não foi possível pausar a automação para a próxima abertura.')
             return
         self.executar(lambda: banco.restaurar_backup(arquivo), self.restaurado)
 

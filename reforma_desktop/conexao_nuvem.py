@@ -260,18 +260,19 @@ class Conexao(Q.QObject):
 
     def alterar_automatico(self, valor):
         if self.ocupado:
-            return
+            return False
         try:
             automacao_nuvem.salvar_preferencia(self.pasta, valor)
         except OSError:
             self.informar('A preferência não pôde ser salva; o modo anterior foi preservado.')
-            return
+            return False
         self.automatico = valor
         if valor:
             self.agendador.ativar()
         else:
             self.agendador.parar()
         self.informar('Sincronização fictícia automática ativada.' if valor else 'Modo manual ativado para o estudo.')
+        return True
 
     def notificar_alteracao(self):
         if self.recebendo:

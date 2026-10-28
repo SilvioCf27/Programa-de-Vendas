@@ -253,6 +253,32 @@ class NuvemTests(unittest.TestCase):
         n.agendador.parar(); n.agendador._disparar(); self.esperar(n)
         self.assertEqual(banco.buscar_venda_por_data('2026-10-23')[3],21)
 
+    def test_servico_ausente_nao_parece_exclusao_de_todos_os_registros(self):
+        self.servico.salvar('2026-10-23','10','20','30')
+        n = self.vincular(self.janela())
+        n.cliente.arquivo.unlink()
+        n.sincronizar(); self.esperar(n)
+        self.assertIn('arquivo do serviço fictício está ausente',n.status)
+        self.assertEqual(len(banco.listar_vendas()),1)
+        self.assertTrue(n.agendador.pausado)
+
+    def test_restauracao_pausa_automacao_na_reabertura(self):
+        self.servico.salvar('2026-10-23','10','20','30')
+        j = self.janela(); n = self.vincular(j)
+        copia = banco.criar_backup()
+        c = j.configuracoes()
+        with patch.object(c,'arquivo_backup',return_value=str(copia)), patch.object(W.QMessageBox,'question',return_value=W.QMessageBox.StandardButton.Yes):
+            c.restaurar()
+        limite = time.monotonic()+15
+        while c.operacao is not None and time.monotonic()<limite:
+            self.app.processEvents(); time.sleep(.005)
+        self.assertTrue(c.reiniciar,c.status.text())
+        self.assertFalse(automacao_nuvem.carregar_preferencia(self.pasta))
+        c.reject()
+        novo = self.janela()
+        self.assertFalse(novo.nuvem.automatico)
+        self.assertIsNone(novo.nuvem.agendador.tarefa)
+
     def test_preferencia_com_falha_preserva_modo(self):
         n = self.janela().nuvem
         with patch.object(automacao_nuvem,'salvar_preferencia',side_effect=OSError()):

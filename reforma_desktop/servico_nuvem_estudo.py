@@ -32,6 +32,9 @@ class ClienteEstudo(nuvem.ClienteNuvem):
                 raise ValueError()
             return dados
         except FileNotFoundError:
+            from ProgramFeira.sincronizacao import vinculado
+            if vinculado(self.arquivo.parent / 'vendas.db'):
+                raise nuvem.ErroNuvem('O arquivo do serviço fictício está ausente. Sincronização interrompida; dados locais preservados.') from None
             return dict(modo='somente-estudo', dados={t: {} for t in migracao.TABELAS}, recibos={})
         except (OSError, ValueError, KeyError, TypeError):
             raise nuvem.ErroNuvem('O serviço fictício local não pôde ser lido. Nenhum dado foi enviado a um serviço real.') from None

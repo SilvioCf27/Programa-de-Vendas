@@ -1,0 +1,5 @@
+{
+  "commit_base": "f964cdb4053983ade0e109afe15078aa476c5bba",
+  "observacao": "Etapa 6: Qt/revisão na revisão final; regressão estável/protótipos na mesma aplicação (e3a6005/f964cdb diferem apenas no controle negativo e documentação). HTTPS em loopback e dados fictícios, sem contas externas.",
+  "data": "2026-10-28"
+}

@@ -1,5 +1,7 @@
 # Revisão conjunta da Etapa 4
 
+**Andamento posterior:** a Etapa 5 foi medida e a [Etapa 6](ETAPA6.md) começou pelos contratos HTTPS. Os resultados abaixo preservam a revisão da Etapa 4.
+
 **Resultado atual — 28/10/2026: as seis lacunas R01–R06 foram corrigidas no estudo e a revisão foi repetida.** O usuário autorizou as correções após a confirmação do ensaio. O layout aprovado e os critérios da coleta foram preservados.
 
 A matriz dos **30 itens** passa a **26 I e quatro S**, sem os seis P anteriores. A regressão e o gate confirmados permitem iniciar as medições da Etapa 5; integrações reais, interação manual, DPI, pacote e atualização continuam nas validações previstas. Não houve mudança dos cálculos, esquema, versão 1.7.1, banco pessoal, contas ou PWA.

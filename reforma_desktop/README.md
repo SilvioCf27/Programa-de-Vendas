@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Entrega atual:** [Etapa 6 — contratos HTTPS](ETAPA6.md), seção 30 do plano. O cliente existente foi exercitado pela interface Qt em servidor TLS local e a sessão passou a usar o projeto do cliente ativo. A entrada padrão continua em simulação; versão 1.7.1, dados e PWA preservados.
+**Entrega atual:** [Etapa 6 — contratos HTTPS](ETAPA6.md), seção 30 do plano. O cliente existente foi exercitado pela interface Qt em servidor TLS local e a sessão passou a usar o projeto do cliente ativo. Windows: 142 testes Qt, 202 estáveis e 31 dos protótipos aprovados. A entrada padrão continua em simulação; versão 1.7.1, dados e PWA preservados.
 
 A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 

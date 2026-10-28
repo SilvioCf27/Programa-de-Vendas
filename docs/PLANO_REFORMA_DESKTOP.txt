@@ -1246,7 +1246,15 @@ teste (sessão nova já em memória e consulta prévia de fechamento), sem mudar
 as regras do núcleo para acomodá-las.
 
 ESTADO E CONTINUIDADE
-Resultado final da regressão Linux/Windows será registrado após a rodada.
+Regressão final: Windows 40686915587, base f964cdb: Qt 142/142, estável
+202/202 e protótipos 31/31, sem falhas/erros/ignorados. Os 15 contratos novos
+passaram, inclusive DPAPI real. Linux: Qt 142 executados, 141 aprovados e
+um DPAPI ignorado; estável 200 aprovados e dois nativos ignorados; protótipos
+31/31; sem falhas/erros. R01–R06 continuam conformes nos dois sistemas.
+Resolução da VM restaurada. Evidências locais em resultados/etapa6-linux e
+nativas em resultados/windows-40686915587, dentro de reforma_desktop.
+Primeira regressão nativa e3a6005 também passou (141/202/31); rodada final
+acrescentou somente controle negativo do transporte e documentação.
 Matriz: 26 I e quatro S (F09/G04/G05/G06), com cobertura de contrato acrescida
 para os três primeiros. Ainda não validar como reais RLS, transações SQL,
 identidade/autorização de conta, concorrência PC/PWA, Drive, pacote, atualização

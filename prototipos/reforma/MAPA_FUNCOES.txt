@@ -266,3 +266,11 @@ erros/redirect, conflitos, fechamento e datas de compras, com UI responsiva.
 Matriz continua 26 I e quatro S: F09/G04/G05 têm contrato TLS acrescido,
 sem comprovação de Supabase/RLS/contas reais; G06 segue ensaio isolado.
 Próxima atividade e resultados: reforma_desktop/ETAPA6.md. Etapa 6 não concluída.
+
+ETAPA 6 — RESULTADO DO CONTRATO
+Windows 40686915587, base f964cdb: 142 Qt, 202 estável, 31 protótipos aprovados;
+15 contratos novos aprovados, inclusive DPAPI/renovação real na pasta fictícia.
+Linux: 141 Qt aprovados/um DPAPI ignorado; 200 estável aprovados/dois nativos
+ignorados; 31 protótipos aprovados. R01–R06 conformes; sem falhas/erros.
+Etapa 6 segue aberta para adaptadores reais, validação externa, interação,
+escalas/acessibilidade, pacote e atualização antes da publicação aprovada.

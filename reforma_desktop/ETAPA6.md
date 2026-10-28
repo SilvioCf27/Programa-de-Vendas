@@ -32,7 +32,11 @@ Na primeira rodada do instrumento, duas expectativas dos testes precisaram de co
 
 ## Resultados
 
-As 15 verificações dirigidas passaram no Linux, com a de DPAPI nativa ignorada por exigir Windows. Regressões completas e validação Windows em andamento; os resultados finais serão registrados aqui.
+Linux: **142 testes Qt executados, 141 aprovados e um ignorado por exigir DPAPI do Windows**. A suíte estável teve **200 aprovados e dois nativos ignorados**, e os protótipos **31/31 aprovados**. As seis verificações da revisão anterior continuam conformes. Sem falhas ou erros. [Evidências locais](resultados/etapa6-linux), revisão `f964cdb`.
+
+Windows nativo: **142/142 Qt, 202/202 estável e 31/31 protótipos aprovados**, sem falhas, erros ou ignorados. Os **15 testes novos** passaram, incluindo DPAPI real, renovação sem novo login e o controle negativo de redirect. As seis verificações R01–R06 continuam conformes. [Evidências da execução 40686915587](resultados/windows-40686915587), revisão `f964cdb`; Python 3.13.16, SQLite 3.50.4 e Qt 6.10.2. A resolução da VM foi restaurada.
+
+A primeira regressão nativa (`e3a6005`, execução 40686463631) também passou: 141 Qt, 202 estável e 31 protótipos. A rodada final acrescentou somente o controle negativo do transporte e documentação; o código da aplicação é o mesmo. Os JSONs finais ficam ligados acima; não houve publicação de executável.
 
 Para reproduzir, com as dependências do estudo e SQLite compatível:
 

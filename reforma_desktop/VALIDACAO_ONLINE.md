@@ -71,3 +71,7 @@ end $$;
 5. A URL HTTPS e a chave **Publishable/anon** desse projeto são usadas localmente no preparador de perfil; não use secret/service_role. Após preparar e abrir a entrada separada, valide primeiro o login, sem vendas reais. Os exemplos e envios serão conferidos na sequência.
 
 Criar o projeto não atualiza o PWA nem muda o projeto de produção. A conferência PC/PWA exigirá posteriormente uma instância web de testes configurada para esse projeto; não trocar a configuração do site em uso.
+
+### Histórico da revisão Windows desta entrega
+
+As execuções 40709506875 (`ffecb9b`) e 40710160241 (`dad9eb2`) também reproduziram as cinco falhas por modal remanescente. Houve ainda uma expectativa incorreta no teste de pasta: o Windows forneceu `RUNNER~1`, enquanto a guarda retornou o caminho canônico `runneradmin`. A comparação do teste passou a usar `resolve()`; a guarda e a identidade do perfil não foram flexibilizadas. As rodadas reprovadas não aprovam a entrega. A validação final usa a correção dos modais e a comparação normalizada.

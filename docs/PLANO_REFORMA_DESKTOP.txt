@@ -1363,3 +1363,9 @@ alterou o agendador para ignorar modais. O principal agora fecha diálogos
 filhos só após as guardas de operação/backup, com proteção de reentrada.
 Teste novo e sequência dirigida online → automático passaram. Regressão
 completa será repetida antes de concluir a entrega.
+
+CONTRAPROVA WINDOWS
+As duas primeiras execuções Windows reproduziram as cinco falhas por modal.
+Uma sexta falha era do instrumento, comparando RUNNER~1 com o caminho
+canônico runneradmin. O teste agora compara r.resolve(), sem flexibilizar
+as guardas de caminho/projeto. Rodada final será repetida após essa correção.

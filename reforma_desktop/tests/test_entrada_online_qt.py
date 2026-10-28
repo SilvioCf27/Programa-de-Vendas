@@ -121,7 +121,7 @@ class EntradaOnlineTests(unittest.TestCase):
     def test_execucao_independente_persiste_sem_copiar_historico_ou_sessao(self):
         p,r=self.preparar_perfil();execucao.preparar(p,r)
         self.assertFalse((r/'vendas.db').exists());self.assertFalse((r/sessao_windows.NOME).exists())
-        self.assertEqual(execucao.preparar(p,r),r)
+        self.assertEqual(execucao.preparar(p,r),r.resolve())
         perfil.conferir(p)
         (r/'nuvem.json').write_text(json.dumps({'url':'https://outro.supabase.co','chave_publica':CHAVE}))
         with self.assertRaisesRegex(ValueError,'projeto'):execucao.preparar(p,r)

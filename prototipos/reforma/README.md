@@ -1,8 +1,8 @@
 # Estudos da reforma do desktop
 
-**Rodada atual:** [revisão conjunta da Etapa 4](../../reforma_desktop/REVISAO_ETAPA4.md), seção 28 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A [comparação técnica](avaliacao/DECISAO_TECNICA.md) permanece como base da decisão.
+**Rodada atual:** [Etapa 5 — medições e fluidez](../../reforma_desktop/DESEMPENHO.md), seção 29 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A [comparação técnica](avaliacao/DECISAO_TECNICA.md) permanece como base da decisão.
 
-A revisão estética e a escolha PySide6 foram aprovadas explicitamente. A Etapa 4 começou: [primeira integração de navegação e Vendas](../../reforma_desktop/README.md). O andamento atual está na seção 28 do plano. Os estudos abaixo não substituem o programa funcional 1.7.1.
+A revisão estética e a escolha PySide6 foram aprovadas explicitamente. A Etapa 4 começou: [primeira integração de navegação e Vendas](../../reforma_desktop/README.md). O andamento atual está na seção 29 do plano. Os estudos abaixo não substituem o programa funcional 1.7.1.
 
 - [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
 - [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)

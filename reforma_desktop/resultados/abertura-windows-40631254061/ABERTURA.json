@@ -1,0 +1,249 @@
+{
+  "data_utc": "2026-10-28T04:15:52.569650+00:00",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "commit_antes": "18592c2d1a13108a08b7d46486497aa5d387ed11",
+  "commit_depois": "c758072b297e6b0348cf84e1f418b5a00a700d2c",
+  "repeticoes": 7,
+  "metodo": "Somente abertura Qt, 224 registros, mesmas bases/tema/janela. Processos novos; revisões alternadas a cada par, sem descartar primeiras amostras. Fases e CPU separados. Sem contas/rede. Não substitui a coleta completa.",
+  "resultados": [
+    {
+      "total_ms": 1508.8475999999957,
+      "cpu_ms": 781.25,
+      "importacao_ms": 350.63019999998346,
+      "preparar_interface_ms": 123.96710000001576,
+      "construcao_ms": 936.2969999999962,
+      "exibicao_ms": 97.95330000000035,
+      "rss_mib": 109.65234375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 1
+    },
+    {
+      "total_ms": 775.3001000000097,
+      "cpu_ms": 718.75,
+      "importacao_ms": 181.59310000001483,
+      "preparar_interface_ms": 35.49759999998514,
+      "construcao_ms": 455.63580000001025,
+      "exibicao_ms": 102.57359999999949,
+      "rss_mib": 108.52734375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 1
+    },
+    {
+      "total_ms": 682.0505000000026,
+      "cpu_ms": 640.625,
+      "importacao_ms": 122.06170000001748,
+      "preparar_interface_ms": 36.0196999999971,
+      "construcao_ms": 415.27349999998364,
+      "exibicao_ms": 108.69560000000433,
+      "rss_mib": 108.234375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 2
+    },
+    {
+      "total_ms": 705.2911000000108,
+      "cpu_ms": 640.625,
+      "importacao_ms": 123.33780000000161,
+      "preparar_interface_ms": 38.63440000000651,
+      "construcao_ms": 439.6601999999916,
+      "exibicao_ms": 103.6587000000111,
+      "rss_mib": 108.05078125,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 2
+    },
+    {
+      "total_ms": 700.1563999999973,
+      "cpu_ms": 671.875,
+      "importacao_ms": 120.4067999999836,
+      "preparar_interface_ms": 41.721499999994194,
+      "construcao_ms": 432.60840000002077,
+      "exibicao_ms": 105.41969999999878,
+      "rss_mib": 108.06640625,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 3
+    },
+    {
+      "total_ms": 681.9308999999976,
+      "cpu_ms": 593.75,
+      "importacao_ms": 122.7453000000196,
+      "preparar_interface_ms": 35.135299999979,
+      "construcao_ms": 420.8881000000133,
+      "exibicao_ms": 103.16219999998566,
+      "rss_mib": 107.95703125,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 3
+    },
+    {
+      "total_ms": 701.7543999999987,
+      "cpu_ms": 625.0,
+      "importacao_ms": 126.37280000001283,
+      "preparar_interface_ms": 39.162399999980835,
+      "construcao_ms": 434.0945000000147,
+      "exibicao_ms": 102.1246999999903,
+      "rss_mib": 107.7421875,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 4
+    },
+    {
+      "total_ms": 690.4287999999781,
+      "cpu_ms": 656.25,
+      "importacao_ms": 120.59479999999212,
+      "preparar_interface_ms": 35.34179999999765,
+      "construcao_ms": 433.2320999999979,
+      "exibicao_ms": 101.26009999999042,
+      "rss_mib": 107.87890625,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 4
+    },
+    {
+      "total_ms": 702.1183999999892,
+      "cpu_ms": 609.375,
+      "importacao_ms": 120.94909999999004,
+      "preparar_interface_ms": 41.13200000000461,
+      "construcao_ms": 439.08250000001203,
+      "exibicao_ms": 100.95479999998247,
+      "rss_mib": 107.66015625,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 5
+    },
+    {
+      "total_ms": 684.295800000001,
+      "cpu_ms": 562.5,
+      "importacao_ms": 120.04569999999148,
+      "preparar_interface_ms": 38.20569999999179,
+      "construcao_ms": 421.7309,
+      "exibicao_ms": 104.31350000001771,
+      "rss_mib": 107.7734375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 5
+    },
+    {
+      "total_ms": 684.4978999999967,
+      "cpu_ms": 515.625,
+      "importacao_ms": 119.77020000000493,
+      "preparar_interface_ms": 35.973799999993616,
+      "construcao_ms": 426.283600000005,
+      "exibicao_ms": 102.47029999999313,
+      "rss_mib": 108.0625,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 6
+    },
+    {
+      "total_ms": 675.5943000000002,
+      "cpu_ms": 546.875,
+      "importacao_ms": 119.82280000000856,
+      "preparar_interface_ms": 35.63420000000406,
+      "construcao_ms": 419.53369999998813,
+      "exibicao_ms": 100.60359999999946,
+      "rss_mib": 107.94140625,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 6
+    },
+    {
+      "total_ms": 692.7916999999866,
+      "cpu_ms": 515.625,
+      "importacao_ms": 120.21970000000692,
+      "preparar_interface_ms": 35.588099999984024,
+      "construcao_ms": 434.0655999999967,
+      "exibicao_ms": 102.91829999999891,
+      "rss_mib": 107.58984375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "antes",
+      "repeticao": 7
+    },
+    {
+      "total_ms": 689.0309000000059,
+      "cpu_ms": 609.375,
+      "importacao_ms": 120.15499999998269,
+      "preparar_interface_ms": 34.78929999999991,
+      "construcao_ms": 430.4666000000168,
+      "exibicao_ms": 103.62000000000648,
+      "rss_mib": 108.05859375,
+      "linhas": 28,
+      "tela": [
+        1536,
+        960
+      ],
+      "qt": "6.10.2",
+      "revisao": "depois",
+      "repeticao": 7
+    }
+  ]
+}

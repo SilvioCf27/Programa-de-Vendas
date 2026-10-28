@@ -245,3 +245,14 @@ V05/V06: leitura completa reutilizada na semana apenas quando não há recorte.
 Cinco novos testes protegem invalidação, frescor, recorte e liberação de cache.
 Resultados/limites e próximas verificações: reforma_desktop/DESEMPENHO.md.
 Produção 1.7.1, contas pessoais, PWA e SQL preservados. Sem pacote/release.
+
+ETAPA 5 — RESULTADO
+Windows 40630217026: repetir Todas/5.000, 425,34 → 211,10 ms;
+atualizar após mudança 434,50 → 215,77 ms; custo de cerca de 4 MiB no RSS final.
+Linux: repetir 331,13 → 161,64 ms; cerca de +3 MiB nessa carga.
+Contraprova de abertura 40631254061 não repetiu aumento observado na primeira
+VM: sete pares alternados, mediana 700,16 → 684,50 ms; sem promessa de ganho.
+127 testes Qt, 202 estável e 31 protótipos aprovados no Windows 40630216953;
+Linux 127 Qt, 200 estável aprovados/dois nativos ignorados e 31 protótipos.
+R01–R06 continuam conformes. Próxima atividade: Etapa 6 original, inventário e
+integrações reais controladas, escalas/acessibilidade, pacote e atualização.

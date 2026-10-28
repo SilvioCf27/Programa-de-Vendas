@@ -1,0 +1,6 @@
+{
+  "commit_antes": "18592c2d1a13108a08b7d46486497aa5d387ed11",
+  "commit_depois": "7cccfb1c32756d6cf1af1bfaf644098e4174f1d7",
+  "data": "2026-10-28",
+  "observacao": "Etapa 5. Bases fictícias. Coleta antes no código da referência, com instrumento ainda não comitado; depois e regressão em 7cccfb1. O assertion de contagem de timers foi acrescentado ao instrumento após o antes, fora dos tempos dos eventos. Nenhuma alteração da base estável."
+}

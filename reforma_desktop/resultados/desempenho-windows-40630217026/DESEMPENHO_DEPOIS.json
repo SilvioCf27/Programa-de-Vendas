@@ -1,0 +1,4295 @@
+{
+  "data_utc": "2026-10-28T04:11:55.867137+00:00",
+  "commit_base": "7cccfb1c32756d6cf1af1bfaf644098e4174f1d7",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "metodo": "Aplicativos ligados ao núcleo real; processos novos alternados; mesmo gerador/SQLite; abertura após fixture e antes de imports gráficos; Mês atual, Grafite, 1536x960 solicitados. Retornos sem mudança separados da invalidação. Paginação Qt preservada, Tk tabela integral. Sem contas/rede.",
+  "repeticoes": 3,
+  "ciclos": 10,
+  "resultados": [
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 2306.828,
+      "rss_inicial_mib": 64.672,
+      "rss_final_mib": 65.305,
+      "crescimento_mib": 0.633,
+      "rss_aquecido_mib": 64.738,
+      "rss_apos_ciclos_mib": 64.75,
+      "crescimento_ciclos_mib": 0.012,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 65.305,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 545.311,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 812.808,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.539,
+            "financas": 6.636
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 362.115,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 760.228,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.23,
+            "financas": 4.706
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 917.659,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 326.549,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 728.741,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.204,
+            "financas": 4.547
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 921.407,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 334.448,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 777.272,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.743,
+            "financas": 6.438
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 961.122,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 350.425,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 785.077,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.417,
+            "financas": 6.222
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 960.725,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 346.281,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 779.501,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.229,
+            "financas": 4.674
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1007.928,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 365.168,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 759.751,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.57,
+            "financas": 5.636
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1029.48,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 383.847,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 816.336,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.232,
+            "financas": 4.657
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1066.584,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 406.563,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 830.048,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.301,
+            "financas": 4.802
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1036.002,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 352.28,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 837.649,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.277,
+            "financas": 4.777
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1036.123,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 393.393,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 852.335,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.25,
+            "financas": 4.722
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1393.407,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 55.845,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.561,
+            "financas": 11.909
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 60.107,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 12.214,
+            "analises": 3.506,
+            "larguras": 15.054
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 158.091,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.12,
+            "analises": 14.485,
+            "larguras": 40.379
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 107.517,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.074,
+            "analises": 16.565,
+            "larguras": 35.121
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 115.385,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.249,
+            "analises": 17.561,
+            "larguras": 35.514
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 343.553,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 770.376,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.533,
+            "financas": 7.589
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 2.984,
+        "max_ms": 3.186,
+        "p95_ms": 3.186,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 62.825,
+        "max_ms": 386.156,
+        "p95_ms": 236.646,
+        "amostras": 319
+      },
+      "linhas_visiveis_todas": 224,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 1002.545,
+      "rss_inicial_mib": 109.039,
+      "rss_final_mib": 123.516,
+      "crescimento_mib": 14.477,
+      "rss_aquecido_mib": 120.309,
+      "rss_apos_ciclos_mib": 120.316,
+      "crescimento_ciclos_mib": 0.008,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 126.309,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 245.485,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 151.273,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.441
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 28.59,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 31.132,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.173,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.236,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 29.168,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.918,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 27.995,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 33.68,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.838,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.405,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 28.789,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 36.878,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 27.498,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 29.083,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 34.977,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 30.586,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 30.234,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 40.814,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.748,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.513,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 43.261,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.668,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.042,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.608,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 33.552,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 38.387,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 50.651,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.13,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.083,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 34.187,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 71.077,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.49
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 57.771,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 9.782,
+            "consulta_vendas": 11.98,
+            "tabela": 23.83
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 77.039,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.767,
+            "consulta_vendas": 6.116,
+            "tabela": 30.109
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 55.201,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.931,
+            "consulta_vendas": 6.215,
+            "tabela": 24.357
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 61.995,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.878,
+            "consulta_vendas": 6.327,
+            "tabela": 23.384
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 40.791,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 68.404,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.497
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 2.341,
+        "max_ms": 2.465,
+        "p95_ms": 2.465,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 26.829,
+        "max_ms": 257.026,
+        "p95_ms": 45.077,
+        "amostras": 69
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 935.301,
+      "rss_inicial_mib": 108.797,
+      "rss_final_mib": 122.898,
+      "crescimento_mib": 14.102,
+      "rss_aquecido_mib": 119.816,
+      "rss_apos_ciclos_mib": 119.91,
+      "crescimento_ciclos_mib": 0.094,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 125.766,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 238.724,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 144.006,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.53
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.867,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 31.717,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 34.156,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.535,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 28.089,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.539,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.299,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.364,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 38.158,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 28.124,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.277,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.845,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.313,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 28.318,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 34.255,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.512,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 28.651,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 35.444,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.441,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 33.99,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 33.767,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.786,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.353,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 38.276,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 29.676,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 27.369,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 32.924,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 27.54,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 28.389,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 35.154,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 66.753,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 4.386
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 59.096,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.694,
+            "consulta_vendas": 10.94,
+            "tabela": 23.729
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 80.364,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.691,
+            "consulta_vendas": 6.875,
+            "tabela": 33.689
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 62.406,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 4.295,
+            "consulta_vendas": 10.036,
+            "tabela": 23.809
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 65.47,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.445,
+            "consulta_vendas": 6.705,
+            "tabela": 23.935
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 41.845,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 77.107,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.459
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 2.492,
+        "max_ms": 3.261,
+        "p95_ms": 3.261,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 28.076,
+        "max_ms": 494.595,
+        "p95_ms": 49.126,
+        "amostras": 64
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 3596.614,
+      "rss_inicial_mib": 63.5,
+      "rss_final_mib": 64.305,
+      "crescimento_mib": 0.805,
+      "rss_aquecido_mib": 63.621,
+      "rss_apos_ciclos_mib": 63.613,
+      "crescimento_ciclos_mib": -0.008,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 64.309,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 573.157,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 968.008,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.757,
+            "financas": 6.887
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 381.74,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 827.465,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.221,
+            "financas": 4.674
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 940.893,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 351.109,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 782.349,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.209,
+            "financas": 5.846
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1051.972,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 355.386,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 789.258,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.633,
+            "financas": 5.834
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1023.912,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 354.389,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 812.181,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.24,
+            "financas": 4.655
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1019.653,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 361.549,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 771.108,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.247,
+            "financas": 5.625
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 936.383,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.554,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 730.631,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.241,
+            "financas": 5.443
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 903.272,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 322.713,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 729.262,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.226,
+            "financas": 4.616
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 909.54,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 325.262,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 729.051,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.214,
+            "financas": 4.551
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 909.489,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 325.206,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 727.719,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.26,
+            "financas": 4.655
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 796.697,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.36,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 728.286,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.599,
+            "financas": 5.019
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 886.799,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 38.62,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.967,
+            "financas": 7.704
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 48.705,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.318,
+            "analises": 3.299,
+            "larguras": 9.442
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 134.002,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 6.77,
+            "analises": 14.164,
+            "larguras": 35.595
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 104.303,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 6.931,
+            "analises": 14.579,
+            "larguras": 35.147
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 103.133,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 6.645,
+            "analises": 14.607,
+            "larguras": 35.16
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 320.052,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 726.487,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.244,
+            "financas": 6.984
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 1.898,
+        "max_ms": 2.003,
+        "p95_ms": 2.003,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 62.817,
+        "max_ms": 402.124,
+        "p95_ms": 196.657,
+        "amostras": 310
+      },
+      "linhas_visiveis_todas": 224,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 2081.724,
+      "rss_inicial_mib": 63.234,
+      "rss_final_mib": 64.035,
+      "crescimento_mib": 0.801,
+      "rss_aquecido_mib": 63.43,
+      "rss_apos_ciclos_mib": 63.43,
+      "crescimento_ciclos_mib": 0.0,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 64.035,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 501.727,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 802.07,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.286,
+            "financas": 4.9
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 346.475,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 833.655,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.231,
+            "financas": 5.851
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 995.183,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 483.729,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 806.617,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.428,
+            "financas": 4.855
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 1018.978,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 352.727,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 749.272,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.527,
+            "financas": 6.939
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 902.78,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 322.049,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 725.097,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.259,
+            "financas": 4.77
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 873.804,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 319.996,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 722.482,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.48,
+            "financas": 5.439
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 892.237,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.214,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 720.782,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.237,
+            "financas": 4.668
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 782.465,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.16,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 720.68,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.266,
+            "financas": 4.671
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 897.608,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.381,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 724.278,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.151,
+            "financas": 5.651
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 902.012,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 319.331,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 726.082,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.265,
+            "financas": 4.756
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 892.04,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 319.985,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 724.141,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.241,
+            "financas": 4.667
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 894.09,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 37.035,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.288,
+            "financas": 7.106
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 49.61,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.45,
+            "analises": 2.509,
+            "larguras": 9.809
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 135.729,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 7.397,
+            "analises": 12.983,
+            "larguras": 34.543
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 101.678,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 6.816,
+            "analises": 14.778,
+            "larguras": 33.905
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 104.625,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 6.664,
+            "analises": 16.591,
+            "larguras": 34.852
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 318.202,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 728.069,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.377,
+            "financas": 7.121
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 1.917,
+        "max_ms": 2.052,
+        "p95_ms": 2.052,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 57.082,
+        "max_ms": 331.755,
+        "p95_ms": 185.981,
+        "amostras": 313
+      },
+      "linhas_visiveis_todas": 224,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 3
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "c644cea8d99d6c262b0db3bf224371046a09b84a346b975412a9274d14402a47",
+      "vendas": 224,
+      "despesas": 75,
+      "total_centavos": 3670600,
+      "abertura_ms": 715.855,
+      "rss_inicial_mib": 108.562,
+      "rss_final_mib": 122.836,
+      "crescimento_mib": 14.273,
+      "rss_aquecido_mib": 119.676,
+      "rss_apos_ciclos_mib": 119.715,
+      "crescimento_ciclos_mib": 0.039,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 75
+      },
+      "pico_so_mib": 125.711,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 212.957,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 132.831,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.429
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.665,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.311,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.3,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.557,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 26.985,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.367,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.942,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.345,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.144,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.891,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.84,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.293,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.067,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.938,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.489,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.797,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.764,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.879,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.69,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.87,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.889,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.53,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.65,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.35,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.855,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.626,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.186,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.886,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.733,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.665,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 60.089,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.501
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 55.803,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 8.193,
+            "consulta_vendas": 10.341,
+            "tabela": 23.472
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 70.918,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.735,
+            "consulta_vendas": 6.012,
+            "tabela": 29.263
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 52.617,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.728,
+            "consulta_vendas": 6.647,
+            "tabela": 22.61
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 58.119,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 2.601,
+            "consulta_vendas": 5.835,
+            "tabela": 23.103
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 38.465,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 62.143,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 3.08
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 2.353,
+        "max_ms": 2.519,
+        "p95_ms": 2.519,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 24.572,
+        "max_ms": 179.207,
+        "p95_ms": 42.281,
+        "amostras": 66
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 3
+    },
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 2392.832,
+      "rss_inicial_mib": 65.988,
+      "rss_final_mib": 78.066,
+      "crescimento_mib": 12.078,
+      "rss_aquecido_mib": 66.203,
+      "rss_apos_ciclos_mib": 66.301,
+      "crescimento_ciclos_mib": 0.098,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 78.387,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 657.898,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 847.84,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 36.305,
+            "financas": 39.419
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 469.557,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 760.59,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.021,
+            "financas": 38.031
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 788.618,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 470.123,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 769.557,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.527,
+            "financas": 38.912
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 790.037,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 469.632,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 763.578,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.006,
+            "financas": 38.156
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 790.385,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 464.596,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 761.877,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.549,
+            "financas": 37.529
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 790.265,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 467.537,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 768.404,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.478,
+            "financas": 37.731
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 780.411,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 467.048,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 768.648,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.685,
+            "financas": 37.781
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 784.136,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 466.726,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 765.9,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.031,
+            "financas": 37.085
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 786.757,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 467.2,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 763.888,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.59,
+            "financas": 37.754
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 787.662,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 469.299,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 764.14,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.826,
+            "financas": 37.905
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 787.527,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 467.231,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 765.673,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.601,
+            "financas": 37.577
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 794.337,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 70.827,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 36.207,
+            "financas": 42.316
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 205.423,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 137.157,
+            "analises": 3.02,
+            "larguras": 9.397
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 1218.779,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 105.696,
+            "analises": 146.225,
+            "larguras": 626.562
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 1177.015,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 105.09,
+            "analises": 148.375,
+            "larguras": 614.478
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 1178.104,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 104.022,
+            "analises": 151.545,
+            "larguras": 612.421
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 467.373,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 770.112,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.709,
+            "financas": 40.949
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 34.53,
+        "max_ms": 35.628,
+        "p95_ms": 35.628,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 59.669,
+        "max_ms": 1143.181,
+        "p95_ms": 276.506,
+        "amostras": 326
+      },
+      "linhas_visiveis_todas": 5000,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 932.444,
+      "rss_inicial_mib": 109.164,
+      "rss_final_mib": 139.117,
+      "crescimento_mib": 29.953,
+      "rss_aquecido_mib": 121.641,
+      "rss_apos_ciclos_mib": 121.664,
+      "crescimento_ciclos_mib": 0.023,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 140.758,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 255.353,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 174.877,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 43.447
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 26.125,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.021,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.209,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.371,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.396,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.854,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.284,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.839,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.907,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.391,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.147,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.962,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.742,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.965,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.292,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.139,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.983,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.23,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.462,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.823,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.204,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.239,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.894,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.54,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.04,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.391,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.154,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.267,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.628,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.369,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 100.856,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 42.934
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 210.686,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 128.334,
+            "consulta_vendas": 165.614,
+            "tabela": 23.307
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 322.742,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 44.665,
+            "consulta_vendas": 113.622,
+            "tabela": 158.721
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 211.512,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 45.046,
+            "consulta_vendas": 113.762,
+            "tabela": 28.574
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 217.456,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 43.418,
+            "consulta_vendas": 113.693,
+            "tabela": 28.857
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 235.447,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 105.632,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 45.747
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 43.794,
+        "max_ms": 45.123,
+        "p95_ms": 45.123,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 24.254,
+        "max_ms": 525.796,
+        "p95_ms": 191.763,
+        "amostras": 68
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 1
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 920.613,
+      "rss_inicial_mib": 109.086,
+      "rss_final_mib": 138.824,
+      "crescimento_mib": 29.738,
+      "rss_aquecido_mib": 121.547,
+      "rss_apos_ciclos_mib": 121.555,
+      "crescimento_ciclos_mib": 0.008,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 140.547,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 255.722,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 174.026,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 43.026
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.213,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.589,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.492,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.881,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.668,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.408,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.854,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.111,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.123,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.508,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.512,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.713,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.268,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 26.003,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.367,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.933,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.097,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.983,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.097,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.461,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.027,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.095,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.123,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.896,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.261,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.549,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.338,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.92,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.366,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.366,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 100.966,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 43.171
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 211.276,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 128.503,
+            "consulta_vendas": 165.48,
+            "tabela": 23.517
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 322.004,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 44.04,
+            "consulta_vendas": 113.127,
+            "tabela": 157.365
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 211.097,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 44.8,
+            "consulta_vendas": 113.538,
+            "tabela": 28.43
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 215.649,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 42.922,
+            "consulta_vendas": 112.124,
+            "tabela": 28.281
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 234.323,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 105.677,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 45.863
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 42.502,
+        "max_ms": 43.821,
+        "p95_ms": 43.821,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 25.094,
+        "max_ms": 516.341,
+        "p95_ms": 191.372,
+        "amostras": 64
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 2349.467,
+      "rss_inicial_mib": 66.223,
+      "rss_final_mib": 78.285,
+      "crescimento_mib": 12.062,
+      "rss_aquecido_mib": 66.25,
+      "rss_apos_ciclos_mib": 66.5,
+      "crescimento_ciclos_mib": 0.25,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 78.691,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 505.769,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 836.707,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.258,
+            "financas": 38.324
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 320.025,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 755.47,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.773,
+            "financas": 37.852
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 894.51,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 322.175,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 761.773,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.193,
+            "financas": 38.296
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 904.607,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.915,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 761.234,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.318,
+            "financas": 38.351
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 904.108,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 322.468,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 761.973,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.038,
+            "financas": 38.115
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 902.039,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.307,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 764.663,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.446,
+            "financas": 37.539
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 902.558,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 322.552,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 760.551,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.736,
+            "financas": 37.895
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 911.649,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.245,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 762.9,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.858,
+            "financas": 37.99
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 901.736,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.994,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 757.448,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.501,
+            "financas": 37.644
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 901.851,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 332.896,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 758.946,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.772,
+            "financas": 37.884
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 903.392,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 323.004,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 765.203,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.391,
+            "financas": 37.531
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 880.346,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 72.305,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.882,
+            "financas": 41.963
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 204.516,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 136.582,
+            "analises": 2.906,
+            "larguras": 9.35
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 1215.19,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 105.753,
+            "analises": 145.962,
+            "larguras": 621.252
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 1166.909,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 104.082,
+            "analises": 147.974,
+            "larguras": 608.303
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 1170.181,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 103.502,
+            "analises": 148.584,
+            "larguras": 609.037
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 321.076,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 763.313,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.291,
+            "financas": 41.645
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 34.397,
+        "max_ms": 36.192,
+        "p95_ms": 36.192,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 54.42,
+        "max_ms": 1141.089,
+        "p95_ms": 276.636,
+        "amostras": 316
+      },
+      "linhas_visiveis_todas": 5000,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 2
+    },
+    {
+      "ferramenta": "tk",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 2363.489,
+      "rss_inicial_mib": 65.816,
+      "rss_final_mib": 77.133,
+      "crescimento_mib": 11.316,
+      "rss_aquecido_mib": 65.926,
+      "rss_apos_ciclos_mib": 66.027,
+      "crescimento_ciclos_mib": 0.102,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 78.055,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 504.617,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 831.285,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.727,
+            "financas": 37.933
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 325.117,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 761.4,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.447,
+            "financas": 37.609
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 897.352,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 325.596,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 759.392,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.558,
+            "financas": 37.6
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 800.198,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 320.69,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 759.561,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.216,
+            "financas": 38.343
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 792.29,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 320.503,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 764.366,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.551,
+            "financas": 37.727
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 895.087,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.657,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 760.317,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.78,
+            "financas": 37.798
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 903.012,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 324.865,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 758.37,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.385,
+            "financas": 37.527
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 900.694,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.888,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 754.758,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.408,
+            "financas": 37.479
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 899.655,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 332.981,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 757.941,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.58,
+            "financas": 37.561
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 898.708,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.112,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 758.507,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.256,
+            "financas": 37.253
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 898.806,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 321.795,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 758.696,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.909,
+            "financas": 37.92
+          }
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 901.409,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 70.785,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 34.991,
+            "financas": 41.162
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 206.167,
+          "chamadas": {
+            "leitura_vendas": 4,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 137.783,
+            "analises": 2.766,
+            "larguras": 9.38
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 1215.869,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 105.045,
+            "analises": 145.3,
+            "larguras": 625.738
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 1180.395,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 103.964,
+            "analises": 147.531,
+            "larguras": 620.877
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 1183.527,
+          "chamadas": {
+            "leitura_vendas": 3,
+            "analises": 1,
+            "larguras": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 103.592,
+            "analises": 147.876,
+            "larguras": 620.87
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 319.545,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 765.923,
+          "chamadas": {
+            "financas": 1,
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 35.395,
+            "financas": 41.631
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 34.439,
+        "max_ms": 36.17,
+        "p95_ms": 36.17,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 55.443,
+        "max_ms": 1145.149,
+        "p95_ms": 276.336,
+        "amostras": 318
+      },
+      "linhas_visiveis_todas": 5000,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 3
+    },
+    {
+      "ferramenta": "qt",
+      "referencia": "2026-10-28",
+      "sha_dados": "7989b3f3411bd86c7afe8c616d7a834a7ff9ed0ae35bc1e860f0fcf95b71d4cb",
+      "vendas": 5000,
+      "despesas": 1667,
+      "total_centavos": 82099100,
+      "abertura_ms": 906.46,
+      "rss_inicial_mib": 109.215,
+      "rss_final_mib": 139.059,
+      "crescimento_mib": 29.844,
+      "rss_aquecido_mib": 121.426,
+      "rss_apos_ciclos_mib": 121.441,
+      "crescimento_ciclos_mib": 0.016,
+      "financeiro_verificado": {
+        "intervalo": [
+          "2026-01-01",
+          "2026-12-31"
+        ],
+        "registros": 101
+      },
+      "pico_so_mib": 140.645,
+      "eventos": [
+        {
+          "cenario": "primeira_analises",
+          "ms": 255.107,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "primeira_financas",
+          "ms": 171.527,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 42.934
+          }
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.066,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.072,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.071,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.917,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.304,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.629,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.622,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 25.288,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.152,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.799,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.655,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.481,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.958,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.279,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 30.578,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 25.054,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.968,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.005,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.751,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.237,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.559,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 23.423,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.593,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.023,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.439,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.686,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 29.657,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_analises",
+          "ms": 24.119,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_financas",
+          "ms": 24.802,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "retorno_vendas",
+          "ms": 28.228,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_ano",
+          "ms": 100.459,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 42.593
+          }
+        },
+        {
+          "cenario": "aplicar_mes",
+          "ms": 212.663,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 3,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 128.814,
+            "consulta_vendas": 166.688,
+            "tabela": 23.532
+          }
+        },
+        {
+          "cenario": "todas_as_vendas",
+          "ms": 322.633,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 44.046,
+            "consulta_vendas": 113.165,
+            "tabela": 158.194
+          }
+        },
+        {
+          "cenario": "repetir_consulta_todas",
+          "ms": 210.354,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 45.014,
+            "consulta_vendas": 113.836,
+            "tabela": 27.992
+          }
+        },
+        {
+          "cenario": "atualizar_apos_mudanca",
+          "ms": 215.767,
+          "chamadas": {
+            "consulta_vendas": 1,
+            "leitura_vendas": 1,
+            "tabela": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 43.208,
+            "consulta_vendas": 112.811,
+            "tabela": 28.187
+          }
+        },
+        {
+          "cenario": "analises_apos_mudanca",
+          "ms": 234.344,
+          "chamadas": {},
+          "partes_ms": {}
+        },
+        {
+          "cenario": "financas_apos_mudanca",
+          "ms": 105.66,
+          "chamadas": {
+            "leitura_vendas": 1
+          },
+          "partes_ms": {
+            "leitura_vendas": 45.585
+          }
+        }
+      ],
+      "sql_todas": {
+        "mediana_ms": 42.939,
+        "max_ms": 43.965,
+        "p95_ms": 43.965,
+        "amostras": 10
+      },
+      "intervalos_pulso": {
+        "mediana_ms": 24.424,
+        "max_ms": 514.637,
+        "p95_ms": 191.086,
+        "amostras": 65
+      },
+      "linhas_visiveis_todas": 10,
+      "tela": [
+        1536,
+        960
+      ],
+      "sqlite": "3.50.4",
+      "dados_verificados": true,
+      "rede": "bloqueada, sem sessão/Drive/contas configuradas",
+      "repeticao": 3
+    }
+  ]
+}

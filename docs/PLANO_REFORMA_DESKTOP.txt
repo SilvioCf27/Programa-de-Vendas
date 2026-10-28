@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
 Versão do plano: 17 — Etapa 5, medições e fluidez em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 5 iniciada: medição do conjunto integrado e otimizações verificáveis.
+Etapa 5: medição e otimizações verificadas; próxima atividade, Etapa 6.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -344,8 +344,9 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 A Etapa 4 teve as seis lacunas corrigidas, com regressão e revisão dirigidas
 aprovadas no Linux e no Windows. O usuário autorizou a próxima etapa.
-A Etapa 5 compara os aplicativos ligados às regras reais em bases fictícias,
-mede o conjunto e otimiza somente custos identificados. A sequência original
+A Etapa 5 mediu os aplicativos ligados às regras reais em bases fictícias
+e verificou duas otimizações nos dois sistemas. O próximo passo é a Etapa 6
+original: revisão de equivalência e validações para produção. A sequência original
 continua preservada; integrações reais, DPI/acessibilidade, pacote, recuperação
 e atualização 1.7.1 → 2.0 permanecem nas verificações anteriores à publicação.
 Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
@@ -1177,13 +1178,30 @@ Cinco regressões específicas verificam frescor, recorte, busca, ordenação,
 mesmo ID alterado e liberação do cache. Regressões existentes permanecem.
 
 RESULTADOS E LIMITES
-Coletas completas Linux e Windows e regressão estão em andamento nesta
-entrega. Serão consolidadas em reforma_desktop/DESEMPENHO.md com evidências
-brutas, versões e origem. Não comparar percentuais entre sistemas diferentes.
+Coletas completas Linux e Windows e regressão concluídas, registradas em
+reforma_desktop/DESEMPENHO.md com JSONs brutos, versões, método e limites.
+Foram 24 processos por sistema no antes/depois, três repetições por cenário.
+Windows 40630217026: repetir consulta completa com 5.000 vendas passou de
+425,34 para 211,10 ms; após mudança, de 434,50 para 215,77 ms. O RSS final
+cresceu cerca de 4 MiB pelo cache de apresentação. Retornos sem alteração
+não repetiram leituras. Linux: repetir 331,13 → 161,64 ms, cerca de +3 MiB
+no RSS final dessa carga. Não misturar números dos sistemas em uma média.
+
+Uma variação de abertura com 224 na primeira VM (731,32 → 935,30 ms) motivou
+contraprova 40631254061: sete pares de revisões alternadas, mesmas bases,
+fases e CPU separadas. Medianas 700,16 → 684,50 ms, sem repetir aumento
+sistemático. As duas coletas foram mantidas; não se presume a causa da
+variação inicial nem se promete ganho de abertura. Aplicação atual igual à
+7cccfb1; c758072 acrescentou somente o instrumento dessa investigação.
+
+Regressão Windows 40630216953: Qt 127/127, estável 202/202, protótipos 31/31;
+seis checagens de revisão conformes, sem falhas/erros/ignorados. Linux:
+127/127 Qt, 200 estável aprovados e dois nativos ignorados, 31/31 protótipos;
+seis checagens conformes. Resolução das VMs restaurada. Sem nova release.
 A referência antes/depois no Windows usa checkout separado da mesma revisão
 18592c2, com o mesmo medidor, sem modificar a base estável.
 O ensaio é curto: não certifica ausência de vazamento, latência de rede real,
 DPI real, leitor de tela ou pacote Windows. Não haverá release nesta etapa.
-Após medir/verificar o conjunto, seguir a Etapa 6 original: equivalência,
+Etapa 5 concluída no escopo controlado descrito. Próxima atividade: Etapa 6 original: equivalência,
 integrações reais controladas, interação/escala/acessibilidade, pacote e ensaio
 de atualização, com aprovação antes da publicação da versão 2.0.

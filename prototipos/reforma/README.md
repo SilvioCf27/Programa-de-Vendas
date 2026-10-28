@@ -1,8 +1,8 @@
 # Estudos da reforma do desktop
 
-**Rodada atual:** [Etapa 6 — contratos HTTPS](../../reforma_desktop/ETAPA6.md), seção 30 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A [comparação técnica](avaliacao/DECISAO_TECNICA.md) permanece como base da decisão.
+**Rodada atual:** [Etapa 6 — preservação offline](../../reforma_desktop/PREPARACAO_VALIDACAO.md), seção 31 do [plano principal](../../docs/PLANO_REFORMA_DESKTOP.txt). A [comparação técnica](avaliacao/DECISAO_TECNICA.md) permanece como base da decisão.
 
-A revisão estética e a escolha PySide6 foram aprovadas explicitamente. A Etapa 4 começou: [primeira integração de navegação e Vendas](../../reforma_desktop/README.md). O andamento atual está na seção 30 do plano. Os estudos abaixo não substituem o programa funcional 1.7.1.
+A revisão estética e a escolha PySide6 foram aprovadas explicitamente. A Etapa 4 começou: [primeira integração de navegação e Vendas](../../reforma_desktop/README.md). O andamento atual está na seção 31 do plano. Os estudos abaixo não substituem o programa funcional 1.7.1.
 
 - [Galeria comentada: Vendas, Análises e Finanças](REFERENCIA_VISUAL.md)
 - [Briefing completo em TXT para enviar à outra IA](BRIEFING_IDENTIDADE_VISUAL.txt)

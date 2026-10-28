@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 18 — Etapa 6, contratos HTTPS em 28/10/2026.
+Versão do plano: 19 — Etapa 6, preservação offline em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 6 iniciada: contratos de integração e preparação da validação real.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -11,7 +11,7 @@ docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
 As seções numeradas registram o histórico das entregas, com seus estados da
-época. A seção 30 registra o início ATUAL da Etapa 6. A orientação de continuidade do
+época. A seção 31 registra a preparação offline ATUAL da Etapa 6. A orientação de continuidade do
 usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -1263,3 +1263,43 @@ Próxima atividade: preparar preservação de preferências/sessão e configura�
 dos adaptadores reais em entrada de validação, com guardas de projeto/pasta;
 depois ensaio online autorizado e conferências previstas na Etapa 6 original.
 Relatório e pendências: reforma_desktop/ETAPA6.md.
+
+31. ETAPA 6 — PRESERVAÇÃO OFFLINE E PREPARAÇÃO DO PERFIL — 28/10/2026
+
+Autorizada a continuidade. Versão v18 arquivada byte a byte; base 963e75c.
+Continua faltando concluir a Etapa 6 para lançar o desktop 2.0. Etapa 7/PWA
+não bloqueia esse lançamento. Não há prazo prometido nem release nesta entrega.
+
+preparar_validacao.py prepara somente uma pasta de estudo marcada, em destino
+novo e independente. Recusa pasta pessoal, sobreposição, links e projeto de
+teste igual ao configurado na origem ou ao vínculo no banco. Configurações
+são validadas, limitadas a uma lista conhecida e copiadas byte a byte para
+preservados, inclusive DPAPI opaca. Nenhum arquivo pessoal é buscado/copiado
+automaticamente. Nenhuma credencial é decifrada pela preparação.
+
+Snapshot SQLite inclui WAL confirmado, usa o backup verificado existente e
+passa pelo ensaio de recuperação. Só a cópia tem journal finalizado em DELETE,
+para não depender de auxiliares de um banco aberto. Conteúdo lógico de todas
+as tabelas é conferido; mudanças na origem durante o processo interrompem.
+
+A aplicação de validação começa SEM banco e SEM sessão ativa. Tema/período
+são preservados; nuvem tem só URL/chave pública de projeto diferente. Sync,
+atualizador e Drive começam desativados. O arquivo original de cada preferência
+permanece em preservados. Manifesto SHA-256 e marcador de conclusão conferem
+arquivos antes de construir o cliente real. O manifesto detecta alterações
+acidentais; não é criptografia ou assinatura contra malware local.
+
+A fábrica de ClienteNuvem existente não autentica nem faz requisição. A entrada
+GUI online ainda não foi habilitada: não usar o perfil como conexão real pronta.
+Esta entrega prepara sua fronteira e compatibilidade; não altera executar.py,
+executar_reforma.py, ProgramFeira, SQL, dados pessoais ou PWA. Não substitui
+configuração da instalação 1.7.1 e não muda o plano original.
+
+Doze testes novos cobrem cópia, WAL, DPAPI nativa, ausência de automações,
+recusas de caminhos/projetos, adulteração e mudança durante preparação.
+Regressão Linux/Windows em andamento; resultados finais serão registrados.
+Próxima atividade: entrada GUI de validação com configuração/login reais,
+sem controles de simulação, em perfil/projeto separado e com envio explícito.
+Ainda faltam ensaio online/RLS/PC-PWA/Drive, interação/DPI/acessibilidade,
+pacote/recibo/atualização/recuperação e aprovação antes da publicação 2.0.
+Relatório: reforma_desktop/PREPARACAO_VALIDACAO.md.

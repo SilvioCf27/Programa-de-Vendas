@@ -57,4 +57,4 @@ A matriz preserva **26 I e quatro S**. O contrato HTTPS amplia a cobertura de F0
 4. Pacote Qt Windows e protocolo de inicialização/recibo; ensaio 1.7.1 → 2.0 com preservação de dados/configuração/sessão e recuperação após falha.
 5. Conferência do usuário, notas e publicação aprovada. A PWA continua na Etapa 7.
 
-A próxima atividade é o primeiro item acima. Não houve acesso às suas contas, alteração de política SQL ou publicação de executável nesta entrega.
+O primeiro item avançou com a [preservação offline e preparação do perfil](PREPARACAO_VALIDACAO.md). A próxima atividade é ligar a entrada gráfica de validação aos adaptadores reais; a preparação não habilita conexão online por si só. Não houve acesso às suas contas, alteração de política SQL ou publicação de executável nesta entrega.

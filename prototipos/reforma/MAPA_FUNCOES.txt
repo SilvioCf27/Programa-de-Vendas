@@ -1,6 +1,6 @@
 MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
-Estado atual: seção final “ETAPA 6 — CONTRATOS HTTPS” e
-reforma_desktop/ETAPA6.md. Os registros anteriores abaixo preservam
+Estado atual: seção final “ETAPA 6 — PRESERVAÇÃO OFFLINE” e
+reforma_desktop/PREPARACAO_VALIDACAO.md. Os registros anteriores abaixo preservam
 o levantamento e o estado de cada entrega; não são o estado atual agregado.
 
 Base: desktop 1.7.1; levantamento por leitura do código. Não é um relatório de
@@ -274,3 +274,11 @@ Linux: 141 Qt aprovados/um DPAPI ignorado; 200 estável aprovados/dois nativos
 ignorados; 31 protótipos aprovados. R01–R06 conformes; sem falhas/erros.
 Etapa 6 segue aberta para adaptadores reais, validação externa, interação,
 escalas/acessibilidade, pacote e atualização antes da publicação aprovada.
+
+ETAPA 6 — PRESERVAÇÃO OFFLINE — 28/10/2026
+Snapshot e configurações do estudo preservados e conferidos; sessão DPAPI
+opaca permanece arquivada, não ativa no projeto novo. Perfil separado começa
+vazio, com automações desativadas; fábrica do cliente real não faz HTTP.
+Doze testes novos; próximas validações em PREPARACAO_VALIDACAO.md.
+Matriz continua 26 I/quatro S; entrada gráfica online e validação externa
+seguem pendentes. Sem mudança da instalação funcional, SQL ou PWA.

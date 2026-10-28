@@ -109,9 +109,12 @@ class Janela(W.QWidget):
             sl.addWidget(b)
         sl.addStretch()
         sl.addWidget(texto('IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
-        aviso = texto('Banco separado · sem nuvem\nNão substitui a versão 1.7.1.', 9, C['muted'])
+        aviso = texto('Banco separado · serviço local simulado\nNão substitui a versão 1.7.1.', 9, C['muted'])
         aviso.setWordWrap(True)
         sl.addWidget(aviso)
+        self.status_nuvem = texto('Nuvem simulada · desconectada', 9, C['muted'])
+        self.status_nuvem.setWordWrap(True)
+        sl.addWidget(self.status_nuvem)
         root.addWidget(side)
         main = Fundo()
         ml = W.QVBoxLayout(main)
@@ -166,6 +169,10 @@ class Janela(W.QWidget):
         self.relogio.timeout.connect(self.verificar_dia)
         self.dia_exibido = servico.hoje()
         self.relogio.start()
+        from reforma_desktop.conexao_nuvem import Conexao
+        self.nuvem = Conexao(self)
+        self.nuvem.mudou.connect(lambda: self.status_nuvem.setText(self.nuvem.resumo))
+        self.status_nuvem.setText(self.nuvem.resumo)
 
     def construir_vendas(self, layout):
         cards = Cartoes()
@@ -341,6 +348,7 @@ class Janela(W.QWidget):
                     self.ano.addItem(str(ano))
         self.exibir_resultado()
         self.pendente()
+        self.nuvem.notificar_alteracao()
 
     def exibir_resultado(self):
         r = self.resultado
@@ -464,13 +472,30 @@ class Janela(W.QWidget):
             self.atualizar()
 
     def closeEvent(self, evento):
+        if self.nuvem.ocupado:
+            evento.ignore()
+            return
         from reforma_desktop.operacoes_backup import fechar_com_backup
         fechar_com_backup(self, evento)
+        if evento.isAccepted():
+            self.nuvem.agendador.parar()
 
     def configuracoes(self):
         from reforma_desktop.configuracoes import Configuracoes
         janela = Configuracoes(self)
         janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        janela.open()
+        return janela
+
+    def conexao_nuvem(self):
+        if getattr(self, '_painel_nuvem', None) is not None:
+            self._painel_nuvem.raise_()
+            return self._painel_nuvem
+        from reforma_desktop.painel_nuvem import PainelNuvem
+        janela = PainelNuvem(self)
+        janela.setAttribute(Q.Qt.WidgetAttribute.WA_DeleteOnClose)
+        self._painel_nuvem = janela
+        janela.destroyed.connect(lambda: setattr(self, '_painel_nuvem', None))
         janela.open()
         return janela
 
@@ -506,6 +531,8 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
             financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
             financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
     janela = Janela(servico, pasta)
+    if captura:
+        janela.nuvem.agendador.parar()
     janela.mostrar(pagina)
     janela.show()
     if captura:

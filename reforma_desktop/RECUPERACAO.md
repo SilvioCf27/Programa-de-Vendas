@@ -39,4 +39,4 @@ A validação desta entrega cobre restauração real, cancelamento, arquivo inv�
 
 Os testes usam somente diretórios fictícios; não representam acesso ao Drive real, interação manual, leitor de tela, DPI ou teste de instalador.
 
-Próxima atividade: sessão/sincronização; depois, edição do fechamento e atualização, na ordem da Etapa 4 original. Etapas 5 e 6 e o novo executável continuam pendentes.
+Continuidade entregue: [sessão/sincronização simulada](NUVEM.md). Próxima atividade: edição do fechamento e atualização, na ordem da Etapa 4 original. Etapas 5 e 6 e o novo executável continuam pendentes.

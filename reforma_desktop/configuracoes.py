@@ -77,7 +77,8 @@ class Configuracoes(W.QDialog):
         self.destino_drive.setWordWrap(True)
         l.addWidget(self.destino_drive)
         self.mostrar_drive()
-        pendentes = texto('Drive configurado cria uma cópia ao fechar. Sessão/nuvem, edição do fechamento e atualizador Qt seguem na sequência do plano. A versão estável não foi alterada.', 9, C['muted'])
+        l.addWidget(botao('Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
+        pendentes = texto('Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. Edição do fechamento e atualizador Qt seguem na sequência do plano. A versão estável não foi alterada.', 9, C['muted'])
         pendentes.setWordWrap(True)
         layout.addWidget(pendentes)
         scroll.setWidget(corpo)
@@ -174,6 +175,8 @@ class Configuracoes(W.QDialog):
     def restaurado(self, anterior):
         # Não reutiliza snapshots, formulários ou histórico de fechamento em memória.
         self.reiniciar = True
+        self.controlador.nuvem.agendador.pausado = True
+        self.controlador.nuvem.agendador.parar()
         self.controlador.relogio.stop()
         self.findChild(W.QScrollArea).setEnabled(False)
         self.status.setText('Dados restaurados. Cópia anterior: ' + str(anterior) + '\nFeche esta janela e abra novamente o estudo. Não continue editando nesta sessão.')

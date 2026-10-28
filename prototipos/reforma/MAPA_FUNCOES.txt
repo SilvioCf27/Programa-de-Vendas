@@ -168,3 +168,15 @@ G03: verificação externa em temporário; restauração confirmada com backup
      Backup ao fechar integrado, com progresso e opção de continuar em falha.
 G04/G05/G06/F09 edição: pendentes; Etapa 4 não concluída.
 Relatório: reforma_desktop/RECUPERACAO.md.
+
+CONTINUIDADE DA ETAPA 4 — SESSÃO/NUVEM QT, 27/10/2026
+G04: sessão/renovação, desconexão e agendador existentes com adaptador Qt.
+     Consultas/aplicação em trabalhadores, proteção de edição e fechamento,
+     revisão explícita de conflitos e atualização das áreas implementadas.
+G05: conferência/transferência inicial com backup e rechecagem do núcleo.
+     Transporte SOMENTE simulado local, identificado na interface. Não há
+     login real nem transferência de dados pessoais. Prova de conexão real,
+     RLS e comparação entre dispositivos ainda pendentes antes da publicação.
+F09 edição: próximo item; G06 atualizador depois. Etapas 5/6 não concluídas.
+Destino futuro confirmado pelo usuário: versão 2.0, sem release nesta etapa.
+Relatório e limites: reforma_desktop/NUVEM.md.

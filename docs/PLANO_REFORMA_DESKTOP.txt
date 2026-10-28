@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 11 — Etapa 4, restauração/Drive em 27/10/2026.
+Versão do plano: 12 — Etapa 4, sessão/sincronização Qt em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -343,12 +343,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-Esta entrega conecta verificação externa, restauração com cópia anterior e
-transferência ao Drive, manual ou ao fechar, em conjunto exclusivo do estudo.
-Próxima atividade: sessão/sincronização, edição do
-fechamento por vigência e atualização. Revisão conjunta e Etapas 5/6 vêm após
-a equivalência. Versão 1.7.1, banco pessoal e PWA permanecem preservados.
-O estudo continua sem conexão autenticada ou leitura do banco pessoal.
+Esta entrega liga sessão, transferência inicial, automação e revisão de
+conflitos Qt ao núcleo, com serviço fictício local. Conexão real permanece
+bloqueada no estudo: nenhuma credencial da conta pessoal é solicitada.
+Próxima atividade: edição do fechamento por vigência; depois, atualizador.
+Revisão conjunta e Etapas 5/6 vêm após a equivalência. A versão principal
+continua 1.7.1; a publicação futura aprovada será 2.0, após as validações do
+plano e o ensaio de atualização preservando banco/configurações/sessão/Drive.
+PWA e dados pessoais permanecem preservados.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -857,3 +859,50 @@ Não foram acessados Drive real, dados pessoais ou contas; renderização
 offscreen não substitui interação manual, DPI, leitor de tela ou empacotamento.
 Etapa 4 segue em andamento. Não há migração do banco pessoal, conexão real,
 release, alteração da versão funcional, PWA ou antecipação das Etapas 5/6/7.
+
+24. ETAPA 4 — SESSÃO, TRANSFERÊNCIA E SINCRONIZAÇÃO QT — 27/10/2026
+
+CONTINUIDADE E DESTINO DA REFORMA
+O usuário confirmou o isolamento do estudo e a intenção de publicar a futura
+reforma como versão 2.0, usando o atualizador após validação. Não há release
+nesta entrega, troca do executar.py ou alteração da base funcional 1.7.1.
+A versão v11 foi arquivada antes desta revisão; a cronologia é preservada.
+
+INTEGRAÇÃO EM AMBIENTE ISOLADO
+A interface Qt usa ClienteNuvem (sessão e renovação), sessao_windows (DPAPI),
+migracao_nuvem, sincronizacao e automacao_nuvem.Agendador existentes.
+Um adaptador de relógio usa QTimer, sem importar interfaces Tk. Transferência
+inicial exige conferência, backup e confirmação. O vínculo continua explícito.
+Conflitos mostram as duas versões, exigem escolha e confirmação; revisões
+antigas são recusadas e descartadas para permitir nova conferência.
+
+O transporte é um serviço fictício local, com conta fixa identificada na
+interface e sem campo para senha ou URL de produção. Sobrescreve _post sem
+encaminhamento HTTP. Não é Supabase, PWA/celular, servidor multiusuário nem
+prova de RLS. Os mecanismos reais são exercitados contra dados fictícios.
+O serviço persiste em servico-nuvem-estudo.json na pasta separada. A sessão
+renovável fictícia usa DPAPI no Windows, sem senha ou token de acesso em
+arquivo. Fora do Windows, a limitação de persistência é informada.
+
+AUTOMAÇÃO E SEGURANÇA DO ESTADO
+Agenda inicial/envio local de dois segundos e consultas de um minuto usam o
+agendador existente. Erros temporários têm espera progressiva até cinco
+minutos; erros definitivos e conflitos pausam. Formulários/configurações
+abertos adiam a aplicação por cinco segundos. A consulta pode ocorrer fora
+da thread gráfica, mas só aplica quando a interface está livre, usando a
+assinatura da base. Filtros pendentes não são aplicados ou bloqueiam consultas.
+Receber dados invalida/atualiza telas sem agendar outro envio artificial.
+Operações que escrevem bloqueiam edições e fechamento até terminar. Backup
+Drive e restauração permanecem protegidos; restauração pausa o agendador e
+exige reabertura. Captura técnica desativa o agendador e não inicia backup.
+
+VALIDAÇÃO E LIMITES
+Evidências e roteiro: reforma_desktop/NUVEM.md. Testes não usam conta real nem
+rede. Windows/DPAPI serão registrados após a rodada nativa. Primeira rodada
+identificou referência a ícone inexistente, corrigida para recurso já incluído.
+A conexão real e os cenários com projeto separado/duas instâncias continuam
+pendentes para a revisão de integração anterior à publicação; o simulador não
+comprova o serviço real. Também seguem pendentes DPI/acessibilidade manuais,
+empacotamento e atualização 1.7.1 → 2.0 nas Etapas 5/6 originais.
+Etapa 4 não está concluída. Próximo item: edição de fechamento por vigência,
+seguida do atualizador; não antecipar PWA ou novas funções da Etapa 7.

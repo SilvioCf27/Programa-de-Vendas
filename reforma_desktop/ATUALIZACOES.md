@@ -50,4 +50,4 @@ A suíte existente também testa o helper original no Windows com troca e recupe
 
 Antes da publicação, a entrada de produção deverá usar o adaptador real e remover os controles/fixtures de ensaio. Não houve essa liberação nesta entrega.
 
-**Próxima atividade:** revisão conjunta da Etapa 4 e rastreamento do inventário para registrar lacunas, inclusive diagnósticos e demais caminhos. A etapa não é considerada concluída apenas porque as telas existem. Depois seguem as verificações de desempenho, equivalência, integração e empacotamento das Etapas 5/6, antes da publicação aprovada da 2.0. A PWA permanece preservada.
+**Continuidade:** [revisão conjunta realizada](REVISAO_ETAPA4.md), com seis lacunas abertas para correção antes de encerrar a Etapa 4. Depois da nova conferência, seguem as verificações de desempenho, equivalência, integração e empacotamento das Etapas 5/6, antes da publicação aprovada da 2.0. A PWA permanece preservada.

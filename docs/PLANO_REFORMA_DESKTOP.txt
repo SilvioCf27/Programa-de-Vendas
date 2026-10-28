@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 14 — Etapa 4, atualizador Qt em ensaio em 27/10/2026.
+Versão do plano: 15 — Etapa 4, revisão conjunta e lacunas em 27/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -10,9 +10,9 @@ A versão 1 de 26/10/2026 foi preservada byte a byte em:
 docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
-As seções 10 a 21 registram o histórico de complementos anteriores.
-A seção 22 registra configurações/preferências e a implementação ATUAL; os
-estados antigos permanecem como registro de sua época. A nova orientação do usuário está preservada em
+As seções numeradas registram o histórico das entregas, com seus estados da
+época. A seção 27 registra a revisão ATUAL. A orientação de continuidade do
+usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
 a decisão técnica e aprovação previstas na Etapa 3.
@@ -343,12 +343,12 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-Esta entrega inclui a interface Qt do atualizador em ensaio local isolado.
-Próxima atividade: revisão conjunta da Etapa 4 e conferência do inventário,
-registrando qualquer lacuna antes de declarar equivalência ou concluir a etapa.
-Depois seguem Etapas 5/6: desempenho, integração real, pacote, instalação,
-recuperação e atualização 1.7.1 → 2.0, antes da publicação aprovada. A versão
-funcional, o banco pessoal, as contas e a PWA permanecem preservados.
+O usuário confirmou o teste do ensaio do atualizador. A revisão percorreu os
+30 itens do inventário e reproduziu seis lacunas. Não encerra a Etapa 4.
+Próxima atividade: corrigir R01–R06 e ampliar a regressão, depois repetir a
+coleta e a revisão conjunta. Só então avaliar avanço à Etapa 5. Integração
+real, DPI/acessibilidade, pacote, recuperação e atualização 1.7.1 → 2.0 seguem
+nas validações originais. Sem mudança da versão funcional, banco ou PWA.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -1022,3 +1022,53 @@ considerar Etapa 4 concluída apenas pela existência das janelas. Integração
 real de nuvem/Drive/atualizador, DPI/acessibilidade, desempenho e pacote/
 instalação/recuperação continuam pendentes nas verificações do plano.
 A versão 2.0 só será publicada após concluir as validações e aprovação final.
+
+27. ETAPA 4 — REVISÃO CONJUNTA DO INVENTÁRIO — 27/10/2026
+
+CONFIRMAÇÃO E ESCOPO
+O usuário informou “Testei e confirmo” sobre o ensaio do atualizador e autorizou
+a revisão seguinte. A confirmação é do ensaio; não autoriza publicar a 2.0,
+usar o banco pessoal ou considerar todas as funções/integrações aprovadas.
+A versão v14 foi preservada antes desta revisão. O plano original e suas
+etapas continuam válidos; não houve mudança de direção ou implementação.
+
+RESULTADO DO RASTREAMENTO
+Os 30 IDs V01–V09/A01–A04/F01–F10/G01–G07 foram localizados em código, acessos
+e testes: 20 com implementação coberta por testes controlados (I), seis com
+lacunas reproduzidas (P), quatro com integração simulada (S). Esses estados
+não são certificação de equivalência/produção. Matriz e critérios completos:
+reforma_desktop/REVISAO_ETAPA4.md. Registros anteriores do mapa foram mantidos,
+com ponteiro para o estado atual; guias com informações antigas foram corrigidos.
+
+SEIS LACUNAS
+R01/V01: Salvar com data parcialmente digitada aceita a última data válida.
+R02/A02: Comparar A/B com data parcial anuncia comparação aplicada.
+R03/V03: Enter não abre edição, embora duplo clique continue abrindo uma vez.
+R04/G02: trabalhador sanitiza erro inesperado, mas não registra diagnóstico;
+         ligação do Qt ao registro seguro de entrada/callbacks ainda ausente.
+R05/G03: fechamento direto da janela principal é aceito com backup ativo;
+         a janela do backup permanece visível. Sem alegação de perda/crash.
+R06/V06: falha transitória na virada marca o dia antes de atualizar e impede
+         nova tentativa no próximo disparo para o mesmo dia.
+Datas foram testadas com foco e ano parcial; comportamento nativo de clique/
+Enter/perda de foco ainda requer conferência interativa. Uma data impossível
+normalizada pelo próprio Qt não foi classificada como bug.
+
+VERIFICAÇÃO E BLOQUEIO DE AVANÇO
+Ferramenta isolada: reforma_desktop/avaliacao/revisar_etapa4.py, com JSON por
+caso e sem contas/rede/dados pessoais. --exigir-conformidade retorna 1 enquanto
+houver caso não conforme; o workflow coleta a evidência e bloqueia a revisão,
+mesmo que a regressão conhecida esteja aprovada. Essa falha não é build ou
+publicação de executável; a tarefa é revisão e não corrige/oculta as lacunas.
+Resultados finais Linux/Windows serão registrados após a rodada completa.
+
+PRÓXIMA ATIVIDADE
+Fechar as lacunas em partes pequenas e testadas: diagnóstico seguro, validação
+de datas e caminhos dependentes, guarda de encerramento, retomada na virada e
+teclado sem duplicidade. Repetir coleta/matriz e revisão antes de encerrar a
+Etapa 4. Não iniciar Etapa 5 nesta entrega nem novas funções da Etapa 7.
+Integrações reais e pacote/recibo de inicialização/atualização Qt ainda exigem
+validação antes de publicar; executar.py e o spec continuam da versão estável.
+A proteção de coleta específica de Tcl não precisa ser copiada para Qt;
+o ciclo de vida de QObject/QThread precisa ser conferido por comportamento.
+Versão 1.7.1, dados reais, sessão/Drive pessoais e PWA permanecem intactos.

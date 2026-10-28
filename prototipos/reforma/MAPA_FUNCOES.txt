@@ -1,4 +1,8 @@
 MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
+Estado atual: seção final “REVISÃO CONJUNTA DA ETAPA 4” e
+reforma_desktop/REVISAO_ETAPA4.md. Os registros anteriores abaixo preservam
+o levantamento e o estado de cada entrega; não são o estado atual agregado.
+
 Base: desktop 1.7.1; levantamento por leitura do código. Não é um relatório de
 migração concluída. Os protótipos demonstram a distribuição, não todas as ações.
 
@@ -201,3 +205,16 @@ Próximo item: revisão conjunta e rastreamento de TODOS os itens V/A/F/G,
 inclusive G02 diagnósticos, sem declarar equivalência apenas por ter telas.
 Etapas 5/6 e publicação dependem das validações/aprovação. PWA preservada.
 Relatório: reforma_desktop/ATUALIZACOES.md.
+
+REVISÃO CONJUNTA DA ETAPA 4 — 27/10/2026
+Usuário confirmou o ensaio do atualizador; não é aprovação de release/produção.
+Todos os 30 IDs rastreados. Matriz: reforma_desktop/REVISAO_ETAPA4.md.
+20 I: implementação coberta por testes controlados, ainda sem aprovação final.
+ 6 P: V01/R01 data parcial, A02/R02 data parcial A/B, V03/R03 Enter,
+      G02/R04 diagnóstico, G03/R05 fechamento durante backup,
+      V06/R06 falha transitória na virada do dia.
+ 4 S: F09/G04/G05/G06 usam transporte/processos fictícios, sem validação real.
+Próximo passo: corrigir/retestar R01–R06 antes de encerrar a Etapa 4 e avançar.
+DPI/acessibilidade, desempenho e validação real/pacote permanecem nas etapas
+previstas. Diagnósticos são preservação de mecanismo, não uma nova função.
+Nenhum módulo funcional, dado pessoal, release ou PWA foi alterado na revisão.

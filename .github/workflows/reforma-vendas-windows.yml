@@ -27,6 +27,9 @@ jobs:
         run: python prototipos/reforma/avaliacao/tela_windows.py --saida resultados-qt/TELA_WINDOWS.json
       - name: Verificar áreas, preferências e temas
         run: python reforma_desktop/validar.py --saida resultados-qt/INTEGRACAO_QT.json
+      - name: Revisar lacunas de equivalência da Etapa 4
+        if: always()
+        run: python reforma_desktop/avaliacao/revisar_etapa4.py --saida resultados-qt/REVISAO_ETAPA4.json --exigir-conformidade
       - name: Conferir regressão da versão estável
         if: always()
         run: python reforma_desktop/validar.py --suite tests --saida resultados-qt/PRODUCAO.json

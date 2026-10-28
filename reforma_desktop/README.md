@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Entrega atual:** [Configurações, preferências, cinco temas e backup local](CONFIGURACOES.md). [Finanças](FINANCAS.md), [Análises](ANALISES.md) e Vendas continuam integradas. O andamento atual está na seção 22 do plano; os resultados anteriores permanecem como histórico.
+**Entrega atual:** [revisão conjunta da Etapa 4](REVISAO_ETAPA4.md), seção 27 do plano. O ensaio do [atualizador](ATUALIZACOES.md) foi confirmado pelo usuário. A matriz rastreia os 30 itens e registra seis lacunas que precisam ser corrigidas antes de encerrar a etapa; resultados anteriores permanecem como histórico.
 
 A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 
@@ -43,11 +43,11 @@ Nas próximas vezes, use o mesmo comando. `--exemplo` só inclui os exemplos se 
 
 O lançador original `executar.py`, o executável instalado e `noturno_demo.py` continuam funcionando como antes. As demos continuam sendo somente visuais; o novo comando acima é a entrada funcional desta etapa.
 
-## O que ainda não foi migrado
+## Estado atual e limites
 
-As três telas já estão integradas no banco de estudo. Consultas e formulários financeiros estão no guia atual acima. A regra de fechamento pode ser consultada; sua edição ainda virá com configurações e nuvem.
+As três telas já estão integradas no banco de estudo. Consultas e formulários financeiros, edição do fechamento e mecanismos de configuração estão disponíveis. A [revisão atual](REVISAO_ETAPA4.md) identifica as lacunas de equivalência e a distinção entre operações locais e simulações.
 
-Editor da preferência de abertura, cinco temas e criação de backup local já estão integrados. Restauração/verificação e Drive manual também estão integrados: veja [Recuperação e Drive](RECUPERACAO.md). Sessão e sincronização Qt usam agora um serviço fictício local: veja [Nuvem em estudo](NUVEM.md). A [edição do fechamento por vigência](FECHAMENTO.md) também está integrada ao serviço fictício. O [atualizador Qt está disponível em ensaio isolado](ATUALIZACOES.md), sem instalar programas. A próxima atividade é a revisão conjunta e a conferência do inventário; a equivalência completa continua pendente. Esta entrada não sincroniza com PWA/Supabase real. Se você configurar o Drive, o cliente do Google poderá enviar as cópias fictícias para a nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Noite conserva a identidade Noturno; as outras paletas são opções para a próxima abertura.
+Editor da preferência de abertura, cinco temas e criação de backup local já estão integrados. Restauração/verificação e Drive manual também estão integrados: veja [Recuperação e Drive](RECUPERACAO.md). Sessão e sincronização Qt usam agora um serviço fictício local: veja [Nuvem em estudo](NUVEM.md). A [edição do fechamento por vigência](FECHAMENTO.md) também está integrada ao serviço fictício. O [atualizador Qt está disponível em ensaio isolado](ATUALIZACOES.md), sem instalar programas. A revisão percorreu o inventário; a próxima atividade é corrigir e retestar as seis lacunas reproduzidas, antes de encerrar a Etapa 4. Esta entrada não sincroniza com PWA/Supabase real. Se você configurar o Drive, o cliente do Google poderá enviar as cópias fictícias para a nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Noite conserva a identidade Noturno; as outras paletas são opções para a próxima abertura.
 
 A aprovação visual não foi reaberta. A integração ainda não representa equivalência completa, estabilidade de uma release, validação manual Windows/DPI/leitor de tela ou teste do atualizador.
 
@@ -63,10 +63,10 @@ O workflow `reforma-vendas-windows.yml` repete essa suíte e as suítes existent
 
 Para sua revisão manual: cadastre uma venda fictícia; tente repetir a data e depois corrija; edite e cancele uma edição; aplique mês/ano/fechamento; deixe um filtro pendente e confira que o resumo não muda; selecione/exclua registros; exporte com mais de uma página; visite Análises/Finanças e retorne para Vendas. São verificações da entrada isolada, não do seu banco real.
 
-Análises e Finanças foram entregues na continuidade. A próxima parte são **configurações e demais mecanismos/formulários**, conforme o plano. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
+Análises, Finanças e os mecanismos do estudo foram entregues na continuidade. A [revisão atual](REVISAO_ETAPA4.md) orienta as correções pendentes da Etapa 4. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
 
 
-### Resultado desta entrega
+### Histórico — resultado da primeira entrega de Vendas
 
 | Ambiente | Vendas Qt | Aplicação estável | Protótipos |
 | --- | --- | --- | --- |

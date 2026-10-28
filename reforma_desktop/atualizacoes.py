@@ -1,6 +1,7 @@
 """Orquestração Qt do ensaio de atualização; nenhuma instalação real é feita."""
 import json
 import os
+from reforma_desktop.diagnostico_qt import pasta_do_objeto, registrar_seguro
 from pathlib import Path
 import tempfile
 from PySide6 import QtCore as Q, QtWidgets as W
@@ -13,13 +14,15 @@ class Tarefa(Q.QThread):
     def __init__(self, funcao, parent):
         super().__init__(parent)
         self.funcao = funcao
+        self.pasta_diagnostico = pasta_do_objeto(parent)
 
     def run(self):
         try:
             r = self.funcao()
         except ValueError as erro:
             self.resultado.emit(False, str(erro))
-        except Exception:
+        except Exception as erro:
+            registrar_seguro(erro, self.pasta_diagnostico)
             self.resultado.emit(False, 'Ensaio não concluído. Confira o armazenamento e tente novamente. Nenhum programa foi instalado.')
         else:
             self.resultado.emit(True, r)
@@ -140,6 +143,7 @@ class Atualizacoes(Q.QObject):
         self.tarefa = t
         t.resultado.connect(lambda ok,valor:resposta.append((ok,valor)))
         def terminou():
+            t.wait()  # Libera a UI só após terminar também a thread nativa.
             self.ocupado = False
             self.tarefa = None
             self.janela.setEnabled(True)

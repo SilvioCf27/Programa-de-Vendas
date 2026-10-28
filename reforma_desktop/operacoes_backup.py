@@ -1,4 +1,5 @@
 """Operações de cópia fora da thread gráfica; usa as proteções do núcleo."""
+from reforma_desktop.diagnostico_qt import pasta_do_objeto, registrar_seguro
 from pathlib import Path
 from PySide6 import QtCore as Q, QtWidgets as W
 from ProgramFeira import backup_drive
@@ -30,11 +31,13 @@ class Operacao(Q.QThread):
     def __init__(self, executar, parent=None):
         super().__init__(parent)
         self.executar = executar
+        self.pasta_diagnostico = pasta_do_objeto(parent)
 
     def run(self):
         try:
             valor = self.executar()
         except Exception as erro:
+            registrar_seguro(erro, self.pasta_diagnostico)
             self.resultado.emit(False, str(erro))
         else:
             self.resultado.emit(True, valor)
@@ -108,6 +111,7 @@ def fechar_com_backup(janela, evento):
     janela._backup_fechamento = op
     op.resultado.connect(lambda ok, valor: resultado.append((ok, valor)))
     def terminou():
+        op.wait()  # Libera a UI só após terminar também a thread nativa.
         janela._backup_fechamento = None
         progresso.concluido = True
         progresso.close()

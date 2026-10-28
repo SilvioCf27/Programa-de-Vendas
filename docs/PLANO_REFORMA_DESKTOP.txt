@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
-Versão do plano: 15 — Etapa 4, revisão conjunta e lacunas em 27/10/2026.
+Versão do plano: 16 — Etapa 4, correções e repetição da revisão em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
 Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
@@ -11,7 +11,7 @@ docs/historico/PLANO_REFORMA_DESKTOP_v1_2026-10-26.txt
 Origem: commit 2a42f43, docs/PLANO_REFORMA_DESKTOP.txt.
 SHA-256 da cópia original: f872c6a957a14f0c48702f6e78c8d111555e14a03cfecec1e74da2b195be2472
 As seções numeradas registram o histórico das entregas, com seus estados da
-época. A seção 27 registra a revisão ATUAL. A orientação de continuidade do
+época. A seção 28 registra as correções e a revisão ATUAL. A orientação de continuidade do
 usuário está preservada em
 docs/historico/CONTINUIDADE_REFORMA_DESKTOP_2026-10-27.txt.
 Nenhum complemento revoga o inventário funcional ou autoriza migração sem
@@ -343,12 +343,13 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
 A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
-O usuário confirmou o teste do ensaio do atualizador. A revisão percorreu os
-30 itens do inventário e reproduziu seis lacunas. Não encerra a Etapa 4.
-Próxima atividade: corrigir R01–R06 e ampliar a regressão, depois repetir a
-coleta e a revisão conjunta. Só então avaliar avanço à Etapa 5. Integração
-real, DPI/acessibilidade, pacote, recuperação e atualização 1.7.1 → 2.0 seguem
-nas validações originais. Sem mudança da versão funcional, banco ou PWA.
+O usuário autorizou corrigir as seis lacunas e repetir a revisão. R01–R06
+foram corrigidas no estudo, com testes próprios e nova coleta de conformidade.
+A matriz passa a 26 itens com implementação testada e quatro integrações
+simuladas. A liberação técnica para as medições da Etapa 5 depende da rodada
+final registrada na seção 28. Integração real, DPI/acessibilidade, pacote,
+recuperação e atualização 1.7.1 → 2.0 continuam nas validações originais,
+sem substituir a versão funcional, abrir o banco pessoal ou alterar a PWA.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -1079,3 +1080,63 @@ validação antes de publicar; executar.py e o spec continuam da versão estáve
 A proteção de coleta específica de Tcl não precisa ser copiada para Qt;
 o ciclo de vida de QObject/QThread precisa ser conferido por comportamento.
 Versão 1.7.1, dados reais, sessão/Drive pessoais e PWA permanecem intactos.
+
+28. ETAPA 4 — CORREÇÕES R01–R06 E REVISÃO REPETIDA — 28/10/2026
+
+AUTORIZAÇÃO E PRESERVAÇÃO
+O usuário autorizou corrigir as lacunas e repetir a revisão. A versão v15
+foi arquivada antes desta revisão. A aprovação visual anterior foi mantida.
+Somente a entrada de estudo/Qt foi corrigida; nenhum módulo de ProgramFeira,
+script SQL, executar.py ou PWA foi modificado. Não houve release ou uso de
+conta/banco pessoal. As reproduções anteriores permanecem como histórico.
+
+CORREÇÕES
+R01/R02: leitura de datas valida o editor antes de obter o ISO. O campo Qt
+mantém uma marca de entrada incompleta quando o próprio Qt restaura o último
+valor ao perder foco/pressionar Enter. Só digitação completa, calendário ou
+ajuste válido explícito liberam a data. A mesma proteção é usada em Vendas,
+A/B e campos financeiros existentes, sem mudar cálculos ou datas gravadas.
+Mês/Fechamento não são bloqueados por campos de data ocultos. Mudanças dos
+dados refazem a comparação aplicada mesmo com uma nova seleção incompleta,
+mostrando aviso sem aplicar o período inválido. Enter no formulário de Vendas
+aciona Salvar/validar, sem assumir Cancelar como botão padrão.
+
+R03: Return e Enter numérico, com foco na tabela de Vendas, editam a linha/ID
+da página visível uma vez. Duplo clique continua funcionando; Enter em outro
+controle não abre a edição. Não houve alteração do componente da demo.
+
+R04: adaptação Qt reutiliza diagnostico.registrar, com data/versão/tipo e
+posições dos frames, sem mensagens/valores/variáveis. Há cobertura da entrada,
+callbacks Qt e dos três tipos de trabalhador. O caminho é resolvido na thread
+criadora e apenas Path é levado ao worker. Avisos gráficos ficam na thread
+principal. O hook é restaurado ao sair; falha do log não esconde o resultado
+original. Erros inesperados de inicialização têm mensagem genérica e registro
+na pasta isolada; sem fallback para o perfil pessoal. Sem Tcl/Tk na interface.
+
+R05: fechamento principal aguarda operações de configurações e qualquer
+QThread filha ainda ativa, além dos estados existentes de nuvem/atualizador.
+As conclusões dos trabalhos aguardam o término nativo antes de liberar a UI,
+limpar recursos ou iniciar o fechamento após backup. A tarefa em andamento
+continua e é possível fechar normalmente depois que termina.
+
+R06: a virada só confirma o novo dia após atualizar com sucesso. Erro de
+armazenamento é registrado, o resumo fica identificado como não confirmado
+e o próximo disparo pode tentar novamente. O aviso é removido após sucesso,
+sem apagar uma mensagem mais recente, como a conclusão de uma exportação.
+
+REVISÃO E CONTINUIDADE
+Quinze testes novos verificam os caminhos diretos e os cliques/Enter, quatro
+datas A/B, campos ocultos, comparação pendente, página/foco, logs sem dados,
+entrada/callbacks/workers, falha do registro, término de threads e retomada.
+R01–R06 foram repetidas com o MESMO roteiro, sem relaxar critérios. Resultados
+finais Linux/Windows serão registrados após a rodada completa.
+O JSON mantém aprovacao_etapa4=false por desenho: um coletor não substitui a
+revisão conjunta/decisão do plano. O gate automático usa casos_conformes.
+
+A matriz atual tem 26 I e quatro S; não restam P referentes às seis lacunas,
+condicionado às evidências finais. Integrações reais e pacote/atualização
+continuam pendentes, sem alegação de equivalência de produção. Após confirmar
+o gate R01–R06 e a regressão, próxima atividade é a Etapa 5: medir abertura,
+navegação, consultas e memória em cenários equivalentes à base. Não publicar
+2.0 ou migrar dados antes das verificações/aprovação das Etapas 5/6.
+Relatório: reforma_desktop/REVISAO_ETAPA4.md.

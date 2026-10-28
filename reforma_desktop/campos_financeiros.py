@@ -12,8 +12,37 @@ def valor_br(centavos):
     return f'{Decimal(centavos) / 100:.2f}'.replace('.', ',')
 
 
+class DataValidada(W.QDateEdit):
+    """Não transforma uma edição incompleta em confirmação da data anterior."""
+    def __init__(self, *args, **kwargs):
+        self.entrada_incompleta = False
+        super().__init__(*args, **kwargs)
+        self.setCalendarPopup(True)
+        self.lineEdit().textEdited.connect(self.marcar_edicao)
+        self.calendarWidget().clicked.connect(self.confirmar_data)
+
+    def marcar_edicao(self, *args):
+        self.entrada_incompleta = not self.hasAcceptableInput()
+
+    def confirmar_data(self, *args):
+        self.entrada_incompleta = False
+
+    def setDate(self, data):
+        self.entrada_incompleta = False
+        super().setDate(data)
+
+    def stepBy(self, passos):
+        super().stepBy(passos)
+        self.entrada_incompleta = not self.hasAcceptableInput()
+
+    def focusOutEvent(self, evento):
+        if not self.hasAcceptableInput():
+            self.entrada_incompleta = True
+        super().focusOutEvent(evento)
+
+
 def campo_data(data, nome):
-    w = W.QDateEdit(Q.QDate(date.fromisoformat(data) if isinstance(data, str) else data))
+    w = DataValidada(Q.QDate(date.fromisoformat(data) if isinstance(data, str) else data))
     w.setCalendarPopup(True)
     w.setDisplayFormat('dd/MM/yyyy')
     w.setAccessibleName(nome)
@@ -21,8 +50,8 @@ def campo_data(data, nome):
 
 
 def data_iso(campo):
-    if not campo.hasAcceptableInput():
-        raise ValueError('Confirme uma data válida antes de salvar.')
+    if getattr(campo, 'entrada_incompleta', False) or not campo.hasAcceptableInput():
+        raise ValueError('Confirme uma data válida pelo calendário ou complete a digitação.')
     campo.interpretText()
     return campo.date().toPython().isoformat()
 

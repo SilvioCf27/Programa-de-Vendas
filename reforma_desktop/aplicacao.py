@@ -18,7 +18,11 @@ from reforma_desktop.vendas import Consulta, ServicoVendas
 from janelas_noturno import janela_vendas
 from reforma_desktop.temas import FundoQt as Fundo, FaixaSemanaQt as FaixaSemana, aplicar_tokens, NOMES
 from ProgramFeira.preferencias import carregar_tema
+from reforma_desktop.campos_financeiros import data_iso, DataValidada
+from reforma_desktop.diagnostico_qt import registrar_seguro, instalar as instalar_diagnostico
 
+
+AVISO_VIRADA = 'Consulta temporariamente indisponível. Os dados exibidos não foram confirmados para o novo dia; nova tentativa no próximo minuto.'
 
 class FormularioVenda(W.QDialog):
     def __init__(self, servico, atualizado, esperado=None, parent=None):
@@ -31,7 +35,7 @@ class FormularioVenda(W.QDialog):
         conteudo.addWidget(texto(self.windowTitle(), 18, bold=True))
         conteudo.addWidget(texto('Valores recebidos em cada forma de pagamento.', 10, C['muted']))
         form = W.QFormLayout()
-        self.data = W.QDateEdit(Q.QDate.currentDate())
+        self.data = DataValidada(Q.QDate.currentDate())
         self.data.setCalendarPopup(True)
         self.data.setDisplayFormat('dd/MM/yyyy')
         self.data.setAccessibleName('Data da venda')
@@ -53,17 +57,19 @@ class FormularioVenda(W.QDialog):
         conteudo.addWidget(self.erro)
         linha = W.QHBoxLayout()
         linha.addStretch()
-        linha.addWidget(botao('Cancelar', self.reject))
+        cancelar = botao('Cancelar', self.reject)
+        cancelar.setAutoDefault(False)
+        linha.addWidget(cancelar)
         self.salvar = botao('Salvar venda', self.gravar, 'check', True)
-        self.salvar.setDefault(True)
         linha.addWidget(self.salvar)
         conteudo.addLayout(linha)
         layout.addWidget(painel)
+        self.salvar.setDefault(True)
 
     def gravar(self):
         self.salvar.setEnabled(False)
         try:
-            self.servico.salvar(self.data.date().toPython().isoformat(),
+            self.servico.salvar(data_iso(self.data),
                                *(c.text() for c in self.campos), esperado=self.esperado)
         except (ValueError, OSError, sqlite3.Error) as erro:
             self.erro.setText(str(erro))
@@ -149,6 +155,12 @@ class Janela(W.QWidget):
         self.vendas_layout.setContentsMargins(0, 0, 0, 0)
         self.vendas_layout.setSpacing(14)
         self.construir_vendas(self.vendas_layout)
+        self._atalhos_tabela = []
+        for tecla in (Q.Qt.Key.Key_Return, Q.Qt.Key.Key_Enter):
+            atalho = G.QShortcut(G.QKeySequence(tecla), self.tabela.table)
+            atalho.setContext(Q.Qt.ShortcutContext.WidgetShortcut)
+            atalho.activated.connect(self.editar_linha_atual)
+            self._atalhos_tabela.append(atalho)
         self.scroll.setWidget(self.body)
         self.stack.addWidget(self.scroll)
         self.paginas = {'Vendas': self.scroll}
@@ -421,6 +433,11 @@ class Janela(W.QWidget):
             return self.financas.abrir_despesa()
         return self.abrir_formulario()
 
+    def editar_linha_atual(self):
+        linha = self.tabela.table.currentRow()
+        if 0 <= linha < len(self.tabela.visiveis):
+            self.tabela.editar.emit(self.tabela.visiveis[linha][0])
+
     def editar(self, identificador):
         esperado = next((r for r in self.resultado['linhas'] if r[0] == identificador), None)
         if esperado:
@@ -470,11 +487,20 @@ class Janela(W.QWidget):
     def verificar_dia(self):
         hoje = self.servico.hoje()
         if hoje != self.dia_exibido:
+            try:
+                self.atualizar()
+            except (OSError, sqlite3.Error) as erro:
+                registrar_seguro(erro, self.pasta)
+                self.status.setText(AVISO_VIRADA)
+                return
             self.dia_exibido = hoje
-            self.atualizar()
+            if self.status.text() == AVISO_VIRADA:
+                self.status.setText(f'Consulta atualizada para {hoje:%d/%m/%Y}. Filtros aplicados preservados.')
 
     def closeEvent(self, evento):
-        if self.nuvem.ocupado or self.atualizador.ocupado:
+        configuracao_ocupada = any(getattr(d, 'operacao', None) is not None for d in self.findChildren(W.QDialog))
+        trabalhador_ativo = any(t.isRunning() for t in self.findChildren(Q.QThread))
+        if self.nuvem.ocupado or self.atualizador.ocupado or configuracao_ocupada or trabalhador_ativo:
             evento.ignore()
             return
         from reforma_desktop.operacoes_backup import fechar_com_backup
@@ -564,4 +590,8 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas'):
         janela._fechamento_autorizado = True
         janela.close()
         return 0
-    return app.exec()
+    restaurar_diagnostico = instalar_diagnostico(pasta, lambda mensagem: W.QMessageBox.warning(janela, 'Operação não concluída', mensagem))
+    try:
+        return app.exec()
+    finally:
+        restaurar_diagnostico()

@@ -139,6 +139,7 @@ class Configuracoes(W.QDialog):
         self._retorno = None
         op.resultado.connect(self.receber)
         def terminou():
+            op.wait()  # Libera a UI só após terminar também a thread nativa.
             self.operacao = None
             self.findChild(W.QScrollArea).setEnabled(True)
             sucesso, valor = self._retorno or (False, 'Operação encerrada sem resultado.')

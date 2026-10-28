@@ -11,6 +11,7 @@ from estado_demo import MESES, Venda
 from janelas_noturno import JanelaDetalhe, Coluna, janela_vendas, janela_dias, janela_pagamentos
 from ProgramFeira.database import banco
 from ProgramFeira.resumos import moeda
+from reforma_desktop.campos_financeiros import data_iso, DataValidada
 from reforma_desktop.analises import Periodo, analisar, comparar, comparar_limites, analisar_evolucao, centavos
 
 
@@ -31,7 +32,7 @@ class SeletorPeriodo(W.QWidget):
         self.mes.addItems(MESES)
         self.mes.setCurrentIndex(referencia.month - 1)
         self.mes.setAccessibleName('Mês do período')
-        self.inicio, self.fim = W.QDateEdit(Q.QDate(referencia)), W.QDateEdit(Q.QDate(referencia))
+        self.inicio, self.fim = DataValidada(Q.QDate(referencia)), DataValidada(Q.QDate(referencia))
         for nome, campo in [('Data inicial', self.inicio), ('Data final inclusive', self.fim)]:
             campo.setAccessibleName(nome)
             campo.setCalendarPopup(True)
@@ -77,8 +78,13 @@ class SeletorPeriodo(W.QWidget):
         self.alterado.emit()
 
     def periodo(self):
-        return Periodo(self.tipo.currentText(), int(self.ano.currentText()), self.mes.currentIndex() + 1,
-                       self.inicio.date().toPython(), self.fim.date().toPython())
+        tipo = self.tipo.currentText()
+        if tipo in ('Data', 'Intervalo'):
+            inicio = date.fromisoformat(data_iso(self.inicio))
+            fim = date.fromisoformat(data_iso(self.fim)) if tipo == 'Intervalo' else inicio
+        else:
+            inicio, fim = self.inicio.date().toPython(), self.fim.date().toPython()
+        return Periodo(tipo, int(self.ano.currentText()), self.mes.currentIndex() + 1, inicio, fim)
 
 
 class PainelAnalises(W.QScrollArea):
@@ -269,7 +275,12 @@ class PainelAnalises(W.QScrollArea):
             self.aviso.setText('Comparação não atualizada: ' + str(erro))
             return
         self.exibir_comparacao(resultado)
-        if (self.a.periodo(), self.b.periodo()) != self.ultima_selecao:
+        try:
+            selecao = (self.a.periodo(), self.b.periodo())
+        except ValueError:
+            self.aviso.setText('Seleção incompleta — confirme as datas antes de Comparar. O resultado da consulta aplicada foi atualizado após alteração dos dados.')
+            return
+        if selecao != self.ultima_selecao:
             self.marcar_pendente()
         else:
             self.aviso.setText('Comparação aplicada atualizada após alteração dos dados.')

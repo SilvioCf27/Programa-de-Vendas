@@ -1,4 +1,5 @@
 """Coordenação Qt sobre os mecanismos existentes, com transporte local de estudo."""
+from reforma_desktop.diagnostico_qt import pasta_do_objeto, registrar_seguro
 from pathlib import Path
 from PySide6 import QtCore as Q, QtWidgets as W
 from ProgramFeira import nuvem, financeiro, migracao_nuvem, sincronizacao, automacao_nuvem, sessao_windows
@@ -38,13 +39,15 @@ class Tarefa(Q.QThread):
     def __init__(self, funcao, parent):
         super().__init__(parent)
         self.funcao = funcao
+        self.pasta_diagnostico = pasta_do_objeto(parent)
 
     def run(self):
         try:
             r = self.funcao()
         except nuvem.ErroNuvem as erro:
             self.resultado.emit(False, erro)
-        except Exception:
+        except Exception as erro:
+            registrar_seguro(erro, self.pasta_diagnostico)
             # Não exibe respostas HTTP, credenciais ou exceções de transporte.
             self.resultado.emit(False, nuvem.ErroNuvem('Operação não confirmada. Confira o armazenamento e tente novamente.'))
         else:
@@ -121,6 +124,7 @@ class Conexao(Q.QObject):
         self.tarefa = tarefa
         tarefa.resultado.connect(lambda ok, valor: resposta.append((ok, valor)))
         def terminou():
+            tarefa.wait()  # Libera a UI só após terminar também a thread nativa.
             self.tarefa = None
             self.ocupado = False
             if travar:
@@ -132,7 +136,8 @@ class Conexao(Q.QObject):
                     concluir(valor)
                 else:
                     self.falhou(valor)
-            except Exception:
+            except Exception as erro:
+                registrar_seguro(erro, self.pasta)
                 self.falhou(nuvem.ErroNuvem('A atualização da tela não foi concluída. Confira os dados antes de retomar.'))
             finally:
                 tarefa.deleteLater()
@@ -217,7 +222,8 @@ class Conexao(Q.QObject):
                     self.janela.financas.atualizar()
                 elif self.janela.area == 'Análises':
                     self.janela.analises.atualizar()
-        except Exception:
+        except Exception as erro:
+            registrar_seguro(erro, self.pasta)
             self.informar('Dados fictícios sincronizados; a atualização da tela falhou. Reabra o estudo para conferir. ' + ('A consulta automática continua agendada.' if self.automatico else 'O modo manual foi preservado.'), self.resumo)
         finally:
             self.recebendo = False

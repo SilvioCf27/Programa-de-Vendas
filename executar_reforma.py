@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--captura', type=Path, help='Salva uma captura e fecha; não entra no loop interativo.')
     args = parser.parse_args()
     temporaria = tempfile.TemporaryDirectory(prefix='gestao-feira-qt-') if args.pasta_estudo is None else None
+    pasta = None
     try:
         from reforma_desktop.ambiente import preparar
         pasta = preparar(args.pasta_estudo or temporaria.name)
@@ -26,8 +27,17 @@ def main():
             print('Instale no mesmo Python: python -m pip install -r prototipos/reforma/requirements.txt', file=sys.stderr)
             return 1
         return iniciar(pasta, args.exemplo, args.captura, args.pagina)
-    except (ValueError, OSError, RuntimeError) as erro:
+    except (ValueError, OSError) as erro:
+        if pasta is not None:
+            from reforma_desktop.diagnostico_qt import registrar_seguro
+            registrar_seguro(erro, pasta)
         print(f'Não foi possível abrir o estudo: {erro}', file=sys.stderr)
+        return 1
+    except Exception as erro:
+        if pasta is not None:
+            from reforma_desktop.diagnostico_qt import registrar_seguro
+            registrar_seguro(erro, pasta)
+        print('Não foi possível abrir o estudo. Confira os requisitos e o diagnóstico técnico na pasta de estudo.', file=sys.stderr)
         return 1
     finally:
         if temporaria:

@@ -1,5 +1,5 @@
 MAPA DE PRESERVAÇÃO — ESTUDO DA REFORMA
-Estado atual: seção final “REVISÃO CONJUNTA DA ETAPA 4” e
+Estado atual: seção final “CORREÇÕES E REVISÃO REPETIDA” e
 reforma_desktop/REVISAO_ETAPA4.md. Os registros anteriores abaixo preservam
 o levantamento e o estado de cada entrega; não são o estado atual agregado.
 
@@ -218,3 +218,17 @@ Próximo passo: corrigir/retestar R01–R06 antes de encerrar a Etapa 4 e avanç
 DPI/acessibilidade, desempenho e validação real/pacote permanecem nas etapas
 previstas. Diagnósticos são preservação de mecanismo, não uma nova função.
 Nenhum módulo funcional, dado pessoal, release ou PWA foi alterado na revisão.
+
+CORREÇÕES E REVISÃO REPETIDA — 28/10/2026
+Usuário autorizou corrigir R01–R06 e repetir o mesmo roteiro.
+V01/R01 e A02/R02: datas validadas, inclusive perda de foco/clique/Enter;
+                   comparação aplicada preservada com seleção incompleta.
+V03/R03: Enter/Return restritos à tabela, ID/página corretos, sem duplicidade.
+G02/R04: diagnóstico seguro em entrada, callbacks e três tipos de trabalhador.
+G03/R05: encerramento aguarda configuração/threads; conclusão espera término.
+V06/R06: falha transitória não confirma o dia; nova tentativa e aviso recuperado.
+Quinze testes novos; roteiro original mantido. Matriz atual 26 I e quatro S
+(F09/G04/G05/G06), sem os seis P anteriores, sujeita às evidências finais.
+Próxima atividade após confirmar gate/regressão: medições da Etapa 5.
+Não é aprovação de produção, pacote Qt, integração real ou release 2.0.
+Evidências: reforma_desktop/REVISAO_ETAPA4.md, seção de repetição.

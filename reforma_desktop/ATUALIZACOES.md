@@ -42,8 +42,12 @@ Os dados/configurações do estudo e a instalação principal permanecem intacto
 
 ## Validação e pendências
 
-Resultados das suítes serão registrados após a rodada final. Dez cenários novos cobrem caminho confirmado, nenhuma versão nova, publicação incompleta, SHA-256 incorreto, candidata reprovada, cancelamento, falha e retomada, preservação dos arquivos, backup com finanças, preferência, agendamento e bloqueio de operações concorrentes.
+Linux: **107/107 testes Qt**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**. [Relatórios locais](resultados/linux-atualizacao). **Windows: 107/107 testes Qt, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas, erros ou testes ignorados. [Relatórios da execução 40615267278](resultados/windows-40615267278), base `b963427`. A resolução da VM foi restaurada. A renderização Qt é offscreen; interação manual, DPI e instalação real da nova interface não são comprovados por essa rodada.
+
+Dez cenários novos cobrem caminho confirmado, nenhuma versão nova, publicação incompleta, SHA-256 incorreto, candidata reprovada, cancelamento, falha e retomada, preservação dos arquivos, backup com finanças, preferência, agendamento e bloqueio de operações concorrentes.
 
 A suíte existente também testa o helper original no Windows com troca e recuperação de pastas de teste. Isso não substitui o teste do **pacote PySide6 real**, do reinício/recibo da nova interface e da atualização **1.7.1 → 2.0**, incluindo recuperação em caso de falha. Consulta/download reais, integração com o Drive durante instalação e preservação de sessão/configurações na atualização completa ainda exigem validação nas etapas previstas. DPI, leitor de tela e interação manual também continuam pendentes.
+
+Antes da publicação, a entrada de produção deverá usar o adaptador real e remover os controles/fixtures de ensaio. Não houve essa liberação nesta entrega.
 
 **Próxima atividade:** revisão conjunta da Etapa 4 e rastreamento do inventário para registrar lacunas, inclusive diagnósticos e demais caminhos. A etapa não é considerada concluída apenas porque as telas existem. Depois seguem as verificações de desempenho, equivalência, integração e empacotamento das Etapas 5/6, antes da publicação aprovada da 2.0. A PWA permanece preservada.

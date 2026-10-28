@@ -294,6 +294,6 @@ ETAPA 6 — ENTRADA ONLINE — 28/10/2026
 Entrada executar_validacao.py: perfil imutável, execução separada/vazia,
 projeto identificado, login real, retomada explícita e sincronização manual.
 Transferência inicial conferida e confirmada. Sem simulação/importação ou
-atualizador fictício. Doze novos testes locais de GUI/TLS/subprocesso.
+atualizador fictício. Treze novos testes locais de GUI/TLS/subprocesso, incluindo encerramento de modais.
 Contas externas/RLS/PC-PWA ainda pendentes; matriz 26 I/quatro S preservada.
 Guia/resultados: reforma_desktop/VALIDACAO_ONLINE.md. Sem release 2.0.

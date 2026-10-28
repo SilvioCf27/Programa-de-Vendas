@@ -1,0 +1,43 @@
+{
+  "suite": "reforma_desktop/tests",
+  "plataforma": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "sqlite": "3.50.4",
+  "executados": 166,
+  "aprovados": 159,
+  "falhas": [
+    {
+      "teste": "test_regra_externa_recebida_atualiza_cache_sem_aplicar_filtro_pendente (test_fechamento_qt.FechamentoTests.test_regra_externa_recebida_atualiza_cache_sem_aplicar_filtro_pendente)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/reforma_desktop/tests/test_fechamento_qt.py\", line 159, in test_regra_externa_recebida_atualiza_cache_sem_aplicar_filtro_pendente\n    self.assertEqual(fechamento.estado()['versao'],1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n"
+    },
+    {
+      "teste": "test_automatico_60_segundos_preserva_consulta_e_filtro_pendente (test_nuvem_qt.NuvemTests.test_automatico_60_segundos_preserva_consulta_e_filtro_pendente)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/reforma_desktop/tests/test_nuvem_qt.py\", line 108, in test_automatico_60_segundos_preserva_consulta_e_filtro_pendente\n    self.assertEqual(banco.buscar_venda_por_data('2026-10-23')[3],21)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 20.0 != 21\n"
+    },
+    {
+      "teste": "test_consulta_em_andamento_adia_aplicacao_se_edicao_for_aberta (test_nuvem_qt.NuvemTests.test_consulta_em_andamento_adia_aplicacao_se_edicao_for_aberta)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/reforma_desktop/tests/test_nuvem_qt.py\", line 254, in test_consulta_em_andamento_adia_aplicacao_se_edicao_for_aberta\n    self.assertEqual(banco.buscar_venda_por_data('2026-10-23')[3],21)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 20.0 != 21\n"
+    },
+    {
+      "teste": "test_falha_de_renderizacao_nao_cancela_proxima_consulta (test_nuvem_qt.NuvemTests.test_falha_de_renderizacao_nao_cancela_proxima_consulta)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/reforma_desktop/tests/test_nuvem_qt.py\", line 288, in test_falha_de_renderizacao_nao_cancela_proxima_consulta\n    self.assertEqual(banco.buscar_venda_por_data('2026-10-23')[3],21)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 20.0 != 21\n"
+    },
+    {
+      "teste": "test_falha_temporaria_backoff_e_resposta_perdida_sem_duplicar (test_nuvem_qt.NuvemTests.test_falha_temporaria_backoff_e_resposta_perdida_sem_duplicar)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/reforma_desktop/tests/test_nuvem_qt.py\", line 136, in test_falha_temporaria_backoff_e_resposta_perdida_sem_duplicar\n    self.assertEqual(n.relogio.tarefas[n.agendador.tarefa].interval(),60000)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 5000 != 60000\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [
+    {
+      "teste": "test_reabertura_dpapi_renova_sem_pedir_login_novamente (test_contrato_https_qt.ContratoHttpsTests.test_reabertura_dpapi_renova_sem_pedir_login_novamente)",
+      "motivo": "DPAPI nativa requer Windows"
+    },
+    {
+      "teste": "test_sessao_dpapi_original_permanece_recuperavel_so_no_arquivo_preservado (test_perfil_validacao.PerfilTests.test_sessao_dpapi_original_permanece_recuperavel_so_no_arquivo_preservado)",
+      "motivo": "DPAPI nativa requer Windows"
+    }
+  ],
+  "sucesso": false,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

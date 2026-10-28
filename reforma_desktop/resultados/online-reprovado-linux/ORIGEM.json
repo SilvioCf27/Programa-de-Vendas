@@ -1,0 +1,4 @@
+{
+  "commit_base": "ffecb9b",
+  "observacao": "Primeira regressão da entrada online: cinco falhas por modal de conexão que permanecia aberto após fechar o principal. Não é a validação final; nenhuma conta externa. A reprodução isolada seguida do teste automático confirmou a interferência."
+}

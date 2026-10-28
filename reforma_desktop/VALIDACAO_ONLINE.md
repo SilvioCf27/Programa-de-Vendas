@@ -32,9 +32,9 @@ O ensaio externo exige projeto de teste, usuário do aplicativo e SQL/políticas
 
 ## Testes
 
-[Doze testes novos](tests/test_entrada_online_qt.py) exercitam o modo online com o cliente existente e TLS loopback: login sem transferência, senha limpa, cancelamento/confirmação com projeto identificado, envio manual, retomada/autorização, falhas, perfil/banco de outro projeto e ausência de controles fictícios. Dois processos novos abrem e reabrem a entrada com `--captura`, banco vazio e HTTP bloqueado. Os testes anteriores continuam preservados.
+[Treze testes novos](tests/test_entrada_online_qt.py) exercitam o modo online com o cliente existente e TLS loopback: login sem transferência, senha limpa, cancelamento/confirmação com projeto identificado, envio manual, retomada/autorização, falhas, perfil/banco de outro projeto e ausência de controles fictícios. Dois processos novos abrem e reabrem a entrada com `--captura`, banco vazio e HTTP bloqueado. Os testes anteriores continuam preservados.
 
-Resultados finais Linux/Windows serão registrados após a regressão. O TLS local usa o servidor fictício de contrato; não comprova o SQL, a RLS, a autorização ou concorrência do Supabase real. A matriz continua 26 I/quatro S até validar os serviços externos.
+A primeira regressão completa encontrou cinco falhas nos cenários automáticos do estudo simulado: o modal da conexão permanecia visível depois de fechar o principal. [Resultado reprovado preservado](resultados/online-reprovado-linux). O fechamento agora encerra os diálogos-filhos depois de confirmar que não há operação ativa; há guarda para reentrada. A reprodução isolada com os testes online seguidos da consulta automática passou, sem modal remanescente. Um teste novo protege esse encerramento. A rodada anterior não foi tratada como aprovação; a revisão final será registrada após repetir a regressão. O TLS local usa o servidor fictício de contrato; não comprova o SQL, a RLS, a autorização ou concorrência do Supabase real. A matriz continua 26 I/quatro S até validar os serviços externos.
 
 ## Próxima atividade
 

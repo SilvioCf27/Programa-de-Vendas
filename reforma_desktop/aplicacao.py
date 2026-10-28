@@ -520,6 +520,9 @@ class Janela(W.QWidget):
                 self.status.setText(f'Consulta atualizada para {hoje:%d/%m/%Y}. Filtros aplicados preservados.')
 
     def closeEvent(self, evento):
+        if getattr(self, '_encerrando_dialogos', False):
+            evento.accept()
+            return
         configuracao_ocupada = any(getattr(d, 'operacao', None) is not None for d in self.findChildren(W.QDialog))
         trabalhador_ativo = any(t.isRunning() for t in self.findChildren(Q.QThread))
         if self.nuvem.ocupado or self.atualizador.ocupado or configuracao_ocupada or trabalhador_ativo:
@@ -528,6 +531,16 @@ class Janela(W.QWidget):
         from reforma_desktop.operacoes_backup import fechar_com_backup
         fechar_com_backup(self, evento)
         if evento.isAccepted():
+            # QWidget.close() não fecha QDialogs-filhos automaticamente.
+            # Sem isso, um modal órfão mantém a aplicação viva e bloqueia
+            # consultas de outras janelas. Operações ativas já foram guardadas.
+            self._encerrando_dialogos = True
+            try:
+                for dialogo in self.findChildren(W.QDialog):
+                    if dialogo.isVisible():
+                        dialogo.close()
+            finally:
+                self._encerrando_dialogos = False
             self.nuvem.agendador.parar()
             self.atualizador.parar()
             self.atualizador.servico.limpar()

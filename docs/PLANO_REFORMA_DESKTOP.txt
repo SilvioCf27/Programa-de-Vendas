@@ -1333,7 +1333,7 @@ entrada. Restauração/importação de banco bloqueada no modo online: inserir
 somente exemplos manualmente. O fechamento identifica o projeto ao salvar.
 O perfil de preparação e os arquivos preservados permanecem imutáveis.
 
-Doze testes novos de GUI/HTTPS local e subprocesso cobrem abertura sem HTTP,
+Treze testes novos de GUI/HTTPS local e subprocesso cobrem abertura sem HTTP,
 login/senha, confirmação/cancelamento, envio manual, retomada/autorização,
 falha de login, identidade do perfil/projeto, reabertura, restauração e ausência
 de controles fictícios. Contratos anteriores preservados. Regressoes finais
@@ -1354,3 +1354,12 @@ conferência somente leitura estão em VALIDACAO_ONLINE.md. Nenhum desses
 roteiros foi executado pelo agente em conta externa. Ainda falta conferir
 Auth/SQL/RLS e a conexão nesse projeto; não usar nem reconfigurar a produção.
 A tela de conexão tem rolagem em alturas menores, com Fechar fixo no rodapé.
+
+CORREÇÃO ENCONTRADA NA REGRESSÃO DA ENTRADA
+A primeira rodada teve cinco falhas por um QDialog modal que continuava
+visível após QWidget.close() no principal. Isso mantinha livre() falso nas
+consultas automáticas posteriores. Falha/reprodução preservadas; não se
+alterou o agendador para ignorar modais. O principal agora fecha diálogos
+filhos só após as guardas de operação/backup, com proteção de reentrada.
+Teste novo e sequência dirigida online → automático passaram. Regressão
+completa será repetida antes de concluir a entrega.

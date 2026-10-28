@@ -167,3 +167,11 @@ class EntradaOnlineTests(unittest.TestCase):
         self.assertIn('verificação pendente',p.conta.text())
         self.assertTrue(p.botoes['retomar'].isEnabled())
         self.assertFalse(p.botoes['conferir'].isEnabled())
+
+    def test_fechar_principal_fecha_modal_e_libera_outras_janelas(self):
+        j=self.janela();p=self.login(j)
+        self.assertTrue(p.isVisible())
+        self.assertTrue(j.close())
+        self.assertFalse(p.isVisible())
+        self.app.processEvents()
+        self.assertIsNone(W.QApplication.activeModalWidget())

@@ -37,11 +37,15 @@ A gravação compara a versão consultada com a do serviço. Se outra alteraçã
 
 O núcleo preserva uma cópia antes de atualizar o histórico SQLite e verifica o vínculo de conta/projeto. Se o serviço confirmar a regra e a gravação local falhar, o programa informa que a cópia local ainda não foi atualizada. Resolva o problema de armazenamento e **consulte novamente** para reconciliar o histórico; não presuma que o serviço desfez a mudança.
 
+Falhas definitivas podem pausar a sincronização. Depois de corrigir o problema e consultar a regra, use **Sincronizar agora** para conferir os registros e retomar as consultas, se a opção automática estiver ativa.
+
 Receber uma regra por sincronização atualiza as áreas do programa sem aplicar seletores pendentes. A mensagem identifica a regra recebida e a cópia anterior preservada. Ler/salvar usa trabalhadores Qt e bloqueia edições/fechamento até a operação terminar.
 
 ## Validação e limites
 
-Resultados das suítes serão registrados após a rodada final. Os novos cenários cobrem prévia e transição, fevereiro bissexto, compra no fechamento, histórico/parcelas preservados, confirmação, entrada incompleta, versão concorrente, revisão de regra futura, falha local após confirmação, indisponibilidade, persistência e recebimento por sincronização.
+Linux: **97/97 testes da integração**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**. [Relatórios locais](resultados/linux-fechamento). **Windows: 97/97 da integração, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas, erros ou testes ignorados. [Relatórios da execução 40608994527](resultados/windows-40608994527), base `8f2dc89`. A resolução da VM foi restaurada. A renderização Qt é offscreen; não representa uma conferência manual de DPI ou interação no Windows.
+
+Os novos cenários cobrem prévia e transição, fevereiro bissexto, compra no fechamento, histórico/parcelas preservados, confirmação, entrada incompleta, versão concorrente, revisão de regra futura, falha local após confirmação, indisponibilidade, persistência e recebimento por sincronização.
 
 Todos usam dados fictícios, sem rede ou conta real. Isso não comprova o Supabase real, interação manual, DPI, leitor de tela, instalador ou atualização. Não houve alteração dos módulos funcionais ou scripts SQL de produção, nem publicação de um novo executável.
 

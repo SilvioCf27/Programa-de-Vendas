@@ -952,7 +952,11 @@ prévia, transição/fim de mês, parcelas/histórico preservados, confirmação
 entradas incompletas, concorrência, revisão futura, falha de backup e serviço,
 persistência e recebimento por sincronização. O teste anterior de leitura foi
 adaptado à nova janela, mantendo a exigência de edição desabilitada sem sessão.
-Resultados finais Linux/Windows serão registrados após a execução completa.
+Resultados finais: Linux, integração 97/97, aplicação 200 aprovados e dois
+ignorados por exigirem Windows, protótipos 31/31. Windows, integração 97/97,
+aplicação 202/202 e protótipos 31/31, sem falhas/erros/ignorados. Execução
+40608994527, base 8f2dc89; resolução da VM restaurada. Renderização offscreen
+não substitui interação manual ou conferência de DPI no Windows.
 Conexão real, DPI/acessibilidade manuais e pacote/atualização continuam
 pendentes; o simulador não comprova o Supabase real. Etapa 4 não concluída.
 Próximo item: atualizador Qt isolado; depois, revisão conjunta e Etapas 5/6.

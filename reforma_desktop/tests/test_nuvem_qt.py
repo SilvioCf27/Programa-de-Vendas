@@ -279,6 +279,17 @@ class NuvemTests(unittest.TestCase):
         self.assertFalse(novo.nuvem.automatico)
         self.assertIsNone(novo.nuvem.agendador.tarefa)
 
+    def test_falha_de_renderizacao_nao_cancela_proxima_consulta(self):
+        self.servico.salvar('2026-10-23','10','20','30')
+        j = self.janela(); n = self.vincular(j)
+        n.cliente.simular_venda_externa()
+        with patch.object(j,'atualizar',side_effect=TypeError('Falha de apresentação')):
+            n.agendador._disparar(); self.esperar(n)
+        self.assertEqual(banco.buscar_venda_por_data('2026-10-23')[3],21)
+        self.assertFalse(n.agendador.pausado)
+        self.assertEqual(n.relogio.tarefas[n.agendador.tarefa].interval(),60000)
+        self.assertIn('atualização da tela falhou',n.status)
+
     def test_preferencia_com_falha_preserva_modo(self):
         n = self.janela().nuvem
         with patch.object(automacao_nuvem,'salvar_preferencia',side_effect=OSError()):

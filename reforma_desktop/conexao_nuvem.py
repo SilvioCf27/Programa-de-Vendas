@@ -217,6 +217,8 @@ class Conexao(Q.QObject):
                     self.janela.financas.atualizar()
                 elif self.janela.area == 'Análises':
                     self.janela.analises.atualizar()
+        except Exception:
+            self.informar('Dados fictícios sincronizados; a atualização da tela falhou. Reabra o estudo para conferir. ' + ('A consulta automática continua agendada.' if self.automatico else 'O modo manual foi preservado.'), self.resumo)
         finally:
             self.recebendo = False
             if automatico:

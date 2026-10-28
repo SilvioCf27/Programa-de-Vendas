@@ -1,0 +1,22 @@
+{
+  "suite": "tests",
+  "plataforma": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "sqlite": "3.50.4",
+  "executados": 202,
+  "aprovados": 200,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [
+    {
+      "teste": "test_helper_troca_e_recupera_apos_falha_de_abertura (test_atualizador.TrocaWindowsTests.test_helper_troca_e_recupera_apos_falha_de_abertura)",
+      "motivo": "Helper nativo requer Windows"
+    },
+    {
+      "teste": "test_dpapi_nativa_recupera_e_recusa_corrupcao (test_sessao_windows.SessaoWindowsTests.test_dpapi_nativa_recupera_e_recusa_corrupcao)",
+      "motivo": "DPAPI nativa requer Windows"
+    }
+  ],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

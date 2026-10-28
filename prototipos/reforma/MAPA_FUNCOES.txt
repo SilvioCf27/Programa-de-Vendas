@@ -229,6 +229,10 @@ G03/R05: encerramento aguarda configuração/threads; conclusão espera término
 V06/R06: falha transitória não confirma o dia; nova tentativa e aviso recuperado.
 Quinze testes novos; roteiro original mantido. Matriz atual 26 I e quatro S
 (F09/G04/G05/G06), sem os seis P anteriores, sujeita às evidências finais.
-Próxima atividade após confirmar gate/regressão: medições da Etapa 5.
+Gate/regressão confirmados: seis casos conformes nos dois sistemas; Windows
+122/122 Qt, 202/202 aplicação, 31/31 protótipos; execução 40627516716,
+base 12152ae. Linux 122/122 Qt, 200 aplicação aprovados e dois nativos
+ignorados, 31/31 protótipos. Evidências ligadas no relatório.
+Próxima atividade: medições da Etapa 5.
 Não é aprovação de produção, pacote Qt, integração real ou release 2.0.
 Evidências: reforma_desktop/REVISAO_ETAPA4.md, seção de repetição.

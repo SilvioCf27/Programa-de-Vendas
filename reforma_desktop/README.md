@@ -47,7 +47,7 @@ O lançador original `executar.py`, o executável instalado e `noturno_demo.py` 
 
 As três telas já estão integradas no banco de estudo. Consultas e formulários financeiros, edição do fechamento e mecanismos de configuração estão disponíveis. A [revisão atual](REVISAO_ETAPA4.md) identifica as lacunas de equivalência e a distinção entre operações locais e simulações.
 
-Editor da preferência de abertura, cinco temas e criação de backup local já estão integrados. Restauração/verificação e Drive manual também estão integrados: veja [Recuperação e Drive](RECUPERACAO.md). Sessão e sincronização Qt usam agora um serviço fictício local: veja [Nuvem em estudo](NUVEM.md). A [edição do fechamento por vigência](FECHAMENTO.md) também está integrada ao serviço fictício. O [atualizador Qt está disponível em ensaio isolado](ATUALIZACOES.md), sem instalar programas. A revisão percorreu o inventário; as seis lacunas foram corrigidas. Após confirmar a regressão e a revisão repetida, a próxima atividade é medir o conjunto na Etapa 5. Esta entrada não sincroniza com PWA/Supabase real. Se você configurar o Drive, o cliente do Google poderá enviar as cópias fictícias para a nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Noite conserva a identidade Noturno; as outras paletas são opções para a próxima abertura.
+Editor da preferência de abertura, cinco temas e criação de backup local já estão integrados. Restauração/verificação e Drive manual também estão integrados: veja [Recuperação e Drive](RECUPERACAO.md). Sessão e sincronização Qt usam agora um serviço fictício local: veja [Nuvem em estudo](NUVEM.md). A [edição do fechamento por vigência](FECHAMENTO.md) também está integrada ao serviço fictício. O [atualizador Qt está disponível em ensaio isolado](ATUALIZACOES.md), sem instalar programas. A revisão percorreu o inventário; as seis lacunas foram corrigidas. A regressão e a revisão repetida passaram no Linux e no Windows; a próxima atividade é medir o conjunto na Etapa 5. Esta entrada não sincroniza com PWA/Supabase real. Se você configurar o Drive, o cliente do Google poderá enviar as cópias fictícias para a nuvem. A preferência de abertura existente já é lida quando presente na pasta de estudo. Noite conserva a identidade Noturno; as outras paletas são opções para a próxima abertura.
 
 A aprovação visual não foi reaberta. A integração ainda não representa equivalência completa, estabilidade de uma release, validação manual Windows/DPI/leitor de tela ou teste do atualizador.
 
@@ -63,7 +63,7 @@ O workflow `reforma-vendas-windows.yml` repete essa suíte e as suítes existent
 
 Para sua revisão manual: cadastre uma venda fictícia; tente repetir a data e depois corrija; edite e cancele uma edição; aplique mês/ano/fechamento; deixe um filtro pendente e confira que o resumo não muda; selecione/exclua registros; exporte com mais de uma página; visite Análises/Finanças e retorne para Vendas. São verificações da entrada isolada, não do seu banco real.
 
-Análises, Finanças e os mecanismos do estudo foram entregues na continuidade. A [revisão atual](REVISAO_ETAPA4.md) orienta as correções pendentes da Etapa 4. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
+Análises, Finanças e os mecanismos do estudo foram entregues na continuidade. A [revisão atual](REVISAO_ETAPA4.md) registra as correções e os limites da Etapa 4. A entrada estável só será substituída após as verificações previstas nas Etapas 5 e 6.
 
 
 ### Histórico — resultado da primeira entrega de Vendas

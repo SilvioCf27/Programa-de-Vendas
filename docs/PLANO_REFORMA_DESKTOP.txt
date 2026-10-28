@@ -1,7 +1,7 @@
 GESTÃO DA FEIRA — PLANO DA REFORMA DO DESKTOP
 Versão do plano: 16 — Etapa 4, correções e repetição da revisão em 28/10/2026.
 Estado: revisão estética e escolha PySide6 aprovadas explicitamente.
-Etapa 4 em andamento: Vendas, Análises e Finanças em dados isolados.
+Etapa 4: revisão técnica repetida; próxima atividade, medições da Etapa 5.
 Base funcional: desktop 1.7.1; PWA com os recursos semanais já adicionados.
 
 REFERÊNCIA PRINCIPAL E HISTÓRICO
@@ -342,12 +342,12 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A Etapa 4 prossegue por configurações e mecanismos em partes isoladas.
+A revisão da Etapa 4 foi repetida em dados isolados.
 O usuário autorizou corrigir as seis lacunas e repetir a revisão. R01–R06
 foram corrigidas no estudo, com testes próprios e nova coleta de conformidade.
 A matriz passa a 26 itens com implementação testada e quatro integrações
-simuladas. A liberação técnica para as medições da Etapa 5 depende da rodada
-final registrada na seção 28. Integração real, DPI/acessibilidade, pacote,
+simuladas. A regressão e o gate confirmados, registrados na seção 28,
+permitem iniciar as medições da Etapa 5. Integração real, DPI/acessibilidade, pacote,
 recuperação e atualização 1.7.1 → 2.0 continuam nas validações originais,
 sem substituir a versão funcional, abrir o banco pessoal ou alterar a PWA.
 
@@ -1128,15 +1128,21 @@ REVISÃO E CONTINUIDADE
 Quinze testes novos verificam os caminhos diretos e os cliques/Enter, quatro
 datas A/B, campos ocultos, comparação pendente, página/foco, logs sem dados,
 entrada/callbacks/workers, falha do registro, término de threads e retomada.
-R01–R06 foram repetidas com o MESMO roteiro, sem relaxar critérios. Resultados
-finais Linux/Windows serão registrados após a rodada completa.
+R01–R06 foram repetidas com o MESMO roteiro, sem relaxar critérios: seis
+conformes no Linux e no Windows, gate com retorno 0 em ambos.
+Linux: Qt 122/122; aplicação 200 aprovados e dois ignorados por exigirem
+Windows; protótipos 31/31, sem falhas/erros. Windows nativo: Qt 122/122,
+aplicação 202/202 e protótipos 31/31, sem falhas/erros/ignorados.
+Execução Windows 40627516716, base 12152ae; resolução da VM restaurada.
+Evidências em reforma_desktop/resultados/linux-correcao-revisao e
+reforma_desktop/resultados/windows-40627516716.
 O JSON mantém aprovacao_etapa4=false por desenho: um coletor não substitui a
 revisão conjunta/decisão do plano. O gate automático usa casos_conformes.
 
-A matriz atual tem 26 I e quatro S; não restam P referentes às seis lacunas,
-condicionado às evidências finais. Integrações reais e pacote/atualização
-continuam pendentes, sem alegação de equivalência de produção. Após confirmar
-o gate R01–R06 e a regressão, próxima atividade é a Etapa 5: medir abertura,
+A matriz atual tem 26 I e quatro S; não restam P referentes às seis lacunas.
+Integrações reais e pacote/atualização continuam pendentes, sem alegação de
+equivalência de produção. Com o gate R01–R06 e a regressão confirmados,
+próxima atividade é a Etapa 5: medir abertura,
 navegação, consultas e memória em cenários equivalentes à base. Não publicar
 2.0 ou migrar dados antes das verificações/aprovação das Etapas 5/6.
 Relatório: reforma_desktop/REVISAO_ETAPA4.md.

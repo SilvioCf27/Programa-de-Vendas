@@ -2,7 +2,7 @@
 
 **Resultado atual — 28/10/2026: as seis lacunas R01–R06 foram corrigidas no estudo e a revisão foi repetida.** O usuário autorizou as correções após a confirmação do ensaio. O layout aprovado e os critérios da coleta foram preservados.
 
-A matriz dos **30 itens** passa a **26 I e quatro S**, sem os seis P anteriores. Isso permite preparar as medições da Etapa 5 quando a rodada final estiver confirmada; integrações reais, interação manual, DPI, pacote e atualização continuam nas validações previstas. Não houve mudança dos cálculos, esquema, versão 1.7.1, banco pessoal, contas ou PWA.
+A matriz dos **30 itens** passa a **26 I e quatro S**, sem os seis P anteriores. A regressão e o gate confirmados permitem iniciar as medições da Etapa 5; integrações reais, interação manual, DPI, pacote e atualização continuam nas validações previstas. Não houve mudança dos cálculos, esquema, versão 1.7.1, banco pessoal, contas ou PWA.
 
 ## Correções aplicadas
 
@@ -113,7 +113,11 @@ O workflow continua registrando essa coleta separadamente em `REVISAO_ETAPA4.jso
 
 ## Repetição após as correções — 28/10/2026
 
-Os resultados finais Linux/Windows desta repetição serão registrados após a rodada completa. O roteiro original [revisar_etapa4.py](avaliacao/revisar_etapa4.py) continua com os mesmos seis critérios; ele não foi enfraquecido para aceitar os defeitos.
+No Linux: **122/122 testes Qt**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**, sem falhas ou erros. As **seis checagens dirigidas ficaram conformes**, com retorno 0 do gate. [Evidências locais](resultados/linux-correcao-revisao), código `12152ae`. **Windows nativo:** **122/122 Qt, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas, erros ou testes ignorados. **R01–R06: seis conformes**, gate com retorno 0. [Evidências da execução 40627516716](resultados/windows-40627516716), código `12152ae`; Python 3.13.16, SQLite 3.50.4 e Qt 6.10.2. A resolução da VM foi restaurada.
+
+Comparação com a rodada anterior: os seis casos antes não conformes passaram mantendo os critérios; a suíte Qt cresceu de 107 para 122 testes com as 15 regressões.
+
+O roteiro original [revisar_etapa4.py](avaliacao/revisar_etapa4.py) continua com os mesmos seis critérios; ele não foi enfraquecido para aceitar os defeitos.
 
 `casos_conformes=true` significa que as seis checagens passaram. `aprovacao_etapa4=false` é mantido por desenho do coletor: ele não concede aprovação geral do inventário, de release ou da migração pessoal. A revisão técnica documentada, o gate e as aprovações do plano têm escopos distintos.
 
@@ -121,4 +125,4 @@ Os testes de clique/Enter desta entrega também verificam a normalização na pe
 
 ## Próxima atividade
 
-Após confirmar a regressão e o gate R01–R06, iniciar a **Etapa 5**, com medições equivalentes de abertura, navegação, consultas e memória. Manter as quatro integrações S isoladas até a validação real prevista e preservar os critérios de pacote/atualização/aprovação antes da 2.0. Nenhuma publicação ou migração pessoal foi autorizada por esta coleta.
+Com a regressão e o gate R01–R06 confirmados, a próxima atividade é iniciar a **Etapa 5**, com medições equivalentes de abertura, navegação, consultas e memória. Manter as quatro integrações S isoladas até a validação real prevista e preservar os critérios de pacote/atualização/aprovação antes da 2.0. Nenhuma publicação ou migração pessoal foi autorizada por esta coleta.

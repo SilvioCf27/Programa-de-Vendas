@@ -1,0 +1,18 @@
+{
+  "suite": "reforma_desktop/tests",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "executados": 167,
+  "aprovados": 166,
+  "falhas": [
+    {
+      "teste": "test_execucao_independente_persiste_sem_copiar_historico_ou_sessao (test_entrada_online_qt.EntradaOnlineTests.test_execucao_independente_persiste_sem_copiar_historico_ou_sessao)",
+      "erro": "Traceback (most recent call last):\n  File \"D:\\a\\Programa-de-Vendas\\Programa-de-Vendas\\reforma_desktop\\tests\\test_entrada_online_qt.py\", line 124, in test_execucao_independente_persiste_sem_copiar_historico_ou_sessao\n    self.assertEqual(execucao.preparar(p,r),r)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: WindowsPath('C:/Users/runneradmin/AppData/Local/Temp/tmpex3gtpwy/execucao') != WindowsPath('C:/Users/RUNNER~1/AppData/Local/Temp/tmpex3gtpwy/execucao')\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": false,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

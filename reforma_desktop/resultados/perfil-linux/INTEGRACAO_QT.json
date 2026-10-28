@@ -1,0 +1,22 @@
+{
+  "suite": "reforma_desktop/tests",
+  "plataforma": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "sqlite": "3.50.4",
+  "executados": 154,
+  "aprovados": 152,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [
+    {
+      "teste": "test_reabertura_dpapi_renova_sem_pedir_login_novamente (test_contrato_https_qt.ContratoHttpsTests.test_reabertura_dpapi_renova_sem_pedir_login_novamente)",
+      "motivo": "DPAPI nativa requer Windows"
+    },
+    {
+      "teste": "test_sessao_dpapi_original_permanece_recuperavel_so_no_arquivo_preservado (test_perfil_validacao.PerfilTests.test_sessao_dpapi_original_permanece_recuperavel_so_no_arquivo_preservado)",
+      "motivo": "DPAPI nativa requer Windows"
+    }
+  ],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

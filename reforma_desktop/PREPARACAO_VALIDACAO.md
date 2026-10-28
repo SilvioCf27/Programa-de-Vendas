@@ -18,7 +18,9 @@ perfil/
   .gestao-feira-perfil-validacao
 ```
 
-Tema e período inicial são mantidos. Os valores originais das outras preferências ficam arquivados, mas na pasta de aplicação a sincronização e o atualizador ficam desativados, o Drive sem configuração e a sessão ausente. Não há cópia de vendas para o novo projeto. O projeto de teste deve ser diferente tanto da configuração de origem quanto do vínculo existente no banco. Uma sessão do projeto antigo não deve ser reutilizada no novo projeto.
+Tema e período inicial são mantidos. Os valores originais das outras preferências ficam arquivados, mas na pasta de aplicação a sincronização e o atualizador ficam desativados, o Drive sem configuração e a sessão ausente. Não há cópia de vendas para o novo projeto. O projeto de teste deve ser diferente tanto da configuração de origem quanto do vínculo existente no banco. Uma sessão do projeto antigo não deve ser reutilizada no novo projeto. Preservar DPAPI não torna a sessão portátil: sua recuperação depende da conta/ambiente Windows que a protegeu.
+
+O perfil é uma preparação imutável; não use `aplicacao` diretamente como pasta de dados em uso, pois arquivos novos ou preferências alteradas invalidam a conferência. A futura entrada deverá conferir o perfil e preparar uma pasta de execução separada.
 
 O manifesto SHA-256 confere os arquivos preservados e ativos. Arquivo extra, conteúdo alterado ou preparação incompleta impedem construir o cliente. Isso detecta alteração acidental; não é criptografia nem proteção contra alguém que possa reescrever os arquivos e o próprio manifesto.
 
@@ -40,7 +42,7 @@ Não use senha, chave secreta ou service_role. A ferramenta não autentica nem e
 
 ## Verificação
 
-[Doze testes novos](tests/test_perfil_validacao.py) cobrem snapshot/configurações, WAL, sessão DPAPI nativa, recusa de destino existente/projeto de origem/pasta pessoal/sobreposição/links, alteração durante cópia e adulteração. Os ensaios usam somente bases e credenciais fictícias. Regressão completa Linux/Windows em andamento.
+[Doze testes novos](tests/test_perfil_validacao.py) cobrem snapshot/configurações, WAL, sessão DPAPI nativa, recusa de destino existente/projeto de origem/pasta pessoal/sobreposição/links, alteração durante cópia e adulteração. Os ensaios usam somente bases e credenciais fictícias. Linux: 154 testes Qt executados, 152 aprovados e dois de DPAPI ignorados; 200 da versão estável aprovados e dois nativos ignorados; 31 dos protótipos aprovados. Sem falhas ou erros; R01–R06 conformes. [Evidências locais](resultados/perfil-linux), revisão `ee5600e`. O comando completo também foi verificado: preparação concluída e repetição no destino existente recusada, sem substituir a origem. **Windows:** 154/154 Qt, 202/202 estáveis e 31/31 protótipos aprovados, sem falhas, erros ou ignorados. Os 12 testes novos passaram, inclusive DPAPI, WAL e links. R01–R06 conformes. [Execução 40706061854](resultados/windows-40706061854), revisão `ee5600e`; resolução da VM restaurada.
 
 ## Próxima atividade
 

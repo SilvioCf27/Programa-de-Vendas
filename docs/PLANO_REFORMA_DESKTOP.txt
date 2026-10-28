@@ -346,9 +346,9 @@ A Etapa 5 foi medida e verificada no Linux e no Windows. O usuário autorizou
 prosseguir. A Etapa 6 começa pelos contratos do cliente HTTP existente com
 Qt, usando TLS local e bases fictícias, e mantém rastreáveis as validações
 reais ainda necessárias. As quatro integrações S não passam automaticamente
-a I por esse ensaio. O próximo item é preservar configurações/sessão e preparar
-os adaptadores reais em entrada de validação separada, antes de habilitar uso
-online controlado. Escalas/acessibilidade, pacote, recuperação e atualização
+a I por esse ensaio. A preservação offline de configurações/sessão foi verificada na seção 31.
+O próximo item é a entrada gráfica de validação separada com login real,
+antes de habilitar uso online controlado. Escalas/acessibilidade, pacote, recuperação e atualização
 1.7.1 → 2.0 continuam necessários antes da publicação aprovada.
 Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
 
@@ -1297,7 +1297,13 @@ configuração da instalação 1.7.1 e não muda o plano original.
 
 Doze testes novos cobrem cópia, WAL, DPAPI nativa, ausência de automações,
 recusas de caminhos/projetos, adulteração e mudança durante preparação.
-Regressão Linux/Windows em andamento; resultados finais serão registrados.
+Windows 40706061854, base ee5600e: Qt 154/154, estável 202/202 e protótipos
+31/31 aprovados, sem falhas/erros/ignorados; R01–R06 conformes. Resolução
+restaurada. Linux: Qt 154 executados, 152 aprovados/dois DPAPI ignorados;
+estável 200 aprovados/dois nativos ignorados; protótipos 31/31; sem falhas/erros.
+CLI verificada: preparação concluída, repetição no destino existente recusada,
+origem/perfil preservados. Evidências em reforma_desktop/resultados/perfil-linux
+e reforma_desktop/resultados/windows-40706061854.
 Próxima atividade: entrada GUI de validação com configuração/login reais,
 sem controles de simulação, em perfil/projeto separado e com envio explícito.
 Ainda faltam ensaio online/RLS/PC-PWA/Drive, interação/DPI/acessibilidade,

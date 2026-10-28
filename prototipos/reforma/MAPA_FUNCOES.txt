@@ -282,3 +282,10 @@ vazio, com automações desativadas; fábrica do cliente real não faz HTTP.
 Doze testes novos; próximas validações em PREPARACAO_VALIDACAO.md.
 Matriz continua 26 I/quatro S; entrada gráfica online e validação externa
 seguem pendentes. Sem mudança da instalação funcional, SQL ou PWA.
+
+RESULTADO DA PRESERVAÇÃO OFFLINE
+Windows 40706061854, base ee5600e: 154 Qt, 202 estáveis e 31 protótipos
+aprovados, sem falhas/erros/ignorados. DPAPI, WAL e links incluídos.
+Linux: 152 Qt aprovados/dois DPAPI ignorados; 200 estáveis aprovados/dois
+nativos ignorados; 31 protótipos aprovados. R01–R06 conformes. CLI verificada.
+Etapa 6 permanece aberta; próxima atividade é entrada GUI de validação real.

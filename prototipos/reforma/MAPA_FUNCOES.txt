@@ -297,3 +297,12 @@ Transferência inicial conferida e confirmada. Sem simulação/importação ou
 atualizador fictício. Treze novos testes locais de GUI/TLS/subprocesso, incluindo encerramento de modais.
 Contas externas/RLS/PC-PWA ainda pendentes; matriz 26 I/quatro S preservada.
 Guia/resultados: reforma_desktop/VALIDACAO_ONLINE.md. Sem release 2.0.
+
+RESULTADO DA ENTRADA ONLINE
+Windows 40711385643 (ecdc773): 167 Qt, 202 estáveis e 31 protótipos aprovados,
+sem falhas/erros/ignorados; R01–R06 conformes. Linux: 165 Qt aprovados/dois
+DPAPI ignorados, 200 estáveis aprovados/dois nativos ignorados, 31 protótipos.
+Defeito de modal remanescente corrigido após primeira rodada reprovada;
+comparação de caminhos 8.3 normalizada no teste Windows. Evidências preservadas.
+Usuário criou projeto Supabase de teste; próxima atividade é Auth/SQL/RLS e
+ensaio externo. Não houve conta externa, produção ou PWA alterada.

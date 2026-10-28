@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Entrega atual:** [entrada gráfica de validação online](VALIDACAO_ONLINE.md), seção 32 do plano. Login real em projeto separado, pasta de execução própria e envio manual por confirmação. A instalação 1.7.1 e o estudo simulado não foram substituídos.
+**Entrega atual:** [entrada gráfica de validação online](VALIDACAO_ONLINE.md), seção 32 do plano. Login real em projeto separado, pasta de execução própria e envio manual por confirmação. Regressão Windows: 167 Qt, 202 estáveis e 31 protótipos aprovados. Próximo passo: conferir Auth/SQL/RLS no projeto separado criado pelo usuário. A instalação 1.7.1 e o estudo simulado não foram substituídos.
 
 A escolha do PySide6 foi aprovada pelo usuário em 27/10/2026, após a comparação técnica. A primeira entrega iniciou **navegação e Vendas**, primeiro item da Etapa 4 do [plano](../docs/PLANO_REFORMA_DESKTOP.txt), seção 19. Não é uma nova release nem substitui o executável 1.7.1.
 

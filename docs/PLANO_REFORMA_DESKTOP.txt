@@ -342,15 +342,14 @@ A aprovação de uma aparência não autoriza alterar cálculos ou remover funç
 
 9. PRÓXIMA ATIVIDADE NA CRONOLOGIA ATUAL
 
-A Etapa 5 foi medida e verificada no Linux e no Windows. O usuário autorizou
-prosseguir. A Etapa 6 começa pelos contratos do cliente HTTP existente com
-Qt, usando TLS local e bases fictícias, e mantém rastreáveis as validações
-reais ainda necessárias. As quatro integrações S não passam automaticamente
-a I por esse ensaio. A preservação offline de configurações/sessão foi verificada na seção 31.
-O próximo item é a entrada gráfica de validação separada com login real,
-antes de habilitar uso online controlado. Escalas/acessibilidade, pacote, recuperação e atualização
-1.7.1 → 2.0 continuam necessários antes da publicação aprovada.
-Não substituir a versão funcional, abrir banco pessoal ou alterar a PWA.
+A Etapa 6 tem contratos, preservação offline e entrada gráfica de validação
+implementados e testados localmente e no Windows. O usuário já criou um
+projeto Supabase separado. Próxima atividade: conferir nesse projeto Auth,
+SQL/políticas e ensaio online de migração/sincronização com dados fictícios.
+As quatro integrações S continuam pendentes de comprovação externa. Depois
+seguem Drive, interação/escalas/acessibilidade, pacote, recuperação e ensaio
+1.7.1 → 2.0, com aprovação antes de publicar. Não substituir a versão funcional
+ou alterar o projeto/contas em uso nem a PWA.
 
 10. REGISTRO DO INÍCIO DO ESTUDO
 
@@ -1336,8 +1335,12 @@ O perfil de preparação e os arquivos preservados permanecem imutáveis.
 Treze testes novos de GUI/HTTPS local e subprocesso cobrem abertura sem HTTP,
 login/senha, confirmação/cancelamento, envio manual, retomada/autorização,
 falha de login, identidade do perfil/projeto, reabertura, restauração e ausência
-de controles fictícios. Contratos anteriores preservados. Regressoes finais
-Linux/Windows serão registradas após a rodada completa.
+de controles fictícios. Contratos anteriores preservados. Regressão final: Windows 40711385643, base ecdc773, Qt 167/167, estável
+202/202 e protótipos 31/31, sem falhas/erros/ignorados. R01–R06 conformes.
+Resolução da VM restaurada. Linux: 167 Qt executados, 165 aprovados e dois
+DPAPI ignorados; estável 200 aprovados/dois nativos ignorados; protótipos 31/31;
+sem falhas/erros, revisão conforme. Evidências em resultados/online-linux e
+resultados/windows-40711385643 dentro de reforma_desktop.
 
 Esta entrega NÃO testa contas externas, Postgres/RLS, PC/PWA ou Google Drive.
 A conexão real usa ClienteNuvem/HTTPS padrão; testes automáticos roteiam só
@@ -1369,3 +1372,10 @@ As duas primeiras execuções Windows reproduziram as cinco falhas por modal.
 Uma sexta falha era do instrumento, comparando RUNNER~1 com o caminho
 canônico runneradmin. O teste agora compara r.resolve(), sem flexibilizar
 as guardas de caminho/projeto. Rodada final será repetida após essa correção.
+
+FECHAMENTO DESTA RODADA
+Revisão e regressão repetidas após as correções, com resultado final aprovado.
+Preservados os resultados anteriores reprovados. A rodada Windows f53cced
+eliminou as cinco falhas de modais, restando somente a comparação 8.3/canônica;
+a ecdc773 passou todos os testes. Sem conta externa ou SQL executado pelo
+agente. Próxima atividade é a conferência do projeto de teste criado pelo usuário.

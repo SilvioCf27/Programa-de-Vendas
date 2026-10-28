@@ -1,0 +1,5 @@
+{
+  "commit_base": "ecdc77339cab58538c2e7caf03fce3ffcbaac81f",
+  "execucao": "40711385643",
+  "observacao": "Etapa 6: contratos HTTPS em loopback e regressão, somente dados fictícios; sem conta externa ou release."
+}

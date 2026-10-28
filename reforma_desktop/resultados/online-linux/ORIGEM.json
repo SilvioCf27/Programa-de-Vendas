@@ -1,0 +1,6 @@
+{
+  "commit_aplicacao": "f53cced",
+  "commit_final": "ecdc77339cab58538c2e7caf03fce3ffcbaac81f",
+  "observacao": "Qt executado após corrigir encerramento de modais. Na sequência, ecdc773 normalizou somente uma expectativa de caminho Windows e documentação; o código da aplicação permaneceu idêntico. Revisão/estável/protótipos na mesma aplicação. Sem conta externa.",
+  "data": "2026-10-28"
+}

@@ -15,7 +15,7 @@ Use sempre a mesma pasta separada. Sem `--pasta-estudo`, o banco e a configuraç
 
 1. Crie um backup local com os exemplos. Edite uma venda fictícia.
 2. **Verificar integridade**: escolha a cópia anterior. O ensaio ocorre em pasta temporária; a venda editada permanece. A verificação não comprova quem criou o arquivo.
-3. **Restaurar backup**: escolha a mesma cópia e confirme a substituição. A cópia dos dados anteriores é preservada em `backups`. Feche a janela e reabra o estudo pelo mesmo comando: a venda deve voltar ao valor da cópia. Nesta entrega não se continua editando na sessão restaurada, para evitar consultas e regras antigas em memória.
+3. **Restaurar backup**: escolha a mesma cópia e confirme a substituição. A cópia dos dados anteriores é preservada em `backups`. Feche a janela e reabra o estudo pelo mesmo comando: a venda deve voltar ao valor da cópia. A sincronização automática é desativada de forma persistente antes da restauração; confira os dados ao reabrir antes de reativá-la. Nesta entrega não se continua editando na sessão restaurada, para evitar consultas e regras antigas em memória.
 4. **Escolher pasta do Drive**: escolha uma pasta privada, sincronizada pelo Google Drive para computador. O estudo cria `Gestao-da-Feira-Estudo-Qt-Backups/Gestao-da-Feira-Backups`, separada do conjunto do programa em uso. Não mova os backups de produção para essa pasta.
 5. **Fazer cópia no Drive agora**: confira a confirmação e os arquivos no navegador. O núcleo conserva sete versões datadas e o arquivo `último`. Desativar remove apenas a configuração do estudo, preservando arquivos.
 

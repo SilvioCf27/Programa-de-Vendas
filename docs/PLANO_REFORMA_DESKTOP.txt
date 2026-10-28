@@ -893,13 +893,20 @@ da thread gráfica, mas só aplica quando a interface está livre, usando a
 assinatura da base. Filtros pendentes não são aplicados ou bloqueiam consultas.
 Receber dados invalida/atualiza telas sem agendar outro envio artificial.
 Operações que escrevem bloqueiam edições e fechamento até terminar. Backup
-Drive e restauração permanecem protegidos; restauração pausa o agendador e
-exige reabertura. Captura técnica desativa o agendador e não inicia backup.
+Drive e restauração permanecem protegidos; restauração salva modo manual
+antes da substituição e exige reabertura. Se não puder salvar a pausa, é
+cancelada. Reativação requer ação explícita após a conferência. Arquivo do
+serviço simulado ausente após vínculo é erro, não exclusão de todos os dados. Captura técnica desativa o agendador e não inicia backup.
 
 VALIDAÇÃO E LIMITES
 Evidências e roteiro: reforma_desktop/NUVEM.md. Testes não usam conta real nem
-rede. Windows/DPAPI serão registrados após a rodada nativa. Primeira rodada
+rede. Linux: integração 88/88; aplicação 200 aprovados e dois ignorados por exigirem
+Windows; protótipos 31/31. Windows: integração 88/88, aplicação 202/202 e
+protótipos 31/31, sem falhas/erros/ignorados. Execução 40607047474, base
+c318963; DPAPI exercitado nativamente com sessão fictícia e resolução da VM
+restaurada. Uma falha de renderização não cancela a próxima consulta. Primeira rodada
 identificou referência a ícone inexistente, corrigida para recurso já incluído.
+A entrada de produção deverá usar o cliente real, sem controles de simulação.
 A conexão real e os cenários com projeto separado/duas instâncias continuam
 pendentes para a revisão de integração anterior à publicação; o simulador não
 comprova o serviço real. Também seguem pendentes DPI/acessibilidade manuais,

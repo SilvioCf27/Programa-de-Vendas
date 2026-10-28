@@ -1,0 +1,13 @@
+{
+  "suite": "reforma_desktop/tests",
+  "plataforma": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.13.5",
+  "sqlite": "3.50.4",
+  "executados": 88,
+  "aprovados": 88,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

@@ -48,12 +48,18 @@ O núcleo verifica novamente as versões antes de aplicar. Se elas mudaram, a re
 
 Consulta e gravação rodam fora da thread gráfica. A consulta automática aguarda formulários/configurações; se uma edição abrir durante a consulta, a aplicação é adiada. Gravações bloqueiam edições e fechamento até concluir. Receber alterações preserva filtros pendentes e atualiza a área visível sem disparar um envio artificial. Consultas sem mudanças não criam outro backup.
 
+Restaurar uma cópia desativa a automação de forma persistente antes de substituir o banco. Se essa preferência não puder ser salva, a restauração é cancelada. Ao reabrir, confira os dados e sincronize manualmente antes de reativar a opção automática. Isso evita desfazer silenciosamente a recuperação.
+
+Se o arquivo do serviço fictício desaparecer depois do vínculo, a sincronização é interrompida; a ausência não é interpretada como exclusão de todos os registros.
+
 O serviço fictício guarda registros e recibos em `servico-nuvem-estudo.json`, dentro da pasta isolada. Não é backup SQLite nem sincronização com outro dispositivo. Se o Drive estiver configurado, seu cliente poderá enviar as cópias SQLite fictícias, como explicado na entrega anterior; essa é uma operação separada.
 
 ## Validação e limites
 
-Resultados das suítes serão registrados após a rodada final. Os cenários incluem transferência, duas direções, finanças/parcelas, filtros pendentes, consultas sem mudança, falha temporária, resposta perdida, conflitos, revisão desatualizada, sessão expirada e fechamento durante trabalho.
+Linux: **88/88 testes da integração**, **200 da aplicação aprovados e dois ignorados por exigirem Windows**, **31/31 dos protótipos**. [Relatórios locais](resultados/linux-nuvem). **Windows: 88/88 da integração, 202/202 da aplicação e 31/31 dos protótipos**, sem falhas, erros ou testes ignorados. [Relatórios da execução 40607047474](resultados/windows-40607047474), base `c318963`. O DPAPI foi exercitado nativamente no Windows com sessão fictícia; a resolução da VM foi restaurada. A renderização Qt usa offscreen e não comprova interação manual ou DPI real.
 
-A validação do simulador **não comprova RLS, permissões, autenticação ou concorrência do Supabase real**. Também não substitui testes com projeto separado e dois dispositivos, interação manual, DPI, leitor de tela, instalador ou atualização. A conexão real permanece bloqueada nesta entrada de estudo e será validada antes da publicação da 2.0.
+Os cenários incluem transferência, duas direções, finanças/parcelas, filtros pendentes, consultas sem mudança, falha temporária, resposta perdida, conflitos, revisão desatualizada, sessão expirada, pausa persistente após restauração, serviço fictício ausente, falha de renderização sem cancelar a próxima consulta e fechamento durante trabalho.
+
+A validação do simulador **não comprova RLS, permissões, autenticação ou concorrência do Supabase real**. Também não substitui testes com projeto separado e dois dispositivos, interação manual, DPI, leitor de tela, instalador ou atualização. A conexão real permanece bloqueada nesta entrada de estudo e será validada antes da publicação da 2.0. A entrada de produção deverá usar o cliente real e remover os controles de simulação; essa liberação ainda não foi feita.
 
 **Próxima atividade:** edição do fechamento por vigência; depois, atualizador. A revisão conjunta e as Etapas 5 e 6 continuam no plano original.

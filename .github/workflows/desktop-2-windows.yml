@@ -29,6 +29,8 @@ jobs:
           architecture: x64
       - name: Instalar dependencias fixadas
         run: python -m pip install -r requirements-desktop-build.txt
+      - name: Preparar resolucao da VM de teste
+        run: python prototipos/reforma/avaliacao/tela_windows.py --saida evidencias-qt/TELA_WINDOWS.json
       - name: Testar Qt, versao estavel e prototipos
         shell: pwsh
         run: |
@@ -86,6 +88,11 @@ jobs:
             evidencias-qt/*.json
             build-qt/GestaoDaFeiraQt/warn-*.txt
           if-no-files-found: ignore
+      - name: Restaurar resolucao da VM
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path evidencias-qt/TELA_WINDOWS.json) { python prototipos/reforma/avaliacao/tela_windows.py --saida evidencias-qt/TELA_WINDOWS.json --restaurar }
       - name: Registrar resultado em branch separada de evidencias
         if: always()
         shell: pwsh

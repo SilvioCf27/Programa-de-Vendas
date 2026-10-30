@@ -1,0 +1,54 @@
+{
+  "versao": "2.0.0",
+  "sucesso": false,
+  "pacote_sha256": "e77dda4a31ae59ba46bceb1e4c04ebf35006ddb854f2349b4a6f7cd7fed528c0",
+  "commit_base": "77bde2f1d5ebcae7284e25e62433c1155016cd8b",
+  "diagnostico": {
+    "cenario": "troca",
+    "etapa": "conferir-preservacao",
+    "codigo_helper": 0
+  },
+  "erro_tipo": "PermissionError",
+  "pilha": [
+    {
+      "arquivo": "testar_transicao_qt_windows.py",
+      "funcao": "main",
+      "linha": 153
+    },
+    {
+      "arquivo": "testar_transicao_qt_windows.py",
+      "funcao": "caso",
+      "linha": 32
+    },
+    {
+      "arquivo": "tempfile.py",
+      "funcao": "__exit__",
+      "linha": 952
+    },
+    {
+      "arquivo": "tempfile.py",
+      "funcao": "cleanup",
+      "linha": 956
+    },
+    {
+      "arquivo": "tempfile.py",
+      "funcao": "_rmtree",
+      "linha": 936
+    },
+    {
+      "arquivo": "shutil.py",
+      "funcao": "rmtree",
+      "linha": 790
+    },
+    {
+      "arquivo": "shutil.py",
+      "funcao": "_rmtree_unsafe",
+      "linha": 629
+    },
+    {
+      "arquivo": "tempfile.py",
+      "funcao": "onexc",
+      "linha": 911
+    }
+  ]
+}

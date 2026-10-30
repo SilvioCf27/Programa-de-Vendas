@@ -30,7 +30,9 @@ def caso(pacote_antigo, pacote_novo, falha=False, diagnostico=None):
     diagnostico = {} if diagnostico is None else diagnostico
     diagnostico.update(cenario='rollback' if falha else 'troca', etapa='extrair-referencia')
     with tempfile.TemporaryDirectory(prefix='feira transicao qt ') as temp:
-        raiz = Path(temp)
+        # TEMP no Windows pode usar o alias 8.3 RUNNER~1, enquanto psutil
+        # devolve o caminho longo. Compara sempre os caminhos canônicos.
+        raiz = Path(temp).resolve()
         alvo = a.extrair(pacote_antigo, raiz/'instalado')
         dados = raiz/'dados'; dados.mkdir()
         # Banco/configurações são fixtures; nenhum destino externo é configurado.
@@ -130,8 +132,9 @@ def caso(pacote_antigo, pacote_novo, falha=False, diagnostico=None):
             import psutil
             for p in psutil.process_iter(['pid','exe']):
                 try:
-                    if p.info['exe'] and Path(p.info['exe']).is_relative_to(raiz):
+                    if p.info['exe'] and Path(p.info['exe']).resolve().is_relative_to(raiz):
                         matar(p.pid)
+                        p.wait(timeout=15)
                 except (OSError, psutil.Error):
                     pass
             time.sleep(.5)

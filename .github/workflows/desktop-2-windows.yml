@@ -40,7 +40,8 @@ jobs:
           evidencia = '1f765dc2ac6aca14ea1701edff8f68501698e77e'
           base = 'a1c20583b6bce8299d1126a49bb81826cf0036d1'
           fontes = ['ProgramFeira', 'reforma_desktop/*.py', 'prototipos/reforma', '*.spec',
-                    'requirements*.txt', 'executar*.py', 'tests', 'tools']
+                    'requirements*.txt', 'executar*.py', 'tests', 'tools',
+                    ':(exclude)tools/testar_transicao_qt_windows.py']
           reutilizar = False
           try:
               subprocess.run(['git','fetch','--no-tags','origin',evidencia], check=True)

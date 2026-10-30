@@ -1,0 +1,18 @@
+{
+  "suite": "prototipos/reforma",
+  "plataforma": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.16",
+  "sqlite": "3.53.1",
+  "executados": 31,
+  "aprovados": 30,
+  "falhas": [
+    {
+      "teste": "test_navegacao_tk_preserva_selecao_e_consulta (test_estudo.ModeloTests.test_navegacao_tk_preserva_selecao_e_consulta)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/prototipos/reforma/test_estudo.py\", line 84, in test_navegacao_tk_preserva_selecao_e_consulta\n    self.executar(\"tkinter_demo.py\", {})\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/Programa-de-Vendas/prototipos/reforma/test_estudo.py\", line 73, in executar\n    self.assertEqual(r.returncode, 0, r.stdout + r.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/prototipos/reforma/tkinter_demo.py\", line 535, in <module>\n    app = Aplicativo()\n  File \"/workspace/Programa-de-Vendas/prototipos/reforma/tkinter_demo.py\", line 126, in __init__\n    self.root = tk.Tk()\n                ~~~~~^^\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": false,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

@@ -1,0 +1,59 @@
+{
+  "suite": "tests",
+  "plataforma": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.16",
+  "sqlite": "3.53.1",
+  "executados": 202,
+  "aprovados": 191,
+  "falhas": [
+    {
+      "teste": "test_atualizacao_preserva_vendas_financas_vinculo_e_configuracoes (test_atualizacao.AtualizacaoTests.test_atualizacao_preserva_vendas_financas_vinculo_e_configuracoes)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_atualizacao.py\", line 47, in test_atualizacao_preserva_vendas_financas_vinculo_e_configuracoes\n    self.assertEqual(retorno.returncode,0,retorno.stdout+retorno.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 25, in <module>\n    import ProgramFeira.main as app\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_consulta_nao_bloqueia_interface_e_formularios_impedem_instalacao (test_atualizador_interface.AtualizadorInterfaceTests.test_consulta_nao_bloqueia_interface_e_formularios_impedem_instalacao)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_atualizador_interface.py\", line 71, in test_consulta_nao_bloqueia_interface_e_formularios_impedem_instalacao\n    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 7, in <module>\n    import ProgramFeira.main as app\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_fluxo_grafico_copia_e_fechamento_com_falha (test_backup_drive.BackupDriveTests.test_fluxo_grafico_copia_e_fechamento_com_falha)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_backup_drive.py\", line 161, in test_fluxo_grafico_copia_e_fechamento_com_falha\n    self.assertEqual(resultado.returncode, 0, resultado.stdout + resultado.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 8, in <module>\n    root = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_finaliza_variaveis_na_interface_e_restaura_gc_apos_trabalhos_sobrepostos (test_coleta_interface.ColetaInterfaceTests.test_finaliza_variaveis_na_interface_e_restaura_gc_apos_trabalhos_sobrepostos)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_coleta_interface.py\", line 55, in test_finaliza_variaveis_na_interface_e_restaura_gc_apos_trabalhos_sobrepostos\n    self.assertEqual(r.returncode,0,r.stdout+r.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n    root=tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_datas_parcelas_taxas_e_previa_de_regra (test_financeiro_interface.FinanceiroInterfaceTests.test_datas_parcelas_taxas_e_previa_de_regra)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_financeiro_interface.py\", line 68, in test_datas_parcelas_taxas_e_previa_de_regra\n    self.assertEqual(r.returncode, 0, r.stdout + r.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n    import ProgramFeira.main as a\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_fluxos_reais_em_banco_temporario (test_interface.InterfaceTests.test_fluxos_reais_em_banco_temporario)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_interface.py\", line 569, in test_fluxos_reais_em_banco_temporario\n    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 11, in <module>\n    import ProgramFeira.main as a\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_verificacao_isola_banco_e_recursos_fora_do_diretorio (test_pacote.PacoteTests.test_verificacao_isola_banco_e_recursos_fora_do_diretorio)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_pacote.py\", line 25, in test_verificacao_isola_banco_e_recursos_fora_do_diretorio\n    self.assertEqual(retorno.returncode, 0, resultado)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : {'versao': '1.7.1', 'sucesso': False, 'plataforma': 'linux', 'empacotado': False, 'erro': 'Traceback (most recent call last):\\n  File \"/workspace/Programa-de-Vendas/executar.py\", line 21, in verificar_pacote\\n    from ProgramFeira import main as app\\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\\n    janela = tk.Tk()\\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n_tkinter.TclError: couldn\\'t connect to display \":99\"\\n'}\n"
+    },
+    {
+      "teste": "test_barras_so_aparecem_quando_necessarias (test_rolagem.RolagemTests.test_barras_so_aparecem_quando_necessarias)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_rolagem.py\", line 46, in test_barras_so_aparecem_quando_necessarias\n    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 5, in <module>\n    import ProgramFeira.main as a\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    },
+    {
+      "teste": "test_faixa_independente_historico_preferencia_e_virada_sem_perder_filtros (test_semanas_interface.SemanasInterfaceTests.test_faixa_independente_historico_preferencia_e_virada_sem_perder_filtros)",
+      "erro": "Traceback (most recent call last):\n  File \"/workspace/Programa-de-Vendas/tests/test_semanas_interface.py\", line 84, in test_faixa_independente_historico_preferencia_e_virada_sem_perder_filtros\n    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 0 : Traceback (most recent call last):\n  File \"<string>\", line 11, in <module>\n    import ProgramFeira.main as a\n  File \"/workspace/Programa-de-Vendas/ProgramFeira/main.py\", line 761, in <module>\n    janela = tk.Tk()\n  File \"/workspace/.tools/python/cpython-3.13.16-linux-x86_64-gnu/lib/python3.13/tkinter/__init__.py\", line 2491, in __init__\n    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)\n              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_tkinter.TclError: couldn't connect to display \":99\"\n\n"
+    }
+  ],
+  "erros": [],
+  "ignorados": [
+    {
+      "teste": "test_helper_troca_e_recupera_apos_falha_de_abertura (test_atualizador.TrocaWindowsTests.test_helper_troca_e_recupera_apos_falha_de_abertura)",
+      "motivo": "Helper nativo requer Windows"
+    },
+    {
+      "teste": "test_dpapi_nativa_recupera_e_recusa_corrupcao (test_sessao_windows.SessaoWindowsTests.test_dpapi_nativa_recupera_e_recusa_corrupcao)",
+      "motivo": "DPAPI nativa requer Windows"
+    }
+  ],
+  "sucesso": false,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

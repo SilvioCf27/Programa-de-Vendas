@@ -2,6 +2,9 @@
 import argparse
 from pathlib import Path
 import sys
+import sqlite3
+
+from ProgramFeira.database.entrada_backup import MIN_SQLITE
 
 
 def main():
@@ -11,6 +14,13 @@ def main():
     p.add_argument('--url-projeto-teste',required=True)
     p.add_argument('--chave-publica',required=True,help='Somente Publishable/anon; nunca senha ou service_role.')
     a=p.parse_args()
+    if sqlite3.sqlite_version_info < MIN_SQLITE:
+        atual='.'.join(map(str,sqlite3.sqlite_version_info))
+        minimo='.'.join(map(str,MIN_SQLITE))
+        print(f'Preparação não iniciada: SQLite {atual} é inferior ao mínimo de segurança {minimo}. '
+              'Use um interpretador Python com SQLite compatível e confira a versão com esse mesmo interpretador. '
+              'Nenhum arquivo foi alterado.',file=sys.stderr)
+        return 1
     try:
         from reforma_desktop.perfil_validacao import preparar,conferir
         perfil=preparar(a.origem_estudo,a.destino,a.url_projeto_teste,a.chave_publica)

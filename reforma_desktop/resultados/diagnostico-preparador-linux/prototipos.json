@@ -1,0 +1,13 @@
+{
+  "suite": "prototipos/reforma",
+  "plataforma": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.16",
+  "sqlite": "3.53.1",
+  "executados": 31,
+  "aprovados": 31,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal."
+}

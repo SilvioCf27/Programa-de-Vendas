@@ -1,0 +1,12 @@
+{
+  "tag": "v2.0.0",
+  "commit": "3f1b953febcdbe175b32e6159896f313cc815986",
+  "publicacao": 41057915253,
+  "validacao_windows": 41057322744,
+  "sha256": "b2d595014fe82f00c4c20314dbed8f486d9723a9968d212e9e8673cfa10b673d",
+  "bytes": 55145147,
+  "download_publico_conferido": true,
+  "atualizacao_e_rollback_aprovados": true,
+  "teste_manual_windows": "pendente",
+  "supabase_drive_reais": "nao acessados nem aprovados"
+}

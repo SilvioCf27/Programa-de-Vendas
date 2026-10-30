@@ -1,6 +1,6 @@
 # Reforma desktop — Vendas, Análises e Finanças em PySide6
 
-**Em preparação:** [pacote candidato e atualização 1.7.1 → 2.0](ATUALIZACAO_2_0.md). A entrada de produção e o workflow de pacote/transição foram implementados; a existência do código não é publicação nem aprovação Windows. Testes manuais Windows continuam adiados. A entrada de estudo e a validação online abaixo permanecem disponíveis separadamente.
+**Publicado em 30/10/2026:** [desktop 2.0.0 e atualização pela interface da 1.7.1](https://github.com/SilvioCf27/Programa-de-Vendas/releases/tag/v2.0.0). O pacote Windows, a transição e a recuperação após falha foram aprovados; [evidências e limites](resultados/pacote-windows-41057322744/README.md). Testes manuais Windows continuam adiados. A integração externa não foi aprovada por esses ensaios. A entrada de estudo e a validação online abaixo permanecem disponíveis separadamente; main e PWA foram preservadas.
 
 **Entrega atual:** [entrada gráfica de validação online](VALIDACAO_ONLINE.md), seção 32 do plano. Login real em projeto separado, pasta de execução própria e envio manual por confirmação. Regressão Windows: 167 Qt, 202 estáveis e 31 protótipos aprovados. Próximo passo: conferir Auth/SQL/RLS no projeto separado criado pelo usuário. A instalação 1.7.1 e o estudo simulado não foram substituídos.
 

@@ -1,5 +1,7 @@
 # Candidata do desktop 2.0
 
+**Status de 30/10/2026:** [v2.0.0 publicada como estável](https://github.com/SilvioCf27/Programa-de-Vendas/releases/tag/v2.0.0), revisão `3f1b953`. O [pacote, a troca 1.7.1 → 2.0 e o rollback Windows](resultados/pacote-windows-41057322744/README.md) passaram. O download público teve SHA-256 conferido. A 1.7.1 já pode encontrá-la em Configurações → Atualizações. Testes manuais Windows e integração externa continuam pendentes, conforme o direcionamento do usuário; não foram convertidos em aprovações.
+
 Esta implementação prepara o pacote Qt e sua atualização pelo programa. O executável 1.7.1 e a PWA permanecem separados. A existência deste documento ou da versão no código não significa que a release foi publicada.
 
 ## Dados e configuração
@@ -41,4 +43,4 @@ Após a publicação efetiva, o usuário poderá abrir 1.7.1 → Configurações
 
 ## Pendências explícitas
 
-Os testes manuais Windows foram adiados pelo usuário. Auth/SQL/RLS, PC/PWA e Drive reais continuam sem aprovação; não foram acessados nem reconfigurados. A publicação da release e o ensaio automático Windows precisam de evidências próprias; validação Linux não os substitui. Não há aprovação automática da Etapa 6 nem lançamento apenas por incrementar a versão.
+Os testes manuais Windows foram adiados pelo usuário. Auth/SQL/RLS, PC/PWA e Drive reais continuam sem aprovação; não foram acessados nem reconfigurados. A publicação e o ensaio automático Windows têm evidências próprias vinculadas acima; validação Linux não foi usada como substituta. A disponibilização para o teste do usuário não transforma essas pendências em aprovação integral da Etapa 6.

@@ -29,7 +29,7 @@ python tools/testar_transicao_qt_windows.py --pacote-171 baseline-171/dist/Gesta
 
 Esse ensaio abre o binário 1.7.1, confere a candidata Qt, cria backup, troca pastas, verifica o recibo 2.0 e compara todas as tabelas e arquivos de configuração fictícios. Outra execução provoca falha de abertura após o smoke e exige recuperar e reabrir a 1.7.1. Nenhum download ou Supabase real é usado pelo ensaio da troca. Um blob opaco sem projeto configurado é preservado byte a byte; DPAPI nativa é coberta separadamente pelos testes Windows.
 
-O workflow guarda artefatos e registra os JSONs em uma branch separada `evidencias/desktop-2-<execução>`, inclusive quando a execução falha. Não escreve na main nem publica automaticamente. Confira a execução/revisão e `sucesso` dos relatórios; uma branch de evidências de falha não aprova o pacote.
+O workflow guarda artefatos e registra os JSONs em uma branch separada `evidencias/desktop-2-<execução>`, inclusive quando a execução falha. Não escreve na main. Pushes da branch geram somente a candidata; uma tag `v2.x` dispara novamente todas as verificações e só publica a release estável se elas passarem e a tag corresponder à versão do pacote. Confira a execução/revisão e `sucesso` dos relatórios; uma branch de evidências de falha não aprova o pacote.
 
 ## Como a atualização chegará à interface
 

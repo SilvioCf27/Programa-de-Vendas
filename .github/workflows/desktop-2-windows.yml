@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: ['reforma/estudo-interface']
+    tags: ['v2.*']
     paths:
       - 'reforma_desktop/**'
       - 'ProgramFeira/atualizador.py'
@@ -63,6 +64,18 @@ jobs:
             dist-qt/VALIDACAO_ATUALIZADOR.json
             evidencias-qt/*.json
           if-no-files-found: error
+      - name: Publicar atualizacao estavel somente por tag 2.x aprovada
+        if: startsWith(github.ref, 'refs/tags/v2.')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FEIRA_TAG: ${{ github.ref_name }}
+          FEIRA_SHA: ${{ github.sha }}
+        shell: pwsh
+        run: |
+          python -c "import os; from reforma_desktop.versao import VERSAO; assert os.environ['FEIRA_TAG'] == 'v'+VERSAO"
+          if ($LASTEXITCODE -ne 0) { throw 'Tag e versao do pacote divergem' }
+          python tools/publicar_desktop_qt.py --pasta dist-qt --evidencias evidencias-qt --commit $env:FEIRA_SHA --publicar
+          if ($LASTEXITCODE -ne 0) { throw 'Publicacao nao concluida' }
       - name: Guardar evidencias em caso de falha
         if: failure()
         uses: actions/upload-artifact@v4

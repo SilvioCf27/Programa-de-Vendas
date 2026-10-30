@@ -1,0 +1,17 @@
+{
+  "versao": "2.0.0",
+  "sucesso": true,
+  "plataforma": "win32",
+  "empacotado": true,
+  "interface": "PySide6",
+  "sqlite": "3.50.4",
+  "banco_isolado": true,
+  "backup_seguranca": true,
+  "cadastro": true,
+  "parcelas": true,
+  "excel": true,
+  "navegacao": true,
+  "atualizador_real": true,
+  "sem_rede": true,
+  "commit_base": "5faae72e2a9cb0a3c121232a3475a3f610665a7a"
+}

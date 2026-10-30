@@ -1,0 +1,69 @@
+{
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "qt": "6.10.2",
+  "dados": "Somente banco/pasta fictícios temporários; sem contas ou rede.",
+  "casos": [
+    {
+      "id": "R01",
+      "item": "V01",
+      "entrada": "02/01/2",
+      "aceitavel_antes": false,
+      "linhas_depois": 0,
+      "data_gravada": null,
+      "conforme": true,
+      "esperado": "Recusar a data inválida sem gravar."
+    },
+    {
+      "id": "R02",
+      "item": "A02",
+      "entrada": "02/01/2",
+      "aceitavel_antes": false,
+      "mensagem": "Não atualizado: Confirme uma data válida pelo calendário ou complete a digitação.",
+      "conforme": true,
+      "esperado": "Recusar a data inválida e manter a comparação anterior identificada."
+    },
+    {
+      "id": "R03",
+      "item": "V03",
+      "edicoes_por_enter": 1,
+      "edicoes_por_duplo_clique": 1,
+      "foco_na_tabela": true,
+      "linhas": 1,
+      "conforme": true,
+      "esperado": "Enter na linha selecionada abre a edição uma única vez."
+    },
+    {
+      "id": "R04",
+      "item": "G02",
+      "resultado_trabalhador": false,
+      "arquivos_de_diagnostico": 1,
+      "registros_runtime_error_novos": 1,
+      "mensagem_presente_no_log": false,
+      "conforme": true,
+      "esperado": "Erro inesperado sanitizado gera registro técnico sem mensagem/variáveis."
+    },
+    {
+      "id": "R05",
+      "item": "G03",
+      "banco_operacao_ativa": true,
+      "janela_principal_visivel": true,
+      "janela_backup_visivel": true,
+      "conforme": true,
+      "esperado": "Encerramento direto da janela principal aguarda a operação de backup."
+    },
+    {
+      "id": "R06",
+      "item": "V06",
+      "erro_propagou": false,
+      "tentativas_em_dois_disparos": 2,
+      "conforme": true,
+      "esperado": "Falha transitória na virada mantém nova tentativa e não confirma o dia antes de atualizar."
+    }
+  ],
+  "casos_conformes": true,
+  "aprovacao_etapa4": false,
+  "observacao": "Coleta direcionada de lacunas, não uma suíte geral de equivalência. A aprovação da etapa exige o inventário completo e revisão conjunta.",
+  "commit_base": "3f1b953febcdbe175b32e6159896f313cc815986"
+}

@@ -1,0 +1,19 @@
+{
+  "suite": "tests",
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "python": "3.13.16",
+  "sqlite": "3.50.4",
+  "executados": 202,
+  "aprovados": 202,
+  "falhas": [],
+  "erros": [],
+  "ignorados": [],
+  "sucesso": true,
+  "dados": "Somente diretórios temporários. Sem conta, nuvem ou banco pessoal.",
+  "reutilizado_de": {
+    "execucao": 41054098828,
+    "commit": "a1c20583b6bce8299d1126a49bb81826cf0036d1",
+    "evidencia": "1f765dc2ac6aca14ea1701edff8f68501698e77e",
+    "fontes_identicas_a": "5faae72e2a9cb0a3c121232a3475a3f610665a7a"
+  }
+}

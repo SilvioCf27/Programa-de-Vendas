@@ -1,0 +1,39 @@
+{
+  "versao": "2.0.0",
+  "sucesso": true,
+  "pacote_sha256": "6d787db1965c42000f035f69a2e9294cae2d673cd94861e28be40c8f1e01e053",
+  "commit_base": "3a16621af72ba28a1910c93bc28c81177e3b8e84",
+  "diagnostico": {
+    "cenario": "rollback",
+    "etapa": "conferir-preservacao",
+    "codigo_helper": 1
+  },
+  "troca": {
+    "sucesso": true,
+    "origem": "1.7.1",
+    "destino": "2.0.0",
+    "recuperacao_apos_falha": false,
+    "reinicio_confirmado": true,
+    "dados_preservados": true,
+    "preferencias_preservadas": true,
+    "sessao_opaca_preservada": true,
+    "binarios_reais": true,
+    "download": "arquivos locais; sem consulta HTTP"
+  },
+  "rollback": {
+    "sucesso": true,
+    "origem": "1.7.1",
+    "destino": "2.0.0",
+    "recuperacao_apos_falha": true,
+    "reinicio_confirmado": false,
+    "dados_preservados": true,
+    "preferencias_preservadas": true,
+    "sessao_opaca_preservada": true,
+    "binarios_reais": true,
+    "download": "arquivos locais; sem consulta HTTP"
+  },
+  "binarios_reais": true,
+  "reinicio_confirmado": true,
+  "dados_preservados": true,
+  "preferencias_preservadas": true
+}

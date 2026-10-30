@@ -1,0 +1,62 @@
+name: Desktop 2 - Liberar pacote Windows aprovado
+on:
+  push:
+    branches: ['reforma/estudo-interface']
+    paths: ['reforma_desktop/LIBERACAO_2_0.json']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  liberar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Conferir execucao de origem
+        id: origem
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          python - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          from reforma_desktop.versao import VERSAO
+          pedido = json.loads(Path('reforma_desktop/LIBERACAO_2_0.json').read_text())
+          assert pedido['versao'] == VERSAO
+          assert re.fullmatch('[0-9a-f]{40}', pedido['commit'])
+          assert type(pedido['execucao']) is int and pedido['execucao'] > 0
+          r = json.loads(subprocess.check_output(['gh','api',f"repos/{os.environ['GH_REPO']}/actions/runs/{pedido['execucao']}"], text=True))
+          assert r['conclusion'] == 'success' and r['status'] == 'completed'
+          assert r['head_sha'] == pedido['commit']
+          assert r['name'] == 'Desktop 2 - Pacote e transicao Windows'
+          assert r['head_branch'] == 'reforma/estudo-interface'
+          # Usa também o verificador da revisão que gerou os binários.
+          # A intenção de liberação não pode trocar esse script após o build.
+          for arquivo in ('tools/publicar_desktop_qt.py','reforma_desktop/versao.py','reforma_desktop/NOTAS_2_0.md','ProgramFeira/atualizador.py'):
+              corpo = subprocess.check_output(['git','show',pedido['commit']+':'+arquivo]) if subprocess.run(['git','cat-file','-e',pedido['commit']], capture_output=True).returncode == 0 else None
+              if corpo is None:
+                  subprocess.run(['git','fetch','--no-tags','origin',pedido['commit']], check=True)
+                  corpo = subprocess.check_output(['git','show',pedido['commit']+':'+arquivo])
+              assert Path(arquivo).read_bytes() == corpo
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write(f"run={pedido['execucao']}\ncommit={pedido['commit']}\n")
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: Desktop-2-Windows-candidata
+          path: pacote-aprovado
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.origem.outputs.run }}
+      - name: Conferir evidencias e disponibilizar a atualizacao estavel
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FEIRA_COMMIT: ${{ steps.origem.outputs.commit }}
+        run: >-
+          python tools/publicar_desktop_qt.py
+          --pasta pacote-aprovado/dist-qt
+          --evidencias pacote-aprovado/evidencias-qt
+          --commit "$FEIRA_COMMIT" --publicar

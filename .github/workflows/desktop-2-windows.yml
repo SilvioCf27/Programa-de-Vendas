@@ -31,10 +31,49 @@ jobs:
         run: python -m pip install -r requirements-desktop-build.txt
       - name: Preparar resolucao da VM de teste
         run: python prototipos/reforma/avaliacao/tela_windows.py --saida evidencias-qt/TELA_WINDOWS.json
+      - name: Reutilizar suites nativas aprovadas somente com fontes identicas
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, platform, sqlite3, subprocess
+          from pathlib import Path
+          evidencia = '1f765dc2ac6aca14ea1701edff8f68501698e77e'
+          base = 'a1c20583b6bce8299d1126a49bb81826cf0036d1'
+          fontes = ['ProgramFeira', 'reforma_desktop/*.py', 'prototipos/reforma', '*.spec',
+                    'requirements*.txt', 'executar*.py', 'tests', 'tools']
+          reutilizar = False
+          try:
+              subprocess.run(['git','fetch','--no-tags','origin',evidencia], check=True)
+              iguais = subprocess.run(['git','diff','--quiet',base,'HEAD','--',*fontes]).returncode == 0
+              pasta = 'reforma_desktop/resultados/pacote-windows-41054098828/'
+              origem = json.loads(subprocess.check_output(['git','show',evidencia+':'+pasta+'ORIGEM.json']))
+              assert origem['commit'] == base
+              if iguais:
+                  resultados = {}
+                  for nome in ('reforma_desktop-tests','tests'):
+                      r = json.loads(subprocess.check_output(['git','show',evidencia+':'+pasta+nome+'.json']))
+                      assert r['sucesso'] and r['executados'] > 0 and r['aprovados'] == r['executados']
+                      assert r['suite'] == ('reforma_desktop/tests' if nome == 'reforma_desktop-tests' else 'tests')
+                      assert r['python'] == platform.python_version() and r['sqlite'] == sqlite3.sqlite_version
+                      assert r['plataforma'].startswith('Windows') and not r['falhas'] and not r['erros'] and not r['ignorados']
+                      r['reutilizado_de'] = dict(execucao=41054098828, commit=base, evidencia=evidencia,
+                          fontes_identicas_a=os.environ['GITHUB_SHA'])
+                      resultados[nome] = r
+                  for nome, r in resultados.items():
+                      Path('evidencias-qt',nome+'.json').write_text(json.dumps(r,ensure_ascii=False,indent=2),encoding='utf-8')
+                  reutilizar = True
+          except (AssertionError, OSError, ValueError, KeyError, subprocess.CalledProcessError):
+              print('Evidencia indisponivel: executar todas as suites.')
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              f.write('FEIRA_REUTILIZAR_SUITES='+('1' if reutilizar else '0')+'\n')
+          print('Reutilizacao validada:',reutilizar)
+          PY
       - name: Testar Qt, versao estavel e prototipos
         shell: pwsh
         run: |
-          foreach ($suite in @('reforma_desktop/tests','tests','prototipos/reforma')) {
+          $suites = @('reforma_desktop/tests','tests','prototipos/reforma')
+          if ($env:FEIRA_REUTILIZAR_SUITES -eq '1') { $suites = @('prototipos/reforma') }
+          foreach ($suite in $suites) {
             $nome = $suite.Replace('/','-')
             python reforma_desktop/validar.py --suite $suite --saida "evidencias-qt/$nome.json"
             if ($LASTEXITCODE -ne 0) { throw "Falha na suite $suite" }

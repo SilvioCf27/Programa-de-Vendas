@@ -12,6 +12,8 @@ venv/
 .venv-build/
 build/
 dist/
+build-qt/
+dist-qt/
 # Dados de uso e arquivos privados não fazem parte do código público.
 *.db
 !ProgramFeira/assets/banco_inicial.db

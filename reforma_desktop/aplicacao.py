@@ -80,11 +80,14 @@ class FormularioVenda(W.QDialog):
 
 
 class Janela(W.QWidget):
-    def __init__(self, servico, pasta, *, cliente_nuvem=None, validacao_real=False):
+    def __init__(self, servico, pasta, *, cliente_nuvem=None, validacao_real=False, producao=False):
         super().__init__()
         if validacao_real and cliente_nuvem is None:
             raise ValueError('O modo de validação exige um cliente explícito.')
         self.validacao_real = validacao_real
+        self.producao = producao
+        if producao and (validacao_real or cliente_nuvem is None):
+            raise ValueError('Produção exige cliente explícito e não pode usar o modo de validação.')
         self.servico, self.pasta = servico, Path(pasta)
         self.setWindowTitle('Gestão da Feira — Etapa 4 · banco de estudo')
         self.resize(1536, 1024)
@@ -118,8 +121,8 @@ class Janela(W.QWidget):
             self.nav[nome] = b
             sl.addWidget(b)
         sl.addStretch()
-        sl.addWidget(texto('VALIDAÇÃO ONLINE' if validacao_real else 'IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
-        aviso = texto(('Banco de validação · envio manual\n' + cliente_nuvem.url) if validacao_real else 'Banco separado · serviço local simulado\nNão substitui a versão 1.7.1.', 9, C['muted'])
+        sl.addWidget(texto('GESTÃO DA FEIRA 2.0' if producao else 'VALIDAÇÃO ONLINE' if validacao_real else 'IMPLEMENTAÇÃO EM ESTUDO', 9, C['muted']))
+        aviso = texto('Vendas, análises e finanças' if producao else ('Banco de validação · envio manual\n' + cliente_nuvem.url) if validacao_real else 'Banco separado · serviço local simulado\nNão substitui a versão 1.7.1.', 9, C['muted'])
         aviso.setWordWrap(True)
         sl.addWidget(aviso)
         self.status_nuvem = texto('Nuvem simulada · desconectada', 9, C['muted'])
@@ -187,9 +190,15 @@ class Janela(W.QWidget):
         self.relogio.start()
         from reforma_desktop.conexao_nuvem import Conexao
         # Ponto de adaptação para contratos isolados; a entrada usa a simulação.
-        self.nuvem = Conexao(self, cliente=cliente_nuvem, validacao_real=validacao_real)
+        self.nuvem = Conexao(self, cliente=cliente_nuvem, validacao_real=validacao_real, producao=producao)
         from reforma_desktop.atualizacoes import Atualizacoes
-        self.atualizador = Atualizacoes(self)
+        if producao:
+            from reforma_desktop.servico_atualizacao import ServicoAtualizacao
+            self.atualizador = Atualizacoes(self, servico=ServicoAtualizacao(self.pasta/'vendas.db'))
+            from reforma_desktop.versao import VERSAO
+            self.setWindowTitle('Gestão da Feira ' + VERSAO)
+        else:
+            self.atualizador = Atualizacoes(self)
         if validacao_real:
             self.setWindowTitle('Gestão da Feira — validação online · ' + cliente_nuvem.url)
             self.atualizador.parar()
@@ -599,7 +608,9 @@ def preparar_interface(tema='escuro'):
     return app
 
 
-def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas', *, cliente_nuvem=None, validacao_real=False):
+def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas', *, cliente_nuvem=None, validacao_real=False, producao=False, ao_exibir=None):
+    if producao and exemplo:
+        raise ValueError('A entrada de produção nunca preenche dados fictícios.')
     app = preparar_interface(carregar_tema(pasta))
     servico = ServicoVendas()
     if exemplo and not banco.listar_vendas():
@@ -613,12 +624,14 @@ def iniciar(pasta, exemplo=False, captura=None, pagina='Vendas', *, cliente_nuve
             compra = hoje.replace(day=9).isoformat()
             financeiro.salvar_lancamento('despesa', compra, 'Compra parcelada fictícia', '180,00', 'Cartão de crédito', 'Outros', 3, data_compra=compra)
             financeiro.salvar_lancamento('taxa', (hoje - timedelta(days=2)).isoformat(), 'Taxa fictícia das vendas', '2,30', 'Outro', 'Feira')
-    janela = Janela(servico, pasta, cliente_nuvem=cliente_nuvem, validacao_real=validacao_real)
+    janela = Janela(servico, pasta, cliente_nuvem=cliente_nuvem, validacao_real=validacao_real, producao=producao)
     if captura:
         janela.nuvem.agendador.parar()
         janela.atualizador.parar()
     janela.mostrar(pagina)
     janela.show()
+    if ao_exibir is not None:
+        Q.QTimer.singleShot(0, ao_exibir)
     if validacao_real and not captura:
         Q.QTimer.singleShot(0, janela.conexao_nuvem)
     if captura:

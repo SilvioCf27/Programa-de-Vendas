@@ -18,9 +18,9 @@ def configurar_drive(banco, pasta):
     return backup_drive.configurar(banco, raiz)
 
 
-def copiar_drive(banco):
+def copiar_drive(banco, *, producao=False):
     dados = backup_drive.carregar_config(Path(banco).parent)
-    if Path(dados.get('pasta', '')).name != PASTA_ESTUDO:
+    if not producao and Path(dados.get('pasta', '')).name != PASTA_ESTUDO:
         raise ValueError('Escolha uma pasta de Drive própria para este estudo antes de copiar.')
     return backup_drive.executar(banco, dados)
 
@@ -107,7 +107,7 @@ def fechar_com_backup(janela, evento):
     janela.relogio.stop()
     resultado = []
     caminho = Path(banco.CAMINHO_BANCO)
-    op = Operacao(lambda: copiar_drive(caminho), janela)
+    op = Operacao(lambda: copiar_drive(caminho, producao=getattr(janela, 'producao', False)), janela)
     janela._backup_fechamento = op
     op.resultado.connect(lambda ok, valor: resultado.append((ok, valor)))
     def terminou():

@@ -30,7 +30,8 @@ class Revisao(W.QDialog):
         super().__init__(parent)
         self.revisao, self.aplicar = revisao, aplicar
         self.escolhas = {}
-        self.setWindowTitle('Conflitos — projeto de validação' if getattr(getattr(parent,'conexao',getattr(parent,'nuvem',None)),'validacao_real',False) else 'Conflitos — dados fictícios')
+        conexao = getattr(parent, 'conexao', getattr(parent, 'nuvem', None))
+        self.setWindowTitle('Conflitos — nuvem' if getattr(conexao, 'producao', False) else 'Conflitos — projeto de validação' if getattr(conexao, 'real', False) else 'Conflitos — dados fictícios')
         self.resize(840, 620)
         l = W.QVBoxLayout(self)
         l.addWidget(texto('Qual versão deve ser mantida?', 18, bold=True))
@@ -46,7 +47,7 @@ class Revisao(W.QDialog):
         lados = W.QHBoxLayout()
         self.textos = {}
         self.botoes_lado = {}
-        for lado, titulo in [('pc','Neste PC'),('nuvem','No projeto de validação' if getattr(getattr(parent,'conexao',getattr(parent,'nuvem',None)),'validacao_real',False) else 'No serviço simulado')]:
+        for lado, titulo in [('pc','Neste PC'),('nuvem','Na nuvem' if getattr(conexao, 'producao', False) else 'No projeto de validação' if getattr(conexao, 'real', False) else 'No serviço simulado')]:
             coluna = W.QVBoxLayout()
             coluna.addWidget(texto(titulo, 12, bold=True))
             campo = W.QPlainTextEdit()
@@ -99,8 +100,9 @@ class PainelNuvem(W.QDialog):
     def __init__(self, janela):
         super().__init__(janela)
         self.conexao = janela.nuvem
-        real = self.conexao.validacao_real
-        self.setWindowTitle('Conexão — projeto de validação' if real else 'Nuvem simulada — estudo Qt')
+        real = self.conexao.real
+        producao = self.conexao.producao
+        self.setWindowTitle('Conexão com a nuvem' if producao else 'Conexão — projeto de validação' if real else 'Nuvem simulada — estudo Qt')
         self.resize(720, 650)
         root = W.QVBoxLayout(self)
         if real:
@@ -113,14 +115,26 @@ class PainelNuvem(W.QDialog):
             root.addWidget(scroll)
         else:
             l = root
-        l.addWidget(texto('Conexão de validação' if real else 'Sessão e sincronização — estudo', 20, bold=True))
-        aviso = texto('Conecta ao projeto identificado abaixo. Use apenas exemplos de teste. Login não envia registros; a transferência inicial exige conferência e confirmação.' if real else 'Serviço fictício local. Não acessa sua conta, não envia dados ao Supabase e não pede senha. A conexão real será validada antes da versão 2.0.', 11, C['muted'])
+        l.addWidget(texto('Conexão com a nuvem' if producao else 'Conexão de validação' if real else 'Sessão e sincronização — estudo', 20, bold=True))
+        aviso = texto('Login não envia registros. A transferência inicial exige conferência e confirmação. O projeto deve corresponder ao vínculo existente dos seus dados.' if producao else 'Conecta ao projeto identificado abaixo. Use apenas exemplos de teste. Login não envia registros; a transferência inicial exige conferência e confirmação.' if real else 'Serviço fictício local. Não acessa sua conta, não envia dados ao Supabase e não pede senha. A conexão real será validada antes da versão 2.0.', 11, C['muted'])
         aviso.setWordWrap(True)
         l.addWidget(aviso)
         projeto = texto('Projeto: ' + self.conexao.cliente.url if real else 'Conta fictícia: estudo@example.invalid', 11, bold=True)
         projeto.setWordWrap(True)
         projeto.setTextInteractionFlags(Q.Qt.TextInteractionFlag.TextSelectableByMouse)
         l.addWidget(projeto)
+        if producao:
+            self.projeto = projeto
+            from ProgramFeira import nuvem
+            config = nuvem.carregar_config(self.conexao.pasta)
+            form_config = W.QFormLayout()
+            self.url = W.QLineEdit(config.get('url', ''))
+            self.chave = W.QLineEdit(config.get('chave_publica', ''))
+            self.chave.setEchoMode(W.QLineEdit.EchoMode.Password)
+            form_config.addRow('URL do projeto', self.url)
+            form_config.addRow('Chave pública Publishable/anon', self.chave)
+            l.addLayout(form_config)
+            l.addWidget(botao('Salvar configuração do projeto', self.configurar))
         if real:
             form = W.QFormLayout()
             self.email = W.QLineEdit()
@@ -162,7 +176,7 @@ class PainelNuvem(W.QDialog):
         self.automatico = W.QCheckBox('Consultar automaticamente a cada minuto enquanto conectado')
         self.automatico.toggled.connect(self.conexao.alterar_automatico)
         l.addWidget(self.automatico)
-        if real:
+        if self.conexao.validacao_real:
             self.automatico.hide()
             l.addWidget(texto('Sincronização manual nesta validação. Nenhum envio ao abrir ou salvar.', 10, C['muted']))
         (root if real else l).addWidget(botao('Fechar', self.reject))
@@ -174,6 +188,15 @@ class PainelNuvem(W.QDialog):
         self.senha.clear()
         self.conexao.conectar(email, senha)
 
+    def configurar(self):
+        from ProgramFeira.nuvem import ErroNuvem
+        try:
+            self.conexao.configurar(self.url.text(), self.chave.text())
+        except (ErroNuvem, OSError):
+            self.conexao.informar('Configuração não salva. Confira a URL, a chave pública e o vínculo do banco; desconecte antes de alterar o projeto.')
+        else:
+            self.projeto.setText('Projeto: ' + self.conexao.cliente.url)
+
     def atualizar(self):
         n = self.conexao
         vinculado = n.vinculado
@@ -181,19 +204,19 @@ class PainelNuvem(W.QDialog):
         with Q.QSignalBlocker(self.automatico):
             self.automatico.setChecked(n.automatico)
         self.automatico.setEnabled(not n.ocupado)
-        if n.validacao_real:
+        if n.real:
             self.conta.setText(('Conta: ' + n.sessao.email + (' · acesso verificado' if n.sessao_verificada else ' · verificação pendente')) if n.sessao else 'Nenhuma sessão ativa.')
             self.email.setEnabled(not n.ocupado)
             self.senha.setEnabled(not n.ocupado)
         for nome, b in self.botoes.items():
-            permitido = bool(n.sessao and (not n.validacao_real or n.sessao_verificada))
+            permitido = bool(n.sessao and (not n.real or n.sessao_verificada))
             if nome == 'entrar': permitido = True
             elif nome == 'sair': permitido = bool(n.sessao)
             elif nome == 'retomar': permitido = bool(n.sessao)
-            elif nome == 'conferir': permitido = bool(n.sessao and not vinculado and (not n.validacao_real or n.sessao_verificada))
-            elif nome == 'transferir': permitido = bool(n.preparacao and not vinculado and (not n.validacao_real or n.sessao_verificada))
-            elif nome == 'sincronizar' and n.validacao_real: permitido = bool(n.sessao_verificada and (vinculado or n.transferencia_confirmada))
-            elif nome in ('conflitos','simular'): permitido = bool(n.sessao and vinculado and (not n.validacao_real or n.sessao_verificada))
+            elif nome == 'conferir': permitido = bool(n.sessao and not vinculado and (not n.real or n.sessao_verificada))
+            elif nome == 'transferir': permitido = bool(n.preparacao and not vinculado and (not n.real or n.sessao_verificada))
+            elif nome == 'sincronizar' and n.real: permitido = bool(n.sessao_verificada and (vinculado or n.transferencia_confirmada))
+            elif nome in ('conflitos','simular'): permitido = bool(n.sessao and vinculado and (not n.real or n.sessao_verificada))
             b.setEnabled(permitido and not n.ocupado)
         self.botoes['conflitos'].setText('Revisar escolhas dos conflitos…' if n.revisao and n.revisao['conflitos'] else 'Conferir conflitos…')
 
@@ -202,8 +225,8 @@ class PainelNuvem(W.QDialog):
         if not n.preparacao or n.ocupado:
             return
         r = n.preparacao['relatorio']
-        mensagem = ('Enviar ' + str(sum(r['novos'].values())) + ' registros para ' + n.cliente.url + '? Use somente dados de teste. Backup: ' + r['backup']) if n.validacao_real else ('Enviar ' + str(sum(r['novos'].values())) + ' registros para o serviço local simulado? Nenhum dado vai para a conta real. Backup: ' + r['backup'])
-        if W.QMessageBox.question(self, 'Transferência para validação' if n.validacao_real else 'Transferência fictícia', mensagem, W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No) == W.QMessageBox.StandardButton.Yes:
+        mensagem = ('Enviar ' + str(sum(r['novos'].values())) + ' registros para ' + n.cliente.url + '?' + (' Use somente dados de teste.' if n.validacao_real else '') + ' Backup: ' + r['backup']) if n.real else ('Enviar ' + str(sum(r['novos'].values())) + ' registros para o serviço local simulado? Nenhum dado vai para a conta real. Backup: ' + r['backup'])
+        if W.QMessageBox.question(self, 'Transferir dados' if n.producao else 'Transferência para validação' if n.validacao_real else 'Transferência fictícia', mensagem, W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No, W.QMessageBox.StandardButton.No) == W.QMessageBox.StandardButton.Yes:
             n.transferir()
 
     def conflitos(self):

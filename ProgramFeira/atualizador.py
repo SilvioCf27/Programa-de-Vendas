@@ -61,7 +61,7 @@ def baixar(url, destino, limite):
             arquivo.write(bloco)
 
 
-def consultar():
+def consultar(*, versao_atual=None):
     with tempfile.TemporaryDirectory(prefix='feira-versao-') as pasta:
         arquivo = Path(pasta) / 'release.json'
         baixar(API, arquivo, 2 * 1024 * 1024)
@@ -70,7 +70,7 @@ def consultar():
     numero(versao)
     if release.get('draft') or release.get('prerelease'):
         raise ValueError('A versão ainda não é uma publicação estável.')
-    if numero(versao) <= numero(VERSAO):
+    if numero(versao) <= numero(VERSAO if versao_atual is None else versao_atual):
         return None
     esperados = {PACOTE, 'SHA256.txt', 'VALIDACAO_WINDOWS.json'}
     assets = {}
@@ -137,10 +137,10 @@ def validar_destino(executavel, banco):
     return alvo
 
 
-def preparar(release, executavel, banco):
+def preparar(release, executavel, banco, *, versao_atual=None):
     """Não modifica a versão em uso. Só prepara e testa a candidata isolada."""
     alvo = validar_destino(executavel, banco)
-    if numero(release['versao']) <= numero(VERSAO):
+    if numero(release['versao']) <= numero(VERSAO if versao_atual is None else versao_atual):
         raise ValueError('A versão publicada não é mais recente que a instalada.')
     stage = Path(tempfile.mkdtemp(prefix='.feira-atualizacao-', dir=alvo.parent))
     try:
@@ -214,7 +214,7 @@ def instalar(preparacao, banco):
     raise ValueError('O atualizador não respondeu. A versão atual foi preservada.')
 
 
-def confirmar_inicio():
+def confirmar_inicio(*, versao=None):
     """Chamado no loop gráfico; recibo restrito à área de atualização."""
     if len(sys.argv) != 3 or sys.argv[1] != '--confirmar-atualizacao':
         return
@@ -224,4 +224,4 @@ def confirmar_inicio():
         recibo.parent.parent != alvo.parent or recibo.exists()):
         raise ValueError('Caminho do recibo de atualização inválido.')
     with recibo.open('x', encoding='utf-8') as arquivo:
-        json.dump({'versao': VERSAO, 'pid': os.getpid()}, arquivo)
+        json.dump({'versao': VERSAO if versao is None else versao, 'pid': os.getpid()}, arquivo)

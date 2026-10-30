@@ -19,7 +19,7 @@ class Configuracoes(W.QDialog):
         self.pasta = Path(controlador.pasta)
         self.operacao = None
         self.reiniciar = False
-        self.setWindowTitle('Configurações — banco de estudo')
+        self.setWindowTitle('Configurações' if controlador.producao else 'Configurações — banco de estudo')
         self.resize(620, 580)
         root = W.QVBoxLayout(self)
         root.addWidget(texto('Configurações', 20, bold=True))
@@ -54,7 +54,7 @@ class Configuracoes(W.QDialog):
         l.addLayout(linha)
         layout.addWidget(box)
         box, l = caixa()
-        l.addWidget(texto('Dados de estudo', 13, bold=True))
+        l.addWidget(texto('Dados do aplicativo' if controlador.producao else 'Dados de estudo', 13, bold=True))
         caminho = texto(str(banco.CAMINHO_BANCO), 9, C['muted'])
         caminho.setWordWrap(True)
         caminho.setTextInteractionFlags(Q.Qt.TextInteractionFlag.TextSelectableByMouse)
@@ -78,11 +78,11 @@ class Configuracoes(W.QDialog):
         self.destino_drive.setWordWrap(True)
         l.addWidget(self.destino_drive)
         self.mostrar_drive()
-        l.addWidget(botao('Conexão com o projeto de validação…' if controlador.validacao_real else 'Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
+        l.addWidget(botao('Conexão com a nuvem…' if controlador.producao else 'Conexão com o projeto de validação…' if controlador.validacao_real else 'Sessão e sincronização — serviço simulado…', controlador.conexao_nuvem, 'arrow-right-left'))
         l.addWidget(botao('Regra de fechamento por vigência…', controlador.configurar_fechamento, 'calendar-days'))
         if not controlador.validacao_real:
-            l.addWidget(botao('Atualizações — ensaio isolado…', controlador.atualizacoes, 'download'))
-        pendentes = texto('Projeto de validação: ' + controlador.nuvem.cliente.url + '. Sincronização manual; atualização real ainda pendente.' if controlador.validacao_real else 'Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt usa pacotes e processos fictícios no ensaio isolado. A versão estável não foi alterada.', 9, C['muted'])
+            l.addWidget(botao('Atualizações…' if controlador.producao else 'Atualizações — ensaio isolado…', controlador.atualizacoes, 'download'))
+        pendentes = texto('Seus dados e configurações permanecem na pasta acima.' if controlador.producao else 'Projeto de validação: ' + controlador.nuvem.cliente.url + '. Sincronização manual; atualização real ainda pendente.' if controlador.validacao_real else 'Drive configurado cria uma cópia ao fechar. Sessão/sincronização usa serviço fictício, sem conta real. O atualizador Qt usa pacotes e processos fictícios no ensaio isolado. A versão estável não foi alterada.', 9, C['muted'])
         pendentes.setWordWrap(True)
         layout.addWidget(pendentes)
         scroll.setWidget(corpo)
@@ -199,7 +199,7 @@ class Configuracoes(W.QDialog):
         if not pasta:
             return
         try:
-            dados = configurar_drive(banco.CAMINHO_BANCO, pasta)
+            dados = (backup_drive.configurar if self.controlador.producao else configurar_drive)(banco.CAMINHO_BANCO, pasta)
             self.mostrar_drive()
             self.status.setText('Pasta de estudo configurada: ' + dados['pasta'] + '\nUse Fazer cópia agora. Envio remoto não verificado; cópia ao fechar ativada neste estudo.')
         except (OSError, ValueError) as erro:
@@ -208,7 +208,7 @@ class Configuracoes(W.QDialog):
     def drive(self):
         def concluido(r):
             self.status.setText('Cópia verificada na pasta: ' + str(r['arquivo']) + '\nConfira o envio no Drive pelo navegador.\n' + '\n'.join(r['avisos']))
-        self.executar(lambda: copiar_drive(banco.CAMINHO_BANCO), concluido)
+        self.executar(lambda: copiar_drive(banco.CAMINHO_BANCO, producao=self.controlador.producao), concluido)
 
     def desativar_drive(self):
         try:

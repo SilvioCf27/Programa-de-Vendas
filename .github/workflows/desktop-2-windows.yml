@@ -1,0 +1,95 @@
+name: Desktop 2 - Pacote e transicao Windows
+on:
+  workflow_dispatch:
+  push:
+    branches: ['reforma/estudo-interface']
+    paths:
+      - 'reforma_desktop/**'
+      - 'ProgramFeira/atualizador.py'
+      - 'executar_desktop.py'
+      - 'GestaoDaFeiraQt.spec'
+      - 'tools/gerar_desktop_qt.py'
+      - 'tools/testar_transicao_qt_windows.py'
+      - 'tools/versao_desktop_windows.txt'
+      - '.github/workflows/desktop-2-windows.yml'
+permissions:
+  contents: read
+jobs:
+  candidata:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          architecture: x64
+      - name: Instalar dependencias fixadas
+        run: python -m pip install -r requirements-desktop-build.txt
+      - name: Testar Qt, versao estavel e prototipos
+        shell: pwsh
+        run: |
+          foreach ($suite in @('reforma_desktop/tests','tests','prototipos/reforma')) {
+            $nome = $suite.Replace('/','-')
+            python reforma_desktop/validar.py --suite $suite --saida "evidencias-qt/$nome.json"
+            if ($LASTEXITCODE -ne 0) { throw "Falha na suite $suite" }
+          }
+          python reforma_desktop/avaliacao/revisar_etapa4.py --saida evidencias-qt/REVISAO.json --exigir-conformidade
+          if ($LASTEXITCODE -ne 0) { throw 'Revisao reprovada' }
+      - name: Compilar e testar candidata Qt
+        run: python tools/gerar_desktop_qt.py
+      - uses: actions/checkout@v4
+        with:
+          ref: v1.7.1
+          path: baseline-171
+      - name: Compilar e testar a referencia 1.7.1 sem modifica-la
+        run: python baseline-171/tools/gerar_executavel.py
+      - name: Trocar 1.7.1 por Qt e recuperar apos falha de abertura
+        run: >-
+          python tools/testar_transicao_qt_windows.py
+          --pacote-171 baseline-171/dist/GestaoDaFeira-Windows-x64.zip
+          --pacote-qt dist-qt/GestaoDaFeira-Windows-x64.zip
+          --saida dist-qt/VALIDACAO_ATUALIZADOR.json
+      - name: Disponibilizar candidata e evidencias aprovadas
+        uses: actions/upload-artifact@v4
+        with:
+          name: Desktop-2-Windows-candidata
+          path: |
+            dist-qt/GestaoDaFeira-Windows-x64.zip
+            dist-qt/SHA256.txt
+            dist-qt/VALIDACAO_WINDOWS.json
+            dist-qt/VALIDACAO_ATUALIZADOR.json
+            evidencias-qt/*.json
+          if-no-files-found: error
+      - name: Guardar evidencias em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Desktop-2-diagnostico
+          path: |
+            dist-qt/*.json
+            evidencias-qt/*.json
+            build-qt/GestaoDaFeiraQt/warn-*.txt
+          if-no-files-found: ignore
+      - name: Registrar resultado em branch separada de evidencias
+        if: always()
+        shell: pwsh
+        env:
+          FEIRA_RUN: ${{ github.run_id }}
+          FEIRA_COMMIT: ${{ github.sha }}
+          FEIRA_STATUS: ${{ job.status }}
+        run: |
+          $destino = "reforma_desktop/resultados/pacote-windows-$env:FEIRA_RUN"
+          New-Item -ItemType Directory -Force $destino
+          if (Test-Path evidencias-qt) { Get-ChildItem evidencias-qt -Filter '*.json' | Copy-Item -Destination $destino }
+          if (Test-Path dist-qt) { Get-ChildItem dist-qt -Filter '*.json' | Copy-Item -Destination $destino }
+          @{commit=$env:FEIRA_COMMIT; execucao=$env:FEIRA_RUN; resultado=$env:FEIRA_STATUS} | ConvertTo-Json | Set-Content "$destino/ORIGEM.json" -Encoding utf8
+          git switch -c "evidencias/desktop-2-$env:FEIRA_RUN"
+          if ($LASTEXITCODE -ne 0) { throw 'Nao foi possivel criar a branch de evidencias' }
+          git add $destino
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Registrar validacao Windows desktop 2 ($env:FEIRA_RUN)"
+          if ($LASTEXITCODE -ne 0) { throw 'Nao foi possivel registrar evidencias' }
+          git push origin "HEAD:refs/heads/evidencias/desktop-2-$env:FEIRA_RUN"
+          if ($LASTEXITCODE -ne 0) { throw 'Nao foi possivel enviar evidencias' }

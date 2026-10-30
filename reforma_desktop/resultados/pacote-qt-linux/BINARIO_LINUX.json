@@ -1,0 +1,16 @@
+{
+  "versao": "2.0.0",
+  "sucesso": true,
+  "plataforma": "linux",
+  "empacotado": true,
+  "interface": "PySide6",
+  "sqlite": "3.53.1",
+  "banco_isolado": true,
+  "backup_seguranca": true,
+  "cadastro": true,
+  "parcelas": true,
+  "excel": true,
+  "navegacao": true,
+  "atualizador_real": true,
+  "sem_rede": true
+}

@@ -11,6 +11,7 @@ class PainelAtualizacao(W.QDialog):
         super().__init__(janela)
         self.permite_atualizacao = True
         self.controlador = janela.atualizador
+        real = self.controlador.real
         self.setWindowTitle('Atualizações — ensaio Qt')
         self.resize(720,580)
         l = W.QVBoxLayout(self)
@@ -23,7 +24,7 @@ class PainelAtualizacao(W.QDialog):
         self.cenario = W.QComboBox()
         for chave,nome in CENARIOS.items():
             self.cenario.addItem(nome,chave)
-        self.cenario.setCurrentIndex(self.cenario.findData(self.controlador.servico.cenario))
+        self.cenario.setCurrentIndex(self.cenario.findData(getattr(self.controlador.servico, 'cenario', 'normal')))
         self.cenario.setAccessibleName('Cenário fictício da atualização')
         self.cenario.currentIndexChanged.connect(lambda:self.controlador.selecionar_cenario(self.cenario.currentData()))
         l.addWidget(self.cenario)
@@ -47,6 +48,23 @@ class PainelAtualizacao(W.QDialog):
             linha.addWidget(ajuda(rotulo,dica))
             l.addLayout(linha)
         l.addWidget(botao('Fechar',self.reject))
+        if real:
+            from reforma_desktop.versao import VERSAO as versao_desktop
+            self.setWindowTitle('Atualizações')
+            # Substitui os textos de ensaio, sem oferecer cenários fictícios.
+            for i, valor in enumerate(('Atualizações', 'Versão instalada: '+versao_desktop,
+                    'A nova versão será baixada e testada antes da confirmação. A instalação preserva backup e a pasta anterior.', '')):
+                widget = l.itemAt(i).widget()
+                widget.setText(valor)
+                if not valor:
+                    widget.hide()
+            self.cenario.hide()
+            self.auto.setText('Consultar ao abrir (nunca instala automaticamente)')
+            for chave, rotulo in [('verificar','Verificar atualizações'),('preparar','Baixar e conferir'),('instalar','Instalar e reiniciar')]:
+                self.botoes[chave].setText(rotulo)
+            for ajuda_widget in self.findChildren(W.QPushButton):
+                if ajuda_widget.text() == '?':
+                    ajuda_widget.hide()
         self.controlador.mudou.connect(self.atualizar)
         self.atualizar()
 
@@ -65,8 +83,8 @@ class PainelAtualizacao(W.QDialog):
         c = self.controlador
         if c.preparacao is None or c.ocupado:
             return
-        if W.QMessageBox.question(self,'Ensaiar atualização',
-            'Exercitar backup e preparação da troca com uma cópia temporária do banco de estudo? Nenhum executável real será trocado ou iniciado e nenhuma cópia será enviada ao Drive.',
+        if W.QMessageBox.question(self,'Instalar atualização' if c.real else 'Ensaiar atualização',
+            ('Instalar a versão conferida e reiniciar o programa? Será criado um backup e a pasta anterior do aplicativo será preservada. A configuração de cópia no Drive existente será respeitada.' if c.real else 'Exercitar backup e preparação da troca com uma cópia temporária do banco de estudo? Nenhum executável real será trocado ou iniciado e nenhuma cópia será enviada ao Drive.'),
             W.QMessageBox.StandardButton.Yes | W.QMessageBox.StandardButton.No,W.QMessageBox.StandardButton.No)==W.QMessageBox.StandardButton.Yes:
             c.instalar()
 

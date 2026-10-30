@@ -20,10 +20,14 @@ class Tarefa(Q.QThread):
         try:
             r = self.funcao()
         except ValueError as erro:
-            self.resultado.emit(False, str(erro))
+            if getattr(self.parent(), 'real', False):
+                registrar_seguro(erro, self.pasta_diagnostico)
+                self.resultado.emit(False, 'Operação recusada. A versão atual foi preservada; confira a distribuição oficial e o armazenamento.')
+            else:
+                self.resultado.emit(False, str(erro))
         except Exception as erro:
             registrar_seguro(erro, self.pasta_diagnostico)
-            self.resultado.emit(False, 'Ensaio não concluído. Confira o armazenamento e tente novamente. Nenhum programa foi instalado.')
+            self.resultado.emit(False, 'Operação não concluída. Confira a conexão e o armazenamento antes de tentar novamente.')
         else:
             self.resultado.emit(True, r)
 
@@ -31,16 +35,19 @@ class Tarefa(Q.QThread):
 class Atualizacoes(Q.QObject):
     mudou = Q.Signal()
 
-    def __init__(self, janela):
+    def __init__(self, janela, *, servico=None):
         super().__init__(janela)
         self.janela = janela
-        self.servico = ServicoEstudo(Path(janela.pasta)/'vendas.db')
+        self.servico = servico if servico is not None else ServicoEstudo(Path(janela.pasta)/'vendas.db')
+        self.real = bool(getattr(self.servico, 'real', False))
         self.preferencia = Path(janela.pasta)/'atualizacoes.json'
         self.automatica = self.ler_preferencia()
         self.ocupado = False
         self.release = self.preparacao = self.resultado = None
         self.tarefa = self.timer = None
         self.status = 'Ensaio local: nenhuma consulta ao GitHub, instalação ou reinício real.'
+        if self.real:
+            self.status = 'Consulte as versões publicadas. A instalação exige confirmação e preserva uma cópia anterior.'
         if self.automatica:
             self.agendar(12000)
 
@@ -78,7 +85,7 @@ class Atualizacoes(Q.QObject):
             self.agendar(12000)
         else:
             self.parar()
-        self.informar('Consulta automática fictícia ativada para o estudo.' if valor else 'Consulta automática do estudo desativada.')
+        self.informar(('Consulta automática ativada.' if valor else 'Consulta automática desativada.') if self.real else ('Consulta automática fictícia ativada para o estudo.' if valor else 'Consulta automática do estudo desativada.'))
 
     def parar(self):
         if self.timer is not None:
@@ -155,7 +162,7 @@ class Atualizacoes(Q.QObject):
                 else:
                     self.release = self.preparacao = self.resultado = None
                     self.servico.limpar()
-                    self.informar('Ensaio interrompido. Nenhum programa foi instalado.\n'+str(valor))
+                    self.informar(('Atualização interrompida. Confira a instalação antes de tentar novamente.\n' if self.real else 'Ensaio interrompido. Nenhum programa foi instalado.\n')+str(valor))
             finally:
                 t.deleteLater()
                 self.mudou.emit()
@@ -169,8 +176,11 @@ class Atualizacoes(Q.QObject):
         self.servico.limpar()
         def recebeu(release):
             self.release = release
-            self.informar('Versão fictícia disponível: '+release['versao']+'. Não é uma publicação real.' if release else 'Ensaio: nenhuma versão mais recente. A base funcional continua inalterada.')
-        self.rodar(self.servico.consultar,recebeu,'Consultando metadados fictícios locais…',silenciosa)
+            if self.real:
+                self.informar('Versão disponível: '+release['versao'] if release else 'Nenhuma versão mais recente disponível.')
+            else:
+                self.informar('Versão fictícia disponível: '+release['versao']+'. Não é uma publicação real.' if release else 'Ensaio: nenhuma versão mais recente. A base funcional continua inalterada.')
+        self.rodar(self.servico.consultar,recebeu,'Consultando versões publicadas…' if self.real else 'Consultando metadados fictícios locais…',silenciosa)
 
     def preparar(self):
         if self.release is None or self.ocupado:
@@ -178,8 +188,8 @@ class Atualizacoes(Q.QObject):
         self.preparacao = self.resultado = None
         def pronto(preparacao):
             self.preparacao = preparacao
-            self.informar('SHA-256 e estrutura do pacote fictício conferidos. O teste da candidata foi simulado. Clique em Ensaio da troca para exercitar backup e preparação, sem instalar ou reiniciar.')
-        self.rodar(lambda:self.servico.preparar(self.release),pronto,'Conferindo o pacote fictício local. Nenhum download real…')
+            self.informar('Download, SHA-256, estrutura e teste isolado da candidata concluídos. Confirme para instalar e reiniciar.' if self.real else 'SHA-256 e estrutura do pacote fictício conferidos. O teste da candidata foi simulado. Clique em Ensaio da troca para exercitar backup e preparação, sem instalar ou reiniciar.')
+        self.rodar(lambda:self.servico.preparar(self.release),pronto,'Baixando e verificando a nova versão…' if self.real else 'Conferindo o pacote fictício local. Nenhum download real…')
 
     def instalar(self):
         if self.preparacao is None or self.ocupado:
@@ -187,5 +197,12 @@ class Atualizacoes(Q.QObject):
         def pronto(r):
             self.resultado = r
             self.preparacao = None
+            if self.real:
+                self.informar('Atualização preparada. Encerrando para instalar e reiniciar…')
+                self.parar()
+                self.janela.nuvem.agendador.parar()
+                self.janela._fechamento_autorizado = True
+                self.janela.close()
+                return
             self.informar(r['observacao']+'\nBackup da cópia fictícia: '+r['backup']+'\nO banco do estudo e as pastas do Drive não foram alterados.')
-        self.rodar(self.servico.instalar,pronto,'Ensaiando backup e preparação da troca, sem executar processos…')
+        self.rodar(self.servico.instalar,pronto,'Preservando backup e preparando o reinício…' if self.real else 'Ensaiando backup e preparação da troca, sem executar processos…')

@@ -599,6 +599,7 @@ def preparar_interface(tema='escuro'):
     aplicar_tokens(tema)
     Q.QLocale.setDefault(Q.QLocale('pt_BR'))
     app = preparar()
+    app.setWindowIcon(G.QIcon(str(Path(__file__).resolve().parents[1] / 'ProgramFeira/assets/gestao-da-feira.ico')))
     paleta = app.palette()
     for papel, cor in [(G.QPalette.ColorRole.Window, C['bg']), (G.QPalette.ColorRole.WindowText, C['text']), (G.QPalette.ColorRole.Base, C['field']), (G.QPalette.ColorRole.AlternateBase, C['alternate']), (G.QPalette.ColorRole.Text, C['text']), (G.QPalette.ColorRole.Button, C['field']), (G.QPalette.ColorRole.ButtonText, C['text']), (G.QPalette.ColorRole.Highlight, C['selected']), (G.QPalette.ColorRole.HighlightedText, C['text']), (G.QPalette.ColorRole.ToolTipBase, C['field']), (G.QPalette.ColorRole.ToolTipText, C['text'])]:
         paleta.setColor(papel, G.QColor(cor))

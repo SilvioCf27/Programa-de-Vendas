@@ -1,4 +1,6 @@
 """Tela financeira Qt sobre as regras atuais; consulta independente de Vendas."""
+from reforma_desktop.historico_financeiro import historico_financeiro, data_da_compra
+from dataclasses import replace
 from datetime import date
 from PySide6 import QtCore as Q, QtWidgets as W
 from componentes_noturno import texto, botao, caixa, titulo_secao, ajuda, acesso, tile
@@ -123,10 +125,20 @@ class PainelFinancas(W.QScrollArea):
         self.setWidget(self.corpo)
         ano, mes, _ = selecao_inicial('Fechamento atual', self.hoje())
         self.seletor = SeletorFinanceiro(date(ano, mes, 1))
-        self.consulta = self.seletor.consulta()
+        self.meio = W.QComboBox()
+        self.meio.addItems(['Todos', *f.MEIOS])
+        self.meio.setAccessibleName('Despesas por pagamento')
+        self.meio.setToolTip('Limita despesas, saldo e falta a cobrir. Vendas e taxas permanecem completas.')
+        self.consulta = self.consulta_atual()
         filtro, fl = caixa(12)
         linha = LinhaResponsiva(1000)
         linha.addWidget(self.seletor, 1)
+        campo_meio = W.QWidget()
+        ml = W.QVBoxLayout(campo_meio)
+        ml.setContentsMargins(0, 0, 0, 0)
+        ml.addWidget(texto('Despesas por pagamento', 9, C['muted']))
+        ml.addWidget(self.meio)
+        linha.addWidget(campo_meio)
         acoes = W.QHBoxLayout()
         acoes.addWidget(botao('Consultar', self.consultar, 'search', True))
         acoes.addWidget(botao('Limpar', self.limpar, 'rotate-ccw'))
@@ -140,6 +152,7 @@ class PainelFinancas(W.QScrollArea):
         fl.addWidget(self.pendente)
         self.layout.addWidget(filtro)
         self.seletor.alterado.connect(self.marcar_pendente)
+        self.meio.currentTextChanged.connect(self.marcar_pendente)
         cards = LinhaResponsiva(950)
         self.cards = {}
         for chave, nome, image, cor, nota in [('saldo', 'Saldo após despesas', 'wallet', C['turquoise'], 'Vendas − taxas − despesas'), ('despesas', 'Despesas a cobrir', 'receipt', C['red'], 'Compromissos incluídos na consulta'), ('falta', 'Falta cobrir', 'banknote', C['blue'], 'Despesas ainda não cobertas')]:
@@ -183,7 +196,15 @@ class PainelFinancas(W.QScrollArea):
         recortes.addWidget(ajuda('Recorte da lista', 'Altera só a lista, não os totais da consulta financeira aplicada. Seleção múltipla e exclusão se limitam à página visível.'))
         recortes.addStretch()
         ll.addLayout(recortes)
-        self.tabela = Tabela(['Compra', 'Fatura / pagamento', 'Descrição / compra', 'Meio', 'Categoria', 'Parcela', 'Valor'], 2)
+        self.busca = W.QLineEdit()
+        self.busca.setPlaceholderText('Buscar por descrição, data, dia ou valor…')
+        self.busca.setAccessibleName('Buscar nos lançamentos; não altera os totais')
+        self.busca.setClearButtonEnabled(True)
+        self.busca.setToolTip('Busca por compra ou fatura, descrição, dia e valor da parcela. Altera só a lista. A consulta e o saldo seguem a fatura/pagamento. Compras sem data informada aparecem no fim.')
+        self.busca.textChanged.connect(self.preencher_lista)
+        ll.addWidget(self.busca)
+        ll.addWidget(ajuda('Datas e ordem', 'Lista pela data da compra/despesa, não pelo cadastro. A fatura/pagamento continua definindo o período e os totais. Registros antigos sem data da compra não são convertidos nem têm uma data presumida.'))
+        self.tabela = Tabela(['Compra / despesa', 'Fatura / pagamento', 'Descrição / compra', 'Meio', 'Categoria', 'Parcela', 'Valor'], 2)
         self.tabela.table.setAccessibleName('Lançamentos da consulta financeira aplicada')
         self.tabela.editar.connect(self.editar)
         self.tabela.excluir.connect(self.excluir)
@@ -208,9 +229,12 @@ class PainelFinancas(W.QScrollArea):
         if self.controlador.area == 'Finanças':
             self.atualizar()
 
+    def consulta_atual(self):
+        return replace(self.seletor.consulta(), meio=self.meio.currentText())
+
     def consultar(self):
         try:
-            consulta = self.seletor.consulta()
+            consulta = self.consulta_atual()
             resultado = self.servico.consultar(consulta)
         except ERROS as erro:
             self.pendente.setText('Consulta não aplicada: ' + str(erro))
@@ -235,12 +259,12 @@ class PainelFinancas(W.QScrollArea):
 
     def marcar_pendente(self):
         try:
-            pendente = self.seletor.consulta() != self.consulta
+            pendente = self.consulta_atual() != self.consulta
         except ValueError as erro:
             self.pendente.setText(str(erro) + ' Os valores continuam na consulta aplicada.')
             self.pendente.show()
             return
-        self.pendente.setText('Período alterado — clique em Consultar. Os valores ainda são da consulta aplicada.' if pendente else '')
+        self.pendente.setText('Filtros alterados — clique em Consultar. Os valores ainda são da consulta aplicada.' if pendente else '')
         self.pendente.setVisible(pendente)
 
     def limpar(self):
@@ -249,6 +273,8 @@ class PainelFinancas(W.QScrollArea):
         self.seletor.ano.setValue(ano)
         self.seletor.mes.setCurrentIndex(mes - 1)
         self.recorte = 0
+        self.busca.clear()
+        self.meio.setCurrentText('Todos')
         self.consultar()
 
     def exibir(self):
@@ -259,6 +285,8 @@ class PainelFinancas(W.QScrollArea):
         a, b = self.resultado['intervalo']
         self.intervalo.setText(f'Consulta financeira independente: {br(a)} a {br(b)} · Inclui faturas futuras dentro do período.')
         avisos = []
+        if self.consulta.meio != 'Todos':
+            avisos.append(f'Despesas: {self.consulta.meio}. Saldo e falta a cobrir usam somente essas despesas; vendas e taxas permanecem completas. Este saldo não representa todas as despesas.')
         if r['parciais']:
             avisos.append('Histórico de ' + ', '.join(map(str, r['parciais'])) + ' não descontado neste recorte: saldo provisório, sem rateio.')
         if r['estimados']:
@@ -277,7 +305,8 @@ class PainelFinancas(W.QScrollArea):
         linhas = self.resultado['linhas']
         r = self.recorte
         linhas = [v for v in linhas if r == 0 or r == 1 and v['tipo'] == 'despesa' or r == 2 and v['tipo'] == 'taxa' or r == 3 and v['parcelas'] > 1]
-        self.tabela.preencher([(v['id'], [br(v['data_compra']) if v.get('data_compra') else '—', br(v['data']), v['descricao'], v['meio'], v['categoria'], f"{v['parcela']}/{v['parcelas']}" if v['parcelas'] > 1 else '—', reais(v['valor_centavos'])]) for v in linhas])
+        linhas = historico_financeiro(linhas, self.busca.text())
+        self.tabela.preencher([(v['id'], [br(data_da_compra(v)) if data_da_compra(v) else ('Vendas ' + br(v['data']) if v['tipo'] == 'taxa' else 'Não informada'), br(v['data']), v['descricao'], v['meio'], v['categoria'], f"{v['parcela']}/{v['parcelas']}" if v['parcelas'] > 1 else '—', reais(v['valor_centavos'])]) for v in linhas])
         for i, b in enumerate(self.botoes_recorte):
             b.setProperty('active', i == self.recorte)
             b.style().unpolish(b)

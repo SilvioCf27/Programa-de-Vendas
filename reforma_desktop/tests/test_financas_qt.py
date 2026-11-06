@@ -301,6 +301,34 @@ class FinancasTests(unittest.TestCase):
         self.assertEqual(p.seletor.mes.currentIndex(), 8)
         self.assertEqual(p.resultado['resumo']['despesas'], 200)
 
+    def test_busca_e_meio_distinguem_resumo_e_lista_sem_adotar_pendente(self):
+        self.vendas.salvar('2026-10-23', '500', '0', '0')
+        self.salvar(valor='180', descricao='Mercado cartão', meio='Cartão de crédito', parcelas=3, compra='2026-10-09')
+        self.salvar(valor='75,50', descricao='Dinheiro terça')
+        f.salvar_lancamento('taxa', '2026-10-23', 'Taxa', '2,30')
+        j, p = self.janela()
+        p.meio.setCurrentText('Cartão de crédito')
+        p.sujo = True
+        p.atualizar()
+        self.assertEqual(p.resultado['resumo']['despesas'], Decimal('135.50'))
+        p.consultar()
+        self.assertEqual(p.resultado['resumo']['despesas'], Decimal('60'))
+        self.assertEqual(p.resultado['resumo']['taxas'], Decimal('2.30'))
+        self.assertEqual(p.resultado['resumo']['saldo'], Decimal('437.70'))
+        p.busca.setText('mercado')
+        self.assertEqual(len(p.tabela.linhas), 1)
+        self.assertEqual(p.tabela.linhas[0][1][0], '09/10/2026')
+        self.assertEqual(p.resultado['resumo']['despesas'], Decimal('60'))
+        p.busca.setText('ausente')
+        self.assertEqual(p.tabela.linhas, [])
+        self.assertEqual(p.resultado['resumo']['saldo'], Decimal('437.70'))
+        p.busca.clear()
+        p.meio.setCurrentText('Dinheiro')
+        p.consultar()
+        self.assertEqual(p.resultado['resumo']['despesas'], Decimal('75.50'))
+        p.limpar()
+        self.assertEqual(p.meio.currentText(), 'Todos')
+
     def test_paginacao_lote_confirmado_e_totais_completos(self):
         for n in range(16):
             self.salvar(valor='10', descricao=f'Despesa {n}')

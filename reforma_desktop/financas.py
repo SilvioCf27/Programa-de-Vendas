@@ -13,6 +13,7 @@ from ProgramFeira.database import banco
 class ConsultaFinanceira:
     tipo: str
     referencia: date
+    meio: str = 'Todos'
 
     def limites(self):
         return f.limites(self.tipo, self.referencia.isoformat())
@@ -34,8 +35,11 @@ class ServicoFinanceiro:
         f.inicializar()
 
     def consultar(self, consulta):
+        if consulta.meio != 'Todos' and consulta.meio not in f.MEIOS:
+            raise ValueError('Escolha um meio de pagamento válido.')
         inicio, fim = consulta.limites()
         linhas, anuais = f.listar_lancamentos(inicio, fim), f.listar_taxas_anuais()
+        linhas = [r for r in linhas if r['tipo'] == 'taxa' or consulta.meio == 'Todos' or r['meio'] == consulta.meio]
         resumo = f.resumir(banco.listar_vendas(inicio, fim), linhas, anuais, inicio, fim)
         return dict(consulta=consulta, intervalo=(inicio, fim), linhas=linhas, anuais=anuais,
                     resumo=resumo, semanas=f.semanas(linhas))

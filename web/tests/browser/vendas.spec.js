@@ -1118,3 +1118,23 @@ test.describe('resumos semanais e preferência de abertura', () => {
     await expect(page.locator('#total')).toHaveText('R$ 21,00');
   });
 });
+
+for (const largura of [320, 390, 1280]) {
+  test(`revisão visual: áreas e ajudas acessíveis em ${largura}px`, async ({ page }) => {
+    await page.setViewportSize({ width: largura, height: 900 });
+    await preparar(page);
+    for (const area of ['vendas', 'analises', 'financas']) {
+      await page.locator(`#aba-${area}`).click();
+      await expect(page.locator(`#area-${area}`)).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      const ajuda = page.locator(`#area-${area} .ajuda-inline`).first();
+      await ajuda.locator('summary').focus();
+      await page.keyboard.press('Enter');
+      await expect(ajuda).toHaveAttribute('open', '');
+      await expect(ajuda.locator('p')).toBeVisible();
+      await ajuda.locator('summary').click();
+      if (process.env.CAPTURAR_WEB_DIR && largura === 390)
+        await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/revisao-${area}.png`, fullPage: true });
+    }
+  });
+}

@@ -450,3 +450,26 @@ o mais antigo, em páginas de até 12 vendas. Atualizar mantém a página quando
 ainda existe; excluir a última venda de uma página ajusta a navegação. Digitar
 uma busca ou aplicar novos filtros volta à primeira página. Ao sair da conta,
 a busca e as marcações de dias são limpas.
+
+
+## Conferir despesas por pagamento e encontrar compras
+
+Em Finanças, **Despesas por pagamento** pode selecionar Dinheiro, Pix, Cartão de
+crédito ou Outro. Clique em **Consultar finanças** para aplicar. Despesas, saldo,
+falta a cobrir e despesas semanais passam a considerar somente esse meio; vendas,
+taxas da maquininha e ajustes históricos continuam completos no período. Um aviso
+indica que esse saldo é parcial em relação ao conjunto das despesas. Atualizar ou
+a consulta automática preserva a seleção aplicada, não o filtro ainda em edição.
+
+**Buscar nos lançamentos** aceita descrição, categoria, meio, data brasileira/ISO,
+dia da semana, parcela e valor do lançamento. A busca não altera indicadores nem
+semanas. Ela permite localizar compras pelo valor ou pela data antes de cadastrar
+outra despesa; não substitui uma validação automática de duplicidade de compras.
+
+A lista destaca e ordena pela data da compra/despesa, independentemente da data de
+cadastro. A fatura fica identificada separadamente. O período financeiro continua
+selecionando a fatura/pagamento: uma compra de outubro pode aparecer na consulta
+da fatura de novembro. Despesas à vista usam a data informada no lançamento.
+Compras antigas no cartão sem data original ficam identificadas como não
+informadas e aparecem ao final; o programa não deduz uma compra pela fatura.
+Datas persistidas não foram alteradas por esta melhoria.

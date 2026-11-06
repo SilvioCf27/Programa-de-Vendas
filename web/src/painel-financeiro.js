@@ -1,3 +1,4 @@
+import { historicoFinanceiro, dataDaCompra } from './historico-financeiro.js';
 import { criarConfiguracaoFechamento } from './painel-fechamento.js';
 import { criarCampoData } from './campo-data.js';
 import { criarSeletorFinanceiro } from './seletor-financeiro.js';
@@ -27,6 +28,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     geracao = 0,
     editando = null,
     anual = null;
+  $('fin-busca').addEventListener('input', () => { if (dados && selecao) desenhar(); });
   const ref = mesFechamento();
   $('fin-referencia').value =
     `${ref.ano}-${String(ref.mes).padStart(2, '0')}-10`;
@@ -133,26 +135,28 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     $('fin-saldo').classList.toggle('negativo', r.saldo < 0);
     let aviso =
       'Saldo considera somente gastos e taxas cadastrados, inclusive futuros. Taxa não cadastrada não significa isenção.';
+    if (selecao.meio && selecao.meio !== 'Todos') aviso += ` Despesas: ${selecao.meio}. Saldo e falta a cobrir usam somente essas despesas; vendas e taxas permanecem completas. Este saldo não representa todas as despesas.`;
     if (r.parciais.length)
       aviso += ` Taxa anual de ${r.parciais.join(', ')} não descontada neste recorte: saldo provisório, sem rateio.`;
     if (r.estimados.length)
       aviso += ` Taxas estimadas em ${r.estimados.join(', ')}: o resultado não é um valor líquido confirmado.`;
     $('fin-aviso').textContent = aviso;
     $('fin-lancamentos').replaceChildren();
-    $('fin-vazio').hidden = r.lancamentos.length > 0;
-    for (const l of [...r.lancamentos].sort(
-      (a, b) => b.data.localeCompare(a.data) || a.id.localeCompare(b.id)
-    )) {
+    const linhas = historicoFinanceiro(r.lancamentos, $('fin-busca').value);
+    $('fin-vazio').hidden = linhas.length > 0;
+    $('fin-vazio').textContent = r.lancamentos.length ? 'Nenhum lançamento encontrado nesta busca.' : 'Nenhum lançamento neste período.';
+    $('fin-contagem').textContent = `${linhas.length} de ${r.lancamentos.length} lançamentos da consulta`;
+    for (const l of linhas) {
       const item = texto('li', '', 'painel registro');
       const topo = texto('div', '', 'titulo');
       topo.append(
-        texto('strong', br(l.data)),
+        texto('strong', l.tipo === 'taxa' ? `Vendas em ${br(l.data)}` : dataDaCompra(l) ? `${l.meio === 'Cartão de crédito' ? 'Compra' : 'Despesa'} em ${br(dataDaCompra(l))}` : 'Compra: data não informada'),
         texto('strong', moeda(l.valor_centavos), 'valor')
       );
       item.append(
         topo,
         texto('p', l.descricao),
-        ...(l.data_compra ? [texto('p', `Compra em ${br(l.data_compra)} · Fatura em ${br(l.data)}`, 'nota')] : []),
+        ...(l.tipo === 'despesa' ? [texto('p', `${l.meio === 'Cartão de crédito' ? 'Fatura' : 'Pagamento'} em ${br(l.data)}${l.parcelas > 1 ? ` · Parcela ${l.parcela}/${l.parcelas}` : ''}`, 'nota data-fatura')] : []),
         texto(
           'p',
           `${l.tipo === 'taxa' ? 'Taxa das vendas no cartão' : 'Despesa'} · ${l.meio} · ${l.categoria}${l.parcelas > 1 ? ` · Parcela ${l.parcela}/${l.parcelas}` : ''}`,
@@ -197,7 +201,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       $('fin-anuais').append(
         texto('li', 'Nenhum ajuste anual cadastrado.', 'nota')
       );
-    $('fin-periodo').textContent = `${br(selecao.inicio)} a ${br(selecao.fim)}`;
+    $('fin-periodo').textContent = `${br(selecao.inicio)} a ${br(selecao.fim)}${selecao.meio && selecao.meio !== 'Todos' ? ` · Despesas: ${selecao.meio}` : ''}`;
     $('fin-dados').hidden = false;
     controles();
   }
@@ -216,7 +220,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     $('fin-status').textContent = 'Consultando dados financeiros…';
     try {
       if (api().fechamentos) await api().fechamentos();
-      const consulta = { ...limitesFinanceiros(tipoConsulta, referenciaConsulta), tipo: tipoConsulta, referencia: referenciaConsulta };
+      const consulta = { ...limitesFinanceiros(tipoConsulta, referenciaConsulta), tipo: tipoConsulta, referencia: referenciaConsulta, meio: nova?.meio ?? 'Todos' };
       await retomar(uid);
       const resposta = await api().financeiro();
       if (atual !== geracao) return;
@@ -417,7 +421,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     event.preventDefault();
     try {
       atualizar(
-        { ...limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value), tipo: $('fin-tipo').value, referencia: $('fin-referencia').value }
+        { ...limitesFinanceiros($('fin-tipo').value, $('fin-referencia').value), tipo: $('fin-tipo').value, referencia: $('fin-referencia').value, meio: $('fin-meio').value }
       );
     } catch (erro) {
       $('fin-status').textContent = erro.message;
@@ -450,6 +454,9 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       ocupado = false;
       dados = null;
       selecao = null;
+      $('fin-busca').value = '';
+      $('fin-meio').value = 'Todos';
+      $('fin-contagem').textContent = '';
       editando = anual = null;
       for (const id of ['fin-dialogo', 'anual-dialogo', 'taxas-dialogo']) $(id).close();
       $('fin-form').reset();

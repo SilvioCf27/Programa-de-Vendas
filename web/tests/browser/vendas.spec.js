@@ -1215,3 +1215,59 @@ test('histórico: editar e excluir na última página usa o registro correto e a
   await expect(page.locator('#vendas li')).toHaveCount(12);
   expect(dados.some(r => r.data === '2030-10-01')).toBe(false);
 });
+
+test('finanças: busca, cronologia da compra e filtro de despesas por pagamento', async ({ page }) => {
+  const dados = await preparar(page);
+  dados.push({ id: 'v', data: '2026-11-01', dinheiro_centavos: 50000, pix_centavos: 0, cartao_centavos: 0, versao: 1 });
+  const r = (id, tipo, meio, valor, compra = null, data = '2026-11-09') => ({ id, tipo, meio, data, data_compra: compra, descricao: id, valor_centavos: valor, categoria: 'Casa', parcela: 1, parcelas: 1, versao: 1 });
+  dados.financeiro.lancamentos.push(r('Mercado terça', 'despesa', 'Cartão de crédito', 30000, '2026-10-20'), { ...r('Compra antiga', 'despesa', 'Cartão de crédito', 5000, '2026-09-01'), created_at: '2099-12-31' }, r('Dinheiro', 'despesa', 'Dinheiro', 40000, null, '2026-11-01'), r('Legado', 'despesa', 'Cartão de crédito', 100), r('Taxa', 'taxa', 'Outro', 1000));
+  await page.locator('#aba-financas').click();
+  await consultarFinancas(page, 'Mês', '2026-11-01');
+  const linhas = page.locator('#fin-lancamentos li');
+  await expect(linhas).toHaveCount(5);
+  await expect(linhas.nth(1)).toContainText('Despesa em 01/11/2026');
+  await expect(linhas.nth(2)).toContainText('Compra em 20/10/2026');
+  await expect(linhas.nth(2)).toContainText('Fatura em 09/11/2026');
+  await expect(linhas.nth(4)).toContainText('Compra: data não informada');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 751,00');
+  for (const termo of ['20/10/2026', '300,00', '300.00', 'mercado']) {
+    await page.locator('#fin-busca').fill(termo);
+    await expect(linhas).toHaveCount(1);
+    await expect(linhas).toContainText('Mercado terça');
+    await expect(page.locator('#fin-despesas')).toHaveText('R$ 751,00');
+  }
+  await page.locator('#fin-busca').fill('terca');
+  await expect(linhas).toHaveCount(2);
+  await page.locator('#fin-busca').fill('');
+  if (process.env.CAPTURAR_WEB_DIR) {
+    await page.locator('#fin-busca').evaluate(e => { e.blur(); window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 50); });
+    await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/financas-compra-busca.png` });
+  }
+  await page.locator('#fin-meio').selectOption('Cartão de crédito');
+  await page.locator('#fin-atualizar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 751,00');
+  await page.locator('#fin-consultar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 351,00');
+  await expect(page.locator('#fin-bruto')).toHaveText('R$ 500,00');
+  await expect(page.locator('#fin-taxas')).toHaveText('R$ 10,00');
+  await expect(page.locator('#fin-saldo')).toHaveText('R$ 139,00');
+  await expect(page.locator('#fin-aviso')).toContainText('não representa todas as despesas');
+  await page.locator('#fin-busca').fill('inexistente');
+  await expect(linhas).toHaveCount(0);
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 351,00');
+  await page.locator('#fin-busca').fill('');
+  await page.locator('#fin-meio').selectOption('Dinheiro');
+  await page.locator('#fin-consultar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 400,00');
+  if (process.env.CAPTURAR_WEB_DIR) {
+    await page.locator('#fin-filtros').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/financas-meio.png` });
+  }
+  await page.locator('#fin-meio').selectOption('Todos');
+  await page.locator('#fin-consultar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 751,00');
+  await page.locator('#fin-busca').fill('mercado');
+  await page.locator('#sair').click();
+  await expect(page.locator('#fin-busca')).toHaveValue('');
+  await expect(page.locator('#fin-meio')).toHaveValue('Todos');
+});

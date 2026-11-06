@@ -423,6 +423,7 @@
             <label>Ano<input id="fin-ano" type="number" min="1900" max="9998" required /></label>
             <label id="fin-mes-rotulo">Mês<select id="fin-mes"></select></label>
             <label id="fin-semana-rotulo" hidden>Semana (segunda a domingo)<select id="fin-semana"></select></label>
+            <label id="fin-meio-rotulo">Despesas por pagamento<select id="fin-meio"><option value="Todos">Todos os meios</option><option>Dinheiro</option><option>Pix</option><option>Cartão de crédito</option><option>Outro</option></select></label>
             <input id="fin-referencia" type="hidden" />
             <button id="fin-consultar" type="submit">Consultar finanças</button>
             <button id="fin-configurar-fechamento" type="button">Configurar fechamento</button>
@@ -519,9 +520,14 @@
             <section class="historico">
               <h2>Lançamentos do período</h2>
               <p class="nota introducao">
-                Parcelamentos mostram uma linha por vencimento, com o valor daquela parcela.
+                Cada parcela entra no período da sua fatura/pagamento; a lista destaca a compra e o valor daquela parcela.
                 Editar abre a compra inteira; excluir remove somente a parcela selecionada.
               </p>
+              <label class="busca-historico">Buscar nos lançamentos
+                <input id="fin-busca" type="search" placeholder="Descrição, data, dia ou valor" aria-describedby="fin-busca-ajuda" />
+              </label>
+              <details class="ajuda-inline"><summary>Datas, ordem e busca</summary><p id="fin-busca-ajuda" class="nota">A lista segue a data da compra ou despesa, da mais recente para a mais antiga, independentemente do dia do cadastro. Compras antigas sem data informada aparecem no fim. A consulta e o saldo continuam usando a fatura ou pagamento. Busque por descrição, compra, fatura, dia da semana ou valor da parcela. A busca não altera os totais nem o resumo semanal.</p></details>
+              <p id="fin-contagem" class="nota" role="status" aria-live="polite"></p>
               <p id="fin-vazio" class="painel" hidden>
                 Nenhum lançamento neste período.
               </p>

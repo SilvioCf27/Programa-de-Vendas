@@ -28,10 +28,11 @@ export function limitesFinanceiros(tipo, referencia) {
   d.setUTCDate(d.getUTCDate() + 6);
   return { inicio, fim: iso(d) };
 }
-export function resumoFinanceiro(dados, { inicio, fim }) {
+export function resumoFinanceiro(dados, { inicio, fim, meio = 'Todos' }) {
+  if (meio !== 'Todos' && !MEIOS.includes(meio)) throw Error('Escolha um meio de pagamento válido.');
   const dentro = (r) => r.data >= inicio && r.data <= fim;
   const vendas = dados.vendas.filter(dentro);
-  const lancamentos = dados.financeiro_lancamentos.filter(dentro);
+  const lancamentos = dados.financeiro_lancamentos.filter(r => dentro(r) && (r.tipo === 'taxa' || meio === 'Todos' || r.meio === meio));
   const bruto = resumo(vendas).total;
   let taxas = lancamentos
     .filter((r) => r.tipo === 'taxa')

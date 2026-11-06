@@ -1,5 +1,5 @@
 // Cache apenas da interface. Login, consultas e dados financeiros ficam fora.
-const CACHE = 'feira-interface-v9';
+const CACHE = 'feira-interface-v10';
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
@@ -9,6 +9,11 @@ self.addEventListener('install', (event) => {
           '/',
           '/icon-192.png',
           '/icon-512.png',
+          '/icon-192.png?v=2',
+          '/icon-512.png?v=2',
+          '/icon-180.png?v=2',
+          '/icon-maskable-512.png?v=2',
+          '/logo-feira.svg',
           '/manifest.webmanifest',
         ])
       )
@@ -35,7 +40,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(fetch(request).catch(() => caches.match('/')));
   } else if (
     url.pathname.startsWith('/assets/') ||
-    ['/icon-192.png', '/icon-512.png', '/manifest.webmanifest'].includes(
+    ['/icon-192.png', '/icon-512.png', '/icon-180.png', '/icon-maskable-512.png', '/logo-feira.svg', '/manifest.webmanifest'].includes(
       url.pathname
     )
   ) {

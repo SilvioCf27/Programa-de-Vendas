@@ -76,3 +76,18 @@ dialog { max-height:calc(100dvh - 32px); overflow-y:auto; box-shadow:0 20px 80px
  .titulo > button { flex-shrink:0; }
  .registro { padding:16px; }
 }
+
+.dias-vendas { grid-column: 1/-1; display: block; border-top: 1px solid var(--linha); padding-top: 12px; }
+.dias-vendas legend { color: var(--suave); font-size: .85rem; }
+.opcoes-dias { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.opcoes-dias label { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.opcoes-dias input { width: 20px; min-height: 20px; height: 20px; margin: 0; accent-color: #279c83; }
+.busca-historico { margin: 16px 0 0; }
+#historico-contagem { margin: 12px 0; }
+.paginacao-historico { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 20px; }
+#filtros { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#filtros button[type='submit'] { grid-column: 1/-1; justify-self: end; min-width: 160px; }
+@media (max-width:600px) {
+  #filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #filtros button[type='submit'] { width: 100%; }
+}

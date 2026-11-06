@@ -1,3 +1,5 @@
+import { filtrarDias, paginaHistorico } from './historico-vendas.js';
+import { dias } from './analises.js';
 import { definirFechamentos } from './fechamento.js';
 import { createClient } from '@supabase/supabase-js';
 import { criarApi } from './api.js';
@@ -37,6 +39,7 @@ let cliente,
   carregando = false,
   gravando = false;
 let selecao;
+let paginaVendas = 1;
 let exportando = false;
 let consultaConfirmada = false;
 let semanaConsultada = null;
@@ -128,9 +131,17 @@ function desenhar() {
   $('total').textContent = moeda(indicadores.total);
   $('quantidade').textContent = indicadores.quantidade;
   $('media').textContent = moeda(indicadores.media);
-  $('vazio').hidden = registros.length > 0;
+  const historico = paginaHistorico(registros, $('busca-vendas').value, paginaVendas);
+  paginaVendas = historico.pagina;
+  $('vazio').hidden = historico.quantidade > 0;
+  $('vazio').textContent = registros.length ? 'Nenhuma venda encontrada nesta busca.' : 'Nenhuma venda neste período e dias selecionados.';
+  $('historico-contagem').textContent = `${historico.inicio}–${historico.fim} de ${historico.quantidade} vendas${$('busca-vendas').value.trim() ? ` encontradas · ${registros.length} nos filtros aplicados` : ' nos filtros aplicados'}`;
+  $('historico-paginacao').hidden = historico.paginas <= 1;
+  $('historico-pagina').textContent = `Página ${historico.pagina} de ${historico.paginas}`;
+  $('historico-anterior').disabled = historico.pagina === 1;
+  $('historico-proxima').disabled = historico.pagina === historico.paginas;
   $('vendas').replaceChildren();
-  for (const r of registros) {
+  for (const r of historico.registros) {
     const item = document.createElement('li');
     item.className = 'painel registro';
     const linha = document.createElement('div');
@@ -180,7 +191,8 @@ function desenhar() {
 }
 function lerSelecaoVendas() {
   const tipo = $('tipo').value, ano = Number($('ano').value), mes = Number($('mes').value);
-  return { ...periodo(tipo, ano, mes), tipo, ano, mes };
+  const dias = [...$('filtros').querySelectorAll('[name="dia-semana"]:checked')].map((c) => Number(c.value));
+  return { ...periodo(tipo, ano, mes), tipo, ano, mes, dias };
 }
 async function carregar(novaSelecao = selecao, consultarConfiguracao = true) {
   if (!sessao || carregando) return false;
@@ -201,12 +213,14 @@ async function carregar(novaSelecao = selecao, consultarConfiguracao = true) {
       api.listar(consulta), api.listar({ inicio: limites.inicio, fim: limites.ate }),
     ]);
     if (atual !== geracao || !sessao) return;
-    registros = linhas;
+    if (JSON.stringify(consulta) !== JSON.stringify(selecao)) paginaVendas = 1;
+    registros = filtrarDias(linhas, consulta?.dias);
     consultaConfirmada = true;
     selecao = consulta;
     $('periodo').textContent = selecao.inicio
       ? `${dataBr(selecao.inicio)} a ${dataBr(selecao.fim)}`
       : 'Todas as vendas';
+    if (selecao.dias?.length) $('periodo').textContent += ` · ${selecao.dias.map((d) => dias[d]).join(', ')}`;
     desenhar();
     // Uma resposta iniciada antes da meia-noite não confirma a semana nova.
     if (dataSemana === hoje()) desenharSemana(linhasSemana, dataSemana);
@@ -269,6 +283,9 @@ $('filtros').addEventListener('submit', (event) => {
     mensagem(erro.message);
   }
 });
+$('busca-vendas').addEventListener('input', () => { paginaVendas = 1; desenhar(); });
+$('historico-anterior').addEventListener('click', () => { paginaVendas--; desenhar(); });
+$('historico-proxima').addEventListener('click', () => { paginaVendas++; desenhar(); });
 $('atualizar').addEventListener('click', () => {
   mensagem('');
   carregar();
@@ -363,6 +380,9 @@ async function receberSessao(nova) {
   geracao++;
   if (mudouConta) {
     consultaConfirmada = false;
+    paginaVendas = 1;
+    $('busca-vendas').value = '';
+    $('filtros').querySelectorAll('[name="dia-semana"]').forEach((c) => { c.checked = false; });
     selecao = null;
     semanaConsultada = null;
     limparSemana();

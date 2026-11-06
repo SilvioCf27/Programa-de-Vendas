@@ -41,9 +41,9 @@ export function montarExportacao(vendas, periodo) {
     ['Indicador', 'Valor'],
     [
       'Filtro aplicado',
-      periodo.inicio
+      (periodo.inicio
         ? `${br(periodo.inicio)} a ${br(periodo.fim)}`
-        : 'Todas as vendas',
+        : 'Todas as vendas') + (periodo.dias?.length ? ` · ${periodo.dias.map((d) => dias[d]).join(', ')}` : ''),
     ],
     ['Registros / dias de feira', r.quantidade],
     ['Dinheiro', numero(totais[0])],

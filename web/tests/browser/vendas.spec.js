@@ -1138,3 +1138,80 @@ for (const largura of [320, 390, 1280]) {
     }
   });
 }
+
+test('histórico: paginação, busca local, filtro semanal e exportação mantêm escopos distintos', async ({ page }) => {
+  const dados = await preparar(page);
+  for (let i = 1; i <= 25; i++) dados.push({ id: String(i), data: `2026-10-${String(i).padStart(2, '0')}`, dinheiro_centavos: i === 23 ? 12345 : 0, pix_centavos: 0, cartao_centavos: 0, versao: 1 });
+  await page.locator('#tipo').selectOption('Todas');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#quantidade')).toHaveText('25');
+  await expect(page.locator('#vendas li')).toHaveCount(12);
+  await expect(page.locator('#historico-pagina')).toHaveText('Página 1 de 3');
+  await page.locator('#historico-proxima').click();
+  await expect(page.locator('#historico-pagina')).toHaveText('Página 2 de 3');
+  await page.locator('#atualizar').click();
+  await expect(page.locator('#historico-pagina')).toHaveText('Página 2 de 3');
+  await page.locator('#busca-vendas').fill('123,45');
+  await expect(page.locator('#vendas li')).toHaveCount(1);
+  await expect(page.locator('#total')).toHaveText('R$ 123,45');
+  await expect(page.locator('#quantidade')).toHaveText('25');
+  const download = page.waitForEvent('download');
+  await page.locator('#exportar-csv').click();
+  const arquivo = await download;
+  const fs = await import('node:fs/promises');
+  const csv = await fs.readFile(await arquivo.path(), 'utf8');
+  expect(csv).toContain('01/10/2026');
+  expect(csv).toContain('"Registros / dias de feira";"25"');
+  await page.locator('#busca-vendas').fill('nada');
+  await expect(page.locator('#vazio')).toHaveText('Nenhuma venda encontrada nesta busca.');
+  await page.locator('#busca-vendas').fill('');
+  await page.locator('[name="dia-semana"][value="6"]').check();
+  await page.locator('#atualizar').click();
+  await expect(page.locator('#quantidade')).toHaveText('25');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#quantidade')).toHaveText('4');
+  await expect(page.locator('#vendas li')).toHaveCount(4);
+  await expect(page.locator('#total')).toHaveText('R$ 0,00');
+  await expect(page.locator('#periodo')).toContainText('Domingo');
+  await page.locator('[name="dia-semana"][value="6"]').uncheck();
+  await page.locator('[name="dia-semana"][value="4"]').check();
+  await page.locator('#atualizar').click();
+  await expect(page.locator('#quantidade')).toHaveText('4');
+  await expect(page.locator('#total')).toHaveText('R$ 0,00');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await expect(page.locator('#total')).toHaveText('R$ 123,45');
+  await page.locator('#busca-vendas').fill('sexta');
+  await page.locator('#sair').click();
+  await expect(page.locator('#vendas li')).toHaveCount(0);
+  await expect(page.locator('#busca-vendas')).toHaveValue('');
+  await expect(page.locator('[name="dia-semana"]:checked')).toHaveCount(0);
+});
+
+
+test('histórico: editar e excluir na última página usa o registro correto e ajusta a navegação', async ({ page }) => {
+  const dados = await preparar(page);
+  for (let i = 1; i <= 13; i++) dados.push({ id: String(i), data: `2030-10-${String(i).padStart(2, '0')}`, dinheiro_centavos: 0, pix_centavos: 0, cartao_centavos: 0, versao: 1 });
+  await page.locator('#tipo').selectOption('Todas');
+  await page.getByRole('button', { name: 'Aplicar', exact: true }).click();
+  await page.locator('#historico-proxima').click();
+  await expect(page.locator('#vendas li')).toHaveCount(1);
+  await expect(page.locator('#vendas li')).toContainText('01/10/2030');
+  await page.locator('#vendas').getByRole('button', { name: 'Editar', exact: true }).click();
+  await expect(page.getByLabel('Data da feira')).toHaveValue('2030-10-01');
+  await page.getByLabel('Pix', { exact: true }).fill('1,50');
+  await page.getByRole('button', { name: 'Salvar venda' }).click();
+  await expect(page.locator('#historico-pagina')).toHaveText('Página 2 de 2');
+  await expect(page.locator('#vendas li')).toContainText('R$ 1,50');
+  if (process.env.CAPTURAR_WEB_DIR) {
+    await page.locator('#area-vendas .historico').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/historico-pagina.png` });
+    await page.locator('#filtros').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/filtro-dias.png` });
+  }
+  page.once('dialog', dialog => dialog.accept());
+  await page.locator('#vendas').getByRole('button', { name: 'Excluir', exact: true }).click();
+  await expect(page.locator('#quantidade')).toHaveText('12');
+  await expect(page.locator('#historico-paginacao')).toBeHidden();
+  await expect(page.locator('#vendas li')).toHaveCount(12);
+  expect(dados.some(r => r.data === '2030-10-01')).toBe(false);
+});

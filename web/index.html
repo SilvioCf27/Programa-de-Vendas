@@ -142,6 +142,7 @@
             ><label
               >Ano<input id="ano" type="number" min="1900" max="9998" required
             /></label>
+            <fieldset class="dias-vendas"><legend>Dias da semana <span class="nota">· sem marcação, todos</span></legend><div class="opcoes-dias"><label><input type="checkbox" name="dia-semana" value="0" />Segunda</label><label><input type="checkbox" name="dia-semana" value="1" />Terça</label><label><input type="checkbox" name="dia-semana" value="2" />Quarta</label><label><input type="checkbox" name="dia-semana" value="3" />Quinta</label><label><input type="checkbox" name="dia-semana" value="4" />Sexta</label><label><input type="checkbox" name="dia-semana" value="5" />Sábado</label><label><input type="checkbox" name="dia-semana" value="6" />Domingo</label></div></fieldset>
             <button type="submit">Aplicar</button>
             <p id="periodo" class="nota"></p>
           </form>
@@ -165,8 +166,18 @@
               Valores brutos, antes de taxas e despesas. Dias zerados também
               contam na média.
             </p>
+            <label class="busca-historico">Buscar no histórico
+              <input id="busca-vendas" type="search" placeholder="Data, dia da semana ou valor" aria-describedby="busca-vendas-ajuda" />
+            </label>
+            <details class="ajuda-inline"><summary>Sobre a busca e as páginas</summary><p id="busca-vendas-ajuda" class="nota">A busca reduz somente a lista. Totais e exportação incluem todas as vendas dos filtros aplicados, inclusive os dias da semana selecionados. A semana atual permanece independente. São exibidas até 12 vendas por página.</p></details>
+            <p id="historico-contagem" class="nota" role="status" aria-live="polite"></p>
             <p id="vazio" class="painel" hidden>Nenhuma venda neste período.</p>
             <ul id="vendas" aria-label="Vendas do período"></ul>
+            <nav id="historico-paginacao" class="paginacao-historico" aria-label="Páginas do histórico" hidden>
+              <button id="historico-anterior" type="button">Anterior</button>
+              <span id="historico-pagina" class="nota"></span>
+              <button id="historico-proxima" type="button">Próxima</button>
+            </nav>
           </section>
         </section>
         <section id="area-analises" hidden>

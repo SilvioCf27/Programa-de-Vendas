@@ -432,3 +432,21 @@ Para receber esta interface depois da publicação no Cloudflare, feche e abra
 o PWA ou atualize a página. Se a versão antiga persistir, feche também outras
 abas do mesmo endereço e abra novamente. Não é necessário instalar SQL novo,
 refazer migrações nem alterar as configurações do Supabase.
+
+
+## Histórico: busca, dias da semana e páginas
+
+Em Vendas, marque um ou mais dias da semana e clique em **Aplicar**. Sem marcação,
+a consulta considera todos os dias. Esse filtro altera os indicadores e a
+exportação, que identifica os dias escolhidos. O cartão Semana atual continua
+independente. Alterações ainda não aplicadas não são utilizadas pela consulta
+automática ou pelo botão Atualizar.
+
+**Buscar no histórico** aceita data brasileira ou ISO, nome do dia e valores de
+pagamento ou total. A busca restringe somente a lista: os indicadores e os arquivos
+exportados continuam usando todos os registros dos filtros aplicados. A ajuda
+junto à busca explica essa diferença. Os registros aparecem do mais recente para
+o mais antigo, em páginas de até 12 vendas. Atualizar mantém a página quando ela
+ainda existe; excluir a última venda de uma página ajusta a navegação. Digitar
+uma busca ou aplicar novos filtros volta à primeira página. Ao sair da conta,
+a busca e as marcações de dias são limpas.

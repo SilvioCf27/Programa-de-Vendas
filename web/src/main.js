@@ -12,6 +12,9 @@ import {
   erroAmigavel,
 } from './regras.js';
 import './style.css';
+import './refinamento.css';
+import { organizarAjudas } from './ajudas-visuais.js';
+organizarAjudas();
 import {
   montarExportacao,
   gerarCsv,

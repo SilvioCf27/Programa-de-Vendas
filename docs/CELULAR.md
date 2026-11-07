@@ -499,3 +499,12 @@ SQLite. Não há importação ou restauração desse formato.
 
 Para a conferência assistida, envie o JSON e a fatura/extrato do mesmo período.
 As divergências devem ser relatadas antes de qualquer eventual correção aprovada.
+
+## Aplicar correções após uma conferência
+
+Em Finanças há um painel separado **Aplicar correções de conferência**. Selecione
+somente o plano JSON revisado, confira a prévia, baixe e guarde a cópia financeira
+anterior e confirme a aplicação. O arquivo exportado para análise não é um plano
+de correções. A conta e os registros precisam coincidir com o plano; se houve
+alterações, ele é recusado. Consulte os [limites e o fluxo](CORRECOES_FINANCEIRAS.md).
+Não compartilhe planos com dados reais em repositórios públicos.

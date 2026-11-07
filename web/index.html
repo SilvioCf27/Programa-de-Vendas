@@ -524,6 +524,17 @@
               <div class="acoes exportacao-web"><button id="fin-exportar-json" type="button" disabled>Exportar finanças (JSON)</button><button id="fin-exportar-csv" type="button" disabled>Exportar finanças (CSV)</button></div>
               <p id="fin-exportar-status" class="nota" role="status" aria-live="polite"></p>
             </details>
+            <details class="painel correcoes-financeiras" id="fin-correcoes">
+              <summary>Aplicar correções de conferência</summary>
+              <p class="nota">Use somente um plano JSON revisado. Nenhuma alteração ocorre ao selecionar o arquivo. O plano pode afetar parcelas fora do período visível. Os registros serão conferidos novamente antes do envio.</p>
+              <label>Plano de correções<input id="fin-correcoes-arquivo" type="file" accept=".json,application/json" /></label>
+              <button id="fin-correcoes-conferir" type="button">Conferir plano</button>
+              <p id="fin-correcoes-status" class="nota" role="status"></p>
+              <ul id="fin-correcoes-previa" class="previa-correcoes"></ul>
+              <button id="fin-correcoes-copia" type="button" disabled>Baixar cópia financeira antes das correções</button>
+              <label class="confirmar-copia"><input id="fin-correcoes-guardada" type="checkbox" disabled />Guardei a cópia financeira gerada e conferi a prévia.</label>
+              <button id="fin-correcoes-aplicar" type="button" class="perigo" disabled>Aplicar correções conferidas</button>
+            </details>
             <section class="historico">
               <h2>Lançamentos do período</h2>
               <p class="nota introducao">

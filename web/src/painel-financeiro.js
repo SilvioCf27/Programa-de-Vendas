@@ -1,3 +1,4 @@
+import { conferirCorrecoes, CAMPOS_CORRECAO } from './correcoes-financeiras.js';
 import { montarExportacaoFinanceira, gerarJsonFinanceiro, gerarCsvFinanceiro } from './exportacao-financeira.js';
 import { baixar } from './exportacao.js';
 import { historicoFinanceiro, dataDaCompra } from './historico-financeiro.js';
@@ -25,6 +26,7 @@ const texto = (tag, conteudo, classe = '') => {
 };
 export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () => {} }) {
   let consultadoEm = null;
+  let planoCorrecoes = null, copiaCorrecoes = null, copiaBaixada = false;
   let dados = null,
     selecao = null,
     ocupado = false,
@@ -62,6 +64,11 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     for (const e of $('fin-dados').querySelectorAll('button'))
       e.disabled = ocupado || offline || pendencia;
     for (const formato of ['json', 'csv']) $('fin-exportar-' + formato).disabled = !dados || !selecao || ocupado || pendencia || !sessao();
+    $('fin-correcoes-arquivo').disabled = ocupado || pendencia;
+    $('fin-correcoes-conferir').disabled = ocupado || offline || pendencia || !sessao();
+    $('fin-correcoes-copia').disabled = !planoCorrecoes || ocupado || pendencia;
+    $('fin-correcoes-guardada').disabled = !copiaBaixada || ocupado || pendencia;
+    $('fin-correcoes-aplicar').disabled = !planoCorrecoes || !copiaCorrecoes || !copiaBaixada || !$('fin-correcoes-guardada').checked || ocupado || offline || pendencia;
     $('fin-atualizar').disabled = ocupado || offline;
     $('fin-consultar').disabled = ocupado || offline;
     $('fin-configurar-fechamento').disabled = ocupado || offline || pendencia;
@@ -125,6 +132,68 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     grupo.append(editar, excluir);
     item.append(grupo);
   }
+  function limparCorrecoes() {
+    planoCorrecoes = copiaCorrecoes = null;
+    copiaBaixada = false;
+    $('fin-correcoes-guardada').checked = false;
+    $('fin-correcoes-previa').replaceChildren();
+    $('fin-correcoes-status').textContent = '';
+  }
+  $('fin-correcoes-arquivo').addEventListener('change', () => { limparCorrecoes(); controles(); });
+  $('fin-correcoes-guardada').addEventListener('change', controles);
+  $('fin-correcoes-conferir').addEventListener('click', async () => {
+    if (ocupado || !sessao() || !navigator.onLine || pendente()) return;
+    const atual = geracao;
+    limparCorrecoes(); ocupado = true; controles();
+    try {
+      const arquivo = $('fin-correcoes-arquivo').files[0];
+      if (!arquivo || arquivo.size > 524288) throw Error();
+      const plano = JSON.parse(await arquivo.text());
+      const snapshot = await api().financeiro();
+      if (atual !== geracao) return;
+      const revisao = conferirCorrecoes(plano, snapshot.financeiro_lancamentos);
+      planoCorrecoes = plano;
+      // A cópia é do snapshot fresco, não da consulta visual possivelmente antiga.
+      const consultaCopia = selecao || { inicio: '1900-01-01', fim: '9998-12-31', meio: 'Todos' };
+      const relatorio = montarExportacaoFinanceira(snapshot, consultaCopia, 'historico_completo', new Date().toISOString());
+      copiaCorrecoes = gerarJsonFinanceiro(relatorio);
+      if (JSON.stringify(JSON.parse(copiaCorrecoes)) !== JSON.stringify(relatorio) || relatorio.financeiro_lancamentos.length !== snapshot.financeiro_lancamentos.length) throw Error();
+      for (const op of revisao.operacoes) {
+        const antes = snapshot.financeiro_lancamentos.find(r => r.id === op.id);
+        const detalhe = op.acao === 'excluir' ? 'Excluir' : 'Atualizar / validar';
+        const nomes = { data: 'Fatura/pagamento', data_compra: 'Compra', descricao: 'Descrição', valor_centavos: 'Valor', meio: 'Pagamento', categoria: 'Categoria', grupo: 'Grupo', parcela: 'Parcela', parcelas: 'Quantidade', tipo: 'Tipo' };
+        const mostrar = (campo, valor) => valor == null ? 'não informado' : campo === 'valor_centavos' ? moeda(valor) : ['data', 'data_compra'].includes(campo) ? br(valor) : campo === 'grupo' ? String(valor).slice(0, 8) : String(valor);
+        const mudancas = op.dados ? CAMPOS_CORRECAO.filter(c => (antes[c] ?? null) !== op.dados[c]).map(c => `${nomes[c]}: ${mostrar(c, antes[c])} → ${mostrar(c, op.dados[c])}`).join('; ') || 'Validação sem mudança de dados.' : 'Registro será removido.';
+        $('fin-correcoes-previa').append(texto('li', `${detalhe} · ${antes.descricao} · ${antes.parcela}/${antes.parcelas} · ${br(antes.data)} · antes ${moeda(antes.valor_centavos)} · ${mudancas}`));
+      }
+      $('fin-correcoes-status').textContent = `${revisao.exclusoes} exclusões e ${revisao.operacoes.length - revisao.exclusoes} atualizações/validações. Valores dos registros envolvidos: ${moeda(revisao.antes)} → ${moeda(revisao.depois)}. Baixe e guarde a cópia antes de aplicar.`;
+      // Habilita o checkbox somente depois do clique de download.
+      $('fin-correcoes-guardada').disabled = true;
+    } catch {
+      if (atual === geracao) { limparCorrecoes(); $('fin-correcoes-status').textContent = 'Plano não conferido: arquivo inválido, registros alterados ou grupo incompleto. Nenhum dado foi modificado.'; }
+    } finally { if (atual === geracao) { ocupado = false; controles(); $('fin-correcoes-guardada').disabled = true; } }
+  });
+  $('fin-correcoes-copia').addEventListener('click', () => {
+    if (!planoCorrecoes || !copiaCorrecoes || ocupado) return;
+    baixar(new Blob([copiaCorrecoes], { type: 'application/json;charset=utf-8' }), `financas-antes-correcoes-${hoje()}.json`);
+    copiaBaixada = true;
+    $('fin-correcoes-guardada').disabled = false;
+  });
+  $('fin-correcoes-aplicar').addEventListener('click', async () => {
+    if (!planoCorrecoes || !copiaCorrecoes || !copiaBaixada || !$('fin-correcoes-guardada').checked || ocupado || !sessao() || !navigator.onLine || pendente()) return;
+    const plano = planoCorrecoes, atual = geracao;
+    ocupado = true; controles();
+    let operacoes = null;
+    try {
+      const snapshot = await api().financeiro();
+      if (atual !== geracao) return;
+      const revisao = conferirCorrecoes(plano, snapshot.financeiro_lancamentos);
+      if (confirm(`Aplicar ${revisao.exclusoes} exclusões e ${revisao.operacoes.length - revisao.exclusoes} atualizações/validações no histórico financeiro? A operação usa versões para recusar registros alterados. A cópia financeira deve estar guardada.`)) operacoes = revisao.operacoes;
+    } catch {
+      if (atual === geracao) { limparCorrecoes(); $('fin-correcoes-status').textContent = 'Os registros mudaram ou o plano não é mais válido. Faça uma nova conferência. Nada foi enviado.'; }
+    } finally { if (atual === geracao) { ocupado = false; controles(); } }
+    if (operacoes && atual === geracao) { limparCorrecoes(); controles(); await gravar(operacoes); }
+  });
   function exportar(formato) {
     if (!sessao() || !dados || !selecao || ocupado) return;
     try {
@@ -472,6 +541,8 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     limpar() {
       geracao++;
       configuracaoFechamento.limpar();
+      limparCorrecoes();
+      $('fin-correcoes-arquivo').value = '';
       ocupado = false;
       dados = null;
       consultadoEm = null;

@@ -473,3 +473,29 @@ da fatura de novembro. Despesas à vista usam a data informada no lançamento.
 Compras antigas no cartão sem data original ficam identificadas como não
 informadas e aparecem ao final; o programa não deduz uma compra pela fatura.
 Datas persistidas não foram alteradas por esta melhoria.
+
+## Exportar Finanças para conferência
+
+Em Finanças, conclua uma consulta e abra **Exportar finanças para conferência**.
+Escolha **Todo o histórico financeiro** para incluir os lançamentos atualmente
+cadastrados de todos os períodos e meios, com parcelas e ajustes históricos. Para
+um recorte, escolha **Somente a consulta aplicada**; campos ainda não aplicados e
+a pesquisa visual não alteram esse arquivo. O recorte usa a fatura/pagamento, como
+os indicadores; grupos parcelados podem estar incompletos nesse caso.
+
+**Exportar finanças (JSON)** é o formato recomendado para conferir com uma fatura.
+Conserva centavos inteiros, datas originais, IDs, grupo/parcelas e versão dos
+registros. **CSV** oferece os mesmos lançamentos em tabela com valores em reais
+e centavos; ajustes históricos aparecem em linhas do tipo `ajuste_anual`.
+Ajustes anuais são registros separados, não uma dedução automática adicional.
+
+O arquivo registra quando os dados foram consultados e quando foi gerado. É uma
+cópia da última consulta concluída, sem nova leitura do servidor ao baixar. Use
+Atualizar antes de exportar para conferir as alterações mais recentes. Login,
+chaves, tokens e identificadores da conta não são incluídos. Descrições e valores
+financeiros fazem parte do arquivo: ele só é compartilhado quando você o envia.
+A exportação não cria acesso remoto, não altera registros e não substitui o backup
+SQLite. Não há importação ou restauração desse formato.
+
+Para a conferência assistida, envie o JSON e a fatura/extrato do mesmo período.
+As divergências devem ser relatadas antes de qualquer eventual correção aprovada.

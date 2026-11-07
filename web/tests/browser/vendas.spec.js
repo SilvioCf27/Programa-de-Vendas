@@ -1312,3 +1312,83 @@ test('exportação financeira gera JSON/CSV do histórico ou consulta sem aplica
   await page.locator('#sair').click();
   await expect(page.locator('#fin-exportar-json')).toBeDisabled();
 });
+
+async function prepararPlanoCorrecao(page) {
+  const dados = await preparar(page);
+  const uuid = i => `10000000-0000-4000-8000-${String(i).padStart(12, '0')}`;
+  const rows = [1,2,3,4].map(i => ({ id: uuid(i), versao:1, tipo:'despesa', data:i%2?'2026-10-09':'2026-11-09', data_compra:null, descricao:'Compra fictícia', valor_centavos:100, meio:'Cartão de crédito', categoria:'Casa', grupo:uuid(i<=2?10:11), parcela:i%2?1:2, parcelas:2 }));
+  dados.financeiro.lancamentos.push(...rows, {...rows[0],id:uuid(99),grupo:null,parcela:1,parcelas:1,meio:'Dinheiro',descricao:'Preservada',valor_centavos:900});
+  const campos = ['tipo','data','data_compra','descricao','valor_centavos','meio','categoria','grupo','parcela','parcelas'];
+  const selecionar = r => Object.fromEntries(campos.map(k=>[k,r[k]]));
+  const plano = { formato:'gestao-da-feira-correcoes',versao_formato:1,verificacoes:rows.map(r=>({id:r.id,versao:r.versao,campos:selecionar(r)})),alteracoes:rows.map((r,i)=>({tabela:'financeiro_lancamentos',acao:i<2?'editar':'excluir',id:r.id,versao:r.versao,dados:i<2?selecionar(r):null})) };
+  await page.locator('#aba-financas').click();
+  await consultarFinancas(page,'Mês','2026-11-01');
+  await page.locator('#fin-correcoes > summary').click();
+  await page.locator('#fin-correcoes-arquivo').setInputFiles({name:'plano.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(plano))});
+  return {dados,plano,uuid};
+}
+
+test('correções: prévia exige cópia e confirmação e recusa reaplicação',async({page})=>{
+  const {dados,plano,uuid}=await prepararPlanoCorrecao(page);
+  await expect(page.locator('#fin-correcoes-aplicar')).toBeDisabled();
+  await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('2 exclusões e 2 atualizações');
+  expect(dados.financeiro.lancamentos).toHaveLength(5);
+  await expect(page.locator('#fin-correcoes-guardada')).toBeDisabled();
+  const download = page.waitForEvent('download');
+  await page.locator('#fin-correcoes-copia').click();
+  const arquivo=await download;
+  const fs=await import('node:fs/promises');
+  const copia=JSON.parse(await fs.readFile(await arquivo.path(),'utf8'));
+  expect(copia.financeiro_lancamentos).toHaveLength(5);
+  await page.locator('#fin-correcoes-guardada').check();
+  if (process.env.CAPTURAR_WEB_DIR) {
+    await page.locator('#fin-correcoes').evaluate(e => window.scrollTo(0, e.getBoundingClientRect().top + window.scrollY - 15));
+    await page.screenshot({path:`${process.env.CAPTURAR_WEB_DIR}/correcoes-financeiras.png`});
+  }
+  const cancelado = new Promise(resolve => page.once('dialog', async d => { await d.dismiss(); resolve(); }));
+  await page.locator('#fin-correcoes-aplicar').click();
+  await cancelado;
+  await expect(page.locator('#fin-correcoes-aplicar')).toBeEnabled();
+  expect(dados.financeiro.lancamentos).toHaveLength(5);
+  page.once('dialog',d=>d.accept());
+  await page.locator('#fin-correcoes-aplicar').click();
+  await expect.poll(()=>dados.financeiro.lancamentos.length).toBe(3);
+  expect(dados.financeiro.lancamentos.map(r=>r.id).sort()).toEqual([uuid(1),uuid(2),uuid(99)].sort());
+  expect(dados.financeiro.lancamentos.find(r=>r.id===uuid(99)).valor_centavos).toBe(900);
+  await page.locator('#fin-correcoes-arquivo').setInputFiles({name:'plano.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(plano))});
+  await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('Plano não conferido');
+  await expect(page.locator('#fin-correcoes-aplicar')).toBeDisabled();
+});
+
+test('correções: mudança após prévia bloqueia o lote inteiro antes de enviar',async({page})=>{
+  const {dados}=await prepararPlanoCorrecao(page);
+  await page.locator('#fin-correcoes-conferir').click();
+  const download=page.waitForEvent('download');
+  await page.locator('#fin-correcoes-copia').click();await download;
+  await page.locator('#fin-correcoes-guardada').check();
+  dados.financeiro.lancamentos[0].versao++;
+  await page.locator('#fin-correcoes-aplicar').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('Os registros mudaram');
+  expect(dados.financeiro.lancamentos).toHaveLength(5);
+  await expect(page.locator('#fin-correcoes-aplicar')).toBeDisabled();
+});
+
+test('correções: resposta perdida retoma o mesmo recibo sem repetir exclusões',async({page})=>{
+  const {dados}=await prepararPlanoCorrecao(page);
+  await page.locator('#fin-correcoes-conferir').click();
+  const download=page.waitForEvent('download');
+  await page.locator('#fin-correcoes-copia').click();await download;
+  await page.locator('#fin-correcoes-guardada').check();
+  dados.financeiro.perderResposta=true;
+  page.once('dialog',d=>d.accept());
+  await page.locator('#fin-correcoes-aplicar').click();
+  await expect(page.locator('#fin-status')).toContainText('Não foi possível confirmar');
+  expect(dados.financeiro.lancamentos).toHaveLength(3);
+  const versoes=dados.financeiro.lancamentos.map(r=>r.versao);
+  await page.locator('#fin-atualizar').click();
+  await expect(page.locator('#fin-status')).toContainText('Dados consultados');
+  expect(dados.financeiro.lancamentos).toHaveLength(3);
+  expect(dados.financeiro.lancamentos.map(r=>r.versao)).toEqual(versoes);
+});

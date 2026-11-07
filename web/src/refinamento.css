@@ -99,3 +99,10 @@ dialog { max-height:calc(100dvh - 32px); overflow-y:auto; box-shadow:0 20px 80px
 .exportacao-financeira { margin: 16px 0; }
 .exportacao-financeira > summary { cursor: pointer; min-height: 32px; color: var(--azul); font-weight: 600; }
 .exportacao-financeira > label { margin: 16px 0 12px; }
+.previa-correcoes { max-height: 280px; overflow-y: auto; margin: 12px 0; }
+.previa-correcoes li { padding: 10px 0; border-bottom: 1px solid var(--linha); font-size: .85rem; overflow-wrap: anywhere; }
+.confirmar-copia { display: flex; align-items: center; gap: 10px; min-height: 48px; margin: 12px 0; }
+.confirmar-copia input { width: 22px; min-height: 22px; margin: 0; }
+.correcoes-financeiras { margin: 16px 0; }
+.correcoes-financeiras > summary { cursor: pointer; min-height: 32px; color: var(--azul); font-weight: 600; }
+.correcoes-financeiras > label { margin: 16px 0 12px; }

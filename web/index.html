@@ -517,6 +517,13 @@
               <button id="fin-despesa" class="primario">+ Despesa</button
               ><button id="fin-taxa">+ Taxas da maquininha</button>
             </div>
+            <details class="painel exportacao-financeira">
+              <summary>Exportar finanças para conferência</summary>
+              <label>Dados para exportar<select id="fin-exportar-escopo"><option value="historico_completo">Todo o histórico financeiro</option><option value="consulta_aplicada">Somente a consulta aplicada</option></select></label>
+              <p class="nota">JSON é recomendado para conferência; CSV abre em planilha. Inclui despesas, parcelas, taxas e ajustes históricos da última consulta concluída. A busca visual não limita o arquivo. Não inclui login ou chaves e não substitui o backup. Compartilhe somente com quem deve conferir seus dados.</p>
+              <div class="acoes exportacao-web"><button id="fin-exportar-json" type="button" disabled>Exportar finanças (JSON)</button><button id="fin-exportar-csv" type="button" disabled>Exportar finanças (CSV)</button></div>
+              <p id="fin-exportar-status" class="nota" role="status" aria-live="polite"></p>
+            </details>
             <section class="historico">
               <h2>Lançamentos do período</h2>
               <p class="nota introducao">

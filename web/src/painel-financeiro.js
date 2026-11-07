@@ -1,3 +1,5 @@
+import { montarExportacaoFinanceira, gerarJsonFinanceiro, gerarCsvFinanceiro } from './exportacao-financeira.js';
+import { baixar } from './exportacao.js';
 import { historicoFinanceiro, dataDaCompra } from './historico-financeiro.js';
 import { criarConfiguracaoFechamento } from './painel-fechamento.js';
 import { criarCampoData } from './campo-data.js';
@@ -22,6 +24,7 @@ const texto = (tag, conteudo, classe = '') => {
   return e;
 };
 export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () => {} }) {
+  let consultadoEm = null;
   let dados = null,
     selecao = null,
     ocupado = false,
@@ -58,6 +61,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     const offline = !navigator.onLine;
     for (const e of $('fin-dados').querySelectorAll('button'))
       e.disabled = ocupado || offline || pendencia;
+    for (const formato of ['json', 'csv']) $('fin-exportar-' + formato).disabled = !dados || !selecao || ocupado || pendencia || !sessao();
     $('fin-atualizar').disabled = ocupado || offline;
     $('fin-consultar').disabled = ocupado || offline;
     $('fin-configurar-fechamento').disabled = ocupado || offline || pendencia;
@@ -121,6 +125,21 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     grupo.append(editar, excluir);
     item.append(grupo);
   }
+  function exportar(formato) {
+    if (!sessao() || !dados || !selecao || ocupado) return;
+    try {
+      if (pendente()) throw Error('Confirme o envio pendente antes de exportar.');
+      const escopo = $('fin-exportar-escopo').value;
+      const relatorio = montarExportacaoFinanceira(dados, selecao, escopo, consultadoEm);
+      const conteudo = formato === 'json' ? gerarJsonFinanceiro(relatorio) : gerarCsvFinanceiro(relatorio);
+      baixar(new Blob([conteudo], { type: formato === 'json' ? 'application/json;charset=utf-8' : 'text/csv;charset=utf-8' }), `financas-${escopo}-${hoje()}.${formato}`);
+      $('fin-exportar-status').textContent = `Arquivo gerado: ${relatorio.totais_registros.lancamentos} lançamentos e ${relatorio.totais_registros.ajustes_anuais} ajustes históricos. Confira Downloads ou a opção de compartilhar do navegador.`;
+    } catch {
+      $('fin-exportar-status').textContent = 'Não foi possível exportar. Consulte as finanças e conclua eventuais envios pendentes antes de tentar novamente.';
+    }
+  }
+  $('fin-exportar-json').addEventListener('click', () => exportar('json'));
+  $('fin-exportar-csv').addEventListener('click', () => exportar('csv'));
   function desenhar() {
     const r = resumoFinanceiro(dados, selecao);
     for (const campo of [
@@ -225,6 +244,8 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       const resposta = await api().financeiro();
       if (atual !== geracao) return;
       dados = resposta;
+      consultadoEm = new Date().toISOString();
+      $('fin-exportar-status').textContent = '';
       selecao = consulta;
       desenhar();
       $('fin-status').textContent =
@@ -453,6 +474,9 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       configuracaoFechamento.limpar();
       ocupado = false;
       dados = null;
+      consultadoEm = null;
+      $('fin-exportar-status').textContent = '';
+      $('fin-exportar-escopo').value = 'historico_completo';
       selecao = null;
       $('fin-busca').value = '';
       $('fin-meio').value = 'Todos';

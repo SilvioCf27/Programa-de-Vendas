@@ -96,3 +96,6 @@ dialog { max-height:calc(100dvh - 32px); overflow-y:auto; box-shadow:0 20px 80px
 #fin-lancamentos .titulo > .valor { flex-shrink: 0; }
 #fin-lancamentos .data-fatura { border-left: 2px solid #478c80; padding-left: 10px; }
 #fin-meio-rotulo { grid-column: 1/-1; }
+.exportacao-financeira { margin: 16px 0; }
+.exportacao-financeira > summary { cursor: pointer; min-height: 32px; color: var(--azul); font-weight: 600; }
+.exportacao-financeira > label { margin: 16px 0 12px; }

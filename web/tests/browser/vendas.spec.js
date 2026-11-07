@@ -1271,3 +1271,44 @@ test('finanças: busca, cronologia da compra e filtro de despesas por pagamento'
   await expect(page.locator('#fin-busca')).toHaveValue('');
   await expect(page.locator('#fin-meio')).toHaveValue('Todos');
 });
+
+test('exportação financeira gera JSON/CSV do histórico ou consulta sem aplicar busca nem filtros pendentes', async ({ page }) => {
+  const dados = await preparar(page);
+  const l = (id, data, meio) => ({ id, tipo: 'despesa', data, data_compra: meio === 'Cartão de crédito' ? '2026-09-09' : null, descricao: id, valor_centavos: 1001, meio, categoria: 'Casa', grupo: 'g', parcela: 1, parcelas: 2, versao: 3, user_id: USER });
+  dados.financeiro.lancamentos.push(l('outubro', '2026-10-09', 'Cartão de crédito'), l('novembro', '2026-11-09', 'Cartão de crédito'), l('dinheiro', '2026-11-02', 'Dinheiro'));
+  await page.locator('#aba-financas').click();
+  await consultarFinancas(page, 'Mês', '2026-11-01');
+  await page.locator('#fin-meio').selectOption('Cartão de crédito');
+  await page.locator('#fin-consultar').click();
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 10,01');
+  await page.locator('#fin-busca').fill('inexistente');
+  await expect(page.locator('#fin-lancamentos li')).toHaveCount(0);
+  await page.locator('#fin-meio').selectOption('Dinheiro');
+  await page.locator('.exportacao-financeira > summary').click();
+  const fs = await import('node:fs/promises');
+  const download = async (botao) => {
+    const aguardando = page.waitForEvent('download');
+    await page.locator(botao).click();
+    const arquivo = await aguardando;
+    return fs.readFile(await arquivo.path(), 'utf8');
+  };
+  const completo = JSON.parse(await download('#fin-exportar-json'));
+  expect(completo.escopo).toBe('historico_completo');
+  expect(completo.financeiro_lancamentos).toHaveLength(3);
+  expect(completo.financeiro_lancamentos[0].user_id).toBeUndefined();
+  expect(completo.consultado_em).toBeTruthy();
+  await page.locator('#fin-exportar-escopo').selectOption('consulta_aplicada');
+  const consulta = JSON.parse(await download('#fin-exportar-json'));
+  expect(consulta.consulta.meio).toBe('Cartão de crédito');
+  expect(consulta.financeiro_lancamentos.map(l => l.id)).toEqual(['novembro']);
+  const csv = await download('#fin-exportar-csv');
+  expect(csv).toContain('"novembro"'); expect(csv).toContain('"10,01"');
+  expect(csv).not.toContain('"outubro"'); expect(csv).not.toContain('"dinheiro"');
+  await expect(page.locator('#fin-despesas')).toHaveText('R$ 10,01');
+  if (process.env.CAPTURAR_WEB_DIR) {
+    await page.locator('.exportacao-financeira').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.CAPTURAR_WEB_DIR}/exportacao-financeira.png` });
+  }
+  await page.locator('#sair').click();
+  await expect(page.locator('#fin-exportar-json')).toBeDisabled();
+});

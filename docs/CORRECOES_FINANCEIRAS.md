@@ -12,7 +12,7 @@ A PWA permite aplicar um arquivo JSON de correções previamente revisado. Não 
 
 ## Restrições
 
-Somente despesas da tabela financeira, com ações editar/excluir. Não permite inserir, trocar IDs, alterar vendas, ajustes anuais, login ou configurações. Todos os membros atuais dos grupos envolvidos precisam estar no plano, inclusive linhas preservadas, que são validadas/atualizadas na mesma transação para conferir suas versões. O resultado deve manter os grupos restantes com parcelas completas e metadados coerentes. Datas/valores/tipos/meios/categorias e limites são validados; não há execução de SQL ou código contido no arquivo. Arquivos são limitados a 512 KiB e 500 operações.
+Somente despesas da tabela financeira. O formato 1 mantém as ações editar/excluir. O formato 2 admite completar parcelas faltantes em grupos já existentes, com ID novo e ausência verificada, quando o grupo final fica completo. Não permite inserções livres, troca de IDs existentes nem alteração de vendas, ajustes anuais, login ou configurações. Todos os membros atuais dos grupos envolvidos precisam estar no plano, inclusive linhas preservadas, que são validadas/atualizadas na mesma transação para conferir suas versões. O resultado deve manter os grupos restantes com parcelas completas e metadados coerentes. Datas/valores/tipos/meios/categorias e limites são validados; não há execução de SQL ou código contido no arquivo. Arquivos são limitados a 512 KiB e 500 operações.
 
 A proteção de acesso ao proprietário é a já existente no servidor. O arquivo não concede permissão e não contém credenciais. A conta usada precisa ter exatamente os registros esperados; outra conta, mudança de conteúdo/versão ou tentativa de reaplicar o mesmo plano é recusada. Logout remove a prévia e o arquivo selecionado. O arquivo com dados reais da conferência não faz parte do repositório público; planos de teste usam apenas dados fictícios.
 
@@ -25,3 +25,14 @@ Na primeira rodada, a classe CSS compartilhada tornava ambíguo o seletor do tes
 [Prévia com dados fictícios](imagens/correcoes-financeiras.png).
 
 Cache de interface v12. Sem mudança de SQL, desktop ou release Windows.
+
+
+## Formato 2: completar parcelas faltantes
+
+O formato 2 usa uma verificação explícita de ausência para o ID da parcela a incluir (`versao: null`, `campos: null`). Se esse ID já existir, o plano é recusado. A inserção precisa pertencer a um grupo existente e totalmente coberto pelo lote. O plano declara data de compra, total em centavos e quantidade; o resultado é comparado com `lancamentoFormulario`, o mesmo cálculo usado no cadastro, incluindo todas as datas de fatura e o rateio de centavos. Grupos incompletos, parcelas repetidas, soma/datas diferentes ou regra de fechamento incompatível são recusados.
+
+As regras de fechamento são consultadas novamente antes da prévia e antes de aplicar. A primeira fatura considera a data de compra e as vigências cadastradas; não é deduzida de um registro de parcela intermediária. Os planos de formato 1 continuam compatíveis. A prévia e a confirmação distinguem exclusões, atualizações/validações e inclusões de parcelas. Não há alteração de SQL ou de regras financeiras.
+
+Validação desta extensão: 83 testes de regras/dados e 36 cenários de navegador aprovados; a última revisão dos testes usa somente datas e valores fictícios. Os casos novos cobrem inclusão em grupo existente, total exato, ID já ocupado, ausência de conferência de faturas, primeira fatura inválida, mudança futura de fechamento, aplicação e recusa de reaplicação. Build aprovado. Planos e arquivos reais recebidos para conferência permanecem fora do repositório público.
+
+Cache da interface v13. Nenhuma atualização de executável Windows nesta entrega.

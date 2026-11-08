@@ -1,3 +1,4 @@
+import { definirFechamentos } from '../src/fechamento.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { conferirCorrecoes, CAMPOS_CORRECAO } from '../src/correcoes-financeiras.js';
@@ -34,4 +35,42 @@ test('grupos hexadecimais legados do desktop também podem ser conferidos',()=>{
   for(const v of plano.verificacoes)v.campos.grupo=v.campos.grupo.replaceAll('-','');
   for(const op of plano.alteracoes)if(op.dados)op.dados.grupo=op.dados.grupo.replaceAll('-','');
   assert.equal(conferirCorrecoes(plano,registros).exclusoes,2);
+});
+
+function exemploInclusao() {
+  const grupo=id(20), compra='2030-03-12';
+  const base={tipo:'despesa',data_compra:compra,descricao:'Compra parcelada fictícia',valor_centavos:1000,meio:'Cartão de crédito',categoria:'Casa',grupo,parcelas:18};
+  const registros=Array.from({length:17},(_,i)=>{const parcela=i+2,m=2030*12+3+parcela-1;return {id:id(100+parcela),versao:1,...base,parcela,valor_centavos:parcela===18?1001:1000,data:`${Math.floor(m/12)}-${String(m%12+1).padStart(2,'0')}-09`};});
+  const selecionar=r=>Object.fromEntries(CAMPOS_CORRECAO.map(k=>[k,r[k]]));
+  const nova={...base,parcela:1,data:'2030-04-09',valor_centavos:1000};
+  const plano={formato:'gestao-da-feira-correcoes',versao_formato:2,
+    faturas:[{grupo,data_compra:compra,total_centavos:18001,parcelas:18}],
+    verificacoes:[...registros.map(r=>({id:r.id,versao:r.versao,campos:selecionar(r)})),{id:id(101),versao:null,campos:null}],
+    alteracoes:[...registros.map(r=>({tabela:'financeiro_lancamentos',acao:'editar',id:r.id,versao:r.versao,dados:selecionar(r)})),{tabela:'financeiro_lancamentos',acao:'inserir',id:id(101),versao:null,dados:nova}]};
+  return {registros,plano};
+}
+test('v2 completa parcela ausente em grupo existente e verifica total exato',()=>{
+  const {registros,plano}=exemploInclusao();
+  const r=conferirCorrecoes(plano,registros);
+  assert.equal(r.insercoes,1);assert.equal(r.atualizacoes,17);assert.equal(r.depois,18001);
+  assert.equal(registros.length,17);
+  assert.equal(r.operacoes.at(-1).dados.data,'2030-04-09');
+});
+test('v2 rejeita ID já existente, inserção sem conferência de faturas e soma alterada',()=>{
+  for(const alterar of [p=>p.faturas=[],p=>p.alteracoes.at(-1).dados.valor_centavos++,p=>p.verificacoes.at(-1).id=p.verificacoes[0].id]) {
+    const {registros,plano}=exemploInclusao();alterar(plano);assert.throws(()=>conferirCorrecoes(plano,registros));
+  }
+  const {registros,plano}=exemploInclusao();registros.push({id:id(101)});assert.throws(()=>conferirCorrecoes(plano,registros));
+});
+test('v2 não aceita primeiro vencimento no mês da compra após fechar a fatura',()=>{
+  const {registros,plano}=exemploInclusao();plano.alteracoes.at(-1).dados.data='2030-03-09';
+  assert.throws(()=>conferirCorrecoes(plano,registros));
+});
+
+test('v2 recusa faturas se a regra vigente mudar em parte do parcelamento',()=>{
+  const {registros,plano}=exemploInclusao();
+  try {
+    definirFechamentos({versao:1,historico:[{vigencia:'2031-01-01',dia:14}]});
+    assert.throws(()=>conferirCorrecoes(plano,registros));
+  } finally { definirFechamentos({versao:0,historico:[]}); }
 });

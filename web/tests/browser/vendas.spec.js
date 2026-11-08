@@ -1392,3 +1392,31 @@ test('correções: resposta perdida retoma o mesmo recibo sem repetir exclusões
   expect(dados.financeiro.lancamentos).toHaveLength(3);
   expect(dados.financeiro.lancamentos.map(r=>r.versao)).toEqual(versoes);
 });
+
+test('correções v2: inclui parcela faltante, calcula 18 parcelas e recusa a segunda aplicação',async({page})=>{
+  const dados=await preparar(page);
+  const uuid=i=>`20000000-0000-4000-8000-${String(i).padStart(12,'0')}`;
+  const grupo=uuid(99),campos=['tipo','data','data_compra','descricao','valor_centavos','meio','categoria','grupo','parcela','parcelas'];
+  const base={tipo:'despesa',data_compra:'2030-03-12',descricao:'Compra em dezoito parcelas',valor_centavos:1000,meio:'Cartão de crédito',categoria:'Casa',grupo,parcelas:18};
+  const rows=Array.from({length:17},(_,i)=>{const parcela=i+2,m=2030*12+3+parcela-1;return {id:uuid(parcela),versao:1,...base,parcela,valor_centavos:parcela===18?1001:1000,data:`${Math.floor(m/12)}-${String(m%12+1).padStart(2,'0')}-09`};});
+  dados.financeiro.lancamentos.push(...rows);
+  const selecionar=r=>Object.fromEntries(campos.map(k=>[k,r[k]]));
+  const plano={formato:'gestao-da-feira-correcoes',versao_formato:2,faturas:[{grupo,data_compra:'2030-03-12',total_centavos:18001,parcelas:18}],
+    verificacoes:[...rows.map(r=>({id:r.id,versao:r.versao,campos:selecionar(r)})),{id:uuid(1),versao:null,campos:null}],
+    alteracoes:[...rows.map(r=>({tabela:'financeiro_lancamentos',acao:'editar',id:r.id,versao:r.versao,dados:selecionar(r)})),{tabela:'financeiro_lancamentos',acao:'inserir',id:uuid(1),versao:null,dados:{...base,parcela:1,data:'2030-04-09',valor_centavos:1000}}]};
+  await page.locator('#aba-financas').click();await consultarFinancas(page,'Ano','2030-01-01');
+  await page.locator('#fin-correcoes > summary').click();
+  const arquivo={name:'plano-v2.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(plano))};
+  await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);
+  await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('1 parcela faltante');
+  await expect(page.locator('#fin-correcoes-previa')).toContainText('Incluir parcela faltante');
+  const baixar=page.waitForEvent('download');await page.locator('#fin-correcoes-copia').click();await baixar;
+  await page.locator('#fin-correcoes-guardada').check();page.once('dialog',d=>d.accept());
+  await page.locator('#fin-correcoes-aplicar').click();
+  await expect.poll(()=>dados.financeiro.lancamentos.length).toBe(18);
+  expect(dados.financeiro.lancamentos.reduce((s,r)=>s+r.valor_centavos,0)).toBe(18001);
+  expect(dados.financeiro.lancamentos.find(r=>r.parcela===1).data).toBe('2030-04-09');
+  await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('Plano não conferido');
+});

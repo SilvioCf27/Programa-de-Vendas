@@ -1,0 +1,61 @@
+CONCILIAÇÃO FINANCEIRA — 13/11/2026
+
+Arquivo para o PWA: conciliacao-financeira-2026-11-13.json
+Use somente esse arquivo nesta rodada. Ele inclui as duas conferências.
+Pré-requisito: o plano anterior de 12/11 (Motorola, HDMI, Kapronezai e Léo)
+já aplicado, conforme confirmado pelo usuário.
+
+1. Atualize/reabra o PWA para receber o suporte aos planos de conciliação.
+2. Finanças > Aplicar correções de conferência > selecione o JSON.
+3. Clique em Conferir plano. O esperado é:
+   - 31 exclusões de parcelas dos quatro grupos duplicados;
+   - 169 atualizações/validações (incluindo parcelas preservadas);
+   - 4 inclusões de despesas do cartão.
+4. Baixe e guarde a cópia financeira oferecida pelo PWA e confira a prévia.
+5. Confirme a cópia e aplique. O servidor verifica versões e aplica o lote
+   em uma transação. Atualizar retoma o mesmo recibo se a resposta se perder.
+6. Consulte somente despesas de Cartão de crédito:
+   Fechamento / Outubro / 2026: R$ 2.389,93 (44 registros).
+   Fechamento / Novembro / 2026: R$ 1.095,96 (22 registros).
+   A segunda soma é a prévia informada, não a fatura definitivamente fechada.
+
+O plano não é um CSV de importação nem restauração de backup.
+Selecionar o arquivo não altera dados. Se a conferência recusar, não edite
+IDs, versões ou valores para forçar a aplicação. Exporte um histórico novo:
+uma edição ou compra cadastrada após 12/11 pode tornar esta cópia antiga.
+Em especial, se Queijo/PF Ferreira ou Cofesa R$ 188,75 já foram acrescentados
+no mesmo período, a conferência integral deve recusar o plano para evitar
+duplicá-los. O agente não consultou nem alterou sua conta real.
+
+O QUE MUDA
+- Reginaldo Stange - Tábua de Bambu: mesmo registro, R$ 20, compra em 12/11.
+- Inclusões nesta prévia: PF Ferreira Alimentos - Queijo, R$ 46;
+  Cofesa, R$ 188,75. Fatura em 09/12. A data exata dessas duas compras
+  não foi informada e fica nula; não foi inventado um dia de compra.
+- Nove parcelas da prévia diminuem um centavo, cada uma, conforme a lista.
+- Duplicidades removidas: Bobina de ignição (mantém Bobina), Suporte Lixadeira
+  (mantém Lixadeira), Kit conector (mantém Trem de emendar os fios) e ML
+  (mantém ML - ML?). As associações usam valores, quantidade e data-base,
+  com a autorização do usuário para resolver as descrições diferentes.
+- Na fatura anterior: valores e datas conforme PDF, Silvio da Feira R$ 40
+  e R$ 3 incluídos, empréstimo mantido como despesa em Outro, fora do cartão.
+- Pix e dinheiro existentes preservados integralmente, inclusive Rafael e Léo.
+- Datas das faturas das compras parceladas alinhadas à parcela que aparece
+  no documento. Shopee: 2/3 na fatura anterior e 3/3 na prévia atual.
+- Totais confirmados mantidos: Motorola R$ 1.998,89, Kapronezai R$ 600,45
+  e HDMI R$ 46,15. No Motorola e Kapronezai, a diferença de dois centavos
+  fica na última parcela futura, ainda estimada, em vez de alterar o total.
+  As demais parcelas futuras devem ser conferidas conforme o banco faturar.
+
+VALIDAÇÃO
+Somatórios em centavos e correspondência com os documentos conferidos.
+Plano validado no mesmo código do PWA. Lote aplicado em PostgreSQL local
+isolado: 204 operações, 193 registros finais conferidos campo a campo.
+Mesmo recibo não reaplica; versões antigas com novo recibo são recusadas.
+Inclusão posterior na fatura recusa a conferência completa do plano.
+89 testes de regras/dados, 37 cenários de navegador e build web aprovados.
+Nenhum teste se conectou ao Supabase real.
+
+O JSON contém descrições e valores financeiros. Foi disponibilizado em uma
+branch separada conforme a preferência do usuário por download via GitHub.
+Não contém senhas, chaves, números de cartão nem o PDF bancário.

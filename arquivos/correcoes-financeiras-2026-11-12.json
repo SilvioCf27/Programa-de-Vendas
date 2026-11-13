@@ -1,0 +1,1922 @@
+{
+  "formato": "gestao-da-feira-correcoes",
+  "versao_formato": 2,
+  "motivo": "Plano refeito exclusivamente a partir do CSV de 12/11/2026. Mesmas correções autorizadas: Motorola, HDMI, Kapronezai e Léo (Pix). Demais registros preservados.",
+  "fonte_sha256": "a156f628583a4dd8a90fc378c0e34f48cefd20bd58a46b46bd76291a3e6194d2",
+  "faturas": [
+    {
+      "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+      "data_compra": "2026-04-12",
+      "total_centavos": 199889,
+      "parcelas": 18
+    }
+  ],
+  "verificacoes": [
+    {
+      "id": "0fce5f8d-ef49-49f2-9a88-8bdae2f4d78b",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-09-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 18,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "61540a89-57ed-4924-b9ea-7912aaef2867",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-09-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 18,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "4e465cd2-35a8-4aa7-86e9-fed129f659fc",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-08-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 17,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "83cd60f8-09ae-4ea1-8719-ffa59a550f63",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-08-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 17,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "51ee47c0-c48b-4c16-bea8-56d46000c4ca",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-07-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 16,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "648bf15b-2a8a-4b04-beae-c763cb063220",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-07-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 16,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "38e55639-f6df-45bf-a5f1-f3f985ea6944",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-06-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 15,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "c8800019-7019-46af-adae-8b642e9042be",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-06-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 15,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "06d9dbef-0f05-4a3f-9dac-32696b424786",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-05-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 14,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "52e0ae6f-d6bf-43c6-9d84-90ff7dc64d25",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-05-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 14,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "c53b21dd-bfe6-49ca-8c74-519f7e7334d0",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-04-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 13,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "c6d5c071-1920-4fdb-bbb6-f8735b19922d",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-04-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 13,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "4cba8c87-1431-4d92-b917-020cf2c6bceb",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-03-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 12,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "db2891a1-9752-4f0c-8a88-05ba10efe733",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-03-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 12,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "138041ee-30a4-4b0c-a91d-99d5aaa0043e",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-02-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 10,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "5dc1610b-4919-42b1-bbba-73b6d8749d25",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-02-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 11,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "8ebfd542-f413-4529-85ce-8e4b5a9e8054",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-02-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 11,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "cbf40e95-3fcb-4fd2-85b4-8d2efc354036",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-02-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 10,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "09108aec-0e73-4933-a9b6-bada58c84ea2",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-01-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 9,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "2bd23625-3e8e-43c6-a7ba-b88ed00e3a60",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-01-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 10,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "766cec94-6d3a-4f03-a2bc-cd58439e3e13",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-01-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 10,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "d5cad204-23b1-45a8-8edb-64648ff531cf",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2027-01-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 9,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "1585e7aa-f3b3-4096-aae5-86f572e03809",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-12-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 9,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "89d97f91-5c37-44a3-8d59-773f7fa2fc2b",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-12-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 8,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "9ffe0614-5992-47fa-8d7b-be9d5a29e149",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-12-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 8,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "a48f63e4-bf94-4d26-9187-5ec1c0a86c2e",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-12-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 9,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "01607f7a-8eb1-421a-948e-517526baecce",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-11-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 8,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "0e59b381-6fc4-41ae-a3ed-2ebe3b22b455",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-11-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 7,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "5b87ac60-b1f3-41f8-a361-5f0bb40023b5",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-11-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 7,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "b6035d5a-c03d-44c3-b2d5-b77088bac339",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-11-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 8,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "31169541-37cb-4653-836c-b8a0bd1ea466",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-10-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 5,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "3bc71d2e-599d-4652-93d2-f2955905c92b",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-10-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 7,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "407c1348-2cd4-49f6-af54-7a5ca5b6812e",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-10-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 6,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "ad9cf4c0-4887-4d52-8646-60ac174225ea",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 4,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "c1758e8c-30fd-4d73-99cc-b29bb00f3907",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "185a9eee-2203-4344-bce0-5df1270ac677",
+        "parcela": 4,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "e861e119-0c09-4c27-b298-7bfce8a916f8",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 4615,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "4c4cb8c9-249f-40ca-91a6-da38b02f7cdb",
+        "parcela": 4,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "5c084513-87eb-4517-8ff6-0557108a63b1",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 6,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "913f992c-5bb1-48e3-9114-9a02ffc3a0a1",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 5,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "daf2d1ef-d7d5-437e-bb9d-ee37c06d75af",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 5,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "f7e34251-6828-42c1-bc49-3b0b8f769a68",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-09-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 6,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "59ee129e-2468-470c-b795-495b3b242453",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "185a9eee-2203-4344-bce0-5df1270ac677",
+        "parcela": 3,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "8ca21bd2-7081-4802-89f2-61a931a8ec82",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 4615,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "4c4cb8c9-249f-40ca-91a6-da38b02f7cdb",
+        "parcela": 3,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "c41aa96a-4e10-485e-b72b-edfb74865afa",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 3,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "0f53dd42-71f3-4fb8-9fb8-0b89e4a27bf0",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 4,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "c790db91-46b9-41e7-b228-bf4d56235fa6",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 5,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "d3b864d4-0454-4c56-aebc-391c8e72b3d5",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 5,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "ef3d41b0-2857-4c71-8f30-cc848063a83e",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-08-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 4,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "395d47b7-ecea-4da3-b949-4c4969501c91",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 2,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "42160591-2c2b-4cb2-b20c-10703eec22c6",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "185a9eee-2203-4344-bce0-5df1270ac677",
+        "parcela": 2,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "95c5fa5f-215d-4971-a879-e672c041fee6",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 4615,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "4c4cb8c9-249f-40ca-91a6-da38b02f7cdb",
+        "parcela": 2,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "02ee2a25-2df7-42d7-88be-b13a3e7432e9",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 3,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "ab6a8b54-8f26-4ebf-ae15-2c656425725e",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 3,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "b8484bc1-d9a9-406e-8bc1-482ba5c360d1",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 4,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "e298d453-9bac-4b82-b725-3f81cdbe6f1f",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-07-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 4,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "44a6e311-9516-4be1-8631-c0713607a101",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 4615,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "4c4cb8c9-249f-40ca-91a6-da38b02f7cdb",
+        "parcela": 1,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "4e797a3c-4ecd-4148-aa2e-9ffb6d961053",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "185a9eee-2203-4344-bce0-5df1270ac677",
+        "parcela": 1,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "5f9e9e25-ccfd-45da-9a8f-df77a6dc7781",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "185a9eee-2203-4344-bce0-5df1270ac677",
+        "parcela": 5,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "6ebee53a-02ea-4ece-b72a-3e921c193d3b",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 1,
+        "parcelas": 5
+      }
+    },
+    {
+      "id": "0338ed06-fc01-4d26-b706-9b91027b6fca",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 2,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "14784461-1dae-4214-bbed-9edcb0ef1658",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 3,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "2006da6f-ed4b-454c-9e01-2481581242c8",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 3,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "ae8a14f2-a656-43a2-8d7b-ebb030ae62dd",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-06-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 2,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "40bd9d0b-6cf4-4e93-8322-3c981f96b864",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-05-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 60045,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "5178d3fe-8407-4249-a01d-6701e7ba9a6d",
+        "parcela": 1,
+        "parcelas": 10
+      }
+    },
+    {
+      "id": "6ddeb976-f974-441e-a3b9-165277d4699f",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-05-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "3072e12b-d7a2-455b-b28b-aaf165234396",
+        "parcela": 2,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "95e0aa59-70f5-46ee-9f0c-22741261f877",
+      "versao": 1,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-05-12",
+        "data_compra": null,
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 2,
+        "parcelas": 18
+      }
+    },
+    {
+      "id": "62a02e0b-19c1-4857-a304-d88351c6a2b4",
+      "versao": 2,
+      "campos": {
+        "tipo": "despesa",
+        "data": "2026-11-09",
+        "data_compra": "2026-10-31",
+        "descricao": "Leo - 20 cocos e 2 caixa de laranja",
+        "valor_centavos": 10000,
+        "meio": "Cartão de crédito",
+        "categoria": "Feira",
+        "grupo": null,
+        "parcela": 1,
+        "parcelas": 1
+      }
+    },
+    {
+      "id": "dca0247b-ef30-568a-9b1a-632f7f276ac5",
+      "versao": null,
+      "campos": null
+    }
+  ],
+  "alteracoes": [
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "61540a89-57ed-4924-b9ea-7912aaef2867",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "83cd60f8-09ae-4ea1-8719-ffa59a550f63",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "51ee47c0-c48b-4c16-bea8-56d46000c4ca",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "c8800019-7019-46af-adae-8b642e9042be",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "06d9dbef-0f05-4a3f-9dac-32696b424786",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "c53b21dd-bfe6-49ca-8c74-519f7e7334d0",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "db2891a1-9752-4f0c-8a88-05ba10efe733",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "8ebfd542-f413-4529-85ce-8e4b5a9e8054",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "cbf40e95-3fcb-4fd2-85b4-8d2efc354036",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "766cec94-6d3a-4f03-a2bc-cd58439e3e13",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "d5cad204-23b1-45a8-8edb-64648ff531cf",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "1585e7aa-f3b3-4096-aae5-86f572e03809",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "89d97f91-5c37-44a3-8d59-773f7fa2fc2b",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "01607f7a-8eb1-421a-948e-517526baecce",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "5b87ac60-b1f3-41f8-a361-5f0bb40023b5",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "c1758e8c-30fd-4d73-99cc-b29bb00f3907",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "e861e119-0c09-4c27-b298-7bfce8a916f8",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "5c084513-87eb-4517-8ff6-0557108a63b1",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "913f992c-5bb1-48e3-9114-9a02ffc3a0a1",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "59ee129e-2468-470c-b795-495b3b242453",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "8ca21bd2-7081-4802-89f2-61a931a8ec82",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "0f53dd42-71f3-4fb8-9fb8-0b89e4a27bf0",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "c790db91-46b9-41e7-b228-bf4d56235fa6",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "42160591-2c2b-4cb2-b20c-10703eec22c6",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "95c5fa5f-215d-4971-a879-e672c041fee6",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "ab6a8b54-8f26-4ebf-ae15-2c656425725e",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "b8484bc1-d9a9-406e-8bc1-482ba5c360d1",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "44a6e311-9516-4be1-8631-c0713607a101",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "4e797a3c-4ecd-4148-aa2e-9ffb6d961053",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "5f9e9e25-ccfd-45da-9a8f-df77a6dc7781",
+      "versao": 2,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "0338ed06-fc01-4d26-b706-9b91027b6fca",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "14784461-1dae-4214-bbed-9edcb0ef1658",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "excluir",
+      "id": "6ddeb976-f974-441e-a3b9-165277d4699f",
+      "versao": 1,
+      "dados": null
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "0fce5f8d-ef49-49f2-9a88-8bdae2f4d78b",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-10-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 18,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "4e465cd2-35a8-4aa7-86e9-fed129f659fc",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-09-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 17,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "648bf15b-2a8a-4b04-beae-c763cb063220",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-08-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 16,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "38e55639-f6df-45bf-a5f1-f3f985ea6944",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-07-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 15,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "52e0ae6f-d6bf-43c6-9d84-90ff7dc64d25",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-06-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 14,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "c6d5c071-1920-4fdb-bbb6-f8735b19922d",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-05-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 13,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "4cba8c87-1431-4d92-b917-020cf2c6bceb",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-04-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 12,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "138041ee-30a4-4b0c-a91d-99d5aaa0043e",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-02-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 10,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "5dc1610b-4919-42b1-bbba-73b6d8749d25",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-03-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 11,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "09108aec-0e73-4933-a9b6-bada58c84ea2",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-01-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 9,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "2bd23625-3e8e-43c6-a7ba-b88ed00e3a60",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-02-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 10,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "9ffe0614-5992-47fa-8d7b-be9d5a29e149",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-12-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 8,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "a48f63e4-bf94-4d26-9187-5ec1c0a86c2e",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2027-01-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 9,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "0e59b381-6fc4-41ae-a3ed-2ebe3b22b455",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-11-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 7,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "b6035d5a-c03d-44c3-b2d5-b77088bac339",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-12-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 8,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "31169541-37cb-4653-836c-b8a0bd1ea466",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-10-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 5,
+        "parcelas": 5
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "3bc71d2e-599d-4652-93d2-f2955905c92b",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-11-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 7,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "407c1348-2cd4-49f6-af54-7a5ca5b6812e",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-10-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6005,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 6,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "ad9cf4c0-4887-4d52-8646-60ac174225ea",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-09-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 4,
+        "parcelas": 5
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "daf2d1ef-d7d5-437e-bb9d-ee37c06d75af",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-09-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 5,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "f7e34251-6828-42c1-bc49-3b0b8f769a68",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-10-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 6,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "c41aa96a-4e10-485e-b72b-edfb74865afa",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-08-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 3,
+        "parcelas": 5
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "d3b864d4-0454-4c56-aebc-391c8e72b3d5",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-09-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 5,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "ef3d41b0-2857-4c71-8f30-cc848063a83e",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-08-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 4,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "395d47b7-ecea-4da3-b949-4c4969501c91",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-07-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 2,
+        "parcelas": 5
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "02ee2a25-2df7-42d7-88be-b13a3e7432e9",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-07-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 3,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "e298d453-9bac-4b82-b725-3f81cdbe6f1f",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-08-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 4,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "6ebee53a-02ea-4ece-b72a-3e921c193d3b",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-06-20",
+        "data_compra": null,
+        "descricao": "ML - Cabo HDMI",
+        "valor_centavos": 923,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "37fb2093-96e7-4a7f-8a85-6c8f911ae78a",
+        "parcela": 1,
+        "parcelas": 5
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "2006da6f-ed4b-454c-9e01-2481581242c8",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-07-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 3,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "ae8a14f2-a656-43a2-8d7b-ebb030ae62dd",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-06-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 2,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "40bd9d0b-6cf4-4e93-8322-3c981f96b864",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-05-12",
+        "data_compra": null,
+        "descricao": "Kapronezai Materiais",
+        "valor_centavos": 6004,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "abee8307-92a1-4cb3-9a1a-5706e9102d0c",
+        "parcela": 1,
+        "parcelas": 10
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "95e0aa59-70f5-46ee-9f0c-22741261f877",
+      "versao": 1,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-06-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11105,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 2,
+        "parcelas": 18
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "editar",
+      "id": "62a02e0b-19c1-4857-a304-d88351c6a2b4",
+      "versao": 2,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-10-31",
+        "data_compra": null,
+        "descricao": "Leo - 20 cocos e 2 caixa de laranja",
+        "valor_centavos": 10000,
+        "meio": "Pix",
+        "categoria": "Feira",
+        "grupo": null,
+        "parcela": 1,
+        "parcelas": 1
+      }
+    },
+    {
+      "tabela": "financeiro_lancamentos",
+      "acao": "inserir",
+      "id": "dca0247b-ef30-568a-9b1a-632f7f276ac5",
+      "versao": null,
+      "dados": {
+        "tipo": "despesa",
+        "data": "2026-05-09",
+        "data_compra": "2026-04-12",
+        "descricao": "ML - Motorola Edge 60 Neo",
+        "valor_centavos": 11104,
+        "meio": "Cartão de crédito",
+        "categoria": "Outros",
+        "grupo": "8ef14271-5aa4-4af9-9db3-3c36b8e7f153",
+        "parcela": 1,
+        "parcelas": 18
+      }
+    }
+  ]
+}

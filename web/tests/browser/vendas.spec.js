@@ -1420,3 +1420,29 @@ test('correções v2: inclui parcela faltante, calcula 18 parcelas e recusa a se
   await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);await page.locator('#fin-correcoes-conferir').click();
   await expect(page.locator('#fin-correcoes-status')).toContainText('Plano não conferido');
 });
+
+test('correções v3: inclui compra da fatura com cópia, preserva Pix e recusa reaplicação',async({page})=>{
+  const dados=await preparar(page);
+  const id='30000000-0000-4000-8000-000000000001';
+  const pix={id:'30000000-0000-4000-8000-000000000002',versao:1,tipo:'despesa',data:'2031-03-16',data_compra:null,descricao:'Pix fictício',valor_centavos:200,meio:'Pix',categoria:'Casa',grupo:null,parcela:1,parcelas:1};
+  dados.financeiro.lancamentos.push(pix);
+  const novo={...pix,data:'2031-04-09',data_compra:'2031-03-16',descricao:'Compra fictícia no cartão',meio:'Cartão de crédito'};
+  delete novo.id;delete novo.versao;
+  const plano={formato:'gestao-da-feira-correcoes',versao_formato:3,totais_preservados:[],
+    verificacoes:[{id,versao:null,campos:null}],alteracoes:[{tabela:'financeiro_lancamentos',acao:'inserir',id,versao:null,dados:novo}],
+    conciliacoes:[{referencia:'Fatura fictícia',inicio:'2031-03-10',fim:'2031-04-09',total_centavos:200,completa:true,movimentos:[{id,data_compra:novo.data_compra,valor_centavos:200,parcela:1,parcelas:1}]}]};
+  await page.locator('#aba-financas').click();await consultarFinancas(page,'Ano','2031-01-01');
+  await page.locator('#fin-correcoes > summary').click();
+  const arquivo={name:'plano-v3.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(plano))};
+  await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-previa')).toContainText('Fatura completa');
+  await expect(page.locator('#fin-correcoes-previa')).toContainText('Incluir despesa conferida');
+  await expect(page.locator('#fin-correcoes-aplicar')).toBeDisabled();
+  expect(dados.financeiro.lancamentos).toHaveLength(1);
+  const baixar=page.waitForEvent('download');await page.locator('#fin-correcoes-copia').click();await baixar;
+  await page.locator('#fin-correcoes-guardada').check();page.once('dialog',d=>d.accept());await page.locator('#fin-correcoes-aplicar').click();
+  await expect.poll(()=>dados.financeiro.lancamentos.length).toBe(2);
+  expect(dados.financeiro.lancamentos.find(r=>r.id===pix.id)).toEqual(pix);
+  await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);await page.locator('#fin-correcoes-conferir').click();
+  await expect(page.locator('#fin-correcoes-status')).toContainText('Plano não conferido');
+});

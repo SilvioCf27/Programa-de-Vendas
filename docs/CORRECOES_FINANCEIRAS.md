@@ -36,3 +36,32 @@ As regras de fechamento são consultadas novamente antes da prévia e antes de a
 Validação desta extensão: 83 testes de regras/dados e 36 cenários de navegador aprovados; a última revisão dos testes usa somente datas e valores fictícios. Os casos novos cobrem inclusão em grupo existente, total exato, ID já ocupado, ausência de conferência de faturas, primeira fatura inválida, mudança futura de fechamento, aplicação e recusa de reaplicação. Build aprovado. Planos e arquivos reais recebidos para conferência permanecem fora do repositório público.
 
 Cache da interface v13. Nenhuma atualização de executável Windows nesta entrega.
+
+## Formato 3: conciliação com documentos
+
+Permite incluir despesas à vista do cartão identificadas em uma referência de
+fatura. O plano contém o intervalo de fechamento, o total em centavos e os
+movimentos associados aos IDs do cadastro. Movimentos agrupados, como pedágios,
+somam para um registro; não criam gastos duplicados. A referência é fornecida
+pelo usuário: não é assinatura digital nem acesso ao banco.
+
+Em uma conciliação completa, todos os gastos de cartão no intervalo precisam
+corresponder aos movimentos e ao total declarado. Uma referência parcial
+confere apenas os itens apresentados e não certifica o total do período.
+Inclusões precisam ser despesas à vista do cartão cobertas pela referência.
+Pix e dinheiro existentes não podem ser editados por este formato. A
+reclassificação de cartão para Outro preserva o valor. Totais de compras
+expressamente confirmados podem ser declarados em `totais_preservados` e são
+conferidos antes e depois. As verificações de versão, grupo completo, cópia,
+confirmação e envio transacional continuam obrigatórias.
+
+Este formato admite os valores efetivamente faturados, que podem diferir do
+rateio estimado pelo cadastro. As datas de compra e o cronograma devem ser
+revisados no plano; uma fatura isolada não comprova todos os pagamentos antigos.
+Não há alteração de SQL, executável ou dados de conta real pelo agente.
+
+Verificação local do formato 3: 89 testes de regras/dados e 37 cenários de
+navegador aprovados, incluindo cópia antes de aplicar, inclusão documentada,
+preservação de Pix e recusa de reaplicação. Build aprovado. Os testes usam
+referências fictícias. Cache da interface v14. A aplicação em conta real e
+uma publicação permanecem etapas separadas da validação local.

@@ -74,3 +74,63 @@ test('v2 recusa faturas se a regra vigente mudar em parte do parcelamento',()=>{
     assert.throws(()=>conferirCorrecoes(plano,registros));
   } finally { definirFechamentos({versao:0,historico:[]}); }
 });
+
+function exemploConciliacao() {
+  const selecionar=r=>Object.fromEntries(CAMPOS_CORRECAO.map(k=>[k,r[k]]));
+  const r={id:id(501),versao:2,tipo:'despesa',data:'2031-04-09',data_compra:'2031-03-15',descricao:'Compra fictícia',valor_centavos:101,meio:'Cartão de crédito',categoria:'Casa',grupo:null,parcela:1,parcelas:1};
+  const novo={...selecionar(r),valor_centavos:200,data_compra:'2031-03-16'};
+  const plano={formato:'gestao-da-feira-correcoes',versao_formato:3,totais_preservados:[],
+    verificacoes:[{id:r.id,versao:2,campos:selecionar(r)},{id:id(502),versao:null,campos:null}],
+    alteracoes:[{tabela:'financeiro_lancamentos',acao:'editar',id:r.id,versao:2,dados:{...selecionar(r),valor_centavos:100}},{tabela:'financeiro_lancamentos',acao:'inserir',id:id(502),versao:null,dados:novo}],
+    conciliacoes:[{referencia:'Documento fictício',inicio:'2031-03-10',fim:'2031-04-09',total_centavos:300,completa:true,movimentos:[{id:r.id,data_compra:r.data_compra,valor_centavos:100,parcela:1,parcelas:1},{id:id(502),data_compra:novo.data_compra,valor_centavos:200,parcela:1,parcelas:1}]}]};
+  return {registros:[r],plano};
+}
+test('v3 confere fatura completa e permite despesa à vista documentada sem tocar Pix/dinheiro',()=>{
+  const {registros,plano}=exemploConciliacao();
+  registros.push({...registros[0],id:id(503),meio:'Pix',data_compra:null});
+  const antes=JSON.stringify(registros), r=conferirCorrecoes(plano,registros);
+  assert.equal(r.insercoes,1);assert.equal(r.depois,300);assert.equal(JSON.stringify(registros),antes);
+});
+test('v3 rejeita divergência de soma, data, parcela, fechamento, inserção sem referência e extra na fatura completa',()=>{
+  for(const alterar of [p=>p.conciliacoes[0].total_centavos++,p=>p.conciliacoes[0].movimentos[0].data_compra='2031-03-14',p=>p.conciliacoes[0].movimentos[0].parcela=2,p=>p.conciliacoes[0].inicio='2031-03-09',p=>p.conciliacoes[0].movimentos.pop(),p=>p.alteracoes[1].dados.meio='Pix']) {
+    const {registros,plano}=exemploConciliacao();alterar(plano);assert.throws(()=>conferirCorrecoes(plano,registros));
+  }
+  const {registros,plano}=exemploConciliacao();registros.push({...registros[0],id:id(509)});assert.throws(()=>conferirCorrecoes(plano,registros));
+});
+test('v3 agrega movimentos da mesma compra, mas não duplica o valor do cadastro',()=>{
+  const {registros,plano}=exemploConciliacao();const m=plano.conciliacoes[0].movimentos[0];
+  m.valor_centavos=40;plano.conciliacoes[0].movimentos.push({...m,valor_centavos:60});
+  assert.equal(conferirCorrecoes(plano,registros).depois,300);
+  plano.conciliacoes[0].movimentos.push({...m});assert.throws(()=>conferirCorrecoes(plano,registros));
+});
+test('v3 não admite editar Pix/dinheiro, mudar valor ao reclassificar ou violar total confirmado',()=>{
+  for(const meio of ['Pix','Dinheiro']) {
+    const {registros,plano}=exemploConciliacao();registros[0].meio=meio;registros[0].data_compra=null;plano.verificacoes[0].campos={...plano.verificacoes[0].campos,meio,data_compra:null};
+    assert.throws(()=>conferirCorrecoes(plano,registros));
+  }
+  const {registros,plano}=exemploConciliacao();plano.alteracoes[0].dados.meio='Outro';plano.alteracoes[0].dados.data_compra=null;assert.throws(()=>conferirCorrecoes(plano,registros));
+  const e=exemploConciliacao();e.plano.totais_preservados=[{grupo:'grupo-ausente',total_centavos:100}];assert.throws(()=>conferirCorrecoes(e.plano,e.registros));
+});
+test('v3 recusa segunda aplicação, versão alterada e fechamento mudado',()=>{
+  const {registros,plano}=exemploConciliacao();registros[0].versao++;assert.throws(()=>conferirCorrecoes(plano,registros));registros[0].versao--;
+  const aplicados=conferirCorrecoes(plano,registros).operacoes.map(op=>({id:op.id,...op.dados,versao:op.versao===null?1:op.versao+1}));
+  assert.throws(()=>conferirCorrecoes(plano,aplicados));
+  try {definirFechamentos({versao:1,historico:[{vigencia:'2031-01-01',dia:14}]});assert.throws(()=>conferirCorrecoes(plano,registros));}
+  finally {definirFechamentos({versao:0,historico:[]});}
+});
+
+test('v3 permite retirar empréstimo do cartão preservando o valor e recusa alteração do total de compra',()=>{
+  const e=exemploConciliacao();
+  const emprestimo={...e.registros[0],id:id(510),descricao:'Empréstimo fictício',valor_centavos:50};
+  e.registros.push(emprestimo);
+  const campos=r=>Object.fromEntries(CAMPOS_CORRECAO.map(k=>[k,r[k]]));
+  e.plano.verificacoes.push({id:emprestimo.id,versao:emprestimo.versao,campos:campos(emprestimo)});
+  e.plano.alteracoes.push({tabela:'financeiro_lancamentos',acao:'editar',id:emprestimo.id,versao:emprestimo.versao,dados:{...campos(emprestimo),meio:'Outro',data_compra:null}});
+  assert.equal(conferirCorrecoes(e.plano,e.registros).operacoes.at(-1).dados.valor_centavos,50);
+  e.plano.alteracoes.at(-1).dados.valor_centavos=49;assert.throws(()=>conferirCorrecoes(e.plano,e.registros));
+  const f=exemplo();f.plano.versao_formato=3;
+  f.plano.conciliacoes=[{referencia:'Documento fictício',inicio:'2026-10-10',fim:'2026-11-09',total_centavos:100,completa:true,movimentos:[{id:f.registros[1].id,data_compra:null,valor_centavos:100,parcela:2,parcelas:2}]}];
+  f.plano.totais_preservados=[{grupo:f.registros[0].grupo,total_centavos:200}];
+  assert.equal(conferirCorrecoes(f.plano,f.registros).exclusoes,2);
+  f.plano.alteracoes[0].dados.valor_centavos=101;assert.throws(()=>conferirCorrecoes(f.plano,f.registros));
+});

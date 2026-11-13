@@ -161,13 +161,16 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       if (JSON.stringify(JSON.parse(copiaCorrecoes)) !== JSON.stringify(relatorio) || relatorio.financeiro_lancamentos.length !== snapshot.financeiro_lancamentos.length) throw Error();
       for (const op of revisao.operacoes) {
         const antes = snapshot.financeiro_lancamentos.find(r => r.id === op.id) || { ...op.dados, valor_centavos: 0 };
-        const detalhe = op.acao === 'excluir' ? 'Excluir' : op.acao === 'inserir' ? 'Incluir parcela faltante' : 'Atualizar / validar';
+        const detalhe = op.acao === 'excluir' ? 'Excluir' : op.acao === 'inserir' ? (plano.versao_formato === 3 ? 'Incluir despesa conferida' : 'Incluir parcela faltante') : 'Atualizar / validar';
         const nomes = { data: 'Fatura/pagamento', data_compra: 'Compra', descricao: 'Descrição', valor_centavos: 'Valor', meio: 'Pagamento', categoria: 'Categoria', grupo: 'Grupo', parcela: 'Parcela', parcelas: 'Quantidade', tipo: 'Tipo' };
         const mostrar = (campo, valor) => valor == null ? 'não informado' : campo === 'valor_centavos' ? moeda(valor) : ['data', 'data_compra'].includes(campo) ? br(valor) : campo === 'grupo' ? String(valor).slice(0, 8) : String(valor);
         const mudancas = op.dados ? CAMPOS_CORRECAO.filter(c => (antes[c] ?? null) !== op.dados[c]).map(c => `${nomes[c]}: ${mostrar(c, antes[c])} → ${mostrar(c, op.dados[c])}`).join('; ') || 'Validação sem mudança de dados.' : 'Registro será removido.';
         $('fin-correcoes-previa').append(texto('li', `${detalhe} · ${antes.descricao} · ${antes.parcela}/${antes.parcelas} · ${br(antes.data)} · antes ${moeda(antes.valor_centavos)} · ${mudancas}`));
       }
-      $('fin-correcoes-status').textContent = `${revisao.exclusoes} exclusões e ${revisao.atualizacoes} atualizações/validações${revisao.insercoes ? ` e ${revisao.insercoes} ${revisao.insercoes === 1 ? 'parcela faltante' : 'parcelas faltantes'}` : ''}. Valores dos registros envolvidos: ${moeda(revisao.antes)} → ${moeda(revisao.depois)}. Baixe e guarde a cópia antes de aplicar.`;
+      $('fin-correcoes-status').textContent = `${revisao.exclusoes} exclusões e ${revisao.atualizacoes} atualizações/validações${revisao.insercoes ? ` e ${revisao.insercoes} ${planoCorrecoes?.versao_formato === 3 ? 'despesa(s) conferida(s)' : revisao.insercoes === 1 ? 'parcela faltante' : 'parcelas faltantes'}` : ''}. Valores dos registros envolvidos: ${moeda(revisao.antes)} → ${moeda(revisao.depois)}. Baixe e guarde a cópia antes de aplicar.`;
+      if (plano.versao_formato === 3) for (const fatura of plano.conciliacoes) {
+        $('fin-correcoes-previa').prepend(texto('li', `${fatura.completa ? 'Fatura completa' : 'Referência parcial'} · ${br(fatura.inicio)} a ${br(fatura.fim)} · ${moeda(fatura.total_centavos)}. ${fatura.completa ? 'Todos os gastos de cartão deste intervalo foram conferidos.' : 'Não certifica o total do período.'}`));
+      }
       // Habilita o checkbox somente depois do clique de download.
       $('fin-correcoes-guardada').disabled = true;
     } catch (erro) {
@@ -190,7 +193,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       const snapshot = await api().financeiro();
       if (atual !== geracao) return;
       const revisao = conferirCorrecoes(plano, snapshot.financeiro_lancamentos);
-      if (confirm(`Aplicar ${revisao.exclusoes} exclusões e ${revisao.atualizacoes} atualizações/validações${revisao.insercoes ? ` e incluir ${revisao.insercoes} ${revisao.insercoes === 1 ? 'parcela faltante' : 'parcelas faltantes'}` : ''} no histórico financeiro? A operação usa versões para recusar registros alterados. A cópia financeira deve estar guardada.`)) operacoes = revisao.operacoes;
+      if (confirm(`Aplicar ${revisao.exclusoes} exclusões e ${revisao.atualizacoes} atualizações/validações${revisao.insercoes ? ` e incluir ${revisao.insercoes} ${planoCorrecoes?.versao_formato === 3 ? 'despesa(s) conferida(s)' : revisao.insercoes === 1 ? 'parcela faltante' : 'parcelas faltantes'}` : ''} no histórico financeiro? A operação usa versões para recusar registros alterados. A cópia financeira deve estar guardada.`)) operacoes = revisao.operacoes;
     } catch {
       if (atual === geracao) { limparCorrecoes(); $('fin-correcoes-status').textContent = 'Os registros mudaram ou o plano não é mais válido. Faça uma nova conferência. Nada foi enviado.'; }
     } finally { if (atual === geracao) { ocupado = false; controles(); } }

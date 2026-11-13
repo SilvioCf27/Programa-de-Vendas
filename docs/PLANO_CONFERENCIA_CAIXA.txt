@@ -1,0 +1,46 @@
+GESTÃO DA FEIRA — PLANO DE CONFERÊNCIA DE CAIXA
+Estado: proposta; não implementada.
+
+1. Concluir a conciliação das despesas
+Conferir fatura, parcelas e meios de pagamento. Guardar a cópia anterior e
+aplicar somente correções identificáveis. Uma diferença não vira despesa
+avulsa apenas para igualar os totais.
+
+2. Separar dois conceitos na interface
+Resultado do período: receitas menos taxas e despesas pelo critério atual.
+Disponível agora: dinheiro efetivamente disponível em espécie e nas contas.
+Uma compra no crédito é um compromisso; não significa que o dinheiro já saiu.
+
+3. Registrar uma posição inicial conferida
+Escolher uma data e informar o dinheiro físico e o saldo de cada conta.
+Essa posição não é venda nem lucro. Ela representa dinheiro que já existia
+quando o acompanhamento começou. Não reescreve o histórico de vendas.
+
+4. Projetar os movimentos que alteram o disponível
+Posição inicial + entradas recebidas - saídas pagas = saldo calculado.
+Separar data de compra, fechamento e pagamento efetivo. Vendas no cartão
+podem ter recebimento posterior e taxas. Pagar a fatura diminui o disponível,
+mas não registra novamente as compras como despesas.
+Transferências entre dinheiro e contas não alteram o total disponível.
+Empréstimos recebidos não são vendas; amortização e encargos precisam de
+classificação própria. Não presumir pagamentos apenas pelo vencimento.
+
+5. Criar a conferência, sem esconder divergências
+Mostrar saldo calculado, saldo informado e diferença. Permitir correção de
+movimentos identificados ou ajuste explícito com data, motivo e histórico.
+Nunca atualizar o saldo inicial silenciosamente para fazer as contas baterem.
+Evitar um único campo de saldo que se sobreponha ao histórico a cada edição.
+
+6. Aprovar o modelo antes de desenvolver
+Definir primeiro o comportamento das contas, recebimentos e pagamentos.
+Apresentar uma tela curta de posição inicial e outra de conferência.
+Manter resultado do período disponível como hoje, com explicação breve.
+
+7. Implementar e verificar em etapas
+Criar migrações compatíveis no SQLite e no Supabase; manter isolamento por
+proprietário, versões, sincronização e recibos de operações. Incluir os novos
+dados no backup e na exportação. Testar transferências, pagamento de fatura,
+recebimentos em atraso, trabalho offline, duplicidade de envio e restauração.
+Verificar primeiro com dados fictícios, depois com uma cópia do histórico.
+Só publicar após conferir desktop e PWA, sem alterar a regra histórica de
+fechamento nem converter automaticamente despesa em movimento de caixa.

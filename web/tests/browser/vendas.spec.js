@@ -9,6 +9,8 @@ function token() {
 async function preparar(page, { falharListagem = false } = {}) {
   const vendas = [];
   const financeiro = { lancamentos: [], anuais: [] };
+  const caixa = [], recibosCaixa = new Map();
+  vendas.caixa = caixa; vendas.recibosCaixa = recibosCaixa;
   const fechamentos = { versao: 0, historico: [] };
   vendas.fechamentos = fechamentos;
   vendas.financeiro = financeiro;
@@ -44,6 +46,26 @@ async function preparar(page, { falharListagem = false } = {}) {
       });
     if (url.pathname === '/auth/v1/logout')
       return route.fulfill({ status: 204, headers });
+    if (url.pathname === '/rest/v1/rpc/consultar_caixa') {
+      if(vendas.caixaSemSQL)return responder({code:'PGRST202'},404);
+      return responder({protocolo:1,movimentos:caixa,vendas,despesas:financeiro.lancamentos});
+    }
+    if (url.pathname === '/rest/v1/rpc/salvar_caixa') {
+      const body=request.postDataJSON();
+      if(recibosCaixa.has(body.operacao_id))return responder(recibosCaixa.get(body.operacao_id));
+      const p=body.pedido;let registro;
+      if(p.acao==='inserir') {
+        if(p.dados.tipo==='abertura'&&caixa.some(r=>r.tipo==='abertura'&&!r.cancelado))return responder({code:'40001'},409);
+        registro={...p.dados,versao:1,cancelado:false,created_at:new Date().toISOString()};caixa.push(registro);
+      } else {
+        registro=caixa.find(r=>r.id===p.id&&r.versao===p.versao&&!r.cancelado);
+        if(!registro)return responder({code:'40001'},409);
+        registro.cancelado=true;registro.versao++;
+      }
+      const resposta={protocolo:1,operacao_id:body.operacao_id,registro};recibosCaixa.set(body.operacao_id,resposta);
+      if(vendas.caixaFalharResposta){vendas.caixaFalharResposta=false;return route.abort('failed');}
+      return responder(resposta);
+    }
     if (url.pathname === '/rest/v1/rpc/consultar_fechamentos') return responder(fechamentos);
     if (url.pathname === '/rest/v1/rpc/salvar_fechamento') {
       const body = request.postDataJSON();
@@ -348,7 +370,7 @@ test('finanças mostra saldo, semanas e ajustes estimados sem ratear taxa anual 
   await consultarFinancas(page, 'Ano');
   await expect(page.locator('#fin-taxas')).toHaveText('R$ 5,00');
   await expect(page.locator('#fin-saldo')).toHaveText('R$ 65,00');
-  await page.getByLabel('Ajuda: Saldo do período').click();
+  await page.getByLabel('Ajuda: Resultado do período').click();
   await expect(
     page.getByText('Não é um cálculo contábil de lucro', { exact: false })
   ).toBeVisible();
@@ -1445,4 +1467,50 @@ test('correções v3: inclui compra da fatura com cópia, preserva Pix e recusa 
   expect(dados.financeiro.lancamentos.find(r=>r.id===pix.id)).toEqual(pix);
   await page.locator('#fin-correcoes-arquivo').setInputFiles(arquivo);await page.locator('#fin-correcoes-conferir').click();
   await expect(page.locator('#fin-correcoes-status')).toContainText('Plano não conferido');
+});
+
+test('caixa: posição inicial, dinheiro/Pix automáticos, cartão confirmado, transferência e conferência sem reset',async({page})=>{
+ const dados=await preparar(page);
+ dados.push({id:91,versao:1,data:'2020-01-02',dinheiro_centavos:1000,pix_centavos:2000,cartao_centavos:99900});
+ dados.financeiro.lancamentos.push(...[['Dinheiro',500],['Pix',700],['Cartão de crédito',10000]].map(([meio,valor_centavos],i)=>({id:'gasto-'+i,tipo:'despesa',data:'2020-01-02',meio,valor_centavos,descricao:'Despesa fictícia',categoria:'Casa',parcela:1,parcelas:1,grupo:null,versao:1})));
+ await page.locator('#aba-financas').click();await expect(page.locator('#caixa-status')).toContainText('Informe o dinheiro');
+ await page.locator('#caixa-edicao summary').click();const f=page.locator('#caixa-form');
+ await f.locator('[name=data]').fill('2020-01-01');await f.locator('[name=descricao]').fill('Posição inicial fictícia');await f.locator('[name=dinheiro]').fill('100,00');await f.locator('[name=saldo_conta]').fill('200,00');
+ page.once('dialog',d=>d.accept());await page.locator('#caixa-salvar').click();
+ await expect(page.locator('#caixa-total')).toHaveText('R$ 318,00');await expect(page.locator('#caixa-dinheiro')).toHaveText('R$ 105,00');
+ const mover=async(tipo,valor,conta,descricao)=>{
+  await f.locator('[name=tipo]').selectOption(tipo);await f.locator('[name=data]').fill('2020-01-03');await f.locator('[name=descricao]').fill(descricao);await f.locator('[name=conta]').selectOption(conta);await f.locator('[name=valor]').fill(valor);await page.locator('#caixa-salvar').click();
+ };
+ await mover('entrada','100,00','conta','Recebimento líquido do cartão');await expect(page.locator('#caixa-total')).toHaveText('R$ 418,00');
+ await mover('saida','80,00','conta','Pagamento de fatura');await expect(page.locator('#caixa-total')).toHaveText('R$ 338,00');
+ expect(dados.financeiro.lancamentos).toHaveLength(3);
+ await mover('transferencia','50,00','dinheiro','Depósito em conta');await expect(page.locator('#caixa-dinheiro')).toHaveText('R$ 55,00');await expect(page.locator('#caixa-conta')).toHaveText('R$ 283,00');
+ await f.locator('[name=tipo]').selectOption('conferencia');await f.locator('[name=data]').fill('2020-01-04');await f.locator('[name=descricao]').fill('Contagem real');await f.locator('[name=dinheiro]').fill('60');await f.locator('[name=saldo_conta]').fill('280');await page.locator('#caixa-salvar').click();
+ await expect(page.locator('#caixa-total')).toHaveText('R$ 338,00');
+ await expect(page.locator('#caixa-historico')).toContainText('dinheiro R$ 5,00; conta -R$ 3,00');
+ const download=page.waitForEvent('download');await page.locator('#caixa-exportar').click();const arquivo=await download;
+ const fs=await import('node:fs/promises');const r=JSON.parse(await fs.readFile(await arquivo.path(),'utf8'));expect(r.formato).toBe('gestao-da-feira-caixa');expect(r.movimentos).toHaveLength(5);expect(r.despesas).toHaveLength(3);
+ await page.locator('#caixa-edicao summary').click();
+ if(process.env.CAPTURAR_WEB_DIR){
+  await page.locator('#caixa-painel').screenshot({path:process.env.CAPTURAR_WEB_DIR+'/caixa-mobile.png'});
+  await page.setViewportSize({width:1280,height:900});await page.locator('#caixa-painel').screenshot({path:process.env.CAPTURAR_WEB_DIR+'/caixa-desktop.png'});
+ }
+ await page.locator('#caixa-historico').locator('..').locator('summary').click();
+ const recebido=page.locator('#caixa-historico li').filter({hasText:'Recebimento líquido do cartão'});page.once('dialog',d=>d.accept());await recebido.getByRole('button',{name:'Cancelar registro'}).click();
+ await expect(page.locator('#caixa-total')).toHaveText('R$ 238,00');await expect(recebido).toContainText('Cancelado');
+ await page.getByRole('button',{name:'Sair',exact:true}).click();await expect(page.locator('#caixa-total')).toHaveText('—');expect(await page.locator('#caixa-historico').textContent()).toBe('');
+});
+
+test('caixa: resposta perdida retoma mesmo recibo; sem SQL não interfere nas despesas',async({page})=>{
+ const dados=await preparar(page);dados.caixaSemSQL=true;
+ await page.locator('#aba-financas').click();await expect(page.locator('#caixa-status')).toContainText('007_caixa.sql');await expect(page.locator('#fin-dados')).toBeVisible();await expect(page.locator('#caixa-salvar')).toBeDisabled();
+ dados.caixaSemSQL=false;await page.locator('#caixa-atualizar').click();await page.locator('#caixa-edicao summary').click();const f=page.locator('#caixa-form');
+ await f.locator('[name=data]').fill('2020-01-01');await f.locator('[name=descricao]').fill('Inicial');await f.locator('[name=dinheiro]').fill('0');await f.locator('[name=saldo_conta]').fill('100');
+ dados.caixaFalharResposta=true;page.once('dialog',d=>d.accept());await page.locator('#caixa-salvar').click();
+ await expect(page.locator('#caixa-status')).toContainText('Envio não confirmado');expect(dados.caixa).toHaveLength(1);await expect(page.locator('#caixa-salvar')).toBeDisabled();
+ expect(await page.evaluate(()=>!!localStorage.getItem('feira-caixa-pendente:11111111-1111-4111-8111-111111111111'))).toBe(true);
+ await page.reload();await expect(page.locator('#aba-financas')).toBeVisible();await page.locator('#aba-financas').click();
+ await expect(page.locator('#caixa-total')).toHaveText('R$ 100,00');expect(dados.caixa).toHaveLength(1);expect(dados.recibosCaixa.size).toBe(1);
+ expect(await page.evaluate(()=>localStorage.getItem('feira-caixa-pendente:11111111-1111-4111-8111-111111111111'))).toBeNull();
+ await page.context().setOffline(true);await expect(page.locator('#caixa-salvar')).toBeDisabled();await page.context().setOffline(false);
 });

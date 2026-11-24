@@ -1,3 +1,4 @@
+import { criarPainelCaixa } from './painel-caixa.js';
 import { conferirCorrecoes, CAMPOS_CORRECAO } from './correcoes-financeiras.js';
 import { montarExportacaoFinanceira, gerarJsonFinanceiro, gerarCsvFinanceiro } from './exportacao-financeira.js';
 import { baixar } from './exportacao.js';
@@ -25,6 +26,7 @@ const texto = (tag, conteudo, classe = '') => {
   return e;
 };
 export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () => {} }) {
+  const caixa=criarPainelCaixa({api,sessao});
   let consultadoEm = null;
   let planoCorrecoes = null, copiaCorrecoes = null, copiaBaixada = false;
   let dados = null,
@@ -324,6 +326,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       desenhar();
       $('fin-status').textContent =
         'Dados consultados na nuvem. O PC recebe as alterações enquanto estiver aberto e conectado.';
+      caixa.atualizar();
       return true;
     } catch (erro) {
       if (atual === geracao)
@@ -533,6 +536,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
       try {
         return (
           ocupado ||
+          caixa.ocupado() ||
           configuracaoFechamento.ocupado() ||
           $('fin-dialogo').open ||
           $('anual-dialogo').open ||
@@ -545,6 +549,7 @@ export function criarPainelFinanceiro({ api, sessao, aoFechamentoAlterado = () =
     },
     limpar() {
       geracao++;
+      caixa.limpar();
       configuracaoFechamento.limpar();
       limparCorrecoes();
       $('fin-correcoes-arquivo').value = '';

@@ -1,5 +1,5 @@
 GESTÃO DA FEIRA — PLANO DE CONFERÊNCIA DE CAIXA
-Estado: proposta; não implementada.
+Estado: implementação inicial no PWA; habilitação descrita em docs/CAIXA_PWA.md.
 
 1. Concluir a conciliação das despesas
 Conferir fatura, parcelas e meios de pagamento. Guardar a cópia anterior e
@@ -44,3 +44,12 @@ recebimentos em atraso, trabalho offline, duplicidade de envio e restauração.
 Verificar primeiro com dados fictícios, depois com uma cópia do histórico.
 Só publicar após conferir desktop e PWA, sem alterar a regra histórica de
 fechamento nem converter automaticamente despesa em movimento de caixa.
+
+ANDAMENTO — IMPLEMENTAÇÃO PWA, 24/11/2026
+A conciliação foi confirmada pelo usuário. Implementado no PWA o saldo inicial
+separado do resultado, dinheiro/Pix automáticos após o fim do dia inicial,
+recebimentos e pagamentos confirmados, transferências, conferências sem reset,
+ajustes com motivo, cancelamento preservando histórico e exportação própria.
+Regras e habilitação descritas em docs/CAIXA_PWA.md. Supabase: migração 007.
+Desktop, inclusão no backup SQLite/Drive e restauração do novo formato ficam
+para a etapa seguinte, conforme prioridade PWA solicitada pelo usuário.

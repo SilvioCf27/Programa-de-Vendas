@@ -22,6 +22,18 @@ export function criarApi(cliente) {
   }
   return {
     fechamentos: lerFechamentos,
+    async caixa() {
+      const {data,error}=await cliente.rpc('consultar_caixa').abortSignal(AbortSignal.timeout(12000));
+      if(error) throw error;
+      if(data?.protocolo!==1 || !['movimentos','vendas','despesas'].every(k=>Array.isArray(data[k]))) throw Error('Resposta de caixa incompleta.');
+      return data;
+    },
+    async salvarCaixa(lote) {
+      const {data,error}=await cliente.rpc('salvar_caixa',lote).abortSignal(AbortSignal.timeout(15000));
+      if(error) throw error;
+      if(data?.protocolo!==1 || data.operacao_id!==lote.operacao_id || !data.registro?.id) throw Error('Envio de caixa não confirmado.');
+      return data;
+    },
     async salvarFechamento(versao, vigencia, dia) {
       const { data, error } = await cliente.rpc('salvar_fechamento', { versao_esperada: versao, vigencia, dia });
       if (error) throw error;

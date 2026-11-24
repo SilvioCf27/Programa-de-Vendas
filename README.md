@@ -65,6 +65,15 @@ Para configurar um novo fechamento e compartilhá-lo com o celular, execute apen
 A migração não altera vendas, despesas nem taxas. Até lá, o dia 09 continua sendo
 a regra inicial. Leia [o guia de finanças e atualização](docs/FINANCAS.md).
 
+## Dinheiro disponível no PWA
+
+Em Finanças, o quadro de caixa separa o saldo inicial e os movimentos reais do
+resultado do período. Dinheiro/Pix são acompanhados pelas vendas e despesas;
+recebimentos de cartão e pagamentos de fatura são confirmados à parte.
+Para habilitar, execute [a migração 007](supabase/migrations/007_caixa.sql).
+Veja [o guia do caixa](docs/CAIXA_PWA.md), incluindo conferência, exportação e
+os limites do backup atual do desktop para esses novos registros.
+
 ## Segurança dos backups
 
 A versão 1.6.2 reforça a validação de backups e caminhos de pastas, preservando

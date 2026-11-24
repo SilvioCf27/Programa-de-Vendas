@@ -106,3 +106,13 @@ dialog { max-height:calc(100dvh - 32px); overflow-y:auto; box-shadow:0 20px 80px
 .correcoes-financeiras { margin: 16px 0; }
 .correcoes-financeiras > summary { cursor: pointer; min-height: 32px; color: var(--azul); font-weight: 600; }
 .correcoes-financeiras > label { margin: 16px 0 12px; }
+
+.caixa-painel { margin-block: 1rem; }
+.caixa-painel .indicadores { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.caixa-painel .indicadores strong { display:block; font-size:1.3rem; overflow-wrap:anywhere; }
+.caixa-form { display:grid; gap:.8rem; padding-block:1rem; }
+.caixa-form label { min-width:0; }
+#caixa-historico { list-style:none; padding:0; }
+#caixa-historico li { padding-block:1rem; border-bottom:1px solid var(--borda, #334155); overflow-wrap:anywhere; }
+#caixa-historico p { margin:.35rem 0; }
+@media(max-width:500px) { .caixa-painel .indicadores {grid-template-columns:1fr;} .caixa-form .acoes {display:grid;} }

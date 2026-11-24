@@ -411,6 +411,38 @@
             Vendas menos taxas e despesas informadas. Inclui gastos pessoais
             cadastrados, despesas futuras e parcelas pelo vencimento.
           </p>
+          <section id="caixa-painel" class="painel caixa-painel" aria-labelledby="caixa-titulo">
+            <div class="titulo"><h3 id="caixa-titulo">Disponível em caixa e conta</h3><button id="caixa-atualizar" type="button">Atualizar caixa</button></div>
+            <p id="caixa-status" role="status" class="nota">Consulte as finanças para carregar o caixa.</p>
+            <div id="caixa-saldos" class="indicadores" hidden>
+              <article><span>Dinheiro físico</span><strong id="caixa-dinheiro">—</strong></article>
+              <article><span>Em conta</span><strong id="caixa-conta">—</strong></article>
+              <article><span>Total acompanhado</span><strong id="caixa-total">—</strong></article>
+            </div>
+            <details class="ajuda-inline"><summary>Como este saldo é calculado?</summary>
+              <p>Informe o que você possui ao fim de uma data. O acompanhamento começa no dia seguinte, independentemente do filtro financeiro. Vendas em dinheiro/Pix e despesas nesses meios entram automaticamente pelas datas cadastradas, até hoje. Cartão vendido só entra quando você registrar o recebimento líquido; compras no crédito só saem quando você registrar o pagamento da fatura. Taxas de cartão já descontadas do recebimento não saem novamente.</p>
+              <p>Não repita aqui vendas em dinheiro/Pix nem despesas já cadastradas nesses meios. Despesas em “Outro” precisam de uma saída confirmada na conta correta. Transferências entre dinheiro e conta não mudam o total. Conferir saldos mostra a diferença sem apagar o histórico; ajustes exigem uma entrada ou saída com motivo.</p>
+            </details>
+            <details id="caixa-edicao"><summary>Informar saldo, movimentar ou conferir</summary>
+              <form id="caixa-form" class="caixa-form">
+                <label>Operação<select name="tipo" id="caixa-tipo"><option value="abertura">Saldo inicial (fim do dia)</option><option value="entrada">Entrada recebida (ex.: cartão líquido ou ajuste)</option><option value="saida">Saída paga (ex.: fatura ou ajuste)</option><option value="transferencia">Transferência entre dinheiro e conta</option><option value="conferencia">Conferir saldos reais (sem alterar o calculado)</option></select></label>
+                <label>Data<input name="data" id="caixa-data" type="date" min="1900-01-01" required /></label>
+                <label>Descrição ou motivo<input name="descricao" maxlength="200" required /></label>
+                <div id="caixa-posicao" class="acoes">
+                  <label>Dinheiro físico contado (R$)<input name="dinheiro" inputmode="decimal" placeholder="0,00" /></label>
+                  <label>Saldo disponível em conta (R$)<input name="saldo_conta" inputmode="decimal" placeholder="0,00" /></label>
+                </div>
+                <div id="caixa-movimento" class="acoes" hidden>
+                  <label>Conta afetada / origem da transferência<select name="conta"><option value="dinheiro">Dinheiro físico</option><option value="conta">Em conta</option></select></label>
+                  <label>Valor recebido ou pago (R$)<input name="valor" inputmode="decimal" placeholder="0,00" /></label>
+                </div>
+                <p class="nota">O saldo inicial é o total que já existe ao fim da data, não uma venda. Pagamento de fatura altera somente o caixa, sem criar outra despesa.</p>
+                <div class="acoes"><button id="caixa-salvar" type="submit">Salvar no caixa</button><button id="caixa-cancelar-form" type="button">Limpar formulário</button></div>
+              </form>
+            </details>
+            <div class="acoes"><button id="caixa-exportar" type="button">Exportar histórico de caixa (JSON)</button></div>
+            <details><summary>Movimentos e conferências</summary><ul id="caixa-historico" class="lista"></ul></details>
+          </section>
           <form id="fin-filtros" class="painel filtros fin-filtros">
             <label
               >Consultar finanças<select id="fin-tipo">
@@ -485,9 +517,9 @@
               </article>
               <article class="painel">
                 <div class="nome-indicador">
-                  <span>Saldo do período</span>
+                  <span>Resultado do período</span>
                   <details class="ajuda">
-                    <summary aria-label="Ajuda: Saldo do período">?</summary>
+                    <summary aria-label="Ajuda: Resultado do período">?</summary>
                     <p>
                       Vendas menos taxas e despesas informadas. Não é um cálculo
                       contábil de lucro e não inclui gastos que você não

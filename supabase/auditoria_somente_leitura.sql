@@ -12,13 +12,13 @@ select n.nspname as esquema, c.relname as tabela,
        has_table_privilege('anon', c.oid, 'DELETE') as anon_pode_excluir
 from pg_class c join pg_namespace n on n.oid=c.relnamespace
 where n.nspname='public' and c.relname in
-  ('vendas','financeiro_lancamentos','financeiro_taxas_anuais','nuvem_operacoes')
+  ('vendas','financeiro_lancamentos','financeiro_taxas_anuais','nuvem_operacoes','caixa_movimentos')
 order by c.relname;
 
 -- Políticas devem restringir os dados à conta autorizada e ao seu auth.uid().
 select schemaname, tablename, policyname, roles, cmd, qual, with_check
 from pg_policies where schemaname='public' and tablename in
-  ('vendas','financeiro_lancamentos','financeiro_taxas_anuais','nuvem_operacoes')
+  ('vendas','financeiro_lancamentos','financeiro_taxas_anuais','nuvem_operacoes','caixa_movimentos')
 order by tablename,cmd;
 
 -- Funciona com versões antigas também: função ausente aparece como instalada=false.
@@ -29,7 +29,9 @@ with esperadas(assinatura) as (values
  ('public.consultar_fechamentos()'),
  ('public.salvar_fechamento(integer,date,integer)'),
  ('public.migrar_desktop_v2(jsonb,boolean)'),
- ('public.sincronizar_desktop_v2(jsonb,uuid)'))
+ ('public.sincronizar_desktop_v2(jsonb,uuid)'),
+ ('public.consultar_caixa()'),
+ ('public.salvar_caixa(jsonb,uuid)'))
 select e.assinatura, p.oid is not null as instalada,
        has_function_privilege('anon',p.oid,'EXECUTE') as anon_pode_executar,
        has_function_privilege('authenticated',p.oid,'EXECUTE') as autenticado_pode_executar,

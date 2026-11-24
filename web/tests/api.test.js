@@ -153,3 +153,14 @@ test('sem SQL 006 consulta legada continua e compra nova é recusada sem perder 
   await assert.rejects(api.aplicarFinanceiro({operacao_id:'nova',alteracoes:[{tabela:'financeiro_lancamentos',dados:{data_compra:'2026-10-09'}}]}),e=>e.code==='PGRST202');
   assert.equal(chamadas.length,3);
 });
+
+test('caixa exige snapshot completo e recibo correspondente; usa requisições com limite de tempo',async()=>{
+ let resposta={protocolo:1,movimentos:[],vendas:[],despesas:[]};const chamadas=[];
+ const api=criarApi({rpc(nome,args){chamadas.push([nome,args]);return {abortSignal(sinal){assert.ok(sinal instanceof AbortSignal);return Promise.resolve({data:resposta,error:null});}};}});
+ assert.deepEqual(await api.caixa(),resposta);
+ resposta={protocolo:1,movimentos:[]};await assert.rejects(api.caixa(),/incompleta/);
+ const lote={operacao_id:'pedido-a',pedido:{acao:'cancelar',id:'a',versao:1}};
+ resposta={protocolo:1,operacao_id:'outro',registro:{id:'a'}};await assert.rejects(api.salvarCaixa(lote),/não confirmado/);
+ resposta={protocolo:1,operacao_id:'pedido-a',registro:{id:'a'}};assert.deepEqual(await api.salvarCaixa(lote),resposta);
+ assert.equal(chamadas.at(-1)[0],'salvar_caixa');assert.deepEqual(chamadas.at(-1)[1],lote);
+});

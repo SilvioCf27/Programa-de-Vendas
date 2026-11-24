@@ -6,6 +6,14 @@ Estão disponíveis login pessoal, cadastro, edição, exclusão e consulta de v
 
 **A sincronização pode ser automática:** depois da migração e do vínculo inicial, ative a opção em **Configurações → Conexão com a nuvem** e entre na sua conta. O desktop aberto consulta a cada minuto; **Sincronizar agora** continua disponível. Nenhum dado pessoal acompanha o código ou é importado automaticamente. Configure o projeto e valide o vínculo antes de usar as duas versões.
 
+## Caixa no PWA
+
+O quadro **Disponível em caixa e conta** tem saldo inicial, movimentos reais,
+transferências e conferência. Requer a [migração 007](../supabase/migrations/007_caixa.sql).
+Leia [como começar e evitar contagens duplicadas](CAIXA_PWA.md).
+O backup SQLite do desktop ainda não inclui os novos movimentos de caixa;
+use a exportação JSON própria do PWA enquanto essa integração não for atualizada.
+
 ## Serviços escolhidos
 
 - **Supabase:** conta de acesso e banco PostgreSQL.
